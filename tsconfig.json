@@ -1,0 +1,46 @@
+{
+  "$schema": "https://schemastore.org",
+  "compilerOptions": {
+    "composite": true,
+    "esModuleInterop": true,
+    "incremental": true,
+    "jsx": "react-jsx",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noUncheckedIndexedAccess": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "ES2022"
+  },
+  "files": [],
+  "include": [],
+  "references": [
+    // 1. Core Platform Packages
+    { "path": "./packages/app" },
+    { "path": "./packages/backend" },
+
+    // 2. Frontend Plugins
+    { "path": "./plugins/frontend/rag-ai" },
+
+    // 3. Backend Core & Nodes
+    { "path": "./plugins/backend/rag-ai-backend" },
+    { "path": "./plugins/backend/rag-ai-node" },
+
+    // 4. Storage & Vector Connectors
+    { "path": "./plugins/backend/rag-ai-storage-pgvector" },
+
+    // 5. Embeddings Ecosystem
+    { "path": "./plugins/backend/rag-ai-backend-embeddings-aws" },
+    { "path": "./plugins/backend/rag-ai-backend-embeddings-openai" },
+
+    // 6. Engine Capabilities
+    { "path": "./plugins/backend/rag-ai-backend-retrieval-augmenter" },
+
+    // 7. Test Harness
+    { "path": "./test" }
+  ]
+}

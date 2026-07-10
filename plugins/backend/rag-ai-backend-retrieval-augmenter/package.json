@@ -1,0 +1,63 @@
+{
+  "name": "@webstackbuilders/rag-ai-backend-retrieval-augmenter",
+  "version": "0.0.1",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "license": "Apache-2.0",
+  "keywords": [
+    "backstage",
+    "plugin",
+    "rag-ai",
+    "backend",
+    "retrieval",
+    "augmenter"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "main": "dist/index.cjs.js",
+    "types": "dist/index.d.ts"
+  },
+  "backstage": {
+    "role": "backend-plugin-module",
+    "pluginId": "rag-ai-backend-retrieval-augmenter",
+    "pluginPackage": "@webstackbuilders/rag-ai-backend"
+  },
+  "bugs": {
+    "url": "https://github.com/webstack-builders/roadie-backstage-plugins/issues",
+    "email": "support@roadie.io"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github:webstack-builders/roadie-backstage-plugins",
+    "directory": "plugins/backend/rag-ai-backend-embeddings"
+  },
+  "scripts": {
+    "start": "backstage-cli package start",
+    "build": "backstage-cli package build",
+    "lint": "backstage-cli package lint",
+    "test": "backstage-cli package test",
+    "clean": "backstage-cli package clean",
+    "prepack": "backstage-cli package prepack",
+    "postpack": "backstage-cli package postpack"
+  },
+  "dependencies": {
+    "@backstage/backend-common": "^0.25.0",
+    "@backstage/backend-plugin-api": "backstage:^",
+    "@backstage/catalog-client": "backstage:^",
+    "@backstage/catalog-model": "backstage:^",
+    "@backstage/errors": "backstage:^",
+    "@backstage/plugin-search-common": "backstage:^",
+    "@langchain/core": "^1.2.2",
+    "@langchain/textsplitters": "^1.0.1",
+    "@webstackbuilders/rag-ai-node": "workspace:^",
+    "p-limit": "^3.1.0"
+  },
+  "devDependencies": {
+    "@backstage/cli": "backstage:^",
+    "jest": "^30.0.0",
+    "vitest": "^4.1.10"
+  },
+  "files": [
+    "dist"
+  ]
+}

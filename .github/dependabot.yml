@@ -1,0 +1,38 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    ignore:
+      # Prevent downgrading or drifting outside Node 22/24 compilation tools
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@types/node"
+        versions: ["< 22.0.0"]
+
+      # Freeze TypeScript to prevent framework build compilation errors
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major", "version-update:semver-minor"]
+
+      # Freeze testing and environment compilation tools
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "node-gyp"
+        update-types: ["version-update:semver-major"]
+
+      # Freeze the linting chain to protect the Backstage ESLint factory layout
+      - dependency-name: "eslint"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@eslint/eslintrc"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "typescript-eslint"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "eslint-plugin-jest"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "eslint-plugin-notice"
+        update-types: ["version-update:semver-major"]
+
+      # Freeze Prettier formatting rules to prevent format code layout drift
+      - dependency-name: "prettier"
+        update-types: ["version-update:semver-major"]

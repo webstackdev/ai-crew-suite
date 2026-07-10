@@ -1,0 +1,139 @@
+/*
+ * Copyright 2024 Larder Software Limited
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+import express, { NextFunction, Request, Response } from 'express';
+import Router from 'express-promise-router';
+import { BaseLLM } from '@langchain/core/language_models/llms';
+import { BaseChatModel } from '@langchain/core/language_models/chat_models';
+import { isEmpty } from 'lodash';
+import { MiddlewareFactory } from '@backstage/backend-defaults/rootHttpRouter';
+import { RootConfigService } from '@backstage/backend-plugin-api';
+import { LoggerService } from '@backstage/backend-plugin-api';
+import { AugmentationIndexer, RetrievalPipeline } from '@webstackbuilders/rag-ai-node';
+import { LlmService } from './LlmService';
+import { RagAiController } from './RagAiController';
+
+type AiBackendConfig = {
+  prompts: {
+    prefix: string;
+    suffix: string;
+  };
+  supportedSources: string[];
+};
+
+export interface RouterOptions {
+  logger: LoggerService;
+  augmentationIndexer: AugmentationIndexer;
+  retrievalPipeline: RetrievalPipeline;
+  model: BaseLLM | BaseChatModel;
+  config: RootConfigService;
+}
+
+const sourceValidator = (
+  supportedSources: string[]
+) => (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const source = req.params.source;
+  if (!supportedSources.includes(source) && source !== 'all') {
+    return res.status(422).json({
+      message: `Only ${supportedSources.join(
+        ', ',
+      )} are supported as AI assistant query sources for now.`,
+    });
+  }
+  return next();
+};
+
+const queryQueryValidator = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const query = req.query.query;
+  if (!query || typeof query !== 'string' || isEmpty(query)) {
+    return res.status(422).json({
+      message: 'You should pass in the query via query params',
+    });
+  }
+  return next();
+};
+
+const bodyQueryValidator = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const query = req.body.query;
+  if (!query || typeof query !== 'string' || isEmpty(query)) {
+    return res.status(422).json({
+      message: 'You should pass in the query via request body',
+    });
+  }
+  return next();
+};
+
+export async function createRouter(
+  options: RouterOptions,
+): Promise<express.Router> {
+  const {
+    logger,
+    augmentationIndexer,
+    retrievalPipeline,
+    model,
+    config
+  } = options;
+  const aiBackendConfig = config.getOptional<AiBackendConfig>('ai');
+  const supportedSources = aiBackendConfig?.supportedSources ?? ['catalog'];
+
+  const llmService = new LlmService({
+    logger,
+    model,
+    configuredPrompts: aiBackendConfig?.prompts,
+  });
+
+  const controller = RagAiController.getInstance({
+    logger,
+    augmentationIndexer,
+    retrievalPipeline,
+    llmService,
+  });
+
+  const router = Router();
+  router.use(express.json());
+
+  const middleware = MiddlewareFactory.create({ config, logger });
+  router.use(middleware.error());
+
+  const sourceValidatorMiddleware = sourceValidator(supportedSources);
+
+  router
+    .route('/embeddings/:source')
+    .post(sourceValidatorMiddleware, controller.createEmbeddings)
+    .delete(sourceValidatorMiddleware, controller.deleteEmbeddings)
+    .get(
+      sourceValidatorMiddleware,
+      queryQueryValidator,
+      controller.getEmbeddings,
+    );
+
+  router
+    .route('/query/:source')
+    .post(sourceValidatorMiddleware, bodyQueryValidator, controller.query);
+
+  return router;
+}

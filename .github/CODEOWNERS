@@ -1,0 +1,5 @@
+* @webstackbuilders/engineering
+
+# Argo CD Backend:
+
+/plugins/backend/backstage-plugin-argo-cd-backend @webstackbuilders/engineering @karlhaworth

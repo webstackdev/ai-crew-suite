@@ -1,0 +1,136 @@
+name: Publish Build
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    outputs:
+      needs_release: ${{ github.event_name == 'workflow_dispatch' && 'true' || steps.release_check.outputs.needs_release }}
+
+    strategy:
+      matrix:
+        node-version: [18]
+
+    env:
+      CI: true
+      NODE_OPTIONS: --max-old-space-size=4096
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        uses: backstage/actions/yarn-install@v0.5.9
+        with:
+          cache-prefix: ${{ runner.os }}-v${{ matrix.node-version }}
+
+      - name: Fetch previous commit for release check
+        run: git fetch origin '${{ github.event.before }}'
+
+      - name: Check if release
+        if: github.event_name != 'workflow_dispatch'
+        id: release_check
+        run: node scripts/check-if-release.js
+        env:
+          COMMIT_SHA_BEFORE: '${{ github.event.before }}'
+
+      - name: build type declarations
+        run: yarn tsc
+
+      - name: build packages
+        run: yarn build
+
+      - name: Discord notification
+        if: ${{ failure() }}
+        uses: Ilshidur/action-discord@0.2.0
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_RELEASE_WEBHOOK }}
+        with:
+          args: 'Master build failed https://github.com/{{GITHUB_REPOSITORY}}/actions/runs/{{GITHUB_RUN_ID}}'
+
+  # A separate release build that is only run for commits that are the result of merging the "Version Packages" PR
+  # We can't re-use the output from the above step, but we'll have a guaranteed node_modules cache and
+  # only run the build steps that are necessary for publishing
+  release:
+    needs: build
+
+    if: needs.build.outputs.needs_release == 'true'
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18]
+
+    env:
+      CI: 'true'
+      NODE_OPTIONS: --max-old-space-size=4096
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          always-auth: true
+          node-version: ${{ matrix.node-version }}
+          registry-url: https://registry.npmjs.org
+
+      - name: Install dependencies
+        uses: backstage/actions/yarn-install@v0.5.9
+        with:
+          cache-prefix: ${{ runner.os }}-v${{ matrix.node-version }}
+
+      - name: build type declarations
+        run: yarn tsc
+
+      - name: build packages
+        run: yarn backstage-cli repo build
+
+      # Publishes current version of packages that are not already present in the registry..
+      - name: Run publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+        run: |
+          git config --global user.email "bot@roadie.io"
+          git config --global user.name "roadie-bot"
+
+          yarn config set npmAuthToken '${NODE_AUTH_TOKEN}'
+          yarn config set npmScopes.roadiehq.npmRegistryServer "https://registry.npmjs.org"
+          yarn config set npmScopes.roadiehq.npmPublishRegistry "https://registry.npmjs.org"
+          yarn config set npmScopes.roadiehq.npmAlwaysAuth true
+
+          yarn workspaces foreach --all --jobs 1 --parallel --no-private npm publish --tolerate-republish
+
+      # Creates the next available tag with format "release-<year>-<month>-<day>[.<n>]"
+      - name: Create a release tag
+        id: create_tag
+        run: node scripts/create-release-tag.js
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Convert the newly created tag into a release with changelog information
+      - name: Create release on GitHub
+        run: node scripts/create-github-release.js ${{ steps.create_tag.outputs.tag_name }} 1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Notify everyone about this on Discord
+      - name: Discord notification
+        uses: Ilshidur/action-discord@0.2.0
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_RELEASE_WEBHOOK }}
+          TAG_NAME: ${{ steps.create_tag.outputs.tag_name }}
+        with:
+          args: 'A new release has been published! https://github.com/RoadieHQ/roadie-backstage-plugins/releases/tag/{{TAG_NAME}}'
