@@ -1,36 +1,53 @@
 ---
 name: 'Bug Report'
-about: 'Create Bug Report'
-labels: kind/bug
+about: 'Report a glitch in an AI tool, RAG engine, or forked plugin'
+labels: ['kind/bug', 'triage']
 ---
 
-<!--- Provide a general summary of the issue in the Title above -->
+## Description
+
+<!-- Provide a clear and concise summary of what the bug is. -->
+
+## Affected Workspaces
+
+<!-- Put an [x] next to all layers impacted by this glitch -->
+- [ ] **AI Tools / Crew Layouts** (e.g., `packages/tool-crew-*`)
+- [ ] **Forked RAG AI Plugins** (e.g., `packages/plugin-rag-ai-*`)
+- [ ] **Core Application Platform** (`packages/app` or `packages/backend`)
+- [ ] **Developer Infrastructure** (Turbo, Yarn, Husky, Playwright)
 
 ## Expected Behavior
 
-<!--- Tell us what should happen -->
+<!-- Tell us what should happen under normal operating parameters -->
 
 ## Current Behavior
 
-<!--- Tell us what happens instead of the expected behavior -->
+<!-- Tell us what happens instead. Include specific details about stream failures, token cuts, or UI lockups if applicable -->
 
 ## Steps to Reproduce
 
-<!--- Provide a link to a live example, or an unambiguous set of steps to -->
-<!--- reproduce this bug. Include code or configuration to reproduce, if relevant -->
+1. Go to Backstage Component view / UI panel: `____`
+2. Trigger the following prompt or action: `____`
+3. Observe the breakdown or stack trace.
 
-## Possible Solution
+## Technical Context & Telemetry
 
-<!--- Not obligatory, but suggest a fix/reason for the bug, -->
-<!--- or ideas as to the implementation of the addition or change -->
+<!-- Providing specific logs or environmental telemetry dramatically cuts down triage time -->
 
-## Context
+### 🪵 Stream or Router Logs (Backstage Contextual Logger)
 
-<!--- How has this issue affected you? What are you trying to accomplish? -->
-<!--- Providing context (e.g. links to configuration settings, -->
-<!--- stack trace or log data) helps us come up with a solution that is most useful in the real world -->
+```text
+// Paste relevant log snippets from yarn start / yarn start-backend here
+```
 
-## Your Environment
+### 🧠 Model & Vector Infrastructure Context
 
-- `@backstage/plugin-catalog-react` version:
-- `@backstage/integration` version:
+- **LLM Engine / Provider**: (e.g., OpenAI gpt-4o, Anthropic Claude 3.5, Local Ollama)
+- **Vector Store / Source**: (e.g., Pinecone, PGVector, Local Embedded)
+- **Stream Delivery**: [ ] Asynchronous SSE Stream (`eventsource-parser`) | [ ] Blocking JSON Rest Payload
+
+## System Environment
+
+- **Node.js Version** (`node -v`):
+- **Yarn Version** (`yarn -v`):
+- **Operating System / Workstation Platform**: (e.g., Ubuntu Linux, macOS, WSL2)

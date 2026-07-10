@@ -1,0 +1,72 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate-and-test:
+    name: Node v${{ matrix.node-version }} Pipeline
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [20, 22] # Preserves your multi-version runtime matrix
+
+    env:
+      CI: true
+      NODE_OPTIONS: --max-old-space-size=4096 # Preserves your Backstage memory buffer fix
+
+    steps:
+      - name: 📂 Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 🟢 Setup Node.js v${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: 📦 Install Workspace Dependencies
+        uses: backstage/actions/yarn-install@v0.5.9
+        with:
+          cache-prefix: ${{ runner.os }}-v${{ matrix.node-version }}
+
+      - name: 🏎️ Initialize Turborepo Remote GitHub Actions Cache
+        uses: rharkor/caching-for-turbo@v2
+
+      - name: ✨ Verify Source Formatting (Prettier)
+        run: yarn prettier --check .
+
+      - name: 🛠️ Execute Turbo Build, Lint & Typecheck
+        run: yarn turbo run build lint typecheck
+
+      - name: 🟢 Run Automated Unit Test Harness
+        run: yarn turbo run test
+
+      - name: 🎭 Provision Playwright Engine
+        run: npx playwright install --with-deps chromium
+
+      - name: 🔐 Prepare Mock Local Storage Auth File
+        run: mkdir -p playwright/.auth && echo '{}' > playwright/.auth/login.json
+
+      - name: 🚀 Run Playwright End-to-End Tests
+        run: npx playwright test
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PLAYWRIGHT_BASE_URL: http://localhost:3000
+
+      - name: 📊 Upload Playwright Report on Failure
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-node-${{ matrix.node-version }}
+          path: playwright-report
+          retention-days: 1

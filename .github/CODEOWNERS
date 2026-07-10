@@ -1,5 +1,20 @@
-* @webstackbuilders/engineering
+# Global Monorepo Rules
+# ---------------------
+# Default owners for infrastructure, toolchains, and platform changes
+*                                              @webstackbuilders/platform-leads
 
-# Argo CD Backend:
+# Forked Roadie RAG AI Plugins
+# ----------------------------
+# Specific core team assigned to manage the unmaintained Roadie forks
+/packages/plugin-rag-ai-*                      @webstackbuilders/rag-maintainers
+/packages/plugin-rag-ai-backend                @webstackbuilders/rag-maintainers
 
-/plugins/backend/backstage-plugin-argo-cd-backend @webstackbuilders/engineering @karlhaworth
+# Custom AI Tools & Crew Layouts
+# ------------------------------
+# Data science and AI squad assigned to evaluate agent orchestration blocks
+/packages/tool-crew-*                          @webstackbuilders/ai-engineers
+
+# GitHub Automation Rules
+# ------------------------
+/.github/workflows/                            @webstackbuilders/platform-leads
+/turbo.json                                    @webstackbuilders/platform-leads

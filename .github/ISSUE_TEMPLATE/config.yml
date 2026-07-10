@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: "🔒 Report a Security Vulnerability"
+    url: "https://github.com"
+    about: "If you discover a security exploit, token leak, or vulnerability, please report it privately here."
+  - name: "📖 Internal Crew Suite Architecture Docs"
+    url: "https://github.com"
+    about: "Review developer setups, engine specifications, and deployment runbooks before filing configuration tasks."

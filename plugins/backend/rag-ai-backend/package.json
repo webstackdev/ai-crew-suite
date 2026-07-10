@@ -24,12 +24,12 @@
   },
   "bugs": {
     "url": "https://github.com/webstack-builders/ai-crew-suite/issues",
-    "email": "support@roadie.io"
+    "email": "support@webstackbuilders.com"
   },
   "repository": {
     "type": "git",
-    "url": "github:webstack-builders/ai-crew-suite",
-    "directory": "plugins/backend/rag-ai-backend"
+    "url": "https://github.com",
+    "directory": "packages/rag-ai-backend"
   },
   "files": [
     "dist",
@@ -40,7 +40,7 @@
     "start": "backstage-cli package start",
     "build": "backstage-cli package build",
     "lint": "backstage-cli package lint",
-    "test": "backstage-cli package test",
+    "test": "vitest run",
     "clean": "backstage-cli package clean",
     "prepack": "backstage-cli package prepack",
     "postpack": "backstage-cli package postpack"
@@ -60,7 +60,6 @@
   "devDependencies": {
     "@backstage/cli": "backstage:^",
     "@types/compression": "^1.8.1",
-    "@types/lodash": "^4.17.24",
-    "jest": "^30.0.0"
+    "@types/lodash": "^4.17.24"
   }
 }

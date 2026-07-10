@@ -8,129 +8,119 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     outputs:
       needs_release: ${{ github.event_name == 'workflow_dispatch' && 'true' || steps.release_check.outputs.needs_release }}
-
     strategy:
       matrix:
-        node-version: [18]
+        node-version: [22]
 
     env:
       CI: true
       NODE_OPTIONS: --max-old-space-size=4096
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - name: 📂 Checkout Repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
-      - name: Set up Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+      - name: 🟢 Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Install dependencies
-        uses: backstage/actions/yarn-install@v0.5.9
+      - name: 📦 Install Workspace Dependencies
+        uses: backstage/actions/yarn-install@2cd6978b476cbdc39fec48346f8b6ca13199dd6a # v0.7.8
         with:
           cache-prefix: ${{ runner.os }}-v${{ matrix.node-version }}
 
-      - name: Fetch previous commit for release check
+      - name: 🏎️ Initialize Turborepo Remote GitHub Actions Cache
+        uses: rharkor/caching-for-turbo@75f8ebf4a43d2c60b23bc2a27082cfea94ffdad9 # v2.5.0
+
+      - name: 🔍 Fetch previous commit for release check
         run: git fetch origin '${{ github.event.before }}'
 
-      - name: Check if release
+      - name: 📝 Check if release
         if: github.event_name != 'workflow_dispatch'
         id: release_check
         run: node scripts/check-if-release.js
         env:
-          COMMIT_SHA_BEFORE: '${{ github.event.before }}'
+          COMMIT_SHA_BEFORE: "${{ github.event.before }}"
 
-      - name: build type declarations
-        run: yarn tsc
+      - name: 🛠️ Build and Verify Distribution Packages
+        run: yarn turbo run build typecheck
 
-      - name: build packages
-        run: yarn build
-
-      - name: Discord notification
+      - name: 🚨 Slack Failure Notification
         if: ${{ failure() }}
-        uses: Ilshidur/action-discord@0.2.0
+        uses: rtCamp/action-slack-notify@33ca3be66c6f378fe1610fd1d5258632dbed5e58 # v2.4.0
         env:
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_RELEASE_WEBHOOK }}
-        with:
-          args: 'Master build failed https://github.com/{{GITHUB_REPOSITORY}}/actions/runs/{{GITHUB_RUN_ID}}'
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_COLOR: "#FF0000"
+          SLACK_USERNAME: "Crew Suite Deploy Bot"
+          SLACK_TITLE: "❌ Master Build Failed"
+          SLACK_MESSAGE: "The main production compilation has failed. Review the logs at: https://github.com{{ github.repository }}/actions/runs/${{ github.run_id }}"
 
-  # A separate release build that is only run for commits that are the result of merging the "Version Packages" PR
-  # We can't re-use the output from the above step, but we'll have a guaranteed node_modules cache and
-  # only run the build steps that are necessary for publishing
   release:
     needs: build
-
     if: needs.build.outputs.needs_release == 'true'
-
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
-        node-version: [18]
+        node-version: [22]
 
     env:
-      CI: 'true'
+      CI: "true"
       NODE_OPTIONS: --max-old-space-size=4096
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - name: 📂 Checkout Repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
-      - name: Set up Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+      - name: 🟢 Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
-          always-auth: true
           node-version: ${{ matrix.node-version }}
           registry-url: https://registry.npmjs.org
 
-      - name: Install dependencies
-        uses: backstage/actions/yarn-install@v0.5.9
+      - name: 📦 Install Workspace Dependencies
+        uses: backstage/actions/yarn-install@2cd6978b476cbdc39fec48346f8b6ca13199dd6a # v0.7.8
         with:
           cache-prefix: ${{ runner.os }}-v${{ matrix.node-version }}
 
-      - name: build type declarations
-        run: yarn tsc
+      - name: 🏎️ Initialize Turborepo Remote GitHub Actions Cache
+        uses: rharkor/caching-for-turbo@75f8ebf4a43d2c60b23bc2a27082cfea94ffdad9 # v2.5.0
 
-      - name: build packages
-        run: yarn backstage-cli repo build
+      - name: 🛠️ Compile Code Artifacts
+        run: yarn turbo run build typecheck
 
-      # Publishes current version of packages that are not already present in the registry..
-      - name: Run publish
+      - name: 🚀 Run publish to NPM Registry
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
         run: |
-          git config --global user.email "bot@roadie.io"
-          git config --global user.name "roadie-bot"
+          git config --global user.email "bot@webstackbuilders.com"
+          git config --global user.name "webstackbuilders-bot"
 
           yarn config set npmAuthToken '${NODE_AUTH_TOKEN}'
-          yarn config set npmScopes.roadiehq.npmRegistryServer "https://registry.npmjs.org"
-          yarn config set npmScopes.roadiehq.npmPublishRegistry "https://registry.npmjs.org"
-          yarn config set npmScopes.roadiehq.npmAlwaysAuth true
+          yarn config set npmScopes.webstackbuilders.npmRegistryServer "https://npmjs.org"
+          yarn config set npmScopes.webstackbuilders.npmPublishRegistry "https://npmjs.org"
+          yarn config set npmScopes.webstackbuilders.npmAlwaysAuth true
 
           yarn workspaces foreach --all --jobs 1 --parallel --no-private npm publish --tolerate-republish
 
-      # Creates the next available tag with format "release-<year>-<month>-<day>[.<n>]"
-      - name: Create a release tag
+      - name: 🏷️ Create a release tag
         id: create_tag
         run: node scripts/create-release-tag.js
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # Convert the newly created tag into a release with changelog information
-      - name: Create release on GitHub
+      - name: 📝 Create release on GitHub
         run: node scripts/create-github-release.js ${{ steps.create_tag.outputs.tag_name }} 1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # Notify everyone about this on Discord
-      - name: Discord notification
-        uses: Ilshidur/action-discord@0.2.0
+      - name: 📢 Slack Success Notification
+        uses: rtCamp/action-slack-notify@v2.3.2
         env:
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_RELEASE_WEBHOOK }}
-          TAG_NAME: ${{ steps.create_tag.outputs.tag_name }}
-        with:
-          args: 'A new release has been published! https://github.com/RoadieHQ/roadie-backstage-plugins/releases/tag/{{TAG_NAME}}'
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_COLOR: "#36a64f"
+          SLACK_USERNAME: "Crew Suite Deploy Bot"
+          SLACK_TITLE: "🚀 New Release Published Successfully"
+          SLACK_MESSAGE: "A new version has been deployed under the @webstackbuilders scope! View changelogs here: https://github.com{{ github.repository }}/releases/tag/${{ steps.create_tag.outputs.tag_name }}"

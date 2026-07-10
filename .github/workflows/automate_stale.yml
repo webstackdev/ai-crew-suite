@@ -1,8 +1,9 @@
-name: Automate staleness
+name: Automate Staleness
+
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 */6 * * *' # run at minute 0 past every 6th hour'
+    - cron: "0 */6 * * *" # Executes at minute 0 past every 6th hour
 
 permissions:
   contents: read
@@ -10,33 +11,48 @@ permissions:
 jobs:
   stale:
     permissions:
-      issues: write # for actions/stale to close stale issues
-      pull-requests: write # for actions/stale to close stale PRs
+      issues: write # Grants permissions to flag/close stale issues
+      pull-requests: write # Grants permissions to flag/close stale PRs
     runs-on: ubuntu-latest
     steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@8ca2b8b2ece13480cda6dacd3511b49857a23c09 # v2.5.1
+      - name: 🛡️ Harden GitHub Actions Runner
+        uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
         with:
           egress-policy: audit
 
-      - uses: actions/stale@v7.0.0
+      - name: 🧹 Flag Stale Issues and Pull Requests
+        uses: actions/stale@1e223db275d687790206a7acac4d1a11bd6fe629 # v10.4.0
         id: stale
         with:
+          # --- Issue Configurations ---
           stale-issue-message: >
             This issue has been automatically marked as stale because it has not had
             recent activity. It will be closed if no further activity occurs. Thank you
-            for your contributions.
+            for your contributions to the AI Crew Suite.
           days-before-issue-stale: 60
           days-before-issue-close: 7
-          exempt-issue-labels: plugin,after-vacations,will-fix
           stale-issue-label: stale
+          exempt-issue-labels: >-
+            plugin,
+            after-vacations,
+            will-fix,
+            kind/bug,
+            kind/enhancement,
+            triage
+
+          # --- Pull Request Configurations ---
           stale-pr-message: >
             This PR has been automatically marked as stale because it has not had
             recent activity from the author. It will be closed if no further activity occurs.
             If the PR was closed and you want it re-opened, let us know
             and we'll re-open the PR so that you can continue the contribution!
-          days-before-pr-stale: 7
-          days-before-pr-close: 5
-          exempt-pr-labels: after-vacations,will-fix
+          days-before-pr-stale: 14 # Bumped from 7 to 14 days to provide a safer buffer for complex RAG/AI refactors
+          days-before-pr-close: 7 # Bumped from 5 to 7 days to match standard issue cycles
           stale-pr-label: stale
-          operations-per-run: 100
+          exempt-pr-labels: >-
+            after-vacations,
+            will-fix,
+            dependencies
+
+          # --- Operation Boundaries ---
+          operations-per-run: 150 # Increased from 100 to comfortably evaluate our 24+ workspace branches

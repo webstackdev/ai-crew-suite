@@ -20,28 +20,30 @@
   "backstage": {
     "role": "backend-plugin-module",
     "pluginId": "rag-ai-backend-embeddings-aws",
-    "pluginPackage": "@webstackbuilders/rag-ai-backend"
+    "pluginPackages": [
+      "@webstackbuilders/rag-ai-backend"
+    ]
   },
   "bugs": {
-    "url": "https://github.com/webstack-builders/roadie-backstage-plugins/issues",
-    "email": "support@roadie.io"
+    "url": "https://github.com",
+    "email": "support@webstackbuilders.com"
   },
   "repository": {
     "type": "git",
-    "url": "github:webstack-builders/roadie-backstage-plugins",
-    "directory": "plugins/backend/rag-ai-backend-embeddings-aws"
+    "url": "https://github.com",
+    "directory": "packages/rag-ai-backend-embeddings-aws"
   },
   "scripts": {
     "start": "backstage-cli package start",
     "build": "backstage-cli package build",
     "lint": "backstage-cli package lint",
-    "test": "backstage-cli package test",
+    "test": "vitest run",
     "clean": "backstage-cli package clean",
     "prepack": "backstage-cli package prepack",
     "postpack": "backstage-cli package postpack"
   },
   "dependencies": {
-    "@aws-sdk/client-bedrock-runtime": "^3.1083.0",
+    "@aws-sdk/client-bedrock-runtime": "^3.1085.0",
     "@aws-sdk/types": "^3.974.0",
     "@backstage/backend-common": "^0.25.0",
     "@backstage/backend-plugin-api": "backstage:^",
@@ -54,8 +56,7 @@
     "@webstackbuilders/rag-ai-node": "workspace:^"
   },
   "devDependencies": {
-    "@backstage/cli": "backstage:^",
-    "jest": "^30.0.0"
+    "@backstage/cli": "backstage:^"
   },
   "files": [
     "dist",

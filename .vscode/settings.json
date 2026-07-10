@@ -4,9 +4,13 @@
     "Contextualizer",
     "ehthumbs",
     "HITL",
+    "Ilshidur",
     "jsdom",
     "llms",
+    "Ollama",
     "pgvector",
+    "rharkor",
+    "rjsf",
     "roadiehq",
     "SCAF",
     "zipfs"
