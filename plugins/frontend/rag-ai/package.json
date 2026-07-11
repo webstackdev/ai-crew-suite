@@ -27,8 +27,6 @@
   "scripts": {
     "start": "backstage-cli package start",
     "build": "backstage-cli package build",
-    "lint": "backstage-cli package lint",
-    "test": "backstage-cli package test",
     "clean": "backstage-cli package clean",
     "prepack": "backstage-cli package prepack",
     "postpack": "backstage-cli package postpack"
@@ -55,11 +53,9 @@
     "@backstage/cli": "backstage:^",
     "@backstage/dev-utils": "backstage:^",
     "@testing-library/jest-dom": "^6.9.1",
-    "@types/jest": "^30.0.0",
     "@types/react": "*",
     "@types/react-dom": "*",
     "@types/react-syntax-highlighter": "^15.5.13",
-    "jest": "^30.0.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.30.4"

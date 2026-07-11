@@ -2,9 +2,6 @@ import { defineConfig, defineProject } from 'vitest/config';
 
 export default defineConfig({
   test: {
-    // Global configurations shared across all projects
-    globals: true,
-    setupFiles: ['./test/vitest.setup.ts'],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
@@ -15,14 +12,24 @@ export default defineConfig({
       defineProject({
         test: {
           name: 'frontend',
-          include: ['plugins/frontend/**/*.test.{ts,tsx}'],
+          globals: true,
+          setupFiles: ['./test/vitest.setup.ts'],
+          include: [
+            'packages/app/src/**/*.test.{ts,tsx}',
+            'plugins/frontend/**/*.test.{ts,tsx}',
+          ],
           environment: 'jsdom',
         },
       }),
       defineProject({
         test: {
           name: 'backend',
-          include: ['plugins/backend/**/*.test.{ts,tsx}', 'packages/**/*.test.{ts,tsx}'],
+          globals: true,
+          setupFiles: ['./test/vitest.setup.ts'],
+          include: [
+            'packages/backend/src/**/*.test.{ts,tsx}',
+            'plugins/backend/**/*.test.{ts,tsx}',
+          ],
           environment: 'node',
         },
       }),

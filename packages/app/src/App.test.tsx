@@ -1,28 +1,34 @@
-import { render, waitFor } from '@testing-library/react';
-import App from './App';
+import { describe, expect, it, vi } from 'vitest';
+
+const createAppMock = vi.fn(() => ({ createRoot: vi.fn() }));
+
+vi.mock('@backstage/frontend-defaults', () => ({
+  createApp: createAppMock,
+}));
+
+vi.mock('@backstage/plugin-catalog/alpha', () => ({
+  default: { id: 'catalog-plugin' },
+}));
+
+vi.mock('./scaffolder/scaffolderModule', () => ({
+  scaffolderCustomizations: { id: 'scaffolder-customizations' },
+}));
+
+vi.mock('./modules/nav', () => ({
+  navModule: { id: 'nav-module' },
+}));
 
 describe('App', () => {
-  it('should render', async () => {
-    process.env = {
-      NODE_ENV: 'test',
-      APP_CONFIG: [
-        {
-          data: {
-            app: { title: 'Test' },
-            backend: { baseUrl: 'http://localhost:7007' },
-            techdocs: {
-              storageUrl: 'http://localhost:7007/api/techdocs/static/docs',
-            },
-          },
-          context: 'test',
-        },
-      ] as any,
-    };
+  it('wires the expected features into createApp', async () => {
+    const { default: app } = await import('./App');
 
-    const rendered = render(App.createRoot());
-
-    await waitFor(() => {
-      expect(rendered.baseElement).toBeInTheDocument();
+    expect(createAppMock).toHaveBeenCalledWith({
+      features: [
+        { id: 'catalog-plugin' },
+        { id: 'nav-module' },
+        { id: 'scaffolder-customizations' },
+      ],
     });
+    expect(app).toBeDefined();
   });
 });

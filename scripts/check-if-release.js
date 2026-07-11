@@ -10,7 +10,7 @@ try {
 
   fs.appendFileSync(process.env.GITHUB_OUTPUT, `needs_release=${hasReleases}\n`);
   console.log(`Version bumps detected: ${hasReleases}`);
-} catch (error) {
+} catch {
   // Fallback: If changeset status is empty or errors, check if a changeset file exists
   const hasChangesets = fs.readdirSync('.changeset').some(file => file.endsWith('.md') && file !== 'README.md');
   fs.appendFileSync(process.env.GITHUB_OUTPUT, `needs_release=${hasChangesets}\n`);

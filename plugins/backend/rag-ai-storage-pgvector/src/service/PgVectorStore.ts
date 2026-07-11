@@ -230,7 +230,7 @@ export class PgVectorStore implements VectorStore {
     const results = [] as [EmbeddingDoc, number][];
     for (const doc of documents) {
       // eslint-ignore-next-line
-      if (doc._distance != null && doc.content != null) {
+      if (doc._distance !== null && doc._distance !== undefined && doc.content !== null && doc.content !== undefined) {
         const document = {
           content: doc.content,
           metadata: doc.metadata,

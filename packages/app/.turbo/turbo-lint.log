@@ -1,0 +1,4 @@
+
+[31mError: Failed to load config "@spotify/eslint-config-base" to extend from.[39m
+[31mReferenced from: /home/kevin/Repos/backstage/ai-crew-suite/packages/app/.eslintrc.js[39m
+

@@ -10,8 +10,6 @@
   "scripts": {
     "start": "backstage-cli package start",
     "build": "backstage-cli package build",
-    "lint": "backstage-cli package lint",
-    "test": "vitest run",
     "clean": "backstage-cli package clean",
     "build-image": "docker build ../../ -f Dockerfile --tag backstage"
   },
@@ -45,18 +43,15 @@
     "@backstage/plugin-search-backend-node": "^1.4.5",
     "@backstage/plugin-signals-backend": "^0.3.16",
     "@backstage/plugin-techdocs-backend": "^2.2.1",
-    
-    "app": "link:../app",
-    "better-sqlite3": "^12.11.1",
-    "node-gyp": "^13.0.1",
-    "pg": "^8.22.0",
-
-    "--- Custom AI Crew Suite Integrations ---": "workspace:*",
     "@webstackbuilders/rag-ai-backend": "workspace:^",
     "@webstackbuilders/rag-ai-backend-embeddings-aws": "workspace:^",
     "@webstackbuilders/rag-ai-backend-embeddings-openai": "workspace:^",
+    "@webstackbuilders/rag-ai-node": "workspace:^",
     "@webstackbuilders/rag-ai-storage-pgvector": "workspace:^",
-    "@webstackbuilders/rag-ai-node": "workspace:^"
+    "app": "link:../app",
+    "better-sqlite3": "^12.11.1",
+    "node-gyp": "^13.0.1",
+    "pg": "^8.22.0"
   },
   "devDependencies": {
     "@backstage/cli": "^0.36.3"

@@ -36,7 +36,7 @@ async function main() {
       index += 1;
       tagName = `${baseTagName}.${index}`;
     }
-  } catch (e) {
+  } catch {
     console.log('No matching tags extracted or repository is uninitialized. Proceeding with baseline tag configuration.');
   }
 

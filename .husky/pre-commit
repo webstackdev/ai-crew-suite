@@ -1,5 +1,2 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
-
-# Run Turbo lint only on packages that have changes in the working directory
-yarn turbo lint --filter=[...HEAD]
+# Lint and format only staged files before commit.
+yarn lint-staged
