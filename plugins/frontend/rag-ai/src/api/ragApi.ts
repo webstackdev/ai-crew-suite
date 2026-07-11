@@ -14,17 +14,25 @@
  * limitations under the License.
  */
 import { createApiRef } from '@backstage/core-plugin-api';
-import { AiRunEvent } from '../types';
+import {
+  AiAgentSummary,
+  AiRunEvent,
+  AiRunInput,
+  RunApprovalInput,
+  RunStartOptions,
+} from '../types';
 
 export interface RagAiApi {
-  ask(
-    question: string,
-    source: string,
-    agentId?: string,
-    sessionId?: string,
+  listAgents(): Promise<AiAgentSummary[]>;
+  startRun(
+    agentId: string,
+    input: AiRunInput,
+    opts?: RunStartOptions,
   ): AsyncGenerator<AiRunEvent>;
+  streamRunEvents(runId: string, lastEventId?: number): AsyncGenerator<AiRunEvent>;
+  approveRun(runId: string, decision: RunApprovalInput): AsyncGenerator<AiRunEvent>;
 }
 
 export const ragAiApiRef = createApiRef<RagAiApi>({
-  id: 'plugin.rag-ai.api',
+  id: 'plugin.ai-core.api',
 });

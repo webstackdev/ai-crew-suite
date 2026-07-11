@@ -21,6 +21,31 @@ export type ResponseEmbedding = {
   };
 };
 
+export type AiAgentSummary = {
+  id: string;
+  orchestrator: 'single-shot' | 'langgraph' | 'crew';
+  memory: 'none' | 'session';
+  tools: string[];
+};
+
+export type AiRunInput = {
+  query: string;
+  source?: string;
+  entityFilter?: unknown;
+};
+
+export type RunStartOptions = {
+  sessionId?: string;
+  idempotencyKey?: string;
+  trigger?: string;
+};
+
+export type RunApprovalInput = {
+  status: 'approved' | 'rejected';
+  note?: string;
+  decidedBy?: string;
+};
+
 export type AiRunEvent =
   | {
       type: 'step';

@@ -17,7 +17,7 @@
   },
   "backstage": {
     "role": "backend-plugin",
-    "pluginId": "rag-ai-backend",
+    "pluginId": "ai-core",
     "pluginPackages": [
       "@webstackbuilders/plugin-ai-core-backend"
     ]

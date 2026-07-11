@@ -217,6 +217,12 @@ export type RunRecord = {
   idempotencyKey?: string;
 };
 
+export type RunStepRecord = {
+  seq: number;
+  type: string;
+  payload: unknown;
+};
+
 export type Artifact = {
   id: string;
   runId: string;
@@ -262,6 +268,7 @@ export interface RunStore {
   findRunByIdempotencyKey(key: string): Promise<RunRecord | undefined>;
   updateRunStatus(runId: string, status: RunRecord['status']): Promise<void>;
   appendRunStep(runId: string, seq: number, type: string, payload: unknown): Promise<void>;
+  listRunSteps(runId: string, sinceSeq?: number): Promise<RunStepRecord[]>;
   createApproval(request: ApprovalRequest): Promise<void>;
   getPendingApproval(runId: string): Promise<ApprovalRequest | undefined>;
   decideApproval(runId: string, decision: ApprovalDecision): Promise<void>;

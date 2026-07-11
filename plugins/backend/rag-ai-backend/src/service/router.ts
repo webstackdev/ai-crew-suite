@@ -135,20 +135,6 @@ const queryQueryValidator = (
   return next();
 };
 
-const bodyQueryValidator = (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  const query = req.body.query;
-  if (!query || typeof query !== 'string' || isEmpty(query)) {
-    return res.status(422).json({
-      message: 'You should pass in the query via request body',
-    });
-  }
-  return next();
-};
-
 export async function createRouter(
   options: RouterOptions,
 ): Promise<express.Router> {
@@ -287,14 +273,12 @@ export async function createRouter(
       controller.getEmbeddings,
     );
 
-  router
-    .route('/query/:source')
-    .post(sourceValidatorMiddleware, bodyQueryValidator, controller.query);
-
   router.route('/agents').get(controller.listAgents);
   router.route('/agents/:id/runs').post(controller.startRun);
+  router.route('/runs/:id/events').get(controller.streamRunEvents);
   router.route('/runs/:id/approvals').post(controller.approveRun);
   router.route('/triggers/:source').post(controller.triggerRun);
+  router.route('/webhooks/:provider').post(controller.webhookRun);
 
   return router;
 }

@@ -20,7 +20,13 @@ import {
   IdentityApi,
 } from '@backstage/core-plugin-api';
 import { RagAiApi } from './ragApi';
-import { AiRunEvent } from '../types';
+import {
+  AiAgentSummary,
+  AiRunEvent,
+  AiRunInput,
+  RunApprovalInput,
+  RunStartOptions,
+} from '../types';
 import {
   EventSourceParserStream,
   ParsedEvent,
@@ -49,7 +55,7 @@ export class RagAiClient implements RagAiApi {
     if (!this.baseUrl) {
       const endpointPath = this.configApi.getOptionalString('ai.endpointPath');
       this.baseUrl = await this.discoveryApi.getBaseUrl(
-        endpointPath ?? 'rag-ai',
+        endpointPath ?? 'ai-core',
       );
     }
     return this.baseUrl;
@@ -60,63 +66,110 @@ export class RagAiClient implements RagAiApi {
     const response = await this.fetchApi.fetch(`${baseUrl}/${path}`, options);
 
     if (!response.ok)
-      throw new Error(`Failed to retrieved data from path ${path}`);
+      throw new Error(`Failed to retrieve data from path ${path}`);
 
-    return response.body!;
+    return response;
   }
 
-  async *ask(
-    question: string,
-    source: string,
-    agentId?: string,
-    sessionId?: string,
+  async listAgents(): Promise<AiAgentSummary[]> {
+    const { token } = await this.identityApi.getCredentials();
+    const response = await this.fetch('agents', {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const payload = (await response.json()) as { agents?: AiAgentSummary[] };
+    return payload.agents ?? [];
+  }
+
+  async *startRun(
+    agentId: string,
+    input: AiRunInput,
+    opts?: RunStartOptions,
   ): AsyncGenerator<AiRunEvent> {
     const { token } = await this.identityApi.getCredentials();
+    const stream = await this.fetchSse(`agents/${agentId}/runs`, {
+      body: JSON.stringify({
+        input,
+        sessionId: opts?.sessionId,
+        idempotencyKey: opts?.idempotencyKey,
+        trigger: opts?.trigger,
+      }),
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    yield* this.readSse(stream);
+  }
+
+  async *streamRunEvents(
+    runId: string,
+    lastEventId?: number,
+  ): AsyncGenerator<AiRunEvent> {
+    const { token } = await this.identityApi.getCredentials();
+    const stream = await this.fetchSse(`runs/${runId}/events`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        ...(typeof lastEventId === 'number' ? { 'Last-Event-ID': String(lastEventId) } : {}),
+      },
+    });
+
+    yield* this.readSse(stream);
+  }
+
+  async *approveRun(
+    runId: string,
+    decision: RunApprovalInput,
+  ): AsyncGenerator<AiRunEvent> {
+    const { token } = await this.identityApi.getCredentials();
+    const stream = await this.fetchSse(`runs/${runId}/approvals`, {
+      body: JSON.stringify(decision),
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    yield* this.readSse(stream);
+  }
+
+  private async fetchSse(path: string, options: {} = {}) {
+    const response = await this.fetch(path, options);
+    if (!response.body) {
+      throw new Error(`No stream available from path ${path}`);
+    }
+
+    return response.body;
+  }
+
+  private async *readSse(stream: ReadableStream<any>): AsyncGenerator<AiRunEvent> {
 
     try {
-      const stream = await this.fetch(`query/${source}`, {
-        body: JSON.stringify({
-          query: question,
-          agentId,
-          sessionId,
-        }),
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (stream) {
-        const reader = stream
-          .pipeThrough(new TextDecoderStream())
-          .pipeThrough(new EventSourceParserStream())
-          .getReader();
+      const reader = stream
+        .pipeThrough(new TextDecoderStream())
+        .pipeThrough(new EventSourceParserStream())
+        .getReader();
 
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-          const parsed = this.toRunEvent(value);
-          if (parsed) {
-            yield parsed;
-          }
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        const parsed = this.toRunEvent(value);
+        if (parsed) {
+          yield parsed;
         }
-      } else {
-        yield {
-          type: 'error',
-          data: {
-            runId: 'unknown',
-            message: 'No response received from the LLM',
-          },
-        };
       }
     } catch (e: any) {
-      // eslint-disable-next-line
-      console.error(e.message);
       yield {
         type: 'error',
         data: {
           runId: 'unknown',
-          message: `Failed to complete query due to error: ${e.message}`,
+          message: `Failed to complete run due to error: ${e.message}`,
         },
       };
     }
@@ -145,30 +198,6 @@ export class RagAiClient implements RagAiApi {
               data: { runId: 'unknown', message: event.data || 'Unknown error' },
             };
           }
-          return undefined;
-        }
-      }
-      case 'response': {
-        return {
-          type: 'token',
-          data: {
-            runId: 'unknown',
-            text: event.data,
-          },
-        };
-      }
-      case 'embeddings': {
-        try {
-          return {
-            type: 'tool_result',
-            data: {
-              runId: 'unknown',
-              tool: 'knowledge.retrieve',
-              ok: true,
-              output: { embeddings: JSON.parse(event.data) },
-            },
-          };
-        } catch {
           return undefined;
         }
       }

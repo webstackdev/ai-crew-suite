@@ -25,7 +25,7 @@ import {
 import { ragAiApiRef, RagAiClient } from './api';
 
 export const ragAiPlugin = createPlugin({
-  id: 'rag-ai',
+  id: 'ai-core',
   apis: [
     createApiFactory({
       api: ragAiApiRef,

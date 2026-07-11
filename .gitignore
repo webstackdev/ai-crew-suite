@@ -41,6 +41,7 @@ dist-types/
 # General cache directories
 .command-cache/
 artifacts/
+.turbo/
 
 # ==========================================
 # 4. Yarn 4 Plug'n'Play (PnP) Specifics

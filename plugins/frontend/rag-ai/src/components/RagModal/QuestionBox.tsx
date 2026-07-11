@@ -16,8 +16,9 @@
 
 /* eslint-disable jsx-a11y/no-autofocus */
 
-import { ChangeEvent, KeyboardEvent, useCallback, useState } from 'react';
+import { ChangeEvent, KeyboardEvent, useCallback, useEffect, useState } from 'react';
 import {
+  Divider,
   Button,
   FormControl,
   Grid,
@@ -29,16 +30,32 @@ import {
   TextField,
 } from '@material-ui/core';
 import LooksIcon from '@material-ui/icons/Looks';
+import { AiAgentSummary } from '../../types';
 
 export const QuestionBox = (props: {
-  onSubmit: (query: string, source: string) => {};
+  onSubmit: (query: string, source: string, agentId: string) => {};
   onClear: () => void;
   fullWidth: boolean;
+  agents: AiAgentSummary[];
+  selectedAgentId?: string;
 }) => {
-  const { onSubmit = () => {}, fullWidth = true, onClear } = props;
+  const {
+    onSubmit = () => {},
+    fullWidth = true,
+    onClear,
+    agents,
+    selectedAgentId,
+  } = props;
   const [label, setLabel] = useState('Ask the LLM');
   const [value, setValue] = useState<string>('');
   const [source, setSource] = useState<string>('all');
+  const [agentId, setAgentId] = useState<string>(selectedAgentId ?? '');
+
+  useEffect(() => {
+    if (selectedAgentId) {
+      setAgentId(selectedAgentId);
+    }
+  }, [selectedAgentId]);
 
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -53,10 +70,10 @@ export const QuestionBox = (props: {
   const handleKeyDown = useCallback(
     (e: KeyboardEvent<HTMLDivElement>) => {
       if (e.ctrlKey && e.key === 'Enter') {
-        onSubmit(value, source);
+        onSubmit(value, source, agentId);
       }
     },
-    [onSubmit, value, source],
+    [onSubmit, value, source, agentId],
   );
 
   const handleClear = useCallback(() => {
@@ -123,10 +140,31 @@ export const QuestionBox = (props: {
           variant="outlined"
           size="large"
           fullWidth
-          onClick={() => onSubmit(value, source)}
+          onClick={() => onSubmit(value, source, agentId)}
+          disabled={!agentId}
         >
           Ask
         </Button>
+      </Grid>
+      <Grid item xs={12}>
+        <FormControl variant="outlined" fullWidth margin="dense">
+          <InputLabel id="question-box-agent">Agent</InputLabel>
+          <Select
+            labelId="question-box-agent"
+            value={agentId}
+            label="Agent"
+            onChange={e => setAgentId(e.target.value as string)}
+          >
+            {agents.map(agent => (
+              <MenuItem key={agent.id} value={agent.id}>
+                {agent.id}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </Grid>
+      <Grid item xs={12}>
+        <Divider />
       </Grid>
       <Grid item xs={12}>
         <FormControl variant="outlined" fullWidth margin="dense">

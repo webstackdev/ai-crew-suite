@@ -158,84 +158,6 @@ export class RagAiController {
       .send({ response: `Embeddings deleted for source ${source}` });
   };
 
-  query = async (req: Request, res: Response) => {
-    // TODO: Remove the need for source in query when we have magical abilities to create very good embeddings
-    const source = req.params.source as EmbeddingsSource;
-    const query = req.body.query;
-    const entityFilter = req.body.entityFilter;
-    const requestSessionId =
-      typeof req.body.sessionId === 'string' && req.body.sessionId
-        ? req.body.sessionId
-        : undefined;
-    const selectedAgentId =
-      typeof req.body.agentId === 'string' && req.body.agentId
-        ? req.body.agentId
-        : this.defaultAgentId;
-    const selectedAgent = this.agents.get(selectedAgentId);
-
-    if (!selectedAgent) {
-      res.status(422).send({
-        message: `Unknown agent '${selectedAgentId}'`,
-      });
-      return;
-    }
-
-    const model = this.models.get(selectedAgent.modelRef);
-    if (!model) {
-      res.status(500).send({
-        message: `Agent '${selectedAgent.id}' references unknown model '${selectedAgent.modelRef}'`,
-      });
-      return;
-    }
-
-    const runId = randomUUID();
-    const sessionId =
-      selectedAgent.memory === 'session' && this.sessionStore
-        ? requestSessionId ??
-          (await this.sessionStore.createSession(selectedAgent.id, 'anonymous'))
-        : undefined;
-
-    res.writeHead(200, {
-      'Content-Type': 'text/event-stream',
-      Connection: 'keep-alive',
-      'Cache-Control': 'no-cache',
-    });
-
-    try {
-      for await (const event of this.executeRun(
-        {
-          runId,
-          agentId: selectedAgent.id,
-          input: {
-            query,
-            source,
-            sessionId,
-            entityFilter,
-          },
-        },
-        model,
-        selectedAgent,
-      )) {
-        this.writeEvent(res, event);
-        res.flush?.();
-      }
-    } catch (e: any) {
-      this.writeEvent(res, {
-        type: 'error',
-        data: {
-          runId,
-          message: e?.message ?? 'Failed to run query',
-        },
-      });
-      this.logger.error(
-        `There was an error executing query ${query} for source ${source} on entity ${entityFilter}: ${e.message}`,
-        e,
-      );
-    }
-
-    res.end();
-  };
-
   startRun = async (req: Request, res: Response) => {
     const agentId = req.params.id;
     const selectedAgent = this.agents.get(agentId);
@@ -372,6 +294,33 @@ export class RagAiController {
     return res.end();
   };
 
+  streamRunEvents = async (req: Request, res: Response) => {
+    const runId = req.params.id;
+    const run = await this.runStore?.getRun(runId);
+    if (!run) {
+      return res.status(404).send({ message: `Run '${runId}' not found` });
+    }
+
+    const sinceSeq = this.parseLastEventId(req.header('last-event-id'));
+    const steps = await this.runStore?.listRunSteps(runId, sinceSeq);
+
+    res.writeHead(200, {
+      'Content-Type': 'text/event-stream',
+      Connection: 'keep-alive',
+      'Cache-Control': 'no-cache',
+    });
+
+    for (const step of steps ?? []) {
+      const event = this.fromStoredStep(step.type, step.payload);
+      if (event) {
+        this.writeEvent(res, event, step.seq);
+        res.flush?.();
+      }
+    }
+
+    return res.end();
+  };
+
   triggerRun = async (req: Request, res: Response) => {
     const source = req.params.source;
     const trigger = this.triggers.find(it => (it.source ?? it.id) === source);
@@ -458,6 +407,23 @@ export class RagAiController {
     }
 
     return res.end();
+  };
+
+  webhookRun = async (req: Request, res: Response) => {
+    const provider = req.params.provider;
+    const idempotencyKey =
+      req.body?.idempotencyKey ??
+      (typeof req.header('x-idempotency-key') === 'string'
+        ? req.header('x-idempotency-key')
+        : undefined);
+
+    req.body = {
+      ...req.body,
+      idempotencyKey,
+      trigger: `webhook:${provider}`,
+    };
+
+    return this.triggerRun(req, res);
   };
 
   private async *executeRun(
@@ -552,52 +518,41 @@ export class RagAiController {
     return true;
   }
 
-  private writeEvent = (res: Response, event: AgentEvent): void => {
+  private writeEvent = (res: Response, event: AgentEvent, seq?: number): void => {
+    if (typeof seq === 'number') {
+      res.write(`id: ${seq}\n`);
+    }
     res.write(`event: ${event.type}\n`);
     res.write(`data: ${JSON.stringify(event.data)}\n\n`);
-
-    // Compatibility aliases for existing frontend consumers during migration.
-    if (event.type === 'token') {
-      const lines = event.data.text.split('\n');
-      res.write('event: response\n');
-      for (const line of lines) {
-        res.write(`data: ${line}\n`);
-      }
-      res.write('\n');
-    }
-
-    if (event.type === 'tool_result' && event.data.tool === 'knowledge.retrieve') {
-      const embeddings = (event.data.output as any)?.embeddings;
-      if (Array.isArray(embeddings)) {
-        res.write('event: embeddings\n');
-        res.write(`data: ${JSON.stringify(embeddings)}\n\n`);
-      }
-    }
-
-    if (event.type === 'usage') {
-      res.write('event: usage\n');
-      res.write(
-        `data: ${JSON.stringify({
-          input_tokens: event.data.input,
-          output_tokens: event.data.output,
-          total_tokens: event.data.total,
-        })}\n\n`,
-      );
-    }
-
-    if (event.type === 'approval_request') {
-      res.write('event: approval_request\n');
-      res.write(`data: ${JSON.stringify(event.data)}\n\n`);
-    }
-
-    if (event.type === 'artifact') {
-      res.write('event: artifact\n');
-      res.write(`data: ${JSON.stringify(event.data)}\n\n`);
-    }
-
-    if (event.type === 'error') {
-      res.write('event: error\n');
-      res.write(`data: ${event.data.message}\n\n`);
-    }
   };
+
+  private parseLastEventId(value?: string): number {
+    if (!value) {
+      return 0;
+    }
+
+    const parsed = Number.parseInt(value, 10);
+    return Number.isFinite(parsed) && parsed > 0 ? parsed : 0;
+  }
+
+  private fromStoredStep(type: string, payload: unknown): AgentEvent | undefined {
+    if (
+      type === 'step' ||
+      type === 'token' ||
+      type === 'tool_call' ||
+      type === 'tool_result' ||
+      type === 'usage' ||
+      type === 'approval_request' ||
+      type === 'artifact' ||
+      type === 'done' ||
+      type === 'error'
+    ) {
+      return {
+        type,
+        data: payload as AgentEvent['data'],
+      } as AgentEvent;
+    }
+
+    return undefined;
+  }
 }

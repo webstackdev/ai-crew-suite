@@ -177,6 +177,23 @@ export class PgAgentRuntimeStore
     });
   }
 
+  async listRunSteps(runId: string, sinceSeq = 0) {
+    const rows = await this.client('ai_run_steps')
+      .select('seq', 'type', 'payload')
+      .where({ run_id: runId })
+      .andWhere('seq', '>', sinceSeq)
+      .orderBy('seq', 'asc');
+
+    return rows.map(row => ({
+      seq: row.seq,
+      type: row.type,
+      payload:
+        typeof row.payload === 'string'
+          ? JSON.parse(row.payload)
+          : row.payload,
+    }));
+  }
+
   async createApproval(request: ApprovalRequest): Promise<void> {
     await this.client('ai_approvals').insert({
       id: request.id,

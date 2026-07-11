@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Box,
+  Button,
   DialogContent,
   DialogTitle,
   Grid,
@@ -31,7 +32,7 @@ import { EmbeddingsView } from './EmbeddingsView';
 import Dialog from '@material-ui/core/Dialog';
 import { ragAiApiRef } from '../../api';
 import { useApi } from '@backstage/core-plugin-api';
-import { ResponseEmbedding } from '../../types';
+import { AiAgentSummary, AiRunEvent, ResponseEmbedding } from '../../types';
 import { Thinking } from './Thinking';
 import { WarningPanel } from '@backstage/core-components';
 
@@ -91,21 +92,58 @@ export const ControlledRagModal = ({
   const [embeddings, setEmbeddings] = useState<ResponseEmbedding[]>([]);
   const [warning, setWarning] = useState<string | undefined>();
   const [sessionId, setSessionId] = useState<string | undefined>();
+  const [agents, setAgents] = useState<AiAgentSummary[]>([]);
+  const [timeline, setTimeline] = useState<string[]>([]);
+  const [artifacts, setArtifacts] = useState<{ kind: string; url?: string; ref?: string }[]>(
+    [],
+  );
+  const [activeRunId, setActiveRunId] = useState<string | undefined>();
+  const [pendingApproval, setPendingApproval] = useState<
+    | {
+        runId: string;
+        approvalId: string;
+        reason: string;
+      }
+    | undefined
+  >();
   const ragApi = useApi(ragAiApiRef);
-  const askLlm = useCallback(
-    async (question: string, source: string) => {
-      setThinking(true);
-      setQuestionResult('');
-      setWarning(undefined);
-      setEmbeddings([]);
 
-      for await (const chunk of ragApi.ask(question, source, undefined, sessionId)) {
+  const selectedAgentId = useMemo(() => agents[0]?.id, [agents]);
+
+  useEffect(() => {
+    let mounted = true;
+    ragApi
+      .listAgents()
+      .then(response => {
+        if (mounted) {
+          setAgents(response);
+        }
+      })
+      .catch(() => {
+        if (mounted) {
+          setWarning('Failed to load agents');
+        }
+      });
+
+    return () => {
+      mounted = false;
+    };
+  }, [ragApi]);
+
+  const consumeEvents = useCallback(
+    async (events: AsyncGenerator<AiRunEvent>) => {
+      for await (const chunk of events) {
+        setActiveRunId(chunk.data.runId);
         switch (chunk.type) {
           case 'token': {
             setQuestionResult(value => value + chunk.data.text);
             break;
           }
           case 'tool_result': {
+            setTimeline(value => [
+              ...value,
+              `${chunk.data.tool}: ${chunk.data.ok ? 'ok' : 'failed'}`,
+            ]);
             if (chunk.data.tool === 'knowledge.retrieve' && chunk.data.ok) {
               const payload = chunk.data.output as
                 | { embeddings?: ResponseEmbedding[] }
@@ -116,37 +154,53 @@ export const ControlledRagModal = ({
             }
             break;
           }
-          case 'error': {
-            setWarning(chunk.data.message);
-            break;
-          }
-          case 'usage': {
-            // Do nothing
-            break;
-          }
           case 'step': {
-            // Do nothing
+            setTimeline(value => [
+              ...value,
+              `${chunk.data.node}: ${chunk.data.phase}`,
+            ]);
             break;
           }
           case 'tool_call': {
-            // Do nothing
-            break;
-          }
-          case 'done': {
-            if (chunk.data.sessionId) {
-              setSessionId(chunk.data.sessionId);
-            }
-            // Do nothing
+            setTimeline(value => [...value, `calling ${chunk.data.tool}`]);
             break;
           }
           case 'approval_request': {
+            setPendingApproval({
+              runId: chunk.data.runId,
+              approvalId: chunk.data.approvalId,
+              reason: chunk.data.reason,
+            });
             setWarning(chunk.data.reason);
             break;
           }
           case 'artifact': {
-            if (chunk.data.url) {
-              setWarning(`Artifact generated: ${chunk.data.url}`);
+            setArtifacts(value => [
+              ...value,
+              {
+                kind: chunk.data.kind,
+                ref: chunk.data.ref,
+                url: chunk.data.url,
+              },
+            ]);
+            break;
+          }
+          case 'error': {
+            setWarning(chunk.data.message);
+            break;
+          }
+          case 'done': {
+            setPendingApproval(undefined);
+            if (chunk.data.sessionId) {
+              setSessionId(chunk.data.sessionId);
             }
+            break;
+          }
+          case 'usage': {
+            setTimeline(value => [
+              ...value,
+              `usage total tokens: ${chunk.data.total}`,
+            ]);
             break;
           }
           default: {
@@ -155,11 +209,56 @@ export const ControlledRagModal = ({
           }
         }
       }
+    },
+    [setActiveRunId],
+  );
+
+  const askLlm = useCallback(
+    async (question: string, source: string, agentId: string) => {
+      setThinking(true);
+      setQuestionResult('');
+      setWarning(undefined);
+      setEmbeddings([]);
+      setArtifacts([]);
+      setTimeline([]);
+      setPendingApproval(undefined);
+
+      await consumeEvents(
+        ragApi.startRun(
+          agentId,
+          {
+            query: question,
+            source,
+          },
+          {
+            sessionId,
+          },
+        ),
+      );
 
       setThinking(false);
     },
-    [ragApi, sessionId],
+    [consumeEvents, ragApi, sessionId],
   );
+
+  const decideApproval = useCallback(
+    async (status: 'approved' | 'rejected') => {
+      if (!pendingApproval) {
+        return;
+      }
+
+      setThinking(true);
+      setWarning(undefined);
+      await consumeEvents(
+        ragApi.approveRun(pendingApproval.runId, {
+          status,
+        }),
+      );
+      setThinking(false);
+    },
+    [consumeEvents, pendingApproval, ragApi],
+  );
+
   useHotkeys(hotkey, () => setOpen(true), []);
   return (
     <Dialog
@@ -169,6 +268,10 @@ export const ControlledRagModal = ({
         setThinking(false);
         setQuestionResult('');
         setEmbeddings([]);
+        setArtifacts([]);
+        setTimeline([]);
+        setPendingApproval(undefined);
+        setActiveRunId(undefined);
         setSessionId(undefined);
       }}
       fullWidth
@@ -189,14 +292,65 @@ export const ControlledRagModal = ({
           <QuestionBox
             onSubmit={askLlm}
             fullWidth
+            agents={agents}
+            selectedAgentId={selectedAgentId}
             onClear={() => {
               setQuestionResult('');
               setEmbeddings([]);
+              setArtifacts([]);
+              setTimeline([]);
+              setPendingApproval(undefined);
               setSessionId(undefined);
             }}
           />
         </Box>
         {warning && <WarningPanel severity="warning" message={warning} />}
+        {pendingApproval && (
+          <Box pt={2}>
+            <Typography variant="subtitle2">
+              Approval needed ({pendingApproval.approvalId}): {pendingApproval.reason}
+            </Typography>
+            <Box pt={1} display="flex" style={{ gap: 8 }}>
+              <Button variant="contained" color="primary" onClick={() => decideApproval('approved')}>
+                Approve
+              </Button>
+              <Button variant="contained" onClick={() => decideApproval('rejected')}>
+                Reject
+              </Button>
+            </Box>
+          </Box>
+        )}
+        {timeline.length > 0 && (
+          <Box pt={2}>
+            <Typography variant="h6">Run Timeline</Typography>
+            {activeRunId && <Typography variant="caption">Run: {activeRunId}</Typography>}
+            <Box component="ul" pl={3}>
+              {timeline.map((entry, index) => (
+                <li key={`${index}-${entry}`}>
+                  <Typography variant="body2">{entry}</Typography>
+                </li>
+              ))}
+            </Box>
+          </Box>
+        )}
+        {artifacts.length > 0 && (
+          <Box pt={2}>
+            <Typography variant="h6">Artifacts</Typography>
+            <Box component="ul" pl={3}>
+              {artifacts.map((artifact, index) => (
+                <li key={`${artifact.kind}-${index}`}>
+                  {artifact.url ? (
+                    <a href={artifact.url} target="_blank" rel="noreferrer">
+                      {artifact.kind}
+                    </a>
+                  ) : (
+                    <Typography variant="body2">{artifact.kind}</Typography>
+                  )}
+                </li>
+              ))}
+            </Box>
+          </Box>
+        )}
         {thinking && !questionResult && !warning ? (
           <Box p={6} display="flex" justifyContent="center" alignItems="center">
             <Thinking />

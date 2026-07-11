@@ -56,7 +56,7 @@ const createSourceRegistry = (): SourceRegistry => {
  * @public
  */
 export const ragAiPlugin = createBackendPlugin({
-  pluginId: 'rag-ai',
+  pluginId: 'ai-core',
   register(env) {
     const sourceRegistry = createSourceRegistry();
     const models = new Map<string, BaseLLM | BaseChatModel>();
