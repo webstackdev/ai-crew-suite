@@ -16,7 +16,7 @@
 import { LoggerService, DatabaseService } from '@backstage/backend-plugin-api';
 import { applyDatabaseMigrations } from '../database/migrations';
 
-import { VectorStore } from '@webstackbuilders/rag-ai-node';
+import { VectorStore } from '@webstackbuilders/plugin-ai-core-node';
 import { PgVectorStore } from './PgVectorStore';
 import { Config } from '@backstage/config';
 

@@ -20,7 +20,7 @@ import {
 } from '@backstage/backend-common';
 import { AuthService, LoggerService } from '@backstage/backend-plugin-api';
 import { ResponseError } from '@backstage/errors';
-import { EmbeddingDoc, EmbeddingsSource } from '@webstackbuilders/rag-ai-node';
+import { EmbeddingDoc, EmbeddingsSource } from '@webstackbuilders/plugin-ai-core-node';
 import { SearchResultSet } from '@backstage/plugin-search-common';
 
 export type SearchClientQuery = {

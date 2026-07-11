@@ -18,7 +18,7 @@ import {
   AugmentationPostProcessor,
   EmbeddingDoc,
   EmbeddingsSource,
-} from '@webstackbuilders/rag-ai-node';
+} from '@webstackbuilders/plugin-ai-core-node';
 
 export class CombiningPostProcessor implements AugmentationPostProcessor {
   async process(

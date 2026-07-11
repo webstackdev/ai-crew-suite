@@ -26,7 +26,7 @@ import {
   augmentationIndexerExtensionPoint,
   retrievalPipelineExtensionPoint,
   modelExtensionPoint,
-} from '@webstackbuilders/rag-ai-node';
+} from '@webstackbuilders/plugin-ai-core-node';
 import { createRouter } from './service/router';
 
 /**

@@ -10,7 +10,7 @@
 
 # RAG AI Backend-embeddings OpenAI submodule
 
-This is a submodule for the `@webstackbuilders/rag-ai-backend` module, which provides functionality to use OpenAI embeddings to generate a RAG AI Backend plugin for Backstage. It exposes configuration options to configure OpenAI API token and wanted embeddings model, as well as the parameters for the model.
+This is a submodule for the `@webstackbuilders/plugin-ai-core-backend` module, which provides functionality to use OpenAI embeddings to generate a RAG AI Backend plugin for Backstage. It exposes configuration options to configure OpenAI API token and wanted embeddings model, as well as the parameters for the model.
 
 ## Initialization
 

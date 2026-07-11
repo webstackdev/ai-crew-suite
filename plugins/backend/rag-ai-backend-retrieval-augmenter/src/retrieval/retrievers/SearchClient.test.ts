@@ -19,7 +19,7 @@ import {
   PluginEndpointDiscovery,
   TokenManager,
 } from '@backstage/backend-common';
-import { EmbeddingsSource } from '@webstackbuilders/rag-ai-node';
+import { EmbeddingsSource } from '@webstackbuilders/plugin-ai-core-node';
 
 describe('SearchClient', () => {
   let mockDiscoveryApi: PluginEndpointDiscovery;

@@ -43,7 +43,7 @@ App.tsx
 ```tsx
 
 // packages/app/src/App.tsx
-import { RagModal } from '@webstackbuilders/rag-ai';
+import { RagModal } from '@webstackbuilders/plugin-ai-core';
 
 ...
 const App = () => (
@@ -62,7 +62,7 @@ You can also choose to use the `SidebarRagModal` component instead. In addition 
 
 ```tsx
 // packages/app/src/components/Root/Root.tsx
-import { SidebarRagModal } from '@webstackbuilders/rag-ai';
+import { SidebarRagModal } from '@webstackbuilders/plugin-ai-core';
 ...
 export const Root = ({ children }: PropsWithChildren<{}>) => (
   <SidebarPage>

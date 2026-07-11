@@ -248,9 +248,9 @@ app:   228 B      [2mdist/static/[22m[36mreact-syntax-highlighter_languages_h
 app:   100 B      [2mdist/static/[22m[36m2468.01ff219c.chunk.js[39m
 Moving backend into dist workspace
 Moving app into dist workspace
-Moving @webstackbuilders/rag-ai-storage-pgvector into dist workspace
-Moving @webstackbuilders/rag-ai-node into dist workspace
-Moving @webstackbuilders/rag-ai-backend-embeddings-openai into dist workspace
-Moving @webstackbuilders/rag-ai-backend-retrieval-augmenter into dist workspace
-Moving @webstackbuilders/rag-ai-backend-embeddings-aws into dist workspace
-Moving @webstackbuilders/rag-ai-backend into dist workspace
+Moving @webstackbuilders/plugin-ai-storage-pgvector-node into dist workspace
+Moving @webstackbuilders/plugin-ai-core-node into dist workspace
+Moving @webstackbuilders/plugin-ai-embeddings-openai-node into dist workspace
+Moving @webstackbuilders/plugin-ai-retrieval-node into dist workspace
+Moving @webstackbuilders/plugin-ai-embeddings-aws-node into dist workspace
+Moving @webstackbuilders/plugin-ai-core-backend into dist workspace

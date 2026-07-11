@@ -1,0 +1,18 @@
+NOTICE
+
+This repository includes code derived from the Apache-2.0 licensed Roadie RAG AI plugins
+from the RoadieHQ/roadie-backstage-plugins project.
+
+Original copyright holder:
+- Larder Software Limited
+
+Derived plugin areas include:
+- plugins/backend/rag-ai-backend
+- plugins/backend/rag-ai-backend-embeddings-aws
+- plugins/backend/rag-ai-backend-embeddings-openai
+- plugins/backend/rag-ai-backend-retrieval-augmenter
+- plugins/backend/rag-ai-node
+- plugins/backend/rag-ai-storage-pgvector
+- plugins/frontend/rag-ai
+
+All derived files retain Apache-2.0 licensing and applicable source headers.

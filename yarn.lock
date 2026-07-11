@@ -12930,63 +12930,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@webstackbuilders/rag-ai-backend-embeddings-aws@workspace:^, @webstackbuilders/rag-ai-backend-embeddings-aws@workspace:plugins/backend/rag-ai-backend-embeddings-aws":
+"@webstackbuilders/plugin-ai-core-backend@workspace:^, @webstackbuilders/plugin-ai-core-backend@workspace:plugins/backend/rag-ai-backend":
   version: 0.0.0-use.local
-  resolution: "@webstackbuilders/rag-ai-backend-embeddings-aws@workspace:plugins/backend/rag-ai-backend-embeddings-aws"
-  dependencies:
-    "@aws-sdk/client-bedrock-runtime": "npm:^3.1085.0"
-    "@aws-sdk/types": "npm:^3.974.0"
-    "@backstage/backend-common": "npm:^0.25.0"
-    "@backstage/backend-plugin-api": "backstage:^"
-    "@backstage/catalog-client": "backstage:^"
-    "@backstage/cli": "backstage:^"
-    "@backstage/config": "backstage:^"
-    "@langchain/aws": "npm:^1.4.2"
-    "@langchain/core": "npm:^1.2.2"
-    "@webstackbuilders/rag-ai-backend": "workspace:^"
-    "@webstackbuilders/rag-ai-backend-retrieval-augmenter": "workspace:^"
-    "@webstackbuilders/rag-ai-node": "workspace:^"
-  languageName: unknown
-  linkType: soft
-
-"@webstackbuilders/rag-ai-backend-embeddings-openai@workspace:^, @webstackbuilders/rag-ai-backend-embeddings-openai@workspace:plugins/backend/rag-ai-backend-embeddings-openai":
-  version: 0.0.0-use.local
-  resolution: "@webstackbuilders/rag-ai-backend-embeddings-openai@workspace:plugins/backend/rag-ai-backend-embeddings-openai"
-  dependencies:
-    "@backstage/backend-common": "npm:^0.25.0"
-    "@backstage/backend-plugin-api": "backstage:^"
-    "@backstage/catalog-client": "backstage:^"
-    "@backstage/cli": "backstage:^"
-    "@backstage/config": "backstage:^"
-    "@langchain/core": "npm:^1.2.2"
-    "@langchain/openai": "npm:^1.5.5"
-    "@webstackbuilders/rag-ai-backend-retrieval-augmenter": "workspace:^"
-    "@webstackbuilders/rag-ai-node": "workspace:^"
-  languageName: unknown
-  linkType: soft
-
-"@webstackbuilders/rag-ai-backend-retrieval-augmenter@workspace:^, @webstackbuilders/rag-ai-backend-retrieval-augmenter@workspace:plugins/backend/rag-ai-backend-retrieval-augmenter":
-  version: 0.0.0-use.local
-  resolution: "@webstackbuilders/rag-ai-backend-retrieval-augmenter@workspace:plugins/backend/rag-ai-backend-retrieval-augmenter"
-  dependencies:
-    "@backstage/backend-common": "npm:^0.25.0"
-    "@backstage/backend-plugin-api": "backstage:^"
-    "@backstage/catalog-client": "backstage:^"
-    "@backstage/catalog-model": "backstage:^"
-    "@backstage/cli": "backstage:^"
-    "@backstage/errors": "backstage:^"
-    "@backstage/plugin-search-common": "backstage:^"
-    "@langchain/core": "npm:^1.2.2"
-    "@langchain/textsplitters": "npm:^1.0.1"
-    "@webstackbuilders/rag-ai-node": "workspace:^"
-    p-limit: "npm:^3.1.0"
-    vitest: "npm:^4.1.10"
-  languageName: unknown
-  linkType: soft
-
-"@webstackbuilders/rag-ai-backend@workspace:^, @webstackbuilders/rag-ai-backend@workspace:plugins/backend/rag-ai-backend":
-  version: 0.0.0-use.local
-  resolution: "@webstackbuilders/rag-ai-backend@workspace:plugins/backend/rag-ai-backend"
+  resolution: "@webstackbuilders/plugin-ai-core-backend@workspace:plugins/backend/rag-ai-backend"
   dependencies:
     "@backstage/backend-common": "npm:^0.25.0"
     "@backstage/backend-defaults": "backstage:^"
@@ -12997,16 +12943,16 @@ __metadata:
     "@types/compression": "npm:^1.8.1"
     "@types/express": "npm:4.17.25"
     "@types/lodash": "npm:^4.17.24"
-    "@webstackbuilders/rag-ai-node": "workspace:^"
+    "@webstackbuilders/plugin-ai-core-node": "workspace:^"
     express: "npm:^4.22.2"
     express-promise-router: "npm:^4.1.1"
     lodash: "npm:^4.18.1"
   languageName: unknown
   linkType: soft
 
-"@webstackbuilders/rag-ai-node@workspace:^, @webstackbuilders/rag-ai-node@workspace:plugins/backend/rag-ai-node":
+"@webstackbuilders/plugin-ai-core-node@workspace:^, @webstackbuilders/plugin-ai-core-node@workspace:plugins/backend/rag-ai-node":
   version: 0.0.0-use.local
-  resolution: "@webstackbuilders/rag-ai-node@workspace:plugins/backend/rag-ai-node"
+  resolution: "@webstackbuilders/plugin-ai-core-node@workspace:plugins/backend/rag-ai-node"
   dependencies:
     "@backstage/backend-plugin-api": "backstage:^"
     "@backstage/cli": "backstage:^"
@@ -13014,22 +12960,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@webstackbuilders/rag-ai-storage-pgvector@workspace:^, @webstackbuilders/rag-ai-storage-pgvector@workspace:plugins/backend/rag-ai-storage-pgvector":
+"@webstackbuilders/plugin-ai-core@workspace:plugins/frontend/rag-ai":
   version: 0.0.0-use.local
-  resolution: "@webstackbuilders/rag-ai-storage-pgvector@workspace:plugins/backend/rag-ai-storage-pgvector"
-  dependencies:
-    "@backstage/backend-plugin-api": "backstage:^"
-    "@backstage/cli": "backstage:^"
-    "@backstage/config": "backstage:^"
-    "@langchain/core": "npm:^1.2.2"
-    "@webstackbuilders/rag-ai-node": "workspace:^"
-    knex: "npm:^3.3.0"
-  languageName: unknown
-  linkType: soft
-
-"@webstackbuilders/rag-ai@workspace:plugins/frontend/rag-ai":
-  version: 0.0.0-use.local
-  resolution: "@webstackbuilders/rag-ai@workspace:plugins/frontend/rag-ai"
+  resolution: "@webstackbuilders/plugin-ai-core@workspace:plugins/frontend/rag-ai"
   dependencies:
     "@backstage/catalog-model": "backstage:^"
     "@backstage/cli": "backstage:^"
@@ -13055,6 +12988,73 @@ __metadata:
     react-type-animation: "npm:^3.2.0"
   peerDependencies:
     react: ^18.0.0
+  languageName: unknown
+  linkType: soft
+
+"@webstackbuilders/plugin-ai-embeddings-aws-node@workspace:^, @webstackbuilders/plugin-ai-embeddings-aws-node@workspace:plugins/backend/rag-ai-backend-embeddings-aws":
+  version: 0.0.0-use.local
+  resolution: "@webstackbuilders/plugin-ai-embeddings-aws-node@workspace:plugins/backend/rag-ai-backend-embeddings-aws"
+  dependencies:
+    "@aws-sdk/client-bedrock-runtime": "npm:^3.1085.0"
+    "@aws-sdk/types": "npm:^3.974.0"
+    "@backstage/backend-common": "npm:^0.25.0"
+    "@backstage/backend-plugin-api": "backstage:^"
+    "@backstage/catalog-client": "backstage:^"
+    "@backstage/cli": "backstage:^"
+    "@backstage/config": "backstage:^"
+    "@langchain/aws": "npm:^1.4.2"
+    "@langchain/core": "npm:^1.2.2"
+    "@webstackbuilders/plugin-ai-core-backend": "workspace:^"
+    "@webstackbuilders/plugin-ai-core-node": "workspace:^"
+    "@webstackbuilders/plugin-ai-retrieval-node": "workspace:^"
+  languageName: unknown
+  linkType: soft
+
+"@webstackbuilders/plugin-ai-embeddings-openai-node@workspace:^, @webstackbuilders/plugin-ai-embeddings-openai-node@workspace:plugins/backend/rag-ai-backend-embeddings-openai":
+  version: 0.0.0-use.local
+  resolution: "@webstackbuilders/plugin-ai-embeddings-openai-node@workspace:plugins/backend/rag-ai-backend-embeddings-openai"
+  dependencies:
+    "@backstage/backend-common": "npm:^0.25.0"
+    "@backstage/backend-plugin-api": "backstage:^"
+    "@backstage/catalog-client": "backstage:^"
+    "@backstage/cli": "backstage:^"
+    "@backstage/config": "backstage:^"
+    "@langchain/core": "npm:^1.2.2"
+    "@langchain/openai": "npm:^1.5.5"
+    "@webstackbuilders/plugin-ai-core-node": "workspace:^"
+    "@webstackbuilders/plugin-ai-retrieval-node": "workspace:^"
+  languageName: unknown
+  linkType: soft
+
+"@webstackbuilders/plugin-ai-retrieval-node@workspace:^, @webstackbuilders/plugin-ai-retrieval-node@workspace:plugins/backend/rag-ai-backend-retrieval-augmenter":
+  version: 0.0.0-use.local
+  resolution: "@webstackbuilders/plugin-ai-retrieval-node@workspace:plugins/backend/rag-ai-backend-retrieval-augmenter"
+  dependencies:
+    "@backstage/backend-common": "npm:^0.25.0"
+    "@backstage/backend-plugin-api": "backstage:^"
+    "@backstage/catalog-client": "backstage:^"
+    "@backstage/catalog-model": "backstage:^"
+    "@backstage/cli": "backstage:^"
+    "@backstage/errors": "backstage:^"
+    "@backstage/plugin-search-common": "backstage:^"
+    "@langchain/core": "npm:^1.2.2"
+    "@langchain/textsplitters": "npm:^1.0.1"
+    "@webstackbuilders/plugin-ai-core-node": "workspace:^"
+    p-limit: "npm:^3.1.0"
+    vitest: "npm:^4.1.10"
+  languageName: unknown
+  linkType: soft
+
+"@webstackbuilders/plugin-ai-storage-pgvector-node@workspace:^, @webstackbuilders/plugin-ai-storage-pgvector-node@workspace:plugins/backend/rag-ai-storage-pgvector":
+  version: 0.0.0-use.local
+  resolution: "@webstackbuilders/plugin-ai-storage-pgvector-node@workspace:plugins/backend/rag-ai-storage-pgvector"
+  dependencies:
+    "@backstage/backend-plugin-api": "backstage:^"
+    "@backstage/cli": "backstage:^"
+    "@backstage/config": "backstage:^"
+    "@langchain/core": "npm:^1.2.2"
+    "@webstackbuilders/plugin-ai-core-node": "workspace:^"
+    knex: "npm:^3.3.0"
   languageName: unknown
   linkType: soft
 
@@ -14225,11 +14225,11 @@ __metadata:
     "@backstage/plugin-search-backend-node": "npm:^1.4.5"
     "@backstage/plugin-signals-backend": "npm:^0.3.16"
     "@backstage/plugin-techdocs-backend": "npm:^2.2.1"
-    "@webstackbuilders/rag-ai-backend": "workspace:^"
-    "@webstackbuilders/rag-ai-backend-embeddings-aws": "workspace:^"
-    "@webstackbuilders/rag-ai-backend-embeddings-openai": "workspace:^"
-    "@webstackbuilders/rag-ai-node": "workspace:^"
-    "@webstackbuilders/rag-ai-storage-pgvector": "workspace:^"
+    "@webstackbuilders/plugin-ai-core-backend": "workspace:^"
+    "@webstackbuilders/plugin-ai-core-node": "workspace:^"
+    "@webstackbuilders/plugin-ai-embeddings-aws-node": "workspace:^"
+    "@webstackbuilders/plugin-ai-embeddings-openai-node": "workspace:^"
+    "@webstackbuilders/plugin-ai-storage-pgvector-node": "workspace:^"
     app: "link:../app"
     better-sqlite3: "npm:^12.11.1"
     node-gyp: "npm:^13.0.1"

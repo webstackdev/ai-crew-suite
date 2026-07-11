@@ -20,7 +20,7 @@ import {
   EmbeddingsSource,
   EntityFilterShape,
   VectorStore,
-} from '@webstackbuilders/rag-ai-node';
+} from '@webstackbuilders/plugin-ai-core-node';
 import { LoggerService } from '@backstage/backend-plugin-api';
 
 export class VectorEmbeddingsRetriever implements AugmentationRetriever {

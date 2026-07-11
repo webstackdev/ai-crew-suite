@@ -1,6 +1,6 @@
 {
-  "name": "@webstackbuilders/rag-ai-backend-embeddings-aws",
-  "description": "The AWS (Bedrock) backend module for the @webstackbuilders/rag-ai plugin.",
+  "name": "@webstackbuilders/plugin-ai-embeddings-aws-node",
+  "description": "The AWS (Bedrock) backend module for the @webstackbuilders/plugin-ai-core plugin.",
   "version": "0.0.1",
   "main": "src/index.ts",
   "types": "src/index.ts",
@@ -21,7 +21,7 @@
     "role": "backend-plugin-module",
     "pluginId": "rag-ai-backend-embeddings-aws",
     "pluginPackages": [
-      "@webstackbuilders/rag-ai-backend"
+      "@webstackbuilders/plugin-ai-core-backend"
     ]
   },
   "bugs": {
@@ -49,9 +49,9 @@
     "@backstage/config": "backstage:^",
     "@langchain/aws": "^1.4.2",
     "@langchain/core": "^1.2.2",
-    "@webstackbuilders/rag-ai-backend": "workspace:^",
-    "@webstackbuilders/rag-ai-backend-retrieval-augmenter": "workspace:^",
-    "@webstackbuilders/rag-ai-node": "workspace:^"
+    "@webstackbuilders/plugin-ai-core-backend": "workspace:^",
+    "@webstackbuilders/plugin-ai-core-node": "workspace:^",
+    "@webstackbuilders/plugin-ai-retrieval-node": "workspace:^"
   },
   "devDependencies": {
     "@backstage/cli": "backstage:^"

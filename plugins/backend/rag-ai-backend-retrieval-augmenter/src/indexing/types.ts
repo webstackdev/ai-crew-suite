@@ -19,7 +19,7 @@ import {
   PluginEndpointDiscovery,
   TokenManager,
 } from '@backstage/backend-common';
-import { VectorStore } from '@webstackbuilders/rag-ai-node';
+import { VectorStore } from '@webstackbuilders/plugin-ai-core-node';
 import { Entity } from '@backstage/catalog-model';
 
 export type AugmentationOptions = {

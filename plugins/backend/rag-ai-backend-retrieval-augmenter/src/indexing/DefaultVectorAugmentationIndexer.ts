@@ -33,7 +33,7 @@ import {
   EmbeddingsSource,
   EntityFilterShape,
   VectorStore,
-} from '@webstackbuilders/rag-ai-node';
+} from '@webstackbuilders/plugin-ai-core-node';
 import { SearchIndex, AugmentationOptions, TechDocsDocument } from './types';
 
 const TECHDOCS_ENTITY_FILTER = {

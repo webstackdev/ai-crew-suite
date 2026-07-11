@@ -1,5 +1,5 @@
 {
-  "name": "@webstackbuilders/rag-ai-backend-retrieval-augmenter",
+  "name": "@webstackbuilders/plugin-ai-retrieval-node",
   "version": "0.0.1",
   "main": "src/index.ts",
   "types": "src/index.ts",
@@ -20,7 +20,7 @@
   "backstage": {
     "role": "backend-plugin-module",
     "pluginId": "rag-ai-backend-retrieval-augmenter",
-    "pluginPackage": "@webstackbuilders/rag-ai-backend"
+    "pluginPackage": "@webstackbuilders/plugin-ai-core-backend"
   },
   "bugs": {
     "url": "https://github.com/webstack-builders/roadie-backstage-plugins/issues",
@@ -47,7 +47,7 @@
     "@backstage/plugin-search-common": "backstage:^",
     "@langchain/core": "^1.2.2",
     "@langchain/textsplitters": "^1.0.1",
-    "@webstackbuilders/rag-ai-node": "workspace:^",
+    "@webstackbuilders/plugin-ai-core-node": "workspace:^",
     "p-limit": "^3.1.0"
   },
   "devDependencies": {

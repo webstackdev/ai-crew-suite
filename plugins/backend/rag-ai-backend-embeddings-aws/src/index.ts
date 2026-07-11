@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { AugmentationIndexer, VectorStore } from '@webstackbuilders/rag-ai-node';
+import { AugmentationIndexer, VectorStore } from '@webstackbuilders/plugin-ai-core-node';
 import {
   BedrockConfig,
   BedrockAugmenter,
@@ -25,7 +25,7 @@ import {
 } from '@backstage/backend-common';
 import { AwsCredentialIdentity, Provider } from '@aws-sdk/types';
 import { Config } from '@backstage/config';
-import { AugmentationOptions } from '@webstackbuilders/rag-ai-backend-retrieval-augmenter';
+import { AugmentationOptions } from '@webstackbuilders/plugin-ai-retrieval-node';
 import { AuthService, LoggerService } from '@backstage/backend-plugin-api';
 
 export interface BedrockEmbeddingsConfig {

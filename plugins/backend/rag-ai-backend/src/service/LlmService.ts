@@ -17,7 +17,7 @@ import { BaseLLM } from '@langchain/core/language_models/llms';
 import { BaseChatModel } from '@langchain/core/language_models/chat_models';
 import { AIMessageChunk } from '@langchain/core/messages';
 import { IterableReadableStream } from '@langchain/core/utils/stream';
-import { EmbeddingDoc } from '@webstackbuilders/rag-ai-node';
+import { EmbeddingDoc } from '@webstackbuilders/plugin-ai-core-node';
 import { LoggerService } from '@backstage/backend-plugin-api';
 import { createPromptTemplates } from './prompts';
 

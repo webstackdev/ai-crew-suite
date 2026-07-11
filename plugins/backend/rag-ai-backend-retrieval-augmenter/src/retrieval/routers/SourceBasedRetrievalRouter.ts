@@ -18,7 +18,7 @@ import {
   AugmentationRetriever,
   EmbeddingsSource,
   RetrievalRouter,
-} from '@webstackbuilders/rag-ai-node';
+} from '@webstackbuilders/plugin-ai-core-node';
 import { LoggerService } from '@backstage/backend-plugin-api';
 
 export class SourceBasedRetrievalRouter implements RetrievalRouter {

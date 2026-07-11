@@ -4,7 +4,7 @@ Roadie gives you a hassle-free, fully customisable SaaS Backstage. Find out more
 
 Amongst others, the following plugins can be found within this repo:
 
-- [AI Assistant - RAG AI](https://www.npmjs.com/package/@webstackbuilders/rag-ai)
+- [AI Assistant - RAG AI](https://www.npmjs.com/package/@webstackbuilders/plugin-ai-core)
 
 - [Github Pull Requests](https://www.npmjs.com/package/@webstackbuilders/backstage-plugin-github-pull-requests)
 

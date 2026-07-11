@@ -8,7 +8,7 @@
 
 ---
 
-# @webstackbuilders/rag-ai-node
+# @webstackbuilders/plugin-ai-core-node
 
 This package contains types and interfaces to support RAG AI backend modules.
 

@@ -18,7 +18,7 @@ import {
   TokenManager,
 } from '@backstage/backend-common';
 import { AuthService, LoggerService } from '@backstage/backend-plugin-api';
-import { VectorStore } from '@webstackbuilders/rag-ai-node';
+import { VectorStore } from '@webstackbuilders/plugin-ai-core-node';
 import {
   DefaultRetrievalPipeline,
   SearchRetriever,

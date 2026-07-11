@@ -18,7 +18,7 @@ import { AwsCredentialIdentity, Provider } from '@aws-sdk/types';
 import {
   DefaultVectorAugmentationIndexer,
   EmbeddingsConfig,
-} from '@webstackbuilders/rag-ai-backend-retrieval-augmenter';
+} from '@webstackbuilders/plugin-ai-retrieval-node';
 import { BedrockCohereEmbeddings } from './BedrockCohereEmbeddings';
 
 export type BedrockConfig = {

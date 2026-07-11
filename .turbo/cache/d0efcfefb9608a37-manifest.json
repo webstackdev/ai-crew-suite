@@ -1,0 +1,55 @@
+{
+  "files": {
+    "plugins/backend/rag-ai-node/.turbo/turbo-build.log": {
+      "size": 1,
+      "mtime_nanos": 1783733446169579685,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/backend/rag-ai-node/dist/index.cjs.js": {
+      "size": 343,
+      "mtime_nanos": 1783733446124579583,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/backend/rag-ai-node/dist/index.cjs.js.map": {
+      "size": 101,
+      "mtime_nanos": 1783733446124579583,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/backend/rag-ai-node/dist/index.d.ts": {
+      "size": 3135,
+      "mtime_nanos": 1783733446101579531,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/backend/rag-ai-node/dist/extensions.cjs.js": {
+      "size": 663,
+      "mtime_nanos": 1783733446124579583,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/backend/rag-ai-node/dist/extensions.cjs.js.map": {
+      "size": 2028,
+      "mtime_nanos": 1783733446124579583,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/backend/rag-ai-node/dist": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    }
+  },
+  "order": [
+    "plugins/backend/rag-ai-node/.turbo/turbo-build.log",
+    "plugins/backend/rag-ai-node/dist",
+    "plugins/backend/rag-ai-node/dist/extensions.cjs.js",
+    "plugins/backend/rag-ai-node/dist/extensions.cjs.js.map",
+    "plugins/backend/rag-ai-node/dist/index.cjs.js",
+    "plugins/backend/rag-ai-node/dist/index.cjs.js.map",
+    "plugins/backend/rag-ai-node/dist/index.d.ts"
+  ]
+}

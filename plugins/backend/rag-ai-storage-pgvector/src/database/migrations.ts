@@ -19,7 +19,7 @@ import { Knex } from 'knex';
 
 export async function applyDatabaseMigrations(knex: Knex): Promise<void> {
   const migrationsDir = resolvePackagePath(
-    '@webstackbuilders/rag-ai-storage-pgvector',
+    '@webstackbuilders/plugin-ai-storage-pgvector-node',
     'migrations',
   );
 

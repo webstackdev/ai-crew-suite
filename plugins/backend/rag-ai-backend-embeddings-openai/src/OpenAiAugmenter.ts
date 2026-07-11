@@ -17,7 +17,7 @@ import { OpenAIEmbeddings } from '@langchain/openai';
 import {
   DefaultVectorAugmentationIndexer,
   EmbeddingsConfig,
-} from '@webstackbuilders/rag-ai-backend-retrieval-augmenter';
+} from '@webstackbuilders/plugin-ai-retrieval-node';
 
 export type OpenAiConfig = {
   modelName?: string;

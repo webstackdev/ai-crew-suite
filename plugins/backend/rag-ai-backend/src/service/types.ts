@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { AugmentationIndexer, RetrievalPipeline } from '@webstackbuilders/rag-ai-node';
+import { AugmentationIndexer, RetrievalPipeline } from '@webstackbuilders/plugin-ai-core-node';
 import { LoggerService } from '@backstage/backend-plugin-api';
 import { BaseLLM } from '@langchain/core/language_models/llms';
 import { BaseChatModel } from '@langchain/core/language_models/chat_models';

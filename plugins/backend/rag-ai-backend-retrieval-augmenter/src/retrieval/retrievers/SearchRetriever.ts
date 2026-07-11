@@ -18,7 +18,7 @@ import {
   AugmentationRetriever,
   EmbeddingDoc,
   EmbeddingsSource,
-} from '@webstackbuilders/rag-ai-node';
+} from '@webstackbuilders/plugin-ai-core-node';
 import { SearchClient } from './SearchClient';
 import {
   PluginEndpointDiscovery,

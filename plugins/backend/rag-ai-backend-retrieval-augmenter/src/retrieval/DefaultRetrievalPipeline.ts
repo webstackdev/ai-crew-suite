@@ -22,7 +22,7 @@ import {
   EntityFilterShape,
   RetrievalPipeline,
   RetrievalRouter,
-} from '@webstackbuilders/rag-ai-node';
+} from '@webstackbuilders/plugin-ai-core-node';
 import { CombiningPostProcessor } from './postProcessors/CombiningPostProcessor';
 
 export class DefaultRetrievalPipeline implements RetrievalPipeline {

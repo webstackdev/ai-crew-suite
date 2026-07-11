@@ -20,8 +20,8 @@ import {
   TokenManager,
 } from '@backstage/backend-common';
 import { Config } from '@backstage/config';
-import { AugmentationOptions } from '@webstackbuilders/rag-ai-backend-retrieval-augmenter';
-import { AugmentationIndexer, VectorStore } from '@webstackbuilders/rag-ai-node';
+import { AugmentationOptions } from '@webstackbuilders/plugin-ai-retrieval-node';
+import { AugmentationIndexer, VectorStore } from '@webstackbuilders/plugin-ai-core-node';
 import { OpenAiConfig, OpenAiAugmenter } from './OpenAiAugmenter';
 
 export interface BedrockEmbeddingsConfig {

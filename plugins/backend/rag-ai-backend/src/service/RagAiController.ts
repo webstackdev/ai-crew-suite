@@ -20,7 +20,7 @@ import {
   AugmentationIndexer,
   EmbeddingsSource,
   RetrievalPipeline,
-} from '@webstackbuilders/rag-ai-node';
+} from '@webstackbuilders/plugin-ai-core-node';
 // For Response.flush()
 // @ts-ignore
 import type compression from 'compression';

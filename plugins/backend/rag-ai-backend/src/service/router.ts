@@ -21,7 +21,7 @@ import { isEmpty } from 'lodash';
 import { MiddlewareFactory } from '@backstage/backend-defaults/rootHttpRouter';
 import { RootConfigService } from '@backstage/backend-plugin-api';
 import { LoggerService } from '@backstage/backend-plugin-api';
-import { AugmentationIndexer, RetrievalPipeline } from '@webstackbuilders/rag-ai-node';
+import { AugmentationIndexer, RetrievalPipeline } from '@webstackbuilders/plugin-ai-core-node';
 import { LlmService } from './LlmService';
 import { RagAiController } from './RagAiController';
 

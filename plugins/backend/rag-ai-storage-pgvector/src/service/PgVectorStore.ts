@@ -18,7 +18,7 @@ import {
   EmbeddingDocMetadata,
   EmbeddingDoc,
   VectorStore,
-} from '@webstackbuilders/rag-ai-node';
+} from '@webstackbuilders/plugin-ai-core-node';
 import { Embeddings } from '@langchain/core/embeddings';
 import { Knex } from 'knex';
 
