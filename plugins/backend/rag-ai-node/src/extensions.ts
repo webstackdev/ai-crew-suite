@@ -14,33 +14,52 @@
  * limitations under the License.
  */
 
-import { AugmentationIndexer, RetrievalPipeline } from './types';
+import {
+  AgentDefinition,
+  ModelDefinition,
+  SourceDescriptor,
+  ToolDefinition,
+  TriggerBinding,
+} from './types';
 import { createExtensionPoint } from '@backstage/backend-plugin-api';
-import { BaseChatModel } from '@langchain/core/language_models/chat_models';
-import { BaseLLM } from '@langchain/core/language_models/llms';
 
-export interface AugmentationIndexerExtensionPoint {
-  setAugmentationIndexer(augmentationIndexer: AugmentationIndexer): void;
+export interface SourceExtensionPoint {
+  addSource(source: SourceDescriptor): void;
 }
 
-export const augmentationIndexerExtensionPoint =
-  createExtensionPoint<AugmentationIndexerExtensionPoint>({
-    id: 'rag-ai.augmentation-indexer',
-  });
+export const sourceExtensionPoint = createExtensionPoint<SourceExtensionPoint>({
+  id: 'plugin-ai.source',
+});
 
-export interface RetrievalPipelineExtensionPoint {
-  setRetrievalPipeline(retrievalPipeline: RetrievalPipeline): void;
+export interface ToolExtensionPoint {
+  addTool(tool: ToolDefinition): void;
 }
 
-export const retrievalPipelineExtensionPoint =
-  createExtensionPoint<RetrievalPipelineExtensionPoint>({
-    id: 'rag-ai.retrieval-pipeline',
-  });
+export const toolExtensionPoint = createExtensionPoint<ToolExtensionPoint>({
+  id: 'plugin-ai.tool',
+});
 
 export interface ModelExtensionPoint {
-  setBaseLLM(baseLLM: BaseLLM | BaseChatModel): void;
+  addModel(model: ModelDefinition): void;
 }
 
 export const modelExtensionPoint = createExtensionPoint<ModelExtensionPoint>({
-  id: 'rag-ai.model',
+  id: 'plugin-ai.model',
 });
+
+export interface AgentExtensionPoint {
+  addAgent(agent: AgentDefinition): void;
+}
+
+export const agentExtensionPoint = createExtensionPoint<AgentExtensionPoint>({
+  id: 'plugin-ai.agent',
+});
+
+export interface TriggerExtensionPoint {
+  addTrigger(trigger: TriggerBinding): void;
+}
+
+export const triggerExtensionPoint =
+  createExtensionPoint<TriggerExtensionPoint>({
+    id: 'plugin-ai.trigger',
+  });

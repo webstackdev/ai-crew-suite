@@ -17,10 +17,13 @@ import { Request, Response } from 'express';
 import { LoggerService } from '@backstage/backend-plugin-api';
 import { LlmService } from './LlmService';
 import {
+  AgentDefinition,
   AugmentationIndexer,
   EmbeddingsSource,
   RetrievalPipeline,
 } from '@webstackbuilders/plugin-ai-core-node';
+import { BaseLLM } from '@langchain/core/language_models/llms';
+import { BaseChatModel } from '@langchain/core/language_models/chat_models';
 // For Response.flush()
 // @ts-ignore
 import type compression from 'compression';
@@ -32,44 +35,30 @@ type UsageMetadata = {
 };
 
 export class RagAiController {
-  private static instance: RagAiController;
   private readonly llmService: LlmService;
   private readonly augmentationIndexer: AugmentationIndexer;
   private readonly retrievalPipeline?: RetrievalPipeline;
+  private readonly models: Map<string, BaseLLM | BaseChatModel>;
+  private readonly agents: Map<string, AgentDefinition>;
+  private readonly defaultAgentId: string;
   private logger: LoggerService;
 
   constructor(
     logger: LoggerService,
     llmService: LlmService,
     augmentationIndexer: AugmentationIndexer,
+    models: Map<string, BaseLLM | BaseChatModel>,
+    agents: Map<string, AgentDefinition>,
+    defaultAgentId: string,
     retrievalPipeline?: RetrievalPipeline,
   ) {
     this.logger = logger;
     this.llmService = llmService;
     this.augmentationIndexer = augmentationIndexer;
+    this.models = models;
+    this.agents = agents;
+    this.defaultAgentId = defaultAgentId;
     this.retrievalPipeline = retrievalPipeline;
-  }
-
-  static getInstance({
-    logger,
-    llmService,
-    augmentationIndexer,
-    retrievalPipeline,
-  }: {
-    logger: LoggerService;
-    llmService: LlmService;
-    augmentationIndexer: AugmentationIndexer;
-    retrievalPipeline?: RetrievalPipeline;
-  }): RagAiController {
-    if (!RagAiController.instance) {
-      RagAiController.instance = new RagAiController(
-        logger,
-        llmService,
-        augmentationIndexer,
-        retrievalPipeline,
-      );
-    }
-    return RagAiController.instance;
   }
 
   createEmbeddings = async (req: Request, res: Response) => {
@@ -121,6 +110,26 @@ export class RagAiController {
     const source = req.params.source as EmbeddingsSource;
     const query = req.body.query;
     const entityFilter = req.body.entityFilter;
+    const selectedAgentId =
+      typeof req.body.agentId === 'string' && req.body.agentId
+        ? req.body.agentId
+        : this.defaultAgentId;
+    const selectedAgent = this.agents.get(selectedAgentId);
+
+    if (!selectedAgent) {
+      res.status(422).send({
+        message: `Unknown agent '${selectedAgentId}'`,
+      });
+      return;
+    }
+
+    const model = this.models.get(selectedAgent.modelRef);
+    if (!model) {
+      res.status(500).send({
+        message: `Agent '${selectedAgent.id}' references unknown model '${selectedAgent.modelRef}'`,
+      });
+      return;
+    }
 
     res.writeHead(200, {
       'Content-Type': 'text/event-stream',
@@ -141,7 +150,10 @@ export class RagAiController {
       const embeddingsData = `data: ${JSON.stringify(embeddingDocs)}\n\n`;
       res.write(embeddingsEvent + embeddingsData);
 
-      const stream = await this.llmService.query(embeddingDocs, query);
+      const stream = await this.llmService.query(embeddingDocs, query, {
+        model,
+        systemPrompt: selectedAgent.systemPrompt,
+      });
       const usage = { input_tokens: 0, output_tokens: 0, total_tokens: 0 };
 
       for await (const chunk of stream) {

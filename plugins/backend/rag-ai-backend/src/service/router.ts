@@ -21,37 +21,61 @@ import { isEmpty } from 'lodash';
 import { MiddlewareFactory } from '@backstage/backend-defaults/rootHttpRouter';
 import { RootConfigService } from '@backstage/backend-plugin-api';
 import { LoggerService } from '@backstage/backend-plugin-api';
-import { AugmentationIndexer, RetrievalPipeline } from '@webstackbuilders/plugin-ai-core-node';
+import {
+  AgentDefinition,
+  AugmentationIndexer,
+  RetrievalPipeline,
+  SourceRegistry,
+} from '@webstackbuilders/plugin-ai-core-node';
 import { LlmService } from './LlmService';
 import { RagAiController } from './RagAiController';
 
 type AiBackendConfig = {
-  prompts: {
+  defaults?: {
+    model?: string;
+    systemPrompt?: string;
+  };
+  agents?: Record<
+    string,
+    {
+      model?: string;
+      systemPrompt?: string;
+      orchestrator?: 'single-shot' | 'langgraph' | 'crew';
+      tools?: string[];
+    }
+  >;
+  prompts?: {
     prefix: string;
     suffix: string;
   };
-  supportedSources: string[];
+  supportedSources?: string[];
 };
 
 export interface RouterOptions {
   logger: LoggerService;
+  sourceRegistry: SourceRegistry;
+  agents: Map<string, AgentDefinition>;
+  models: Map<string, BaseLLM | BaseChatModel>;
+  defaultAgentId: string;
   augmentationIndexer: AugmentationIndexer;
   retrievalPipeline: RetrievalPipeline;
-  model: BaseLLM | BaseChatModel;
   config: RootConfigService;
 }
 
 const sourceValidator = (
-  supportedSources: string[]
+  sourceRegistry: SourceRegistry,
 ) => (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   const source = req.params.source;
-  if (!supportedSources.includes(source) && source !== 'all') {
+  if (!sourceRegistry.has(source) && source !== 'all') {
     return res.status(422).json({
-      message: `Only ${supportedSources.join(
+      message: `Only ${sourceRegistry
+        .list()
+        .map(it => it.id)
+        .join(
         ', ',
       )} are supported as AI assistant query sources for now.`,
     });
@@ -92,26 +116,49 @@ export async function createRouter(
 ): Promise<express.Router> {
   const {
     logger,
+    sourceRegistry,
+    agents,
+    models,
+    defaultAgentId,
     augmentationIndexer,
     retrievalPipeline,
-    model,
-    config
+    config,
   } = options;
   const aiBackendConfig = config.getOptional<AiBackendConfig>('ai');
-  const supportedSources = aiBackendConfig?.supportedSources ?? ['catalog'];
+  const configuredAgents = aiBackendConfig?.agents;
+  const configuredDefaultModelRef = aiBackendConfig?.defaults?.model;
+  const fallbackModelRef = configuredDefaultModelRef ?? [...models.keys()][0];
+
+  if (configuredAgents) {
+    for (const [id, agentConfig] of Object.entries(configuredAgents)) {
+      const existing = agents.get(id);
+      if (!existing) {
+        agents.set(id, {
+          id,
+          modelRef: agentConfig.model ?? fallbackModelRef,
+          systemPrompt:
+            agentConfig.systemPrompt ?? aiBackendConfig?.defaults?.systemPrompt ?? '',
+          toolIds: agentConfig.tools ?? [],
+          orchestrator: agentConfig.orchestrator ?? 'single-shot',
+        });
+      }
+    }
+  }
 
   const llmService = new LlmService({
     logger,
-    model,
     configuredPrompts: aiBackendConfig?.prompts,
   });
 
-  const controller = RagAiController.getInstance({
+  const controller = new RagAiController(
     logger,
-    augmentationIndexer,
-    retrievalPipeline,
     llmService,
-  });
+    augmentationIndexer,
+    models,
+    agents,
+    defaultAgentId,
+    retrievalPipeline,
+  );
 
   const router = Router();
   router.use(express.json());
@@ -119,7 +166,7 @@ export async function createRouter(
   const middleware = MiddlewareFactory.create({ config, logger });
   router.use(middleware.error());
 
-  const sourceValidatorMiddleware = sourceValidator(supportedSources);
+  const sourceValidatorMiddleware = sourceValidator(sourceRegistry);
 
   router
     .route('/embeddings/:source')

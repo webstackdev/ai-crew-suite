@@ -21,13 +21,33 @@ import {
 import { BaseLLM } from '@langchain/core/language_models/llms';
 import { BaseChatModel } from '@langchain/core/language_models/chat_models';
 import {
-  AugmentationIndexer,
-  RetrievalPipeline,
-  augmentationIndexerExtensionPoint,
-  retrievalPipelineExtensionPoint,
+  agentExtensionPoint,
+  AgentDefinition,
   modelExtensionPoint,
+  ModelDefinition,
+  sourceExtensionPoint,
+  SourceRegistry,
+  toolExtensionPoint,
+  ToolDefinition,
+  triggerExtensionPoint,
+  TriggerBinding,
 } from '@webstackbuilders/plugin-ai-core-node';
 import { createRouter } from './service/router';
+
+const createSourceRegistry = (): SourceRegistry => {
+  const sources = new Map<string, { id: string; description?: string }>();
+  return {
+    register(source) {
+      sources.set(source.id, source);
+    },
+    list() {
+      return [...sources.values()];
+    },
+    has(id) {
+      return sources.has(id);
+    },
+  };
+};
 
 /**
  * Rag AI backend plugin
@@ -37,34 +57,51 @@ import { createRouter } from './service/router';
 export const ragAiPlugin = createBackendPlugin({
   pluginId: 'rag-ai',
   register(env) {
-    let augmentationIndexer: AugmentationIndexer | undefined;
-    let retrievalPipeline: RetrievalPipeline | undefined;
-    let model: BaseLLM | BaseChatModel | undefined;
+    const sourceRegistry = createSourceRegistry();
+    const models = new Map<string, BaseLLM | BaseChatModel>();
+    const tools = new Map<string, ToolDefinition>();
+    const agents = new Map<string, AgentDefinition>();
+    const triggers: TriggerBinding[] = [];
 
-    env.registerExtensionPoint(augmentationIndexerExtensionPoint, {
-      setAugmentationIndexer(indexer) {
-        if (augmentationIndexer) {
-          throw new Error('AugmentationIndexer may only be set once');
+    env.registerExtensionPoint(sourceExtensionPoint, {
+      addSource(source) {
+        if (sourceRegistry.has(source.id)) {
+          throw new Error(`Source '${source.id}' may only be registered once`);
         }
-        augmentationIndexer = indexer;
+        sourceRegistry.register(source);
       },
     });
 
-    env.registerExtensionPoint(retrievalPipelineExtensionPoint, {
-      setRetrievalPipeline(pipeline) {
-        if (retrievalPipeline) {
-          throw new Error('RetrievalPipeline may only be set once');
+    env.registerExtensionPoint(toolExtensionPoint, {
+      addTool(tool) {
+        if (tools.has(tool.id)) {
+          throw new Error(`Tool '${tool.id}' may only be registered once`);
         }
-        retrievalPipeline = pipeline;
+        tools.set(tool.id, tool);
       },
     });
 
     env.registerExtensionPoint(modelExtensionPoint, {
-      setBaseLLM(llm) {
-        if (model) {
-          throw new Error('Model may only be set once');
+      addModel(modelDefinition: ModelDefinition) {
+        if (models.has(modelDefinition.id)) {
+          throw new Error(`Model '${modelDefinition.id}' may only be registered once`);
         }
-        model = llm;
+        models.set(modelDefinition.id, modelDefinition.model);
+      },
+    });
+
+    env.registerExtensionPoint(agentExtensionPoint, {
+      addAgent(agent) {
+        if (agents.has(agent.id)) {
+          throw new Error(`Agent '${agent.id}' may only be registered once`);
+        }
+        agents.set(agent.id, agent);
+      },
+    });
+
+    env.registerExtensionPoint(triggerExtensionPoint, {
+      addTrigger(trigger) {
+        triggers.push(trigger);
       },
     });
 
@@ -75,17 +112,75 @@ export const ragAiPlugin = createBackendPlugin({
         httpRouter: coreServices.httpRouter,
       },
       async init({ logger, config, httpRouter }) {
-        if (!(augmentationIndexer && model && retrievalPipeline)) {
-          throw new Error('augmentationIndexer, model, and retrievalPipeline must be registered');
+        const aiConfig = config.getOptionalConfig('ai');
+        const configuredSources =
+          aiConfig?.getOptionalStringArray('supportedSources') ??
+          aiConfig?.getOptionalStringArray('sources') ??
+          ['catalog'];
+
+        configuredSources.forEach(sourceId => {
+          if (!sourceRegistry.has(sourceId)) {
+            sourceRegistry.register({ id: sourceId });
+          }
+        });
+
+        const augmentationIndexer = [...tools.values()]
+          .map(tool => tool.augmentationIndexer)
+          .find(Boolean);
+        const retrievalPipeline = [...tools.values()]
+          .map(tool => tool.retrievalPipeline)
+          .find(Boolean);
+
+        if (!augmentationIndexer || !retrievalPipeline) {
+          throw new Error(
+            'At least one augmentation indexer tool and one retrieval pipeline tool must be registered',
+          );
         }
+
+        if (models.size === 0) {
+          throw new Error('At least one model must be registered');
+        }
+
+        const defaultModelRef =
+          aiConfig?.getOptionalString('defaults.model') ?? [...models.keys()][0];
+        const defaultSystemPrompt =
+          aiConfig?.getOptionalString('defaults.systemPrompt') ?? '';
+        const defaultToolIds = [...tools.keys()];
+
+        if (!agents.has('service-contextualizer')) {
+          agents.set('service-contextualizer', {
+            id: 'service-contextualizer',
+            modelRef: defaultModelRef,
+            systemPrompt: defaultSystemPrompt,
+            toolIds: defaultToolIds,
+            orchestrator: 'single-shot',
+            memory: 'none',
+          });
+        }
+
+        const defaultAgentId =
+          aiConfig?.getOptionalString('defaults.agent') ?? 'service-contextualizer';
+
+        if (!agents.has(defaultAgentId)) {
+          throw new Error(`Configured default agent '${defaultAgentId}' is not registered`);
+        }
+
+        if (!models.has(defaultModelRef)) {
+          throw new Error(`Configured default model '${defaultModelRef}' is not registered`);
+        }
+
+        logger.debug(`Registered ${triggers.length} AI triggers`);
 
         httpRouter.use(
           await createRouter({
             logger,
             config,
+            sourceRegistry,
+            agents,
+            models,
+            defaultAgentId,
             augmentationIndexer,
             retrievalPipeline,
-            model,
           }),
         );
       },

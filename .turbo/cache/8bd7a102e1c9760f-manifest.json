@@ -1,0 +1,132 @@
+{
+  "files": {
+    "plugins/backend/rag-ai-backend/dist/index.cjs.js.map": {
+      "size": 103,
+      "mtime_nanos": 1783733754506278947,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/backend/rag-ai-backend/dist": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "plugins/backend/rag-ai-backend/dist/plugin.cjs.js": {
+      "size": 4745,
+      "mtime_nanos": 1783733754506278947,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/backend/rag-ai-backend/dist/service/LlmService.cjs.js": {
+      "size": 862,
+      "mtime_nanos": 1783733754506278947,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/backend/rag-ai-backend/dist/service/RagAiController.cjs.js.map": {
+      "size": 12464,
+      "mtime_nanos": 1783733754507278950,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/backend/rag-ai-backend/dist/service/router.cjs.js.map": {
+      "size": 8303,
+      "mtime_nanos": 1783733754507278950,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/backend/rag-ai-backend/.turbo/turbo-build.log": {
+      "size": 1,
+      "mtime_nanos": 1783733754566279083,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/backend/rag-ai-backend/dist/service/router.cjs.js": {
+      "size": 3475,
+      "mtime_nanos": 1783733754506278947,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/backend/rag-ai-backend/dist/index.cjs.js": {
+      "size": 295,
+      "mtime_nanos": 1783733754506278947,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/backend/rag-ai-backend/dist/service/LlmService.cjs.js.map": {
+      "size": 3283,
+      "mtime_nanos": 1783733754507278950,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/backend/rag-ai-backend/dist/service/prompts.cjs.js.map": {
+      "size": 2248,
+      "mtime_nanos": 1783733754507278950,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/backend/rag-ai-backend/dist/service/index.cjs.js": {
+      "size": 273,
+      "mtime_nanos": 1783733754506278947,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/backend/rag-ai-backend/dist/service/index.cjs.js.map": {
+      "size": 1139,
+      "mtime_nanos": 1783733754507278950,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/backend/rag-ai-backend/dist/plugin.cjs.js.map": {
+      "size": 10419,
+      "mtime_nanos": 1783733754507278950,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/backend/rag-ai-backend/dist/index.d.ts": {
+      "size": 1075,
+      "mtime_nanos": 1783733754455278832,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/backend/rag-ai-backend/dist/service/RagAiController.cjs.js": {
+      "size": 4928,
+      "mtime_nanos": 1783733754506278947,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/backend/rag-ai-backend/dist/service/prompts.cjs.js": {
+      "size": 981,
+      "mtime_nanos": 1783733754506278947,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/backend/rag-ai-backend/dist/service": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    }
+  },
+  "order": [
+    "plugins/backend/rag-ai-backend/.turbo/turbo-build.log",
+    "plugins/backend/rag-ai-backend/dist",
+    "plugins/backend/rag-ai-backend/dist/index.cjs.js",
+    "plugins/backend/rag-ai-backend/dist/index.cjs.js.map",
+    "plugins/backend/rag-ai-backend/dist/index.d.ts",
+    "plugins/backend/rag-ai-backend/dist/plugin.cjs.js",
+    "plugins/backend/rag-ai-backend/dist/plugin.cjs.js.map",
+    "plugins/backend/rag-ai-backend/dist/service",
+    "plugins/backend/rag-ai-backend/dist/service/LlmService.cjs.js",
+    "plugins/backend/rag-ai-backend/dist/service/LlmService.cjs.js.map",
+    "plugins/backend/rag-ai-backend/dist/service/RagAiController.cjs.js",
+    "plugins/backend/rag-ai-backend/dist/service/RagAiController.cjs.js.map",
+    "plugins/backend/rag-ai-backend/dist/service/index.cjs.js",
+    "plugins/backend/rag-ai-backend/dist/service/index.cjs.js.map",
+    "plugins/backend/rag-ai-backend/dist/service/prompts.cjs.js",
+    "plugins/backend/rag-ai-backend/dist/service/prompts.cjs.js.map",
+    "plugins/backend/rag-ai-backend/dist/service/router.cjs.js",
+    "plugins/backend/rag-ai-backend/dist/service/router.cjs.js.map"
+  ]
+}

@@ -16,27 +16,56 @@
 
 export interface Config {
   /**
-   * Roadie RAG AI configuration
+   * AI backend configuration
    */
   ai?: {
     /**
-     * Texts to inject to the prompts when querying the LLM
+     * Global defaults that are inherited by individual agent configs.
      */
-    prompts: {
+    defaults?: {
       /**
-       * Prefix prompt to add to the query. This prompt is always succeeded by a text blob of embeddings retrieved by the RAG engine
+       * Default model reference used when an agent does not specify one.
        */
-      prefix: string;
+      model?: string;
 
       /**
-       * Suffix prompt to add to the query. This prompt is always succeeded by text query user has input
+       * Default system prompt used when an agent does not specify one.
        */
+      systemPrompt?: string;
+
+      /**
+       * Default agent id for requests that do not specify one.
+       */
+      agent?: string;
+    };
+
+    /**
+     * Optional agent-specific overrides.
+     */
+    agents?: Record<
+      string,
+      {
+        model?: string;
+        systemPrompt?: string;
+      }
+    >;
+
+    /**
+     * Legacy prompt template configuration, now treated as default prompt input.
+     */
+    prompts?: {
+      prefix: string;
       suffix: string;
     };
 
     /**
-     * Supported sources to query information from using RAG. This can be used to omit unnecessary sources from being retrievable
+     * Supported sources to query information from using RAG.
      */
-    supportedSources: string[];
+    supportedSources?: string[];
+
+    /**
+     * Source ids available to the source registry.
+     */
+    sources?: string[];
   };
 }

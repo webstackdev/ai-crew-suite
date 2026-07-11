@@ -23,44 +23,49 @@ import { createPromptTemplates } from './prompts';
 
 export class LlmService {
   private readonly logger: LoggerService;
-  private readonly model: BaseLLM | BaseChatModel;
-  private readonly prompts: {
-    prefixPrompt: (embedding: string) => string;
-    suffixPrompt: (input: string) => string;
+  private readonly configuredPrompts?: {
+    prefix?: string;
+    suffix?: string;
   };
 
   constructor({
     logger,
-    model,
     configuredPrompts,
   }: {
     logger: LoggerService;
-    model: BaseLLM | BaseChatModel;
     configuredPrompts?: {
       prefix?: string;
       suffix?: string;
     };
   }) {
     this.logger = logger;
-    this.model = model;
-    this.prompts = createPromptTemplates(configuredPrompts);
+    this.configuredPrompts = configuredPrompts;
   }
 
   async query(
     embeddings: EmbeddingDoc[],
     query: string,
+    options: {
+      model: BaseLLM | BaseChatModel;
+      systemPrompt?: string;
+    },
   ): Promise<IterableReadableStream<string | AIMessageChunk>> {
     this.logger.info('Starting to prompt LLM.');
+
+    const prompts = createPromptTemplates({
+      prefix: options.systemPrompt ?? this.configuredPrompts?.prefix,
+      suffix: this.configuredPrompts?.suffix,
+    });
 
     const promptEmbeddings = embeddings
       .map(embedding => embedding.content)
       .join('\n');
 
-    const prompt = `Human:\n${this.prompts.prefixPrompt(
+    const prompt = `Human:\n${prompts.prefixPrompt(
       promptEmbeddings,
-    )}\n ---\n${this.prompts.suffixPrompt(query)}\nAssistant:`;
+    )}\n ---\n${prompts.suffixPrompt(query)}\nAssistant:`;
 
-    return this.model.stream(prompt) as Promise<
+    return options.model.stream(prompt) as Promise<
       IterableReadableStream<string | AIMessageChunk>
     >;
   }

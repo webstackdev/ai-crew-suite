@@ -14,8 +14,23 @@
  * limitations under the License.
  */
 import { Embeddings } from '@langchain/core/embeddings';
+import { BaseChatModel } from '@langchain/core/language_models/chat_models';
+import { BaseLLM } from '@langchain/core/language_models/llms';
 
-export type EmbeddingsSource = 'catalog' | 'tech-docs' | 'all';
+export type SourceId = string;
+
+export type EmbeddingsSource = SourceId;
+
+export type SourceDescriptor = {
+  id: SourceId;
+  description?: string;
+};
+
+export interface SourceRegistry {
+  register(source: SourceDescriptor): void;
+  list(): SourceDescriptor[];
+  has(id: SourceId): boolean;
+}
 
 export type EmbeddingDocMetadata = Partial<{
   source: EmbeddingsSource;
@@ -98,3 +113,29 @@ export interface VectorStore {
     amount?: number,
   ): Promise<EmbeddingDoc[]>;
 }
+
+export type ModelDefinition = {
+  id: string;
+  model: BaseLLM | BaseChatModel;
+};
+
+export type ToolDefinition = {
+  id: string;
+  augmentationIndexer?: AugmentationIndexer;
+  retrievalPipeline?: RetrievalPipeline;
+};
+
+export type TriggerBinding = {
+  id: string;
+  source?: string;
+};
+
+export type AgentDefinition = {
+  id: string;
+  modelRef: string;
+  systemPrompt: string;
+  toolIds: string[];
+  orchestrator?: 'single-shot' | 'langgraph' | 'crew';
+  memory?: 'none' | 'session';
+  triggers?: TriggerBinding[];
+};

@@ -15,9 +15,9 @@
  */
 
 import { createRouter } from './router';
-import { RagAiConfig } from './types';
+import { RouterOptions } from './router';
 
-export const createApiRoutes = async (config: RagAiConfig) => {
-  const router = await createRouter(config);
+export const createApiRoutes = async (options: RouterOptions) => {
+  const router = await createRouter(options);
   return { router };
 };
