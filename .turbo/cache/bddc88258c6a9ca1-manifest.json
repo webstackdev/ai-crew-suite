@@ -1,0 +1,174 @@
+{
+  "files": {
+    "plugins/backend/rag-ai-backend/dist/service/prompts.cjs.js.map": {
+      "size": 2248,
+      "mtime_nanos": 1783734308979536423,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/backend/rag-ai-backend/dist/service/index.cjs.js.map": {
+      "size": 1139,
+      "mtime_nanos": 1783734308979536423,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/backend/rag-ai-backend/dist/service/SingleShotOrchestrator.cjs.js.map": {
+      "size": 7635,
+      "mtime_nanos": 1783734308979536423,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/backend/rag-ai-backend/dist/index.cjs.js.map": {
+      "size": 103,
+      "mtime_nanos": 1783734308979536423,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/backend/rag-ai-backend/dist/index.cjs.js": {
+      "size": 295,
+      "mtime_nanos": 1783734308979536423,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/backend/rag-ai-backend/dist/service": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "plugins/backend/rag-ai-backend/dist/index.d.ts": {
+      "size": 1131,
+      "mtime_nanos": 1783734308921536292,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/backend/rag-ai-backend/dist/service/AgentRuntime.cjs.js": {
+      "size": 1993,
+      "mtime_nanos": 1783734308979536423,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/backend/rag-ai-backend/dist/service/RagAiController.cjs.js.map": {
+      "size": 12352,
+      "mtime_nanos": 1783734308979536423,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/backend/rag-ai-backend/dist/service/LlmService.cjs.js.map": {
+      "size": 3283,
+      "mtime_nanos": 1783734308979536423,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/backend/rag-ai-backend/dist/service/index.cjs.js": {
+      "size": 273,
+      "mtime_nanos": 1783734308979536423,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/backend/rag-ai-backend/dist/service/prompts.cjs.js": {
+      "size": 981,
+      "mtime_nanos": 1783734308979536423,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/backend/rag-ai-backend/dist/plugin.cjs.js.map": {
+      "size": 10454,
+      "mtime_nanos": 1783734308979536423,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/backend/rag-ai-backend/dist/service/RagAiController.cjs.js": {
+      "size": 4838,
+      "mtime_nanos": 1783734308979536423,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/backend/rag-ai-backend/dist/service/AgentRuntime.cjs.js.map": {
+      "size": 4982,
+      "mtime_nanos": 1783734308979536423,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/backend/rag-ai-backend/dist/service/ToolRegistry.cjs.js": {
+      "size": 339,
+      "mtime_nanos": 1783734308979536423,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/backend/rag-ai-backend/dist/service/router.cjs.js": {
+      "size": 4401,
+      "mtime_nanos": 1783734308979536423,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/backend/rag-ai-backend/dist/service/router.cjs.js.map": {
+      "size": 10150,
+      "mtime_nanos": 1783734308979536423,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/backend/rag-ai-backend/dist/service/LlmService.cjs.js": {
+      "size": 862,
+      "mtime_nanos": 1783734308979536423,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/backend/rag-ai-backend/dist/plugin.cjs.js": {
+      "size": 4764,
+      "mtime_nanos": 1783734308979536423,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/backend/rag-ai-backend/dist/service/ToolRegistry.cjs.js.map": {
+      "size": 1531,
+      "mtime_nanos": 1783734308979536423,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/backend/rag-ai-backend/.turbo/turbo-build.log": {
+      "size": 1,
+      "mtime_nanos": 1783734309033536546,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/backend/rag-ai-backend/dist": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "plugins/backend/rag-ai-backend/dist/service/SingleShotOrchestrator.cjs.js": {
+      "size": 3129,
+      "mtime_nanos": 1783734308979536423,
+      "mode": 436,
+      "is_dir": false
+    }
+  },
+  "order": [
+    "plugins/backend/rag-ai-backend/.turbo/turbo-build.log",
+    "plugins/backend/rag-ai-backend/dist",
+    "plugins/backend/rag-ai-backend/dist/index.cjs.js",
+    "plugins/backend/rag-ai-backend/dist/index.cjs.js.map",
+    "plugins/backend/rag-ai-backend/dist/index.d.ts",
+    "plugins/backend/rag-ai-backend/dist/plugin.cjs.js",
+    "plugins/backend/rag-ai-backend/dist/plugin.cjs.js.map",
+    "plugins/backend/rag-ai-backend/dist/service",
+    "plugins/backend/rag-ai-backend/dist/service/AgentRuntime.cjs.js",
+    "plugins/backend/rag-ai-backend/dist/service/AgentRuntime.cjs.js.map",
+    "plugins/backend/rag-ai-backend/dist/service/LlmService.cjs.js",
+    "plugins/backend/rag-ai-backend/dist/service/LlmService.cjs.js.map",
+    "plugins/backend/rag-ai-backend/dist/service/RagAiController.cjs.js",
+    "plugins/backend/rag-ai-backend/dist/service/RagAiController.cjs.js.map",
+    "plugins/backend/rag-ai-backend/dist/service/SingleShotOrchestrator.cjs.js",
+    "plugins/backend/rag-ai-backend/dist/service/SingleShotOrchestrator.cjs.js.map",
+    "plugins/backend/rag-ai-backend/dist/service/ToolRegistry.cjs.js",
+    "plugins/backend/rag-ai-backend/dist/service/ToolRegistry.cjs.js.map",
+    "plugins/backend/rag-ai-backend/dist/service/index.cjs.js",
+    "plugins/backend/rag-ai-backend/dist/service/index.cjs.js.map",
+    "plugins/backend/rag-ai-backend/dist/service/prompts.cjs.js",
+    "plugins/backend/rag-ai-backend/dist/service/prompts.cjs.js.map",
+    "plugins/backend/rag-ai-backend/dist/service/router.cjs.js",
+    "plugins/backend/rag-ai-backend/dist/service/router.cjs.js.map"
+  ]
+}

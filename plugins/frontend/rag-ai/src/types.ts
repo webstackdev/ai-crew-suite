@@ -20,3 +20,24 @@ export type ResponseEmbedding = {
     [key: string]: string;
   };
 };
+
+export type AiRunEvent =
+  | {
+      type: 'step';
+      data: { runId: string; seq: number; node: string; phase: 'enter' | 'exit' };
+    }
+  | { type: 'token'; data: { runId: string; text: string } }
+  | { type: 'tool_call'; data: { runId: string; tool: string; args: unknown } }
+  | {
+      type: 'tool_result';
+      data: {
+        runId: string;
+        tool: string;
+        ok: boolean;
+        summary?: string;
+        output?: unknown;
+      };
+    }
+  | { type: 'usage'; data: { runId: string; input: number; output: number; total: number } }
+  | { type: 'done'; data: { runId: string } }
+  | { type: 'error'; data: { runId: string; message: string } };

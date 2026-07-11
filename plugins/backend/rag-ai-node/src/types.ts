@@ -16,6 +16,7 @@
 import { Embeddings } from '@langchain/core/embeddings';
 import { BaseChatModel } from '@langchain/core/language_models/chat_models';
 import { BaseLLM } from '@langchain/core/language_models/llms';
+import { LoggerService } from '@backstage/backend-plugin-api';
 
 export type SourceId = string;
 
@@ -119,12 +120,6 @@ export type ModelDefinition = {
   model: BaseLLM | BaseChatModel;
 };
 
-export type ToolDefinition = {
-  id: string;
-  augmentationIndexer?: AugmentationIndexer;
-  retrievalPipeline?: RetrievalPipeline;
-};
-
 export type TriggerBinding = {
   id: string;
   source?: string;
@@ -139,3 +134,79 @@ export type AgentDefinition = {
   memory?: 'none' | 'session';
   triggers?: TriggerBinding[];
 };
+
+export type ToolContext = {
+  credentials?: unknown;
+  auth?: unknown;
+  discovery?: unknown;
+  logger: LoggerService;
+  identity: string;
+  runId: string;
+  signal: AbortSignal;
+};
+
+export interface Tool<A = unknown, R = unknown> {
+  id: string;
+  description?: string;
+  schema?: unknown;
+  invoke(args: A, ctx: ToolContext): Promise<R>;
+  effect?: 'read' | 'write';
+}
+
+export interface ToolRegistry {
+  register(tool: Tool): void;
+  get(id: string): Tool | undefined;
+  list(): Tool[];
+}
+
+export type ToolDefinition = Tool & {
+  augmentationIndexer?: AugmentationIndexer;
+  retrievalPipeline?: RetrievalPipeline;
+};
+
+export type AgentRunInput = {
+  runId: string;
+  agentId: string;
+  input: {
+    query: string;
+    source: SourceId;
+    entityFilter?: EntityFilterShape;
+  };
+};
+
+export type RunContext = {
+  logger: LoggerService;
+  toolRegistry: ToolRegistry;
+  model: BaseLLM | BaseChatModel;
+  systemPrompt?: string;
+  identity?: string;
+  signal?: AbortSignal;
+};
+
+export type AgentEvent =
+  | {
+      type: 'step';
+      data: { runId: string; seq: number; node: string; phase: 'enter' | 'exit' };
+    }
+  | { type: 'token'; data: { runId: string; text: string } }
+  | { type: 'tool_call'; data: { runId: string; tool: string; args: unknown } }
+  | {
+      type: 'tool_result';
+      data: {
+        runId: string;
+        tool: string;
+        ok: boolean;
+        summary?: string;
+        output?: unknown;
+      };
+    }
+  | {
+      type: 'usage';
+      data: { runId: string; input: number; output: number; total: number };
+    }
+  | { type: 'done'; data: { runId: string } }
+  | { type: 'error'; data: { runId: string; message: string } };
+
+export interface Orchestrator {
+  run(input: AgentRunInput, ctx: RunContext): AsyncIterable<AgentEvent>;
+}

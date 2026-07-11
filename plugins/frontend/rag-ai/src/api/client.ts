@@ -20,6 +20,7 @@ import {
   IdentityApi,
 } from '@backstage/core-plugin-api';
 import { RagAiApi } from './ragApi';
+import { AiRunEvent } from '../types';
 import {
   EventSourceParserStream,
   ParsedEvent,
@@ -64,13 +65,18 @@ export class RagAiClient implements RagAiApi {
     return response.body!;
   }
 
-  async *ask(question: string, source: string): AsyncGenerator<ParsedEvent> {
+  async *ask(
+    question: string,
+    source: string,
+    agentId?: string,
+  ): AsyncGenerator<AiRunEvent> {
     const { token } = await this.identityApi.getCredentials();
 
     try {
       const stream = await this.fetch(`query/${source}`, {
         body: JSON.stringify({
           query: question,
+          agentId,
         }),
         method: 'POST',
         headers: {
@@ -87,23 +93,83 @@ export class RagAiClient implements RagAiApi {
         while (true) {
           const { done, value } = await reader.read();
           if (done) break;
-          yield value;
+          const parsed = this.toRunEvent(value);
+          if (parsed) {
+            yield parsed;
+          }
         }
       } else {
         yield {
-          data: 'No response received from the LLM',
-          event: 'message',
-          type: 'event',
+          type: 'error',
+          data: {
+            runId: 'unknown',
+            message: 'No response received from the LLM',
+          },
         };
       }
     } catch (e: any) {
       // eslint-disable-next-line
       console.error(e.message);
       yield {
-        data: `Failed to complete query due to error: ${e.message}`,
-        event: 'error',
-        type: 'event',
+        type: 'error',
+        data: {
+          runId: 'unknown',
+          message: `Failed to complete query due to error: ${e.message}`,
+        },
       };
+    }
+  }
+
+  private toRunEvent(event: ParsedEvent): AiRunEvent | undefined {
+    switch (event.event) {
+      case 'step':
+      case 'token':
+      case 'tool_call':
+      case 'tool_result':
+      case 'usage':
+      case 'done':
+      case 'error': {
+        try {
+          return {
+            type: event.event,
+            data: JSON.parse(event.data),
+          } as AiRunEvent;
+        } catch {
+          if (event.event === 'error') {
+            return {
+              type: 'error',
+              data: { runId: 'unknown', message: event.data || 'Unknown error' },
+            };
+          }
+          return undefined;
+        }
+      }
+      case 'response': {
+        return {
+          type: 'token',
+          data: {
+            runId: 'unknown',
+            text: event.data,
+          },
+        };
+      }
+      case 'embeddings': {
+        try {
+          return {
+            type: 'tool_result',
+            data: {
+              runId: 'unknown',
+              tool: 'knowledge.retrieve',
+              ok: true,
+              output: { embeddings: JSON.parse(event.data) },
+            },
+          };
+        } catch {
+          return undefined;
+        }
+      }
+      default:
+        return undefined;
     }
   }
 }

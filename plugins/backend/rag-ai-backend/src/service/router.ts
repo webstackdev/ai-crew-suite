@@ -24,11 +24,17 @@ import { LoggerService } from '@backstage/backend-plugin-api';
 import {
   AgentDefinition,
   AugmentationIndexer,
+  EntityFilterShape,
+  Orchestrator,
   RetrievalPipeline,
+  ToolDefinition,
   SourceRegistry,
 } from '@webstackbuilders/plugin-ai-core-node';
 import { LlmService } from './LlmService';
 import { RagAiController } from './RagAiController';
+import { AgentRuntime } from './AgentRuntime';
+import { SingleShotOrchestrator } from './SingleShotOrchestrator';
+import { InMemoryToolRegistry } from './ToolRegistry';
 
 type AiBackendConfig = {
   defaults?: {
@@ -55,6 +61,7 @@ export interface RouterOptions {
   logger: LoggerService;
   sourceRegistry: SourceRegistry;
   agents: Map<string, AgentDefinition>;
+  tools: Map<string, ToolDefinition>;
   models: Map<string, BaseLLM | BaseChatModel>;
   defaultAgentId: string;
   augmentationIndexer: AugmentationIndexer;
@@ -118,6 +125,7 @@ export async function createRouter(
     logger,
     sourceRegistry,
     agents,
+    tools,
     models,
     defaultAgentId,
     augmentationIndexer,
@@ -150,9 +158,38 @@ export async function createRouter(
     configuredPrompts: aiBackendConfig?.prompts,
   });
 
+  const toolRegistry = new InMemoryToolRegistry();
+  toolRegistry.register({
+    id: 'knowledge.retrieve',
+    description: 'Retrieve augmentation context for a source and query',
+    effect: 'read',
+    async invoke(args: unknown) {
+      const payload = args as {
+        query: string;
+        source: string;
+        entityFilter?: EntityFilterShape;
+      };
+      return retrievalPipeline.retrieveAugmentationContext(
+        payload.query,
+        payload.source,
+        payload.entityFilter,
+      );
+    },
+  });
+
+  for (const tool of tools.values()) {
+    toolRegistry.register(tool);
+  }
+
+  const orchestrators = new Map<string, Orchestrator>();
+  orchestrators.set('single-shot', new SingleShotOrchestrator(llmService));
+
+  const runtime = new AgentRuntime(agents, orchestrators);
+
   const controller = new RagAiController(
     logger,
-    llmService,
+    runtime,
+    toolRegistry,
     augmentationIndexer,
     models,
     agents,

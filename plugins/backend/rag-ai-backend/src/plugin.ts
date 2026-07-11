@@ -177,6 +177,7 @@ export const ragAiPlugin = createBackendPlugin({
             config,
             sourceRegistry,
             agents,
+            tools,
             models,
             defaultAgentId,
             augmentationIndexer,

@@ -99,25 +99,46 @@ export const ControlledRagModal = ({
       setEmbeddings([]);
 
       for await (const chunk of ragApi.ask(question, source)) {
-        switch (chunk.event) {
-          case 'response': {
-            setQuestionResult(value => value + chunk.data);
+        switch (chunk.type) {
+          case 'token': {
+            setQuestionResult(value => value + chunk.data.text);
             break;
           }
-          case 'embeddings': {
-            setEmbeddings(JSON.parse(chunk.data));
+          case 'tool_result': {
+            if (chunk.data.tool === 'knowledge.retrieve' && chunk.data.ok) {
+              const payload = chunk.data.output as
+                | { embeddings?: ResponseEmbedding[] }
+                | undefined;
+              if (payload?.embeddings) {
+                setEmbeddings(payload.embeddings);
+              }
+            }
             break;
           }
           case 'error': {
-            setWarning(chunk.data);
+            setWarning(chunk.data.message);
             break;
           }
           case 'usage': {
             // Do nothing
             break;
           }
-          default:
-            throw new Error(`Unknown event type: ${chunk.event}`);
+          case 'step': {
+            // Do nothing
+            break;
+          }
+          case 'tool_call': {
+            // Do nothing
+            break;
+          }
+          case 'done': {
+            // Do nothing
+            break;
+          }
+          default: {
+            const exhaustiveCheck: never = chunk;
+            throw new Error(`Unknown event type: ${JSON.stringify(exhaustiveCheck)}`);
+          }
         }
       }
 

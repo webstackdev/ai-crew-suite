@@ -15,27 +15,25 @@
  */
 import { Request, Response } from 'express';
 import { LoggerService } from '@backstage/backend-plugin-api';
-import { LlmService } from './LlmService';
 import {
   AgentDefinition,
+  AgentEvent,
   AugmentationIndexer,
   EmbeddingsSource,
   RetrievalPipeline,
+  ToolRegistry,
 } from '@webstackbuilders/plugin-ai-core-node';
 import { BaseLLM } from '@langchain/core/language_models/llms';
 import { BaseChatModel } from '@langchain/core/language_models/chat_models';
+import { randomUUID } from 'crypto';
+import { AgentRuntime } from './AgentRuntime';
 // For Response.flush()
 // @ts-ignore
 import type compression from 'compression';
 
-type UsageMetadata = {
-  total_tokens: number;
-  output_tokens: number;
-  input_tokens: number;
-};
-
 export class RagAiController {
-  private readonly llmService: LlmService;
+  private readonly runtime: AgentRuntime;
+  private readonly toolRegistry: ToolRegistry;
   private readonly augmentationIndexer: AugmentationIndexer;
   private readonly retrievalPipeline?: RetrievalPipeline;
   private readonly models: Map<string, BaseLLM | BaseChatModel>;
@@ -45,7 +43,8 @@ export class RagAiController {
 
   constructor(
     logger: LoggerService,
-    llmService: LlmService,
+    runtime: AgentRuntime,
+    toolRegistry: ToolRegistry,
     augmentationIndexer: AugmentationIndexer,
     models: Map<string, BaseLLM | BaseChatModel>,
     agents: Map<string, AgentDefinition>,
@@ -53,7 +52,8 @@ export class RagAiController {
     retrievalPipeline?: RetrievalPipeline,
   ) {
     this.logger = logger;
-    this.llmService = llmService;
+    this.runtime = runtime;
+    this.toolRegistry = toolRegistry;
     this.augmentationIndexer = augmentationIndexer;
     this.models = models;
     this.agents = agents;
@@ -131,6 +131,8 @@ export class RagAiController {
       return;
     }
 
+    const runId = randomUUID();
+
     res.writeHead(200, {
       'Content-Type': 'text/event-stream',
       Connection: 'keep-alive',
@@ -138,79 +140,80 @@ export class RagAiController {
     });
 
     try {
-      const embeddingDocs = this.retrievalPipeline
-        ? await this.retrievalPipeline.retrieveAugmentationContext(
+      for await (const event of this.runtime.run(
+        {
+          runId,
+          agentId: selectedAgent.id,
+          input: {
             query,
             source,
             entityFilter,
-          )
-        : [];
-
-      const embeddingsEvent = `event: embeddings\n`;
-      const embeddingsData = `data: ${JSON.stringify(embeddingDocs)}\n\n`;
-      res.write(embeddingsEvent + embeddingsData);
-
-      const stream = await this.llmService.query(embeddingDocs, query, {
-        model,
-        systemPrompt: selectedAgent.systemPrompt,
-      });
-      const usage = { input_tokens: 0, output_tokens: 0, total_tokens: 0 };
-
-      for await (const chunk of stream) {
-        if (typeof chunk !== 'string' && 'usage_metadata' in chunk) {
-          usage.input_tokens +=
-            (chunk.usage_metadata as UsageMetadata)?.input_tokens ?? 0;
-          usage.output_tokens +=
-            (chunk.usage_metadata as UsageMetadata)?.output_tokens ?? 0;
-          usage.total_tokens +=
-            (chunk.usage_metadata as UsageMetadata)?.total_tokens ?? 0;
-        }
-
-        const text =
-          typeof chunk === 'string' ? chunk : (chunk.content as string);
-        const event = `event: response\n`;
-        const data = this.parseSseText(text);
-        res.write(event + data);
+          },
+        },
+        {
+          logger: this.logger,
+          toolRegistry: this.toolRegistry,
+          model,
+          systemPrompt: selectedAgent.systemPrompt,
+          identity: 'anonymous',
+        },
+      )) {
+        this.writeEvent(res, event);
         res.flush?.();
       }
-
-      if (Object.values(usage).some(it => it !== 0)) {
-        this.logger.info(
-          `Produced response with token usage: ${JSON.stringify(usage)}`,
-        );
-        res.write(`event: usage\n` + `data: ${JSON.stringify(usage)}\n\n`);
-      } else {
-        this.logger.info(
-          `Unable to retrieve token usage information from this model invocation.`,
-        );
-        res.write(
-          `event: usage\n` +
-            `data: ${JSON.stringify({
-              input_tokens: -1,
-              output_tokens: -1,
-              total_tokens: -1,
-            })}\n\n`,
-        );
-      }
     } catch (e: any) {
+      this.writeEvent(res, {
+        type: 'error',
+        data: {
+          runId,
+          message: e?.message ?? 'Failed to run query',
+        },
+      });
       this.logger.error(
         `There was an error executing query ${query} for source ${source} on entity ${entityFilter}: ${e.message}`,
         e,
       );
-      throw e;
     }
 
     res.end();
   };
 
-  private parseSseText = (text: string): string => {
-    const lines = text.split('\n');
+  private writeEvent = (res: Response, event: AgentEvent): void => {
+    res.write(`event: ${event.type}\n`);
+    res.write(`data: ${JSON.stringify(event.data)}\n\n`);
 
-    const output = lines.reduce((result, line) => {
-      const data = `data: ${line}\n`;
-      return result + data;
-    }, '');
+    // Compatibility aliases for existing frontend consumers during migration.
+    if (event.type === 'token') {
+      const lines = event.data.text.split('\n');
+      res.write('event: response\n');
+      for (const line of lines) {
+        res.write(`data: ${line}\n`);
+      }
+      res.write('\n');
+    }
 
-    return `${output}\n`;
+    if (event.type === 'tool_result' && event.data.tool === 'knowledge.retrieve') {
+      const embeddings = (event.data.output as any)?.embeddings;
+      if (Array.isArray(embeddings)) {
+        res.write('event: embeddings\n');
+        res.write(`data: ${JSON.stringify(embeddings)}\n\n`);
+      }
+    }
+
+    if (event.type === 'usage') {
+      res.write('event: usage\n');
+      res.write(
+        `data: ${JSON.stringify({
+          input_tokens: event.data.input,
+          output_tokens: event.data.output,
+          total_tokens: event.data.total,
+        })}\n\n`,
+      );
+    }
+
+    if (event.type === 'error') {
+      res.write('event: error\n');
+      res.write(`data: ${event.data.message}\n\n`);
+    }
   };
 }

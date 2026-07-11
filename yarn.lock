@@ -12940,6 +12940,7 @@ __metadata:
     "@backstage/cli": "backstage:^"
     "@backstage/config": "backstage:^"
     "@langchain/core": "npm:^1.2.2"
+    "@opentelemetry/api": "npm:^1.9.0"
     "@types/compression": "npm:^1.8.1"
     "@types/express": "npm:4.17.25"
     "@types/lodash": "npm:^4.17.24"

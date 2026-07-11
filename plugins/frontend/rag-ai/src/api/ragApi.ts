@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 import { createApiRef } from '@backstage/core-plugin-api';
-import { ParsedEvent } from 'eventsource-parser/stream';
+import { AiRunEvent } from '../types';
 
 export interface RagAiApi {
-  ask(question: string, source: string): AsyncGenerator<ParsedEvent>;
+  ask(question: string, source: string, agentId?: string): AsyncGenerator<AiRunEvent>;
 }
 
 export const ragAiApiRef = createApiRef<RagAiApi>({
