@@ -50,6 +50,14 @@ export interface Config {
         orchestrator?: 'single-shot' | 'langgraph' | 'crew';
         tools?: string[];
         memory?: 'none' | 'session';
+        crew?: {
+          roles: {
+            id: string;
+            systemPrompt: string;
+            model?: string;
+            tools?: string[];
+          }[];
+        };
       }
     >;
 

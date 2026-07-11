@@ -133,6 +133,14 @@ export type AgentDefinition = {
   toolIds: string[];
   orchestrator?: 'single-shot' | 'langgraph' | 'crew';
   memory?: 'none' | 'session';
+  crew?: {
+    roles: {
+      id: string;
+      systemPrompt: string;
+      modelRef?: string;
+      toolIds?: string[];
+    }[];
+  };
   triggers?: TriggerBinding[];
 };
 

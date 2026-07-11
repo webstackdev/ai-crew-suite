@@ -38,9 +38,11 @@ import {
 import { LlmService } from './LlmService';
 import { RagAiController } from './RagAiController';
 import { AgentRuntime } from './AgentRuntime';
+import { CrewOrchestrator } from './CrewOrchestrator';
 import { LangGraphOrchestrator } from './LangGraphOrchestrator';
 import { SingleShotOrchestrator } from './SingleShotOrchestrator';
 import { InMemoryToolRegistry } from './ToolRegistry';
+import { createDefaultToolPackTools } from './ToolPacks';
 
 type AiBackendConfig = {
   defaults?: {
@@ -55,6 +57,14 @@ type AiBackendConfig = {
       orchestrator?: 'single-shot' | 'langgraph' | 'crew';
       tools?: string[];
       memory?: 'none' | 'session';
+      crew?: {
+        roles: {
+          id: string;
+          systemPrompt: string;
+          model?: string;
+          tools?: string[];
+        }[];
+      };
     }
   >;
   prompts?: {
@@ -168,6 +178,16 @@ export async function createRouter(
           memory:
             agentConfig.memory ??
             (agentConfig.orchestrator === 'langgraph' ? 'session' : 'none'),
+          crew: agentConfig.crew
+            ? {
+                roles: agentConfig.crew.roles.map(role => ({
+                  id: role.id,
+                  systemPrompt: role.systemPrompt,
+                  modelRef: role.model,
+                  toolIds: role.tools,
+                })),
+              }
+            : undefined,
         });
       }
     }
@@ -201,9 +221,16 @@ export async function createRouter(
     toolRegistry.register(tool);
   }
 
+  for (const tool of createDefaultToolPackTools(logger)) {
+    if (!toolRegistry.get(tool.id)) {
+      toolRegistry.register(tool);
+    }
+  }
+
   const orchestrators = new Map<string, Orchestrator>();
   orchestrators.set('single-shot', new SingleShotOrchestrator(llmService));
   orchestrators.set('langgraph', new LangGraphOrchestrator(llmService));
+  orchestrators.set('crew', new CrewOrchestrator(llmService, agents, models));
 
   const runtime = new AgentRuntime(agents, orchestrators);
 

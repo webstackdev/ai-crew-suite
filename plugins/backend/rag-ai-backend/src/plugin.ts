@@ -160,6 +160,50 @@ export const ragAiPlugin = createBackendPlugin({
           });
         }
 
+        if (!agents.has('doc-janitor-crew')) {
+          const modelRefs = [...models.keys()];
+          const reviewerModelRef = modelRefs[1] ?? defaultModelRef;
+          agents.set('doc-janitor-crew', {
+            id: 'doc-janitor-crew',
+            modelRef: defaultModelRef,
+            systemPrompt:
+              'Coordinate a multi-role documentation crew and produce a concise, high-quality artifact.',
+            toolIds: [
+              'knowledge.retrieve',
+              'toolpack.github.search_issues',
+              'toolpack.jira.search_tickets',
+              'toolpack.cost.estimate',
+            ],
+            orchestrator: 'crew',
+            memory: 'none',
+            crew: {
+              roles: [
+                {
+                  id: 'researcher',
+                  systemPrompt:
+                    'Researcher: collect relevant context, constraints, and references.',
+                  modelRef: defaultModelRef,
+                  toolIds: ['knowledge.retrieve', 'toolpack.github.search_issues'],
+                },
+                {
+                  id: 'writer',
+                  systemPrompt:
+                    'Writer: draft the primary output in clear actionable language.',
+                  modelRef: defaultModelRef,
+                  toolIds: ['toolpack.jira.search_tickets'],
+                },
+                {
+                  id: 'reviewer',
+                  systemPrompt:
+                    'Reviewer: improve quality, consistency, and risk awareness.',
+                  modelRef: reviewerModelRef,
+                  toolIds: ['toolpack.cost.estimate'],
+                },
+              ],
+            },
+          });
+        }
+
         const defaultAgentId =
           aiConfig?.getOptionalString('defaults.agent') ?? 'service-contextualizer';
 

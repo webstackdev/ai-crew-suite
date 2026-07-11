@@ -1,0 +1,34 @@
+{
+  "files": {
+    "packages/backend/dist": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "packages/backend/dist/bundle.tar.gz": {
+      "size": 6912728,
+      "mtime_nanos": 1783736475528449886,
+      "mode": 436,
+      "is_dir": false
+    },
+    "packages/backend/dist/skeleton.tar.gz": {
+      "size": 1981,
+      "mtime_nanos": 1783736475032999000,
+      "mode": 436,
+      "is_dir": false
+    },
+    "packages/backend/.turbo/turbo-build.log": {
+      "size": 27679,
+      "mtime_nanos": 1783736475588450023,
+      "mode": 436,
+      "is_dir": false
+    }
+  },
+  "order": [
+    "packages/backend/.turbo/turbo-build.log",
+    "packages/backend/dist",
+    "packages/backend/dist/bundle.tar.gz",
+    "packages/backend/dist/skeleton.tar.gz"
+  ]
+}

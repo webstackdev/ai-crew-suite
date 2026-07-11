@@ -1,0 +1,216 @@
+{
+  "files": {
+    "plugins/frontend/rag-ai/dist": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "plugins/frontend/rag-ai/dist/index.d.ts": {
+      "size": 2597,
+      "mtime_nanos": 1783736464673425269,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/frontend/rag-ai/dist/components/RagModal/SidebarRagModal.esm.js.map": {
+      "size": 2038,
+      "mtime_nanos": 1783736464733425405,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/frontend/rag-ai/dist/index.esm.js": {
+      "size": 214,
+      "mtime_nanos": 1783736464733425405,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/frontend/rag-ai/dist/components/RagModal/Thinking.esm.js.map": {
+      "size": 5302,
+      "mtime_nanos": 1783736464733425405,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/frontend/rag-ai/dist/components/RagModal/index.esm.js.map": {
+      "size": 98,
+      "mtime_nanos": 1783736464734425407,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/frontend/rag-ai/dist/api/ragApi.esm.js.map": {
+      "size": 1166,
+      "mtime_nanos": 1783736464733425405,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/frontend/rag-ai/.turbo/turbo-build.log": {
+      "size": 1,
+      "mtime_nanos": 1783736464783425518,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/frontend/rag-ai/dist/components/RagModal/ResultRenderer.esm.js": {
+      "size": 2163,
+      "mtime_nanos": 1783736464733425405,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/frontend/rag-ai/dist/components/CodeHighlighter.esm.js.map": {
+      "size": 2296,
+      "mtime_nanos": 1783736464733425405,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/frontend/rag-ai/dist/components/RagModal/ResultRenderer.esm.js.map": {
+      "size": 4974,
+      "mtime_nanos": 1783736464733425405,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/frontend/rag-ai/dist/plugin.esm.js.map": {
+      "size": 2838,
+      "mtime_nanos": 1783736464733425405,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/frontend/rag-ai/dist/components/RagModal/RagModal.esm.js.map": {
+      "size": 12811,
+      "mtime_nanos": 1783736464733425405,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/frontend/rag-ai/dist/plugin.esm.js": {
+      "size": 1282,
+      "mtime_nanos": 1783736464733425405,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/frontend/rag-ai/dist/components": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "plugins/frontend/rag-ai/dist/api": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "plugins/frontend/rag-ai/dist/api/client.esm.js.map": {
+      "size": 8344,
+      "mtime_nanos": 1783736464733425405,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/frontend/rag-ai/dist/components/CodeHighlighter.esm.js": {
+      "size": 953,
+      "mtime_nanos": 1783736464733425405,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/frontend/rag-ai/dist/components/RagModal": {
+      "size": 0,
+      "mtime_nanos": 0,
+      "mode": 0,
+      "is_dir": true
+    },
+    "plugins/frontend/rag-ai/dist/components/RagModal/Thinking.esm.js": {
+      "size": 2952,
+      "mtime_nanos": 1783736464733425405,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/frontend/rag-ai/dist/components/RagModal/EmbeddingsView.esm.js": {
+      "size": 5650,
+      "mtime_nanos": 1783736464733425405,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/frontend/rag-ai/dist/components/RagModal/RagModal.esm.js": {
+      "size": 6341,
+      "mtime_nanos": 1783736464733425405,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/frontend/rag-ai/dist/components/RagModal/QuestionBox.esm.js.map": {
+      "size": 7604,
+      "mtime_nanos": 1783736464733425405,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/frontend/rag-ai/dist/components/RagModal/QuestionBox.esm.js": {
+      "size": 3566,
+      "mtime_nanos": 1783736464733425405,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/frontend/rag-ai/dist/components/RagModal/index.esm.js": {
+      "size": 209,
+      "mtime_nanos": 1783736464733425405,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/frontend/rag-ai/dist/components/RagModal/EmbeddingsView.esm.js.map": {
+      "size": 11273,
+      "mtime_nanos": 1783736464733425405,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/frontend/rag-ai/dist/components/RagModal/SidebarRagModal.esm.js": {
+      "size": 772,
+      "mtime_nanos": 1783736464733425405,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/frontend/rag-ai/dist/index.esm.js.map": {
+      "size": 95,
+      "mtime_nanos": 1783736464733425405,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/frontend/rag-ai/dist/api/ragApi.esm.js": {
+      "size": 189,
+      "mtime_nanos": 1783736464733425405,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/frontend/rag-ai/dist/api/client.esm.js": {
+      "size": 3417,
+      "mtime_nanos": 1783736464733425405,
+      "mode": 436,
+      "is_dir": false
+    }
+  },
+  "order": [
+    "plugins/frontend/rag-ai/.turbo/turbo-build.log",
+    "plugins/frontend/rag-ai/dist",
+    "plugins/frontend/rag-ai/dist/api",
+    "plugins/frontend/rag-ai/dist/api/client.esm.js",
+    "plugins/frontend/rag-ai/dist/api/client.esm.js.map",
+    "plugins/frontend/rag-ai/dist/api/ragApi.esm.js",
+    "plugins/frontend/rag-ai/dist/api/ragApi.esm.js.map",
+    "plugins/frontend/rag-ai/dist/components",
+    "plugins/frontend/rag-ai/dist/components/CodeHighlighter.esm.js",
+    "plugins/frontend/rag-ai/dist/components/CodeHighlighter.esm.js.map",
+    "plugins/frontend/rag-ai/dist/components/RagModal",
+    "plugins/frontend/rag-ai/dist/components/RagModal/EmbeddingsView.esm.js",
+    "plugins/frontend/rag-ai/dist/components/RagModal/EmbeddingsView.esm.js.map",
+    "plugins/frontend/rag-ai/dist/components/RagModal/QuestionBox.esm.js",
+    "plugins/frontend/rag-ai/dist/components/RagModal/QuestionBox.esm.js.map",
+    "plugins/frontend/rag-ai/dist/components/RagModal/RagModal.esm.js",
+    "plugins/frontend/rag-ai/dist/components/RagModal/RagModal.esm.js.map",
+    "plugins/frontend/rag-ai/dist/components/RagModal/ResultRenderer.esm.js",
+    "plugins/frontend/rag-ai/dist/components/RagModal/ResultRenderer.esm.js.map",
+    "plugins/frontend/rag-ai/dist/components/RagModal/SidebarRagModal.esm.js",
+    "plugins/frontend/rag-ai/dist/components/RagModal/SidebarRagModal.esm.js.map",
+    "plugins/frontend/rag-ai/dist/components/RagModal/Thinking.esm.js",
+    "plugins/frontend/rag-ai/dist/components/RagModal/Thinking.esm.js.map",
+    "plugins/frontend/rag-ai/dist/components/RagModal/index.esm.js",
+    "plugins/frontend/rag-ai/dist/components/RagModal/index.esm.js.map",
+    "plugins/frontend/rag-ai/dist/index.d.ts",
+    "plugins/frontend/rag-ai/dist/index.esm.js",
+    "plugins/frontend/rag-ai/dist/index.esm.js.map",
+    "plugins/frontend/rag-ai/dist/plugin.esm.js",
+    "plugins/frontend/rag-ai/dist/plugin.esm.js.map"
+  ]
+}

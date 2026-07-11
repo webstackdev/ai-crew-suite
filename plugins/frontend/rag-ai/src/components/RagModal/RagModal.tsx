@@ -144,7 +144,9 @@ export const ControlledRagModal = ({
             break;
           }
           case 'artifact': {
-            // Do nothing in this modal; artifact-capable UI comes in a later iteration.
+            if (chunk.data.url) {
+              setWarning(`Artifact generated: ${chunk.data.url}`);
+            }
             break;
           }
           default: {
