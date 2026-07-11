@@ -1,0 +1,17 @@
+{
+  "name": "__backstage-module-federation-runtime-shared-dependencies__",
+  "version": "0.0.0",
+  "private": true,
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js"
+  },
+  "peerDependencies": {
+    "@material-ui/core": "^4.12.2",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-router": "^6.30.4",
+    "react-router-dom": "^6.30.4"
+  },
+  "sideEffects": true
+}

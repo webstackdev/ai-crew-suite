@@ -1,0 +1,62 @@
+{
+  "files": {
+    "plugins/backend/rag-ai-backend-embeddings-aws/dist/BedrockAugmenter.cjs.js.map": {
+      "size": 3000,
+      "mtime_nanos": 1783731883468179609,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/backend/rag-ai-backend-embeddings-aws/dist/index.cjs.js": {
+      "size": 1112,
+      "mtime_nanos": 1783731883468179609,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/backend/rag-ai-backend-embeddings-aws/dist/BedrockCohereEmbeddings.cjs.js": {
+      "size": 2512,
+      "mtime_nanos": 1783731883468179609,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/backend/rag-ai-backend-embeddings-aws/dist/index.cjs.js.map": {
+      "size": 3602,
+      "mtime_nanos": 1783731883468179609,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/backend/rag-ai-backend-embeddings-aws/dist/BedrockCohereEmbeddings.cjs.js.map": {
+      "size": 5559,
+      "mtime_nanos": 1783731883468179609,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/backend/rag-ai-backend-embeddings-aws/dist/index.d.ts": {
+      "size": 1041,
+      "mtime_nanos": 1783731883468179609,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/backend/rag-ai-backend-embeddings-aws/dist/BedrockAugmenter.cjs.js": {
+      "size": 1126,
+      "mtime_nanos": 1783731883468179609,
+      "mode": 436,
+      "is_dir": false
+    },
+    "plugins/backend/rag-ai-backend-embeddings-aws/.turbo/turbo-build.log": {
+      "size": 1,
+      "mtime_nanos": 1783731639111663204,
+      "mode": 436,
+      "is_dir": false
+    }
+  },
+  "order": [
+    "plugins/backend/rag-ai-backend-embeddings-aws/.turbo/turbo-build.log",
+    "plugins/backend/rag-ai-backend-embeddings-aws/dist/BedrockAugmenter.cjs.js",
+    "plugins/backend/rag-ai-backend-embeddings-aws/dist/BedrockAugmenter.cjs.js.map",
+    "plugins/backend/rag-ai-backend-embeddings-aws/dist/BedrockCohereEmbeddings.cjs.js",
+    "plugins/backend/rag-ai-backend-embeddings-aws/dist/BedrockCohereEmbeddings.cjs.js.map",
+    "plugins/backend/rag-ai-backend-embeddings-aws/dist/index.cjs.js",
+    "plugins/backend/rag-ai-backend-embeddings-aws/dist/index.cjs.js.map",
+    "plugins/backend/rag-ai-backend-embeddings-aws/dist/index.d.ts"
+  ]
+}

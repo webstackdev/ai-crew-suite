@@ -1,7 +1,7 @@
 {
   "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "./dist-types"
+    "outDir": "../../../dist-types/plugins/backend/rag-ai-backend"
   },
   "include": ["src/**/*"]
 }
