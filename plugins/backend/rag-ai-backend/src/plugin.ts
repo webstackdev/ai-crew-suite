@@ -237,6 +237,7 @@ export const ragAiPlugin = createBackendPlugin({
             checkpointStore: runtimeStore,
             runStore: runtimeStore,
             artifactSink: runtimeStore,
+            auditLogSink: runtimeStore,
             triggers,
           }),
         );

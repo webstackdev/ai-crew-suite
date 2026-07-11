@@ -275,4 +275,4 @@ flowchart LR
 - [x] P3: `LangGraphOrchestrator` + `CheckpointStore`; `SessionStore`; ship first stateful agent.
 - [x] P4: triggers (event/cron/webhook) + idempotency; `ArtifactSink`; approvals + resume; ship first write agent.
 - [x] P5: `CrewOrchestrator`; tool packs; ship first crew.
-- [ ] P6: budgets/timeouts/cancel/retry; redaction + audit log.
+- [x] P6: budgets/timeouts/cancel/retry; redaction + audit log.

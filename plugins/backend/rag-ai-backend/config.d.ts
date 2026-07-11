@@ -78,5 +78,16 @@ export interface Config {
      * Source ids available to the source registry.
      */
     sources?: string[];
+
+    /**
+     * Runtime hardening controls for retries, timeouts, budgets and throttling.
+     */
+    hardening?: {
+      timeoutMs?: number;
+      maxRetries?: number;
+      retryBackoffMs?: number;
+      maxTotalTokens?: number;
+      rateLimitPerMinute?: number;
+    };
   };
 }

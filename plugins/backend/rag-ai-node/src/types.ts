@@ -229,6 +229,20 @@ export interface ArtifactSink {
   record(artifact: Artifact): Promise<void>;
 }
 
+export type AuditLogEntry = {
+  id: string;
+  runId: string;
+  agentId: string;
+  action: string;
+  toolId?: string;
+  payload?: unknown;
+  actor?: string;
+};
+
+export interface AuditLogSink {
+  recordWriteAction(entry: AuditLogEntry): Promise<void>;
+}
+
 export type ApprovalDecision = {
   status: 'approved' | 'rejected';
   note?: string;
@@ -264,6 +278,13 @@ export type RunContext = {
   checkpointStore?: CheckpointStore;
   runStore?: RunStore;
   artifactSink?: ArtifactSink;
+  auditLogSink?: AuditLogSink;
+  hardening?: {
+    timeoutMs?: number;
+    maxRetries?: number;
+    retryBackoffMs?: number;
+    maxTotalTokens?: number;
+  };
   memory?: 'none' | 'session';
 };
 

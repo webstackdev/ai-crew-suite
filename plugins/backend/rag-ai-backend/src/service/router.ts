@@ -23,6 +23,7 @@ import { RootConfigService } from '@backstage/backend-plugin-api';
 import { LoggerService } from '@backstage/backend-plugin-api';
 import {
   AgentDefinition,
+  AuditLogSink,
   ArtifactSink,
   AugmentationIndexer,
   CheckpointStore,
@@ -72,6 +73,13 @@ type AiBackendConfig = {
     suffix: string;
   };
   supportedSources?: string[];
+  hardening?: {
+    timeoutMs?: number;
+    maxRetries?: number;
+    retryBackoffMs?: number;
+    maxTotalTokens?: number;
+    rateLimitPerMinute?: number;
+  };
 };
 
 export interface RouterOptions {
@@ -87,6 +95,7 @@ export interface RouterOptions {
   checkpointStore?: CheckpointStore;
   runStore?: RunStore;
   artifactSink?: ArtifactSink;
+  auditLogSink?: AuditLogSink;
   triggers?: TriggerBinding[];
   config: RootConfigService;
 }
@@ -156,10 +165,12 @@ export async function createRouter(
     checkpointStore,
     runStore,
     artifactSink,
+    auditLogSink,
     triggers,
     config,
   } = options;
   const aiBackendConfig = config.getOptional<AiBackendConfig>('ai');
+  const hardeningConfig = aiBackendConfig?.hardening;
   const configuredAgents = aiBackendConfig?.agents;
   const configuredDefaultModelRef = aiBackendConfig?.defaults?.model;
   const fallbackModelRef = configuredDefaultModelRef ?? [...models.keys()][0];
@@ -247,7 +258,15 @@ export async function createRouter(
     checkpointStore,
     runStore,
     artifactSink,
+    auditLogSink,
     triggers,
+    {
+      timeoutMs: hardeningConfig?.timeoutMs,
+      maxRetries: hardeningConfig?.maxRetries,
+      retryBackoffMs: hardeningConfig?.retryBackoffMs,
+      maxTotalTokens: hardeningConfig?.maxTotalTokens,
+      rateLimitPerMinute: hardeningConfig?.rateLimitPerMinute,
+    },
   );
 
   const router = Router();

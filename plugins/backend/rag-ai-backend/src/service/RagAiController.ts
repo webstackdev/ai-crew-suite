@@ -19,6 +19,7 @@ import {
   AgentDefinition,
   AgentEvent,
   ApprovalDecision,
+  AuditLogSink,
   ArtifactSink,
   AugmentationIndexer,
   CheckpointStore,
@@ -50,7 +51,16 @@ export class RagAiController {
   private readonly checkpointStore?: CheckpointStore;
   private readonly runStore?: RunStore;
   private readonly artifactSink?: ArtifactSink;
+  private readonly auditLogSink?: AuditLogSink;
   private readonly triggers: TriggerBinding[];
+  private readonly hardening: {
+    timeoutMs?: number;
+    maxRetries?: number;
+    retryBackoffMs?: number;
+    maxTotalTokens?: number;
+    rateLimitPerMinute?: number;
+  };
+  private readonly rateLimitBucket = new Map<string, number[]>();
   private logger: LoggerService;
 
   constructor(
@@ -66,7 +76,15 @@ export class RagAiController {
     checkpointStore?: CheckpointStore,
     runStore?: RunStore,
     artifactSink?: ArtifactSink,
+    auditLogSink?: AuditLogSink,
     triggers: TriggerBinding[] = [],
+    hardening: {
+      timeoutMs?: number;
+      maxRetries?: number;
+      retryBackoffMs?: number;
+      maxTotalTokens?: number;
+      rateLimitPerMinute?: number;
+    } = {},
   ) {
     this.logger = logger;
     this.runtime = runtime;
@@ -80,7 +98,9 @@ export class RagAiController {
     this.checkpointStore = checkpointStore;
     this.runStore = runStore;
     this.artifactSink = artifactSink;
+    this.auditLogSink = auditLogSink;
     this.triggers = triggers;
+    this.hardening = hardening;
   }
 
   listAgents = async (_req: Request, res: Response) => {
@@ -240,6 +260,10 @@ export class RagAiController {
       return res.status(422).send({ message: 'input.query is required' });
     }
 
+    if (!this.consumeRateLimit(selectedAgent.id)) {
+      return res.status(429).send({ message: 'Rate limit exceeded for agent' });
+    }
+
     if (idempotencyKey && this.runStore) {
       const existing = await this.runStore.findRunByIdempotencyKey(idempotencyKey);
       if (existing) {
@@ -265,6 +289,9 @@ export class RagAiController {
     });
 
     try {
+      const abortController = new AbortController();
+      const timeoutHandle = this.createTimeout(abortController);
+      this.attachAbortOnClose(req, res, abortController, timeoutHandle);
       for await (const event of this.executeRun(
         {
           runId,
@@ -280,10 +307,12 @@ export class RagAiController {
         },
         model,
         selectedAgent,
+        abortController.signal,
       )) {
         this.writeEvent(res, event);
         res.flush?.();
       }
+      clearTimeout(timeoutHandle);
     } catch (e: any) {
       this.writeEvent(res, {
         type: 'error',
@@ -379,6 +408,10 @@ export class RagAiController {
       return res.status(422).send({ message: 'input.query is required' });
     }
 
+    if (!this.consumeRateLimit(selectedAgent.id)) {
+      return res.status(429).send({ message: 'Rate limit exceeded for agent' });
+    }
+
     const runId = randomUUID();
     const sessionId =
       selectedAgent.memory === 'session' && this.sessionStore
@@ -393,6 +426,9 @@ export class RagAiController {
     });
 
     try {
+      const abortController = new AbortController();
+      const timeoutHandle = this.createTimeout(abortController);
+      this.attachAbortOnClose(req, res, abortController, timeoutHandle);
       for await (const event of this.executeRun(
         {
           runId,
@@ -408,10 +444,12 @@ export class RagAiController {
         },
         model,
         selectedAgent,
+        abortController.signal,
       )) {
         this.writeEvent(res, event);
         res.flush?.();
       }
+      clearTimeout(timeoutHandle);
     } catch (e: any) {
       this.writeEvent(res, {
         type: 'error',
@@ -437,6 +475,7 @@ export class RagAiController {
     },
     model: BaseLLM | BaseChatModel,
     selectedAgent: AgentDefinition,
+    signal?: AbortSignal,
   ): AsyncIterable<AgentEvent> {
     for await (const event of this.runtime.run(runInput, {
       logger: this.logger,
@@ -449,9 +488,68 @@ export class RagAiController {
       checkpointStore: this.checkpointStore,
       runStore: this.runStore,
       artifactSink: this.artifactSink,
+      auditLogSink: this.auditLogSink,
+      hardening: {
+        maxRetries: this.hardening.maxRetries,
+        retryBackoffMs: this.hardening.retryBackoffMs,
+        maxTotalTokens: this.hardening.maxTotalTokens,
+      },
+      signal,
     })) {
       yield event;
     }
+  }
+
+  private createTimeout(controller: AbortController): NodeJS.Timeout | undefined {
+    if (!this.hardening.timeoutMs || this.hardening.timeoutMs <= 0) {
+      return undefined;
+    }
+
+    return setTimeout(() => {
+      controller.abort(new Error('Run timed out'));
+    }, this.hardening.timeoutMs);
+  }
+
+  private attachAbortOnClose(
+    req: Request,
+    res: Response,
+    controller: AbortController,
+    timeout?: NodeJS.Timeout,
+  ): void {
+    const onClose = () => {
+      if (!controller.signal.aborted) {
+        controller.abort(new Error('Client disconnected'));
+      }
+      if (timeout) {
+        clearTimeout(timeout);
+      }
+      req.off('close', onClose);
+      res.off('close', onClose);
+    };
+
+    req.on('close', onClose);
+    res.on('close', onClose);
+  }
+
+  private consumeRateLimit(agentId: string): boolean {
+    const limit = this.hardening.rateLimitPerMinute;
+    if (!limit || limit <= 0) {
+      return true;
+    }
+
+    const now = Date.now();
+    const cutoff = now - 60_000;
+    const bucket = this.rateLimitBucket.get(agentId) ?? [];
+    const nextBucket = bucket.filter(timestamp => timestamp >= cutoff);
+
+    if (nextBucket.length >= limit) {
+      this.rateLimitBucket.set(agentId, nextBucket);
+      return false;
+    }
+
+    nextBucket.push(now);
+    this.rateLimitBucket.set(agentId, nextBucket);
+    return true;
   }
 
   private writeEvent = (res: Response, event: AgentEvent): void => {

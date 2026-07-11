@@ -15,6 +15,8 @@
  */
 import { Knex } from 'knex';
 import {
+  AuditLogEntry,
+  AuditLogSink,
   ApprovalDecision,
   ApprovalRequest,
   Artifact,
@@ -28,7 +30,7 @@ import {
 import { randomUUID } from 'crypto';
 
 export class PgAgentRuntimeStore
-  implements SessionStore, CheckpointStore, RunStore, ArtifactSink
+  implements SessionStore, CheckpointStore, RunStore, ArtifactSink, AuditLogSink
 {
   constructor(private readonly client: Knex) {}
 
@@ -221,6 +223,18 @@ export class PgAgentRuntimeStore
       kind: artifact.kind,
       ref: artifact.ref ?? null,
       url: artifact.url ?? null,
+    });
+  }
+
+  async recordWriteAction(entry: AuditLogEntry): Promise<void> {
+    await this.client('ai_audit_logs').insert({
+      id: entry.id,
+      run_id: entry.runId,
+      agent_id: entry.agentId,
+      action: entry.action,
+      tool_id: entry.toolId ?? null,
+      payload: entry.payload ? JSON.stringify(entry.payload) : null,
+      actor: entry.actor ?? null,
     });
   }
 }
