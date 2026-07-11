@@ -129,6 +129,8 @@ export class RagAiClient implements RagAiApi {
       case 'tool_call':
       case 'tool_result':
       case 'usage':
+      case 'approval_request':
+      case 'artifact':
       case 'done':
       case 'error': {
         try {

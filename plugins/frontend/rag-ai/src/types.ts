@@ -39,5 +39,10 @@ export type AiRunEvent =
       };
     }
   | { type: 'usage'; data: { runId: string; input: number; output: number; total: number } }
+  | {
+      type: 'approval_request';
+      data: { runId: string; approvalId: string; reason: string; effect: 'read' | 'write' };
+    }
+  | { type: 'artifact'; data: { runId: string; kind: string; url?: string; ref?: string } }
   | { type: 'done'; data: { runId: string; sessionId?: string } }
   | { type: 'error'; data: { runId: string; message: string } };

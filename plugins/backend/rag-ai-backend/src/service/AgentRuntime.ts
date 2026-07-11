@@ -17,6 +17,7 @@ import {
   AgentDefinition,
   AgentEvent,
   AgentRunInput,
+  ApprovalDecision,
   Orchestrator,
   RunContext,
 } from '@webstackbuilders/plugin-ai-core-node';
@@ -68,11 +69,27 @@ export class AgentRuntime {
         return;
       }
 
+      if (ctx.runStore) {
+        await ctx.runStore.createRun({
+          id: input.runId,
+          agentId: input.agentId,
+          sessionId: input.input.sessionId,
+          status: 'running',
+          trigger: input.trigger,
+          idempotencyKey: input.idempotencyKey,
+        });
+      }
+
+      let seq = 0;
+
       for await (const event of orchestrator.run(input, {
         ...ctx,
         systemPrompt: ctx.systemPrompt ?? agent.systemPrompt,
         memory: ctx.memory ?? agent.memory ?? 'none',
       })) {
+        seq += 1;
+        await ctx.runStore?.appendRunStep(input.runId, seq, event.type, event.data);
+
         if (event.type === 'tool_call') {
           tracer.startSpan('ai.tool.call', {
             attributes: {
@@ -88,10 +105,112 @@ export class AgentRuntime {
           runSpan.setAttribute('ai.usage.total', event.data.total);
         }
 
+        if (event.type === 'approval_request') {
+          await ctx.runStore?.createApproval({
+            id: event.data.approvalId,
+            runId: input.runId,
+            reason: event.data.reason,
+            effect: event.data.effect,
+          });
+          await ctx.runStore?.updateRunStatus(input.runId, 'paused');
+        }
+
+        if (event.type === 'artifact') {
+          await ctx.artifactSink?.record({
+            id: `${input.runId}:${seq}`,
+            runId: input.runId,
+            kind: event.data.kind,
+            ref: event.data.ref,
+            url: event.data.url,
+          });
+        }
+
+        if (event.type === 'done') {
+          await ctx.runStore?.updateRunStatus(input.runId, 'done');
+        }
+
+        if (event.type === 'error') {
+          await ctx.runStore?.updateRunStatus(input.runId, 'error');
+        }
+
         yield event;
       }
     } finally {
       runSpan.end();
+    }
+  }
+
+  async *resume(
+    runId: string,
+    decision: ApprovalDecision,
+    ctx: Omit<RunContext, 'model' | 'systemPrompt'> & {
+      model: RunContext['model'];
+      systemPrompt?: string;
+      orchestratorName?: string;
+    },
+  ): AsyncIterable<AgentEvent> {
+    const run = await ctx.runStore?.getRun(runId);
+    if (!run) {
+      yield { type: 'error', data: { runId, message: `Unknown run '${runId}'` } };
+      return;
+    }
+
+    const agent = this.agents.get(run.agentId);
+    if (!agent) {
+      yield {
+        type: 'error',
+        data: { runId, message: `Unknown agent '${run.agentId}' for run '${runId}'` },
+      };
+      return;
+    }
+
+    const orchestratorName = agent.orchestrator ?? 'single-shot';
+    const orchestrator =
+      this.orchestrators.get(orchestratorName) ??
+      this.orchestrators.get('single-shot');
+
+    if (!orchestrator?.resume) {
+      yield {
+        type: 'error',
+        data: {
+          runId,
+          message: `Orchestrator '${orchestratorName}' does not support resume`,
+        },
+      };
+      return;
+    }
+
+    await ctx.runStore?.decideApproval(runId, decision);
+    await ctx.runStore?.updateRunStatus(runId, 'running');
+
+    let seq = 1000000;
+    for await (const event of orchestrator.resume(runId, decision, {
+      ...ctx,
+      systemPrompt: ctx.systemPrompt ?? agent.systemPrompt,
+      memory: ctx.memory ?? agent.memory ?? 'none',
+    })) {
+      seq += 1;
+      await ctx.runStore?.appendRunStep(runId, seq, event.type, event.data);
+
+      if (event.type === 'artifact') {
+        await ctx.artifactSink?.record({
+          id: `${runId}:${seq}`,
+          runId,
+          kind: event.data.kind,
+          ref: event.data.ref,
+          url: event.data.url,
+        });
+      }
+
+      if (event.type === 'done') {
+        await ctx.runStore?.updateRunStatus(runId, 'done');
+      }
+
+      if (event.type === 'error') {
+        await ctx.runStore?.updateRunStatus(runId, 'error');
+      }
+
+      yield event;
     }
   }
 }

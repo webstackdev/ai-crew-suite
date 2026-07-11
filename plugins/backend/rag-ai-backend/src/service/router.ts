@@ -23,14 +23,17 @@ import { RootConfigService } from '@backstage/backend-plugin-api';
 import { LoggerService } from '@backstage/backend-plugin-api';
 import {
   AgentDefinition,
+  ArtifactSink,
   AugmentationIndexer,
   CheckpointStore,
   EntityFilterShape,
   Orchestrator,
   RetrievalPipeline,
+  RunStore,
   SessionStore,
   ToolDefinition,
   SourceRegistry,
+  TriggerBinding,
 } from '@webstackbuilders/plugin-ai-core-node';
 import { LlmService } from './LlmService';
 import { RagAiController } from './RagAiController';
@@ -72,6 +75,9 @@ export interface RouterOptions {
   retrievalPipeline: RetrievalPipeline;
   sessionStore?: SessionStore;
   checkpointStore?: CheckpointStore;
+  runStore?: RunStore;
+  artifactSink?: ArtifactSink;
+  triggers?: TriggerBinding[];
   config: RootConfigService;
 }
 
@@ -138,6 +144,9 @@ export async function createRouter(
     retrievalPipeline,
     sessionStore,
     checkpointStore,
+    runStore,
+    artifactSink,
+    triggers,
     config,
   } = options;
   const aiBackendConfig = config.getOptional<AiBackendConfig>('ai');
@@ -209,6 +218,9 @@ export async function createRouter(
     retrievalPipeline,
     sessionStore,
     checkpointStore,
+    runStore,
+    artifactSink,
+    triggers,
   );
 
   const router = Router();
@@ -232,6 +244,11 @@ export async function createRouter(
   router
     .route('/query/:source')
     .post(sourceValidatorMiddleware, bodyQueryValidator, controller.query);
+
+  router.route('/agents').get(controller.listAgents);
+  router.route('/agents/:id/runs').post(controller.startRun);
+  router.route('/runs/:id/approvals').post(controller.approveRun);
+  router.route('/triggers/:source').post(controller.triggerRun);
 
   return router;
 }

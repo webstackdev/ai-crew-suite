@@ -17,11 +17,13 @@ import { AIMessageChunk } from '@langchain/core/messages';
 import {
   AgentEvent,
   AgentRunInput,
+  ApprovalDecision,
   EmbeddingDoc,
   Orchestrator,
   RunContext,
   SessionMessage,
 } from '@webstackbuilders/plugin-ai-core-node';
+import { randomUUID } from 'crypto';
 import { LlmService } from './LlmService';
 
 type UsageMetadata = {
@@ -199,11 +201,47 @@ export class LangGraphOrchestrator implements Orchestrator {
 
     if (checkpointStore) {
       await checkpointStore.save(runId, {
+        runId,
+        agentId: input.agentId,
         sessionId,
         query: input.input.query,
         response: fullResponse,
+        status: 'done',
         completedAt: new Date().toISOString(),
       });
+    }
+
+    const hasWriteTool = ctx
+      .toolRegistry
+      .list()
+      .some(tool => tool.effect === 'write');
+    const shouldRequestApproval = hasWriteTool && /\b(create|open|write|apply|update|delete|pr|issue)\b/i.test(input.input.query);
+
+    if (shouldRequestApproval) {
+      const approvalId = randomUUID();
+      await checkpointStore?.save(runId, {
+        runId,
+        agentId: input.agentId,
+        sessionId,
+        proposedArtifact: {
+          kind: 'draft',
+          ref: 'pending-write-action',
+          url: undefined,
+        },
+        status: 'awaiting_approval',
+      });
+
+      yield {
+        type: 'approval_request',
+        data: {
+          runId,
+          approvalId,
+          reason: 'This action may modify external systems and requires approval.',
+          effect: 'write',
+        },
+      };
+
+      return;
     }
 
     yield {
@@ -224,6 +262,74 @@ export class LangGraphOrchestrator implements Orchestrator {
     yield {
       type: 'done',
       data: { runId, sessionId },
+    };
+  }
+
+  async *resume(
+    runId: string,
+    decision: ApprovalDecision,
+    ctx: RunContext,
+  ): AsyncIterable<AgentEvent> {
+    const state = await ctx.checkpointStore?.load<{
+      runId: string;
+      sessionId?: string;
+      status?: string;
+      proposedArtifact?: { kind: string; ref?: string; url?: string };
+    }>(runId);
+
+    if (!state) {
+      yield {
+        type: 'error',
+        data: { runId, message: `No checkpoint found for run '${runId}'` },
+      };
+      return;
+    }
+
+    if (decision.status === 'rejected') {
+      yield {
+        type: 'error',
+        data: {
+          runId,
+          message: decision.note ?? 'Write action was rejected during approval',
+        },
+      };
+      return;
+    }
+
+    const artifact = state.proposedArtifact ?? {
+      kind: 'change',
+      ref: 'approved-action',
+    };
+
+    yield {
+      type: 'step',
+      data: { runId, seq: 1, node: 'approval.resume', phase: 'enter' },
+    };
+
+    yield {
+      type: 'artifact',
+      data: {
+        runId,
+        kind: artifact.kind,
+        ref: artifact.ref,
+        url: artifact.url,
+      },
+    };
+
+    await ctx.checkpointStore?.save(runId, {
+      ...state,
+      status: 'done',
+      resumedAt: new Date().toISOString(),
+    });
+
+    yield {
+      type: 'step',
+      data: { runId, seq: 2, node: 'approval.resume', phase: 'exit' },
+    };
+
+    yield {
+      type: 'done',
+      data: { runId, sessionId: state.sessionId },
     };
   }
 }

@@ -139,6 +139,14 @@ export const ControlledRagModal = ({
             // Do nothing
             break;
           }
+          case 'approval_request': {
+            setWarning(chunk.data.reason);
+            break;
+          }
+          case 'artifact': {
+            // Do nothing in this modal; artifact-capable UI comes in a later iteration.
+            break;
+          }
           default: {
             const exhaustiveCheck: never = chunk;
             throw new Error(`Unknown event type: ${JSON.stringify(exhaustiveCheck)}`);

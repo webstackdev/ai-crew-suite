@@ -15,13 +15,21 @@
  */
 import { Knex } from 'knex';
 import {
+  ApprovalDecision,
+  ApprovalRequest,
+  Artifact,
+  ArtifactSink,
   CheckpointStore,
+  RunRecord,
+  RunStore,
   SessionMessage,
   SessionStore,
 } from '@webstackbuilders/plugin-ai-core-node';
 import { randomUUID } from 'crypto';
 
-export class PgAgentRuntimeStore implements SessionStore, CheckpointStore {
+export class PgAgentRuntimeStore
+  implements SessionStore, CheckpointStore, RunStore, ArtifactSink
+{
   constructor(private readonly client: Knex) {}
 
   async createSession(agentId: string, userRef?: string): Promise<string> {
@@ -90,5 +98,129 @@ export class PgAgentRuntimeStore implements SessionStore, CheckpointStore {
     }
 
     return row.state as T;
+  }
+
+  async createRun(record: RunRecord): Promise<void> {
+    await this.client('ai_runs').insert({
+      id: record.id,
+      agent_id: record.agentId,
+      session_id: record.sessionId ?? null,
+      status: record.status,
+      trigger: record.trigger ?? null,
+      idempotency_key: record.idempotencyKey ?? null,
+    });
+  }
+
+  async getRun(runId: string): Promise<RunRecord | undefined> {
+    const row = await this.client('ai_runs')
+      .select('id', 'agent_id', 'session_id', 'status', 'trigger', 'idempotency_key')
+      .where({ id: runId })
+      .first();
+
+    if (!row) {
+      return undefined;
+    }
+
+    return {
+      id: row.id,
+      agentId: row.agent_id,
+      sessionId: row.session_id ?? undefined,
+      status: row.status,
+      trigger: row.trigger ?? undefined,
+      idempotencyKey: row.idempotency_key ?? undefined,
+    };
+  }
+
+  async findRunByIdempotencyKey(key: string): Promise<RunRecord | undefined> {
+    const row = await this.client('ai_runs')
+      .select('id', 'agent_id', 'session_id', 'status', 'trigger', 'idempotency_key')
+      .where({ idempotency_key: key })
+      .first();
+
+    if (!row) {
+      return undefined;
+    }
+
+    return {
+      id: row.id,
+      agentId: row.agent_id,
+      sessionId: row.session_id ?? undefined,
+      status: row.status,
+      trigger: row.trigger ?? undefined,
+      idempotencyKey: row.idempotency_key ?? undefined,
+    };
+  }
+
+  async updateRunStatus(runId: string, status: RunRecord['status']): Promise<void> {
+    await this.client('ai_runs')
+      .where({ id: runId })
+      .update({
+        status,
+        ended_at: status === 'running' ? null : this.client.fn.now(),
+      });
+  }
+
+  async appendRunStep(
+    runId: string,
+    seq: number,
+    type: string,
+    payload: unknown,
+  ): Promise<void> {
+    await this.client('ai_run_steps').insert({
+      id: randomUUID(),
+      run_id: runId,
+      seq,
+      type,
+      payload: JSON.stringify(payload),
+    });
+  }
+
+  async createApproval(request: ApprovalRequest): Promise<void> {
+    await this.client('ai_approvals').insert({
+      id: request.id,
+      run_id: request.runId,
+      status: 'pending',
+      note: request.reason,
+    });
+  }
+
+  async getPendingApproval(runId: string): Promise<ApprovalRequest | undefined> {
+    const row = await this.client('ai_approvals')
+      .select('id', 'run_id', 'status', 'note')
+      .where({ run_id: runId, status: 'pending' })
+      .orderBy('requested_at', 'desc')
+      .first();
+
+    if (!row) {
+      return undefined;
+    }
+
+    return {
+      id: row.id,
+      runId: row.run_id,
+      reason: row.note ?? 'Approval required',
+      effect: 'write',
+    };
+  }
+
+  async decideApproval(runId: string, decision: ApprovalDecision): Promise<void> {
+    await this.client('ai_approvals')
+      .where({ run_id: runId, status: 'pending' })
+      .update({
+        status: decision.status,
+        note: decision.note ?? null,
+        decided_at: this.client.fn.now(),
+        decided_by: decision.decidedBy ?? null,
+      });
+  }
+
+  async record(artifact: Artifact): Promise<void> {
+    await this.client('ai_artifacts').insert({
+      id: artifact.id,
+      run_id: artifact.runId,
+      kind: artifact.kind,
+      ref: artifact.ref ?? null,
+      url: artifact.url ?? null,
+    });
   }
 }

@@ -18,12 +18,17 @@ import { LoggerService } from '@backstage/backend-plugin-api';
 import {
   AgentDefinition,
   AgentEvent,
+  ApprovalDecision,
+  ArtifactSink,
   AugmentationIndexer,
   CheckpointStore,
+  EntityFilterShape,
   EmbeddingsSource,
   RetrievalPipeline,
+  RunStore,
   SessionStore,
   ToolRegistry,
+  TriggerBinding,
 } from '@webstackbuilders/plugin-ai-core-node';
 import { BaseLLM } from '@langchain/core/language_models/llms';
 import { BaseChatModel } from '@langchain/core/language_models/chat_models';
@@ -43,6 +48,9 @@ export class RagAiController {
   private readonly defaultAgentId: string;
   private readonly sessionStore?: SessionStore;
   private readonly checkpointStore?: CheckpointStore;
+  private readonly runStore?: RunStore;
+  private readonly artifactSink?: ArtifactSink;
+  private readonly triggers: TriggerBinding[];
   private logger: LoggerService;
 
   constructor(
@@ -56,6 +64,9 @@ export class RagAiController {
     retrievalPipeline?: RetrievalPipeline,
     sessionStore?: SessionStore,
     checkpointStore?: CheckpointStore,
+    runStore?: RunStore,
+    artifactSink?: ArtifactSink,
+    triggers: TriggerBinding[] = [],
   ) {
     this.logger = logger;
     this.runtime = runtime;
@@ -67,7 +78,21 @@ export class RagAiController {
     this.retrievalPipeline = retrievalPipeline;
     this.sessionStore = sessionStore;
     this.checkpointStore = checkpointStore;
+    this.runStore = runStore;
+    this.artifactSink = artifactSink;
+    this.triggers = triggers;
   }
+
+  listAgents = async (_req: Request, res: Response) => {
+    return res.status(200).send({
+      agents: [...this.agents.values()].map(agent => ({
+        id: agent.id,
+        orchestrator: agent.orchestrator ?? 'single-shot',
+        memory: agent.memory ?? 'none',
+        tools: agent.toolIds,
+      })),
+    });
+  };
 
   createEmbeddings = async (req: Request, res: Response) => {
     const source = req.params.source as EmbeddingsSource;
@@ -157,7 +182,7 @@ export class RagAiController {
     });
 
     try {
-      for await (const event of this.runtime.run(
+      for await (const event of this.executeRun(
         {
           runId,
           agentId: selectedAgent.id,
@@ -168,16 +193,8 @@ export class RagAiController {
             entityFilter,
           },
         },
-        {
-          logger: this.logger,
-          toolRegistry: this.toolRegistry,
-          model,
-          systemPrompt: selectedAgent.systemPrompt,
-          identity: 'anonymous',
-          memory: selectedAgent.memory,
-          sessionStore: this.sessionStore,
-          checkpointStore: this.checkpointStore,
-        },
+        model,
+        selectedAgent,
       )) {
         this.writeEvent(res, event);
         res.flush?.();
@@ -198,6 +215,244 @@ export class RagAiController {
 
     res.end();
   };
+
+  startRun = async (req: Request, res: Response) => {
+    const agentId = req.params.id;
+    const selectedAgent = this.agents.get(agentId);
+    if (!selectedAgent) {
+      return res.status(422).send({ message: `Unknown agent '${agentId}'` });
+    }
+
+    const model = this.models.get(selectedAgent.modelRef);
+    if (!model) {
+      return res.status(500).send({
+        message: `Agent '${selectedAgent.id}' references unknown model '${selectedAgent.modelRef}'`,
+      });
+    }
+
+    const payload = req.body?.input ?? req.body ?? {};
+    const query = payload.query;
+    const source = payload.source ?? 'all';
+    const entityFilter = payload.entityFilter;
+    const idempotencyKey = req.body?.idempotencyKey;
+
+    if (!query || typeof query !== 'string') {
+      return res.status(422).send({ message: 'input.query is required' });
+    }
+
+    if (idempotencyKey && this.runStore) {
+      const existing = await this.runStore.findRunByIdempotencyKey(idempotencyKey);
+      if (existing) {
+        return res.status(200).send({
+          duplicate: true,
+          runId: existing.id,
+          status: existing.status,
+        });
+      }
+    }
+
+    const runId = randomUUID();
+    const sessionId =
+      selectedAgent.memory === 'session' && this.sessionStore
+        ? payload.sessionId ??
+          (await this.sessionStore.createSession(selectedAgent.id, 'anonymous'))
+        : undefined;
+
+    res.writeHead(200, {
+      'Content-Type': 'text/event-stream',
+      Connection: 'keep-alive',
+      'Cache-Control': 'no-cache',
+    });
+
+    try {
+      for await (const event of this.executeRun(
+        {
+          runId,
+          agentId: selectedAgent.id,
+          idempotencyKey,
+          trigger: req.body?.trigger,
+          input: {
+            query,
+            source,
+            sessionId,
+            entityFilter,
+          },
+        },
+        model,
+        selectedAgent,
+      )) {
+        this.writeEvent(res, event);
+        res.flush?.();
+      }
+    } catch (e: any) {
+      this.writeEvent(res, {
+        type: 'error',
+        data: { runId, message: e?.message ?? 'Failed to start run' },
+      });
+    }
+
+    return res.end();
+  };
+
+  approveRun = async (req: Request, res: Response) => {
+    const runId = req.params.id;
+    const decision = req.body as ApprovalDecision;
+    if (!decision || (decision.status !== 'approved' && decision.status !== 'rejected')) {
+      return res.status(422).send({ message: "status must be 'approved' or 'rejected'" });
+    }
+
+    const run = await this.runStore?.getRun(runId);
+    if (!run) {
+      return res.status(404).send({ message: `Run '${runId}' not found` });
+    }
+
+    const agent = this.agents.get(run.agentId);
+    if (!agent) {
+      return res.status(404).send({ message: `Agent '${run.agentId}' not found` });
+    }
+
+    const model = this.models.get(agent.modelRef);
+    if (!model) {
+      return res.status(500).send({
+        message: `Agent '${agent.id}' references unknown model '${agent.modelRef}'`,
+      });
+    }
+
+    res.writeHead(200, {
+      'Content-Type': 'text/event-stream',
+      Connection: 'keep-alive',
+      'Cache-Control': 'no-cache',
+    });
+
+    for await (const event of this.runtime.resume(runId, decision, {
+      logger: this.logger,
+      toolRegistry: this.toolRegistry,
+      model,
+      systemPrompt: agent.systemPrompt,
+      identity: decision.decidedBy ?? 'anonymous',
+      memory: agent.memory,
+      sessionStore: this.sessionStore,
+      checkpointStore: this.checkpointStore,
+      runStore: this.runStore,
+      artifactSink: this.artifactSink,
+    })) {
+      this.writeEvent(res, event);
+      res.flush?.();
+    }
+
+    return res.end();
+  };
+
+  triggerRun = async (req: Request, res: Response) => {
+    const source = req.params.source;
+    const trigger = this.triggers.find(it => (it.source ?? it.id) === source);
+    const agentId = req.body?.agentId ?? trigger?.agentId ?? trigger?.id ?? this.defaultAgentId;
+    const idempotencyKey = req.body?.idempotencyKey;
+
+    if (!idempotencyKey || typeof idempotencyKey !== 'string') {
+      return res.status(422).send({ message: 'idempotencyKey is required' });
+    }
+
+    const existing = await this.runStore?.findRunByIdempotencyKey(idempotencyKey);
+    if (existing) {
+      return res.status(200).send({ duplicate: true, runId: existing.id, status: existing.status });
+    }
+
+    const selectedAgent = this.agents.get(agentId);
+    if (!selectedAgent) {
+      return res.status(422).send({ message: `Unknown agent '${agentId}'` });
+    }
+
+    const model = this.models.get(selectedAgent.modelRef);
+    if (!model) {
+      return res.status(500).send({
+        message: `Agent '${selectedAgent.id}' references unknown model '${selectedAgent.modelRef}'`,
+      });
+    }
+
+    const payload = req.body?.input ?? req.body ?? {};
+    const query = payload.query;
+    const requestSource = payload.source ?? source;
+    const entityFilter = payload.entityFilter;
+
+    if (!query || typeof query !== 'string') {
+      return res.status(422).send({ message: 'input.query is required' });
+    }
+
+    const runId = randomUUID();
+    const sessionId =
+      selectedAgent.memory === 'session' && this.sessionStore
+        ? payload.sessionId ??
+          (await this.sessionStore.createSession(selectedAgent.id, 'anonymous'))
+        : undefined;
+
+    res.writeHead(200, {
+      'Content-Type': 'text/event-stream',
+      Connection: 'keep-alive',
+      'Cache-Control': 'no-cache',
+    });
+
+    try {
+      for await (const event of this.executeRun(
+        {
+          runId,
+          agentId: selectedAgent.id,
+          idempotencyKey,
+          trigger: source,
+          input: {
+            query,
+            source: requestSource,
+            sessionId,
+            entityFilter,
+          },
+        },
+        model,
+        selectedAgent,
+      )) {
+        this.writeEvent(res, event);
+        res.flush?.();
+      }
+    } catch (e: any) {
+      this.writeEvent(res, {
+        type: 'error',
+        data: { runId, message: e?.message ?? 'Failed to process trigger run' },
+      });
+    }
+
+    return res.end();
+  };
+
+  private async *executeRun(
+    runInput: {
+      runId: string;
+      agentId: string;
+      idempotencyKey?: string;
+      trigger?: string;
+      input: {
+        query: string;
+        source: string;
+        sessionId?: string;
+        entityFilter?: EntityFilterShape;
+      };
+    },
+    model: BaseLLM | BaseChatModel,
+    selectedAgent: AgentDefinition,
+  ): AsyncIterable<AgentEvent> {
+    for await (const event of this.runtime.run(runInput, {
+      logger: this.logger,
+      toolRegistry: this.toolRegistry,
+      model,
+      systemPrompt: selectedAgent.systemPrompt,
+      identity: 'anonymous',
+      memory: selectedAgent.memory,
+      sessionStore: this.sessionStore,
+      checkpointStore: this.checkpointStore,
+      runStore: this.runStore,
+      artifactSink: this.artifactSink,
+    })) {
+      yield event;
+    }
+  }
 
   private writeEvent = (res: Response, event: AgentEvent): void => {
     res.write(`event: ${event.type}\n`);
@@ -230,6 +485,16 @@ export class RagAiController {
           total_tokens: event.data.total,
         })}\n\n`,
       );
+    }
+
+    if (event.type === 'approval_request') {
+      res.write('event: approval_request\n');
+      res.write(`data: ${JSON.stringify(event.data)}\n\n`);
+    }
+
+    if (event.type === 'artifact') {
+      res.write('event: artifact\n');
+      res.write(`data: ${JSON.stringify(event.data)}\n\n`);
     }
 
     if (event.type === 'error') {

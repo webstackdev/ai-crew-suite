@@ -123,6 +123,7 @@ export type ModelDefinition = {
 export type TriggerBinding = {
   id: string;
   source?: string;
+  agentId?: string;
 };
 
 export type AgentDefinition = {
@@ -167,6 +168,8 @@ export type ToolDefinition = Tool & {
 export type AgentRunInput = {
   runId: string;
   agentId: string;
+  idempotencyKey?: string;
+  trigger?: string;
   input: {
     query: string;
     source: SourceId;
@@ -197,6 +200,51 @@ export interface CheckpointStore {
   load<T = unknown>(runId: string): Promise<T | undefined>;
 }
 
+export type RunRecord = {
+  id: string;
+  agentId: string;
+  sessionId?: string;
+  status: 'running' | 'paused' | 'done' | 'error';
+  trigger?: string;
+  idempotencyKey?: string;
+};
+
+export type Artifact = {
+  id: string;
+  runId: string;
+  kind: string;
+  ref?: string;
+  url?: string;
+};
+
+export interface ArtifactSink {
+  record(artifact: Artifact): Promise<void>;
+}
+
+export type ApprovalDecision = {
+  status: 'approved' | 'rejected';
+  note?: string;
+  decidedBy?: string;
+};
+
+export type ApprovalRequest = {
+  id: string;
+  runId: string;
+  reason: string;
+  effect: 'read' | 'write';
+};
+
+export interface RunStore {
+  createRun(record: RunRecord): Promise<void>;
+  getRun(runId: string): Promise<RunRecord | undefined>;
+  findRunByIdempotencyKey(key: string): Promise<RunRecord | undefined>;
+  updateRunStatus(runId: string, status: RunRecord['status']): Promise<void>;
+  appendRunStep(runId: string, seq: number, type: string, payload: unknown): Promise<void>;
+  createApproval(request: ApprovalRequest): Promise<void>;
+  getPendingApproval(runId: string): Promise<ApprovalRequest | undefined>;
+  decideApproval(runId: string, decision: ApprovalDecision): Promise<void>;
+}
+
 export type RunContext = {
   logger: LoggerService;
   toolRegistry: ToolRegistry;
@@ -206,6 +254,8 @@ export type RunContext = {
   signal?: AbortSignal;
   sessionStore?: SessionStore;
   checkpointStore?: CheckpointStore;
+  runStore?: RunStore;
+  artifactSink?: ArtifactSink;
   memory?: 'none' | 'session';
 };
 
@@ -230,9 +280,22 @@ export type AgentEvent =
       type: 'usage';
       data: { runId: string; input: number; output: number; total: number };
     }
+  | {
+      type: 'approval_request';
+      data: { runId: string; approvalId: string; reason: string; effect: 'read' | 'write' };
+    }
+  | {
+      type: 'artifact';
+      data: { runId: string; kind: string; url?: string; ref?: string };
+    }
   | { type: 'done'; data: { runId: string; sessionId?: string } }
   | { type: 'error'; data: { runId: string; message: string } };
 
 export interface Orchestrator {
   run(input: AgentRunInput, ctx: RunContext): AsyncIterable<AgentEvent>;
+  resume?(
+    runId: string,
+    decision: ApprovalDecision,
+    ctx: RunContext,
+  ): AsyncIterable<AgentEvent>;
 }

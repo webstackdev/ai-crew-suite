@@ -191,6 +191,9 @@ export const ragAiPlugin = createBackendPlugin({
             retrievalPipeline,
             sessionStore: runtimeStore,
             checkpointStore: runtimeStore,
+            runStore: runtimeStore,
+            artifactSink: runtimeStore,
+            triggers,
           }),
         );
       },
