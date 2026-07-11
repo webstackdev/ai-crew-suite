@@ -12945,6 +12945,7 @@ __metadata:
     "@types/express": "npm:4.17.25"
     "@types/lodash": "npm:^4.17.24"
     "@webstackbuilders/plugin-ai-core-node": "workspace:^"
+    "@webstackbuilders/plugin-ai-storage-pgvector-node": "workspace:^"
     express: "npm:^4.22.2"
     express-promise-router: "npm:^4.1.1"
     lodash: "npm:^4.18.1"

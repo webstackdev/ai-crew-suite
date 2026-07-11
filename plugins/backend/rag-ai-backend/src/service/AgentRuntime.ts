@@ -34,16 +34,16 @@ export class AgentRuntime {
     orchestratorName?: string;
   }): AsyncIterable<AgentEvent> {
     const tracer = trace.getTracer('plugin-ai-core-backend');
+    const agent = this.agents.get(input.agentId);
     const runSpan = tracer.startSpan('ai.run', {
       attributes: {
         'ai.run.id': input.runId,
         'ai.agent.id': input.agentId,
-        'ai.orchestrator': ctx.orchestratorName ?? 'single-shot',
+        'ai.orchestrator': agent?.orchestrator ?? ctx.orchestratorName ?? 'single-shot',
       },
     });
 
     try {
-      const agent = this.agents.get(input.agentId);
       if (!agent) {
         yield {
           type: 'error',
@@ -71,6 +71,7 @@ export class AgentRuntime {
       for await (const event of orchestrator.run(input, {
         ...ctx,
         systemPrompt: ctx.systemPrompt ?? agent.systemPrompt,
+        memory: ctx.memory ?? agent.memory ?? 'none',
       })) {
         if (event.type === 'tool_call') {
           tracer.startSpan('ai.tool.call', {

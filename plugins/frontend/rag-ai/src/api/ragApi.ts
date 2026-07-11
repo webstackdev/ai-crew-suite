@@ -17,7 +17,12 @@ import { createApiRef } from '@backstage/core-plugin-api';
 import { AiRunEvent } from '../types';
 
 export interface RagAiApi {
-  ask(question: string, source: string, agentId?: string): AsyncGenerator<AiRunEvent>;
+  ask(
+    question: string,
+    source: string,
+    agentId?: string,
+    sessionId?: string,
+  ): AsyncGenerator<AiRunEvent>;
 }
 
 export const ragAiApiRef = createApiRef<RagAiApi>({

@@ -24,15 +24,18 @@ import { LoggerService } from '@backstage/backend-plugin-api';
 import {
   AgentDefinition,
   AugmentationIndexer,
+  CheckpointStore,
   EntityFilterShape,
   Orchestrator,
   RetrievalPipeline,
+  SessionStore,
   ToolDefinition,
   SourceRegistry,
 } from '@webstackbuilders/plugin-ai-core-node';
 import { LlmService } from './LlmService';
 import { RagAiController } from './RagAiController';
 import { AgentRuntime } from './AgentRuntime';
+import { LangGraphOrchestrator } from './LangGraphOrchestrator';
 import { SingleShotOrchestrator } from './SingleShotOrchestrator';
 import { InMemoryToolRegistry } from './ToolRegistry';
 
@@ -48,6 +51,7 @@ type AiBackendConfig = {
       systemPrompt?: string;
       orchestrator?: 'single-shot' | 'langgraph' | 'crew';
       tools?: string[];
+      memory?: 'none' | 'session';
     }
   >;
   prompts?: {
@@ -66,6 +70,8 @@ export interface RouterOptions {
   defaultAgentId: string;
   augmentationIndexer: AugmentationIndexer;
   retrievalPipeline: RetrievalPipeline;
+  sessionStore?: SessionStore;
+  checkpointStore?: CheckpointStore;
   config: RootConfigService;
 }
 
@@ -130,6 +136,8 @@ export async function createRouter(
     defaultAgentId,
     augmentationIndexer,
     retrievalPipeline,
+    sessionStore,
+    checkpointStore,
     config,
   } = options;
   const aiBackendConfig = config.getOptional<AiBackendConfig>('ai');
@@ -148,6 +156,9 @@ export async function createRouter(
             agentConfig.systemPrompt ?? aiBackendConfig?.defaults?.systemPrompt ?? '',
           toolIds: agentConfig.tools ?? [],
           orchestrator: agentConfig.orchestrator ?? 'single-shot',
+          memory:
+            agentConfig.memory ??
+            (agentConfig.orchestrator === 'langgraph' ? 'session' : 'none'),
         });
       }
     }
@@ -183,6 +194,7 @@ export async function createRouter(
 
   const orchestrators = new Map<string, Orchestrator>();
   orchestrators.set('single-shot', new SingleShotOrchestrator(llmService));
+  orchestrators.set('langgraph', new LangGraphOrchestrator(llmService));
 
   const runtime = new AgentRuntime(agents, orchestrators);
 
@@ -195,6 +207,8 @@ export async function createRouter(
     agents,
     defaultAgentId,
     retrievalPipeline,
+    sessionStore,
+    checkpointStore,
   );
 
   const router = Router();

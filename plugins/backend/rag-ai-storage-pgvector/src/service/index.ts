@@ -18,6 +18,7 @@ import { applyDatabaseMigrations } from '../database/migrations';
 
 import { VectorStore } from '@webstackbuilders/plugin-ai-core-node';
 import { PgVectorStore } from './PgVectorStore';
+import { PgAgentRuntimeStore } from './PgAgentRuntimeStore';
 import { Config } from '@backstage/config';
 
 export interface PgVectorStoreInitConfig {
@@ -54,4 +55,14 @@ export async function createPgVectorStore({
     chunkSize: options?.chunkSize,
     amount: options?.amount,
   });
+}
+
+export async function createPgAgentRuntimeStore({
+  logger,
+  database,
+}: Omit<PgVectorStoreInitConfig, 'config'>): Promise<PgAgentRuntimeStore> {
+  logger.info('Starting PgAgentRuntimeStore');
+  const dbClient = await database.getClient();
+  await applyDatabaseMigrations(dbClient);
+  return new PgAgentRuntimeStore(dbClient);
 }

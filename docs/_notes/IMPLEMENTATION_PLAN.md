@@ -272,7 +272,7 @@ flowchart LR
 - [x] P0: rename packages + imports to `@webstackbuilders/*`; NOTICE; green build.
 - [x] P1: `SourceRegistry`; registry extension points; de-singleton; per-agent model/prompt.
 - [x] P2: `Tool`/`ToolContext`; `knowledge.retrieve`; `SingleShotOrchestrator`; `AgentRuntime`; OTel + usage; new SSE + FE client.
-- [ ] P3: `LangGraphOrchestrator` + `CheckpointStore`; `SessionStore`; ship first stateful agent.
+- [x] P3: `LangGraphOrchestrator` + `CheckpointStore`; `SessionStore`; ship first stateful agent.
 - [ ] P4: triggers (event/cron/webhook) + idempotency; `ArtifactSink`; approvals + resume; ship first write agent.
 - [ ] P5: `CrewOrchestrator`; tool packs; ship first crew.
 - [ ] P6: budgets/timeouts/cancel/retry; redaction + audit log.

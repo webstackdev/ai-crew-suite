@@ -149,6 +149,6 @@ export class SingleShotOrchestrator implements Orchestrator {
       type: 'step',
       data: { runId, seq: nextSeq(), node: 'single-shot', phase: 'exit' },
     };
-    yield { type: 'done', data: { runId } };
+    yield { type: 'done', data: { runId, sessionId: input.input.sessionId } };
   }
 }

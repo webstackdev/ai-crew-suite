@@ -18,6 +18,7 @@ import {
   createBackendPlugin,
   coreServices,
 } from '@backstage/backend-plugin-api';
+import { createPgAgentRuntimeStore } from '@webstackbuilders/plugin-ai-storage-pgvector-node';
 import { BaseLLM } from '@langchain/core/language_models/llms';
 import { BaseChatModel } from '@langchain/core/language_models/chat_models';
 import {
@@ -110,8 +111,9 @@ export const ragAiPlugin = createBackendPlugin({
         logger: coreServices.logger,
         config: coreServices.rootConfig,
         httpRouter: coreServices.httpRouter,
+        database: coreServices.database,
       },
-      async init({ logger, config, httpRouter }) {
+      async init({ logger, config, httpRouter, database }) {
         const aiConfig = config.getOptionalConfig('ai');
         const configuredSources =
           aiConfig?.getOptionalStringArray('supportedSources') ??
@@ -171,6 +173,11 @@ export const ragAiPlugin = createBackendPlugin({
 
         logger.debug(`Registered ${triggers.length} AI triggers`);
 
+        const runtimeStore = await createPgAgentRuntimeStore({
+          logger,
+          database,
+        });
+
         httpRouter.use(
           await createRouter({
             logger,
@@ -182,6 +189,8 @@ export const ragAiPlugin = createBackendPlugin({
             defaultAgentId,
             augmentationIndexer,
             retrievalPipeline,
+            sessionStore: runtimeStore,
+            checkpointStore: runtimeStore,
           }),
         );
       },

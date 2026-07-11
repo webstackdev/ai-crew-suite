@@ -39,5 +39,5 @@ export type AiRunEvent =
       };
     }
   | { type: 'usage'; data: { runId: string; input: number; output: number; total: number } }
-  | { type: 'done'; data: { runId: string } }
+  | { type: 'done'; data: { runId: string; sessionId?: string } }
   | { type: 'error'; data: { runId: string; message: string } };

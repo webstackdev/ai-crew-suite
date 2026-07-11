@@ -16,3 +16,4 @@
 
 export * from './service';
 export * from './service/PgVectorStore';
+export * from './service/PgAgentRuntimeStore';

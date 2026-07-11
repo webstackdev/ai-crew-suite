@@ -19,8 +19,10 @@ import {
   AgentDefinition,
   AgentEvent,
   AugmentationIndexer,
+  CheckpointStore,
   EmbeddingsSource,
   RetrievalPipeline,
+  SessionStore,
   ToolRegistry,
 } from '@webstackbuilders/plugin-ai-core-node';
 import { BaseLLM } from '@langchain/core/language_models/llms';
@@ -39,6 +41,8 @@ export class RagAiController {
   private readonly models: Map<string, BaseLLM | BaseChatModel>;
   private readonly agents: Map<string, AgentDefinition>;
   private readonly defaultAgentId: string;
+  private readonly sessionStore?: SessionStore;
+  private readonly checkpointStore?: CheckpointStore;
   private logger: LoggerService;
 
   constructor(
@@ -50,6 +54,8 @@ export class RagAiController {
     agents: Map<string, AgentDefinition>,
     defaultAgentId: string,
     retrievalPipeline?: RetrievalPipeline,
+    sessionStore?: SessionStore,
+    checkpointStore?: CheckpointStore,
   ) {
     this.logger = logger;
     this.runtime = runtime;
@@ -59,6 +65,8 @@ export class RagAiController {
     this.agents = agents;
     this.defaultAgentId = defaultAgentId;
     this.retrievalPipeline = retrievalPipeline;
+    this.sessionStore = sessionStore;
+    this.checkpointStore = checkpointStore;
   }
 
   createEmbeddings = async (req: Request, res: Response) => {
@@ -110,6 +118,10 @@ export class RagAiController {
     const source = req.params.source as EmbeddingsSource;
     const query = req.body.query;
     const entityFilter = req.body.entityFilter;
+    const requestSessionId =
+      typeof req.body.sessionId === 'string' && req.body.sessionId
+        ? req.body.sessionId
+        : undefined;
     const selectedAgentId =
       typeof req.body.agentId === 'string' && req.body.agentId
         ? req.body.agentId
@@ -132,6 +144,11 @@ export class RagAiController {
     }
 
     const runId = randomUUID();
+    const sessionId =
+      selectedAgent.memory === 'session' && this.sessionStore
+        ? requestSessionId ??
+          (await this.sessionStore.createSession(selectedAgent.id, 'anonymous'))
+        : undefined;
 
     res.writeHead(200, {
       'Content-Type': 'text/event-stream',
@@ -147,6 +164,7 @@ export class RagAiController {
           input: {
             query,
             source,
+            sessionId,
             entityFilter,
           },
         },
@@ -156,6 +174,9 @@ export class RagAiController {
           model,
           systemPrompt: selectedAgent.systemPrompt,
           identity: 'anonymous',
+          memory: selectedAgent.memory,
+          sessionStore: this.sessionStore,
+          checkpointStore: this.checkpointStore,
         },
       )) {
         this.writeEvent(res, event);

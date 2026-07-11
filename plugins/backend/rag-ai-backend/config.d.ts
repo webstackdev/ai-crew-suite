@@ -47,6 +47,9 @@ export interface Config {
       {
         model?: string;
         systemPrompt?: string;
+        orchestrator?: 'single-shot' | 'langgraph' | 'crew';
+        tools?: string[];
+        memory?: 'none' | 'session';
       }
     >;
 

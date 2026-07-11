@@ -90,6 +90,7 @@ export const ControlledRagModal = ({
   const [questionResult, setQuestionResult] = useState('');
   const [embeddings, setEmbeddings] = useState<ResponseEmbedding[]>([]);
   const [warning, setWarning] = useState<string | undefined>();
+  const [sessionId, setSessionId] = useState<string | undefined>();
   const ragApi = useApi(ragAiApiRef);
   const askLlm = useCallback(
     async (question: string, source: string) => {
@@ -98,7 +99,7 @@ export const ControlledRagModal = ({
       setWarning(undefined);
       setEmbeddings([]);
 
-      for await (const chunk of ragApi.ask(question, source)) {
+      for await (const chunk of ragApi.ask(question, source, undefined, sessionId)) {
         switch (chunk.type) {
           case 'token': {
             setQuestionResult(value => value + chunk.data.text);
@@ -132,6 +133,9 @@ export const ControlledRagModal = ({
             break;
           }
           case 'done': {
+            if (chunk.data.sessionId) {
+              setSessionId(chunk.data.sessionId);
+            }
             // Do nothing
             break;
           }
@@ -144,7 +148,7 @@ export const ControlledRagModal = ({
 
       setThinking(false);
     },
-    [ragApi],
+    [ragApi, sessionId],
   );
   useHotkeys(hotkey, () => setOpen(true), []);
   return (
@@ -155,6 +159,7 @@ export const ControlledRagModal = ({
         setThinking(false);
         setQuestionResult('');
         setEmbeddings([]);
+        setSessionId(undefined);
       }}
       fullWidth
       maxWidth="lg"
@@ -177,6 +182,7 @@ export const ControlledRagModal = ({
             onClear={() => {
               setQuestionResult('');
               setEmbeddings([]);
+              setSessionId(undefined);
             }}
           />
         </Box>

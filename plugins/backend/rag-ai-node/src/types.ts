@@ -170,9 +170,32 @@ export type AgentRunInput = {
   input: {
     query: string;
     source: SourceId;
+    sessionId?: string;
     entityFilter?: EntityFilterShape;
   };
 };
+
+export type SessionMessage = {
+  role: 'user' | 'assistant' | 'system';
+  content: string;
+  tokenUsage?: {
+    input: number;
+    output: number;
+    total: number;
+  };
+  createdAt?: string;
+};
+
+export interface SessionStore {
+  createSession(agentId: string, userRef?: string): Promise<string>;
+  appendMessage(sessionId: string, message: SessionMessage): Promise<void>;
+  listMessages(sessionId: string, limit?: number): Promise<SessionMessage[]>;
+}
+
+export interface CheckpointStore {
+  save(runId: string, state: unknown): Promise<void>;
+  load<T = unknown>(runId: string): Promise<T | undefined>;
+}
 
 export type RunContext = {
   logger: LoggerService;
@@ -181,6 +204,9 @@ export type RunContext = {
   systemPrompt?: string;
   identity?: string;
   signal?: AbortSignal;
+  sessionStore?: SessionStore;
+  checkpointStore?: CheckpointStore;
+  memory?: 'none' | 'session';
 };
 
 export type AgentEvent =
@@ -204,7 +230,7 @@ export type AgentEvent =
       type: 'usage';
       data: { runId: string; input: number; output: number; total: number };
     }
-  | { type: 'done'; data: { runId: string } }
+  | { type: 'done'; data: { runId: string; sessionId?: string } }
   | { type: 'error'; data: { runId: string; message: string } };
 
 export interface Orchestrator {

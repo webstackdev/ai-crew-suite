@@ -69,6 +69,7 @@ export class RagAiClient implements RagAiApi {
     question: string,
     source: string,
     agentId?: string,
+    sessionId?: string,
   ): AsyncGenerator<AiRunEvent> {
     const { token } = await this.identityApi.getCredentials();
 
@@ -77,6 +78,7 @@ export class RagAiClient implements RagAiApi {
         body: JSON.stringify({
           query: question,
           agentId,
+          sessionId,
         }),
         method: 'POST',
         headers: {
