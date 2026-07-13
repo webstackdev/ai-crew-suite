@@ -12,8 +12,8 @@ import { policyExtensionPoint } from '@backstage/plugin-permission-node/alpha';
 
 class TestPermissionPolicy implements PermissionPolicy {
   async handle(
-    request: PolicyQuery,
-    user?: PolicyQueryUser,
+    _request: PolicyQuery,
+    _user?: PolicyQueryUser,
   ): Promise<PolicyDecision> {
     return { result: AuthorizeResult.ALLOW };
   }

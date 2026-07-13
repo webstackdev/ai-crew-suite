@@ -46,7 +46,7 @@
     "@backstage/cli": "backstage:^",
     "@backstage/cli-defaults": "backstage:^",
     "@backstage/config": "backstage:^",
-    "@backstage/eslint-plugin": "^0.3.1",
+    "@backstage/eslint-plugin": "backstage:^",
     "@changesets/cli": "^2.31.0",
     "@playwright/test": "^1.61.1",
     "@spotify/eslint-config-base": "^15.0.0",
