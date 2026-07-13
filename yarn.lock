@@ -7286,7 +7286,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/material@npm:^7.3.11, @mui/material@npm:^7.3.2":
+"@mui/material@npm:^7.3.2":
   version: 7.3.11
   resolution: "@mui/material@npm:7.3.11"
   dependencies:
@@ -8360,7 +8360,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@playwright/test@npm:^1.61.1":
+"@playwright/test@npm:^1.49.0, @playwright/test@npm:^1.61.1":
   version: 1.61.1
   resolution: "@playwright/test@npm:1.61.1"
   dependencies:
@@ -13697,10 +13697,10 @@ __metadata:
     "@backstage/ui": "backstage:^"
     "@emotion/react": "npm:^11.14.0"
     "@emotion/styled": "npm:^11.14.1"
-    "@material-ui/core": "npm:^4.12.4"
-    "@material-ui/icons": "npm:^4.11.3"
-    "@mui/material": "npm:^7.3.11"
-    "@playwright/test": "npm:^1.61.1"
+    "@material-ui/core": "npm:^4.12.2"
+    "@material-ui/icons": "npm:^4.9.1"
+    "@mui/material": "npm:^7.3.2"
+    "@playwright/test": "npm:^1.49.0"
     "@rjsf/utils": "npm:^6.6.2"
     "@testing-library/dom": "npm:^10.4.1"
     "@testing-library/jest-dom": "npm:^6.9.1"
@@ -13710,13 +13710,12 @@ __metadata:
     "@types/react-dom": "npm:*"
     __backstage-module-federation-runtime-shared-dependencies__: "portal:../../internal/module-federation-runtime-shared-dependencies"
     cross-env: "npm:^10.1.0"
-    i18next: "npm:26.3.6"
+    i18next: "npm:^22.5.1"
     prop-types: "npm:^15.8.1"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
     react-router: "npm:^6.30.4"
     react-router-dom: "npm:^6.30.4"
-    vitest: "npm:^4.1.10"
   languageName: unknown
   linkType: soft
 
@@ -14377,7 +14376,6 @@ __metadata:
     "@webstackbuilders/plugin-ai-storage-pgvector-node": "workspace:^"
     app: "link:../app"
     better-sqlite3: "npm:^12.11.1"
-    i18next: "npm:26.3.6"
     node-gyp: "npm:^13.0.1"
     pg: "npm:^8.22.0"
   languageName: unknown

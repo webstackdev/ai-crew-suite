@@ -6,15 +6,6 @@
     "BACKSTAGE_APP_CONFIG"
   ],
   "tasks": {
-    "lint": {
-      "cache": true,
-      "inputs": ["src/**/*.ts", "src/**/*.tsx", "package.json", "tsconfig.json", ".eslintrc*"]
-    },
-    "test": {
-      "cache": true,
-      "dependsOn": ["^build"],
-      "inputs": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.test.ts", "src/**/*.test.tsx"]
-    },
     "build": {
       "cache": true,
       "dependsOn": ["^build"],
@@ -26,16 +17,32 @@
     },
     "start": {
       "cache": false,
-      "persistent": true
+      "persistent": true,
+      "dependsOn": ["^build"]
     },
     "start-backend": {
       "cache": false,
-      "persistent": true
+      "persistent": true,
+      "dependsOn": ["^build"]
+    },
+    "clean": {
+      "cache": false,
+      "dependsOn": ["^clean"]
+    },
+    "lint": {
+      "cache": true,
+      "inputs": ["src/**/*.ts", "src/**/*.tsx", "package.json", "tsconfig.json", ".eslintrc*"]
+    },
+    "test": {
+      "cache": true,
+      "dependsOn": ["^build"],
+      "inputs": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.test.ts", "src/**/*.test.tsx"]
     },
     "typecheck": {
       "cache": true,
       "dependsOn": ["^build"],
-      "inputs": ["src/**/*.ts", "src/**/*.tsx", "tsconfig.json"]
+      "inputs": ["src/**/*.ts", "src/**/*.tsx", "tsconfig.json"],
+      "outputs": []
     }
   }
 }

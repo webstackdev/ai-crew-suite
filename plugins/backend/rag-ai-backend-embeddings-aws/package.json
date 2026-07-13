@@ -38,10 +38,13 @@
     "build": "backstage-cli package build",
     "clean": "backstage-cli package clean",
     "prepack": "backstage-cli package prepack",
-    "postpack": "backstage-cli package postpack"
+    "postpack": "backstage-cli package postpack",
+    "typecheck": "tsc --noEmit",
+    "lint": "backstage-cli package lint",
+    "test": "backstage-cli package test --passWithNoTests"
   },
   "dependencies": {
-    "@aws-sdk/client-bedrock-runtime": "^3.1085.0",
+    "@aws-sdk/client-bedrock-runtime": "^3.1086.0",
     "@aws-sdk/types": "^3.974.0",
     "@backstage/backend-common": "^0.25.0",
     "@backstage/backend-plugin-api": "backstage:^",

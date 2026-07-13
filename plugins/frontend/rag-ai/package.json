@@ -29,7 +29,10 @@
     "build": "backstage-cli package build",
     "clean": "backstage-cli package clean",
     "prepack": "backstage-cli package prepack",
-    "postpack": "backstage-cli package postpack"
+    "postpack": "backstage-cli package postpack",
+    "typecheck": "tsc --noEmit",
+    "lint": "backstage-cli package lint",
+    "test": "backstage-cli package test --passWithNoTests"
   },
   "dependencies": {
     "@backstage/catalog-model": "backstage:^",
@@ -44,11 +47,11 @@
     "prop-types": "^15.8.1",
     "react-hotkeys-hook": "^5.3.3",
     "react-markdown": "^8.0.3",
-    "react-syntax-highlighter": "^15.4.5",
+    "react-syntax-highlighter": "^15.6.6",
     "react-type-animation": "^3.2.0"
   },
   "peerDependencies": {
-    "react": "^18.0.0"
+    "react": "^18.3.1"
   },
   "devDependencies": {
     "@backstage/cli": "backstage:^",
