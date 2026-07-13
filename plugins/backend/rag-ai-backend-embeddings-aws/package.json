@@ -51,7 +51,8 @@
     "@langchain/core": "^1.2.2",
     "@webstackbuilders/plugin-ai-core-backend": "workspace:^",
     "@webstackbuilders/plugin-ai-core-node": "workspace:^",
-    "@webstackbuilders/plugin-ai-retrieval-node": "workspace:^"
+    "@webstackbuilders/plugin-ai-retrieval-node": "workspace:^",
+    "i18next": "26.3.6"
   },
   "devDependencies": {
     "@backstage/cli": "backstage:^"

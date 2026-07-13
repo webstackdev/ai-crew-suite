@@ -44,6 +44,7 @@
     "@backstage/config": "backstage:^",
     "@langchain/core": "^1.2.2",
     "@webstackbuilders/plugin-ai-core-node": "workspace:^",
+    "i18next": "26.3.6",
     "knex": "^3.3.0"
   },
   "devDependencies": {
