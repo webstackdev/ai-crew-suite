@@ -20,7 +20,7 @@
     "plugins/**/*"
   ],
   "scripts": {
-    "dev": "turbo start start-backend --concurrency=10",
+    "dev": "turbo start --filter=app --filter=backend --concurrency=10",
     "dev:ci": "concurrently \"http-server packages/app/dist -a localhost --port 3000 --gzip --proxy http://localhost:3000?\" \"turbo start-backend\"",
     "start": "yarn workspace app start",
     "start-backend": "yarn workspace backend start",

@@ -1,0 +1,41 @@
+app:
+  title: AI Crew Suite
+  baseUrl: http://localhost:3000
+
+organization:
+  name: AI Crew Suite
+
+backend:
+  baseUrl: http://localhost:7007
+  listen:
+    port: 7007
+  database:
+    client: better-sqlite3
+    connection: ':memory:'
+
+integrations:
+  github: []
+
+proxy: {}
+
+techdocs:
+  builder: local
+  generator:
+    runIn: local
+  publisher:
+    type: local
+
+auth:
+  environment: development
+  providers:
+    guest: {}
+
+catalog:
+  rules:
+    - allow: [Component, System, API, Resource, Location]
+  locations: []
+
+scaffolder: {}
+
+permission:
+  enabled: true
