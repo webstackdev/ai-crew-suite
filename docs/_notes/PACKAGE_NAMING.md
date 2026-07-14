@@ -10,7 +10,7 @@
 
 ## Theme 1: The "Copilot & Crew" Theme (Professional & Collaborative)
 
-*This theme emphasizes teamwork, assistance, and standard software engineering roles.*
+_This theme emphasizes teamwork, assistance, and standard software engineering roles._
 
 - **1. Service Contextualizer:** Service Copilot
 - **2. Documentation Janitor:** TechDocs Maintainer
@@ -42,7 +42,7 @@
 
 ## Theme 2: The "Agentic Persona" Theme (Clever & Action-Oriented)
 
-*This theme gives each plugin a specific operational persona, leaning into the CrewAI/LangGraph agent concept.*
+_This theme gives each plugin a specific operational persona, leaning into the CrewAI/LangGraph agent concept._
 
 - **1. Service Contextualizer:** Agent Oracle
 - **2. Documentation Janitor:** Agent Janitor
@@ -74,7 +74,7 @@
 
 ## Theme 3: The "Backstage Native" Theme (Seamless & Technical)
 
-*This theme mimics standard Backstage plugin naming conventions for a highly integrated look.*
+_This theme mimics standard Backstage plugin naming conventions for a highly integrated look._
 
 - **1. Service Contextualizer:** catalog-ai-insights
 - **2. Documentation Janitor:** techdocs-ai-janitor
@@ -103,29 +103,3 @@
 - **25. Smart Dependency "Bridge Builder":** catalog-ai-migration
 - **26. Semantic Search for "Microservice Archeology":** search-ai-archeology
 - **27. The "Goldilocks" Alert Tuner:** pagerduty-ai-tuner
-
-## Naming Requirements
-
-These are enforced by the Backstage framework's newer Frontend and Backend systems, as well as standard package guidelines like Backstage ADR011.
-
-### Plugin Package Suffixes
-
-Every npm package belonging to a plugin must explicitly declare its type in the package name. If your base plugin name is `ai-reviewer`, you are strictly required to name the internal packages as:
-
-- `...plugin-ai-reviewer` (The main frontend package)
-- `...plugin-ai-reviewer-backend` (The Node.js backend package)
-- `...plugin-ai-reviewer-node` (Optional: for library code shared with other backends)
-- `...plugin-ai-reviewer-common` (Optional: code shared between frontend and backend)
-
-### Plugin IDs must be Kebab-Case
-
-When creating a plugin instance (e.g., using `createFrontendPlugin`), the `pluginId` must be a literal string written in `kebab-case`.
-
-- *Valid:* `pluginId: 'scaffolder-ai-intent'`
-- *Invalid:* `pluginId: 'scaffolderAIIntent'` or `pluginId: 'scaffolder_ai_intent'`
-
-### Code Exports must be CamelCase
-
-The TypeScript code variable exposing the plugin instance must be written in `camelCase` and suffix the word `Plugin`.
-
-- *Valid:* `export const scaffolderAiIntentPlugin = createFrontendPlugin(...)`

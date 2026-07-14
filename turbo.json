@@ -1,19 +1,13 @@
 {
   "$schema": "https://turbo.build",
-  "globalEnv": [
-    "NODE_ENV",
-    "CI",
-    "BACKSTAGE_APP_CONFIG"
-  ],
+  "concurrency": "75%",
+  "globalEnv": ["NODE_ENV", "CI", "BACKSTAGE_APP_CONFIG"],
   "tasks": {
     "build": {
       "cache": true,
       "dependsOn": ["^build"],
       "outputs": ["dist/**", "alpha/**"],
-      "env": [
-        "APP_CONFIG_PATH",
-        "PLAYWRIGHT_BASE_URL"
-      ]
+      "env": ["APP_CONFIG_PATH", "PLAYWRIGHT_BASE_URL"]
     },
     "start": {
       "cache": false,
@@ -31,16 +25,27 @@
     },
     "lint": {
       "cache": true,
-      "inputs": ["src/**/*.ts", "src/**/*.tsx", "package.json", "tsconfig.json", ".eslintrc*"]
+      "inputs": [
+        "src/**/*.ts",
+        "src/**/*.tsx",
+        "package.json",
+        "tsconfig.json",
+        ".eslintrc*"
+      ]
     },
     "test": {
       "cache": true,
       "dependsOn": ["^build"],
-      "inputs": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.test.ts", "src/**/*.test.tsx"]
+      "inputs": [
+        "src/**/*.ts",
+        "src/**/*.tsx",
+        "src/**/*.test.ts",
+        "src/**/*.test.tsx"
+      ]
     },
     "typecheck": {
       "cache": true,
-      "dependsOn": ["^build"],
+      "dependsOn": ["^typecheck"],
       "inputs": ["src/**/*.ts", "src/**/*.tsx", "tsconfig.json"],
       "outputs": []
     }

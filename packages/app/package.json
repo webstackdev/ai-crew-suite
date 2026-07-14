@@ -11,7 +11,7 @@
     "build": "backstage-cli package build",
     "clean": "backstage-cli package clean",
     "typecheck": "tsc --noEmit",
-    "lint": "backstage-cli package lint",
+    "lint": "backstage-cli package lint --format stylish",
     "test": "backstage-cli package test --passWithNoTests"
   },
   "dependencies": {

@@ -43,7 +43,7 @@
     "prepack": "backstage-cli package prepack",
     "postpack": "backstage-cli package postpack",
     "typecheck": "tsc --noEmit",
-    "lint": "backstage-cli package lint",
+    "lint": "backstage-cli package lint --format stylish",
     "test": "backstage-cli package test --passWithNoTests"
   },
   "dependencies": {
