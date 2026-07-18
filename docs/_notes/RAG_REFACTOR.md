@@ -16,21 +16,21 @@ We transformed the original Roadie RAG plugins from a single-assistant, retrieva
 
 Packages and responsibilities:
 
-| Package                                            | Role                                                                                                   |
-| -------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
-| `rag-ai-node`                                      | Shared types + backend extension points (`AugmentationIndexer`, `RetrievalPipeline`, `model`).         |
-| `plugin-ai-core-backend`                           | Plugin wiring, `LlmService` (single prompt → stream), `RagAiController` (SSE), `router.ts` (2 routes). |
-| `plugin-ai-core-backend-embeddings-aws` / `openai` | Provider-specific embeddings + augmenter.                                                              |
-| `plugin-ai-core-backend-retrieval-augmenter`       | `DefaultRetrievalPipeline` = routers → retrievers → post-processors.                                   |
-| `rag-ai-storage-pgvector`                          | `RoadieVectorStore` on pgvector.                                                                       |
-| `rag-ai` (frontend)                                | `RagModal` chat UI + `ragApi` client.                                                                  |
+| Package                                            | Role                                                                                                    |
+| -------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| `rag-ai-node`                                      | Shared types + backend extension points (`AugmentationIndexer`, `RetrievalPipeline`, `model`).          |
+| `plugin-ai-core-backend`                           | Plugin wiring, `LlmService` (single prompt → stream), `AiCoreController` (SSE), `router.ts` (2 routes). |
+| `plugin-ai-core-backend-embeddings-aws` / `openai` | Provider-specific embeddings + augmenter.                                                               |
+| `plugin-ai-core-backend-retrieval-augmenter`       | `DefaultRetrievalPipeline` = routers → retrievers → post-processors.                                    |
+| `rag-ai-storage-pgvector`                          | `RoadieVectorStore` on pgvector.                                                                        |
+| `rag-ai` (frontend)                                | `RagModal` chat UI + `ragApi` client.                                                                   |
 
 Request flow today:
 
 ```mermaid
 flowchart LR
   UI[RagModal] -->|POST /query/:source| R[router.ts]
-  R --> C[RagAiController.query]
+  R --> C[AiCoreController.query]
   C --> P[RetrievalPipeline]
   P --> V[(pgvector)]
   C --> L[LlmService.query]
@@ -41,7 +41,7 @@ flowchart LR
 Key characteristics that matter for the refactor:
 
 - **Single-shot completion.** `LlmService.query` builds one `prefix + embeddings + suffix + query` string and calls `model.stream(prompt)`. No loop, no tool calls, no intermediate steps.
-- **Singletons / "set once".** `RagAiController.getInstance` is a singleton and the extension points throw if set twice (`model`, `augmentationIndexer`, `retrievalPipeline` "may only be set once"). One backend = one assistant.
+- **Singletons / "set once".** `AiCoreController.getInstance` is a singleton and the extension points throw if set twice (`model`, `augmentationIndexer`, `retrievalPipeline` "may only be set once"). One backend = one assistant.
 - **Closed source enum.** `EmbeddingsSource = 'catalog' | 'tech-docs' | 'all'` is a union type baked into `rag-ai-node` and validated in `router.ts`.
 - **Stateless.** No session, memory, or checkpoint. Every query is independent.
 - **Retrieval-only.** The pipeline can _read_ context; there is no abstraction for the agent to _do_ anything (open a PR, page on-call, write TechDocs, run a Scaffolder task).
@@ -120,7 +120,7 @@ flowchart TB
 
 - Replace `EmbeddingsSource` union with an **open `string` + a `SourceRegistry`**. Sources register themselves (`catalog`, `tech-docs`, `github-pr`, `jira`, `commits`, `cloud`, …). `sourceValidator` in `router.ts` validates against the registry, not a literal list.
 - Replace "may only be set once" extension points with **registries** keyed by id (`AgentRegistry`, `ToolRegistry`, `ModelRegistry`). Multiple agents coexist in one backend.
-- Make `RagAiController` **not a singleton**; instantiate per request/run with the resolved agent. The singleton currently prevents more than one assistant per backend.
+- Make `AiCoreController` **not a singleton**; instantiate per request/run with the resolved agent. The singleton currently prevents more than one assistant per backend.
 - Allow **per-agent model + prompt** instead of the global `ai.prompts.prefix/suffix`. Keep global config as defaults.
 
 ### 3.3 Transport: structured agent events
@@ -185,7 +185,7 @@ Every idea decomposes into: _(orchestrator) + (tools) + (trigger) + (model/promp
 
 ## 6. Suggested phasing
 
-1. **Seams first (no behavior change):** open the `EmbeddingsSource` type, convert set-once extension points to registries, de-singleton `RagAiController`, per-agent model/prompt. Existing chat keeps working.
+1. **Seams first (no behavior change):** open the `EmbeddingsSource` type, convert set-once extension points to registries, de-singleton `AiCoreController`, per-agent model/prompt. Existing chat keeps working.
 2. **Tool + Orchestrator abstractions:** wrap retrieval as `knowledge.retrieve`; refactor `LlmService` into `SingleShotOrchestrator`. Prove parity with today's `/query`.
 3. **LangGraph orchestrator + session/checkpoint store + structured SSE events.** Ship one real stateful agent (Incident Responder or Codebase Tour Guide) end to end.
 4. **Triggers + HITL + ArtifactSink.** Add event / cron intake and approval flow; ship a write-capable agent (PR Reviewer or Security Remediation).

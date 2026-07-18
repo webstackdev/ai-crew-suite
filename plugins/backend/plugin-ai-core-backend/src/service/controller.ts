@@ -46,7 +46,7 @@ import type compression from 'compression';
  * This controller bridges express routes to runtime orchestration, embedding
  * management, SSE streaming, approval handling, and trigger/webhook execution.
  */
-export class RagAiController {
+export class AiCoreController {
   private readonly runtime: AgentRuntime;
   private readonly toolRegistry: ToolRegistry;
   private readonly augmentationIndexer: AugmentationIndexer;
@@ -136,6 +136,7 @@ export class RagAiController {
       source,
       entityFilter,
     );
+    this.logger.info(`Created ${amountOfEmbeddings} embeddings for source ${source}`);
     return res.status(200).send({
       response: `${amountOfEmbeddings} embeddings created for source ${source}, for entities with filter ${JSON.stringify(
         entityFilter,
@@ -148,14 +149,19 @@ export class RagAiController {
    */
   getEmbeddings = async (req: Request, res: Response) => {
     if (!this.retrievalPipeline) {
+      this.logger.warn('Embedding lookup requested without a configured retrieval pipeline');
       return res.status(500).send({
         message: 'No retrieval pipeline configured for this AI backend. ',
       });
     }
 
     const source = req.params.source as EmbeddingsSource;
-    const query = req.query.query as string;
+    const query = this.normalizeQuery(req.query.query);
     const entityFilter = req.body.entityFilter;
+
+    if (!query) {
+      return res.status(422).send({ message: 'query is required' });
+    }
 
     const response = await this.retrievalPipeline.retrieveAugmentationContext(
       query,
@@ -171,7 +177,9 @@ export class RagAiController {
   deleteEmbeddings = async (req: Request, res: Response) => {
     const source = req.params.source as EmbeddingsSource;
     const entityFilter = req.body.entityFilter;
+    this.logger.info(`Deleting embeddings for source ${source}`);
     await this.augmentationIndexer.deleteEmbeddings(source, entityFilter);
+    this.logger.info(`Deleted embeddings for source ${source}`);
     return res
       .status(201)
       .send({ response: `Embeddings deleted for source ${source}` });
@@ -195,22 +203,24 @@ export class RagAiController {
     }
 
     const payload = req.body?.input ?? req.body ?? {};
-    const query = payload.query;
+    const query = this.normalizeQuery(payload.query);
     const source = payload.source ?? 'all';
     const entityFilter = payload.entityFilter;
     const idempotencyKey = req.body?.idempotencyKey;
 
-    if (!query || typeof query !== 'string') {
+    if (!query) {
       return res.status(422).send({ message: 'input.query is required' });
     }
 
     if (!this.consumeRateLimit(selectedAgent.id)) {
+      this.logger.warn(`Rate limit exceeded for agent '${selectedAgent.id}'`);
       return res.status(429).send({ message: 'Rate limit exceeded for agent' });
     }
 
     if (idempotencyKey && this.runStore) {
       const existing = await this.runStore.findRunByIdempotencyKey(idempotencyKey);
       if (existing) {
+        this.logger.info(`Returning duplicate run '${existing.id}' for idempotency key`);
         return res.status(200).send({
           duplicate: true,
           runId: existing.id,
@@ -232,10 +242,11 @@ export class RagAiController {
       'Cache-Control': 'no-cache',
     });
 
+    const abortController = new AbortController();
+    const timeoutHandle = this.createTimeout(abortController);
+    this.attachAbortOnClose(req, res, abortController, timeoutHandle);
+
     try {
-      const abortController = new AbortController();
-      const timeoutHandle = this.createTimeout(abortController);
-      this.attachAbortOnClose(req, res, abortController, timeoutHandle);
       for await (const event of this.executeRun(
         {
           runId,
@@ -256,12 +267,16 @@ export class RagAiController {
         this.writeEvent(res, event);
         res.flush?.();
       }
-      clearTimeout(timeoutHandle);
     } catch (e: any) {
+      this.logger.error(`Failed to start run '${runId}': ${e?.message ?? e}`);
       this.writeEvent(res, {
         type: 'error',
         data: { runId, message: e?.message ?? 'Failed to start run' },
       });
+    } finally {
+      if (timeoutHandle) {
+        clearTimeout(timeoutHandle);
+      }
     }
 
     return res.end();
@@ -300,20 +315,28 @@ export class RagAiController {
       'Cache-Control': 'no-cache',
     });
 
-    for await (const event of this.runtime.resume(runId, decision, {
-      logger: this.logger,
-      toolRegistry: this.toolRegistry,
-      model,
-      systemPrompt: agent.systemPrompt,
-      identity: decision.decidedBy ?? 'anonymous',
-      memory: agent.memory,
-      sessionStore: this.sessionStore,
-      checkpointStore: this.checkpointStore,
-      runStore: this.runStore,
-      artifactSink: this.artifactSink,
-    })) {
-      this.writeEvent(res, event);
-      res.flush?.();
+    try {
+      for await (const event of this.runtime.resume(runId, decision, {
+        logger: this.logger,
+        toolRegistry: this.toolRegistry,
+        model,
+        systemPrompt: agent.systemPrompt,
+        identity: decision.decidedBy ?? 'anonymous',
+        memory: agent.memory,
+        sessionStore: this.sessionStore,
+        checkpointStore: this.checkpointStore,
+        runStore: this.runStore,
+        artifactSink: this.artifactSink,
+      })) {
+        this.writeEvent(res, event);
+        res.flush?.();
+      }
+    } catch (e: any) {
+      this.logger.error(`Failed to resume run '${runId}': ${e?.message ?? e}`);
+      this.writeEvent(res, {
+        type: 'error',
+        data: { runId, message: e?.message ?? 'Failed to resume run' },
+      });
     }
 
     return res.end();
@@ -353,7 +376,7 @@ export class RagAiController {
    * Starts a run from a named trigger source.
    */
   triggerRun = async (req: Request, res: Response) => {
-    const source = req.params.source;
+    const source = req.params.source ?? req.body?.trigger;
     const trigger = this.triggers.find(it => (it.source ?? it.id) === source);
     const agentId = req.body?.agentId ?? trigger?.agentId ?? trigger?.id ?? this.defaultAgentId;
     const idempotencyKey = req.body?.idempotencyKey;
@@ -380,15 +403,16 @@ export class RagAiController {
     }
 
     const payload = req.body?.input ?? req.body ?? {};
-    const query = payload.query;
-    const requestSource = payload.source ?? source;
+    const query = this.normalizeQuery(payload.query);
+    const requestSource = payload.source ?? source ?? 'all';
     const entityFilter = payload.entityFilter;
 
-    if (!query || typeof query !== 'string') {
+    if (!query) {
       return res.status(422).send({ message: 'input.query is required' });
     }
 
     if (!this.consumeRateLimit(selectedAgent.id)) {
+      this.logger.warn(`Rate limit exceeded for agent '${selectedAgent.id}'`);
       return res.status(429).send({ message: 'Rate limit exceeded for agent' });
     }
 
@@ -405,10 +429,11 @@ export class RagAiController {
       'Cache-Control': 'no-cache',
     });
 
+    const abortController = new AbortController();
+    const timeoutHandle = this.createTimeout(abortController);
+    this.attachAbortOnClose(req, res, abortController, timeoutHandle);
+
     try {
-      const abortController = new AbortController();
-      const timeoutHandle = this.createTimeout(abortController);
-      this.attachAbortOnClose(req, res, abortController, timeoutHandle);
       for await (const event of this.executeRun(
         {
           runId,
@@ -429,12 +454,16 @@ export class RagAiController {
         this.writeEvent(res, event);
         res.flush?.();
       }
-      clearTimeout(timeoutHandle);
     } catch (e: any) {
+      this.logger.error(`Failed to process trigger run '${runId}': ${e?.message ?? e}`);
       this.writeEvent(res, {
         type: 'error',
         data: { runId, message: e?.message ?? 'Failed to process trigger run' },
       });
+    } finally {
+      if (timeoutHandle) {
+        clearTimeout(timeoutHandle);
+      }
     }
 
     return res.end();
@@ -562,6 +591,15 @@ export class RagAiController {
     nextBucket.push(now);
     this.rateLimitBucket.set(agentId, nextBucket);
     return true;
+  }
+
+  private normalizeQuery(value: unknown): string | undefined {
+    if (typeof value !== 'string') {
+      return undefined;
+    }
+
+    const query = value.trim();
+    return query.length > 0 ? query : undefined;
   }
 
   /**

@@ -194,7 +194,7 @@ Each phase is independently shippable and ends with a **Definition of Done (DoD)
 
 - `SourceId = string` + `SourceRegistry`; move `sourceValidator` to the registry.
 - Convert extension points to registries (`addAgent / addTool / addModel / addSource`).
-- Delete `RagAiController` singleton; instantiate per run.
+- Delete `AiCoreController` singleton; instantiate per run.
 - Per-agent model + prompt resolved from config; global values become defaults.
 - **DoD:** existing chat behavior reproduced via a single built-in `service-contextualizer` agent registered through the new registries; two agents can coexist in one backend.
 

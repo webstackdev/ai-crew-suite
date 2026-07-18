@@ -35,7 +35,7 @@ import type {
   TriggerBinding,
 } from '@webstackbuilders/plugin-ai-core-node';
 import type { AgentRuntime } from '../runtime';
-import type { RagAiController } from '../service/RagAiController';
+import type { AiCoreController } from '../service/controller';
 import type { Config } from '../../config';
 
 /** Plugin configuration */
@@ -78,7 +78,7 @@ export interface AiBackendServices {
   retrievalPipeline: RetrievalPipeline;
   toolRegistry: ToolRegistry;
   runtime: AgentRuntime;
-  controller: RagAiController;
+  controller: AiCoreController;
 }
 
 /**
@@ -97,7 +97,7 @@ export interface RouterOptions extends AiBackendServiceOptions {
  * Minimal controller surface needed by the router binder.
  */
 export type RouteController = Pick<
-  RagAiController,
+  AiCoreController,
   | 'createEmbeddings'
   | 'deleteEmbeddings'
   | 'getEmbeddings'

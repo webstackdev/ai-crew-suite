@@ -32,7 +32,7 @@ import {
   createDefaultToolPackTools,
   InMemoryToolRegistry
 } from '../tools';
-import { RagAiController } from './RagAiController';
+import { AiCoreController } from './controller';
 import type {
   AiBackendConfig,
   AiBackendServiceOptions,
@@ -397,7 +397,7 @@ export function createAiBackendServices(
     resolvedAgents,
     createOrchestrators(llmService, resolvedAgents, models),
   );
-  const controller = new RagAiController(
+  const controller = new AiCoreController(
     logger,
     runtime,
     toolRegistry,
