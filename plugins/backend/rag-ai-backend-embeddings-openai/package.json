@@ -19,7 +19,7 @@
   },
   "backstage": {
     "role": "backend-plugin-module",
-    "pluginId": "rag-ai-backend-embeddings-openai",
+    "pluginId": "plugin-ai-core-backend-embeddings-openai",
     "pluginPackages": [
       "@webstackbuilders/plugin-ai-core-backend"
     ]
@@ -31,7 +31,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com",
-    "directory": "packages/rag-ai-backend-embeddings-openai"
+    "directory": "packages/plugin-ai-core-backend-embeddings-openai"
   },
   "scripts": {
     "start": "backstage-cli package start",
@@ -48,7 +48,7 @@
     "@backstage/backend-plugin-api": "backstage:^",
     "@backstage/catalog-client": "backstage:^",
     "@backstage/config": "backstage:^",
-    "@langchain/core": "^1.2.2",
+    "@langchain/core": "^1.2.3",
     "@langchain/openai": "^1.5.5",
     "@webstackbuilders/plugin-ai-core-node": "workspace:^",
     "@webstackbuilders/plugin-ai-retrieval-node": "workspace:^",

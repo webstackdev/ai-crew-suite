@@ -8,7 +8,7 @@
 
 ---
 
-# rag-ai-backend-retrieval-augmenter
+# plugin-ai-core-backend-retrieval-augmenter
 
 This is a base module providing default functionality related to RAG AI indexing embeddings and retrieval of augmentation context. It enables a pluggable AI model initialization in a submodule and provides default, extendable functionality to create, manage, and search embeddings.
 

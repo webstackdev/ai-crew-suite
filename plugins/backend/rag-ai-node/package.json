@@ -39,7 +39,7 @@
   },
   "dependencies": {
     "@backstage/backend-plugin-api": "backstage:^",
-    "@langchain/core": "^1.2.2",
+    "@langchain/core": "^1.2.3",
     "i18next": "26.3.6"
   },
   "devDependencies": {

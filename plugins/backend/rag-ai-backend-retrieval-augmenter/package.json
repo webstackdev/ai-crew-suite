@@ -19,7 +19,7 @@
   },
   "backstage": {
     "role": "backend-plugin-module",
-    "pluginId": "rag-ai-backend-retrieval-augmenter",
+    "pluginId": "plugin-ai-core-backend-retrieval-augmenter",
     "pluginPackages": [
       "@webstackbuilders/plugin-ai-core-backend"
     ]
@@ -31,7 +31,7 @@
   "repository": {
     "type": "git",
     "url": "github:webstack-builders/roadie-backstage-plugins",
-    "directory": "plugins/backend/rag-ai-backend-retrieval-augmenter"
+    "directory": "plugins/backend/plugin-ai-core-backend-retrieval-augmenter"
   },
   "scripts": {
     "start": "backstage-cli package start",
@@ -41,7 +41,7 @@
     "postpack": "backstage-cli package postpack",
     "typecheck": "tsc --noEmit",
     "lint": "backstage-cli package lint --format stylish",
-    "test": "vitest run src --exclude dist-types/** --passWithNoTests"
+    "test": "vitest run src --exclude 'dist-types/**' --passWithNoTests"
   },
   "dependencies": {
     "@backstage/backend-common": "^0.25.0",
@@ -50,7 +50,7 @@
     "@backstage/catalog-model": "backstage:^",
     "@backstage/errors": "backstage:^",
     "@backstage/plugin-search-common": "backstage:^",
-    "@langchain/core": "^1.2.2",
+    "@langchain/core": "^1.2.3",
     "@langchain/textsplitters": "^1.0.1",
     "@webstackbuilders/plugin-ai-core-node": "workspace:^",
     "i18next": "26.3.6",

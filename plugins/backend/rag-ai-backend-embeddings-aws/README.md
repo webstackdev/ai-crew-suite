@@ -10,6 +10,8 @@
 
 # RAG AI Backend-embeddings AWS Bedrock submodule
 
+`plugin-ai-core-backend-module-embeddings-aws`
+
 This is a submodule for the `@webstackbuilders/plugin-ai-core-backend` module, which provides functionality to use AWS Bedrock embeddings to generate a RAG AI Backend plugin for Backstage. It integrates `@backstage/integration-aws-node` package for fetching AWS account credentials.
 
 ## Initialization

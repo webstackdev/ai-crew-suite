@@ -74,19 +74,19 @@ module.exports = {
       createConfigForRole(__dirname, 'frontend-plugin'),
     ),
     ...scopedOverrides(
-      'plugins/backend/rag-ai-backend',
+      'plugins/backend/plugin-ai-core-backend',
       createConfigForRole(__dirname, 'backend-plugin'),
     ),
     ...scopedOverrides(
-      'plugins/backend/rag-ai-backend-embeddings-aws',
+      'plugins/backend/plugin-ai-core-backend-embeddings-aws',
       createConfigForRole(__dirname, 'backend-plugin-module'),
     ),
     ...scopedOverrides(
-      'plugins/backend/rag-ai-backend-embeddings-openai',
+      'plugins/backend/plugin-ai-core-backend-embeddings-openai',
       createConfigForRole(__dirname, 'backend-plugin-module'),
     ),
     ...scopedOverrides(
-      'plugins/backend/rag-ai-backend-retrieval-augmenter',
+      'plugins/backend/plugin-ai-core-backend-retrieval-augmenter',
       createConfigForRole(__dirname, 'backend-plugin-module'),
     ),
     ...scopedOverrides(

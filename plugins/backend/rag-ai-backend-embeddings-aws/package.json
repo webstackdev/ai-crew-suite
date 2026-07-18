@@ -19,7 +19,7 @@
   },
   "backstage": {
     "role": "backend-plugin-module",
-    "pluginId": "rag-ai-backend-embeddings-aws",
+    "pluginId": "plugin-ai-core-backend-embeddings-aws",
     "pluginPackages": [
       "@webstackbuilders/plugin-ai-core-backend"
     ]
@@ -31,7 +31,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com",
-    "directory": "packages/rag-ai-backend-embeddings-aws"
+    "directory": "packages/plugin-ai-core-backend-embeddings-aws"
   },
   "scripts": {
     "start": "backstage-cli package start",
@@ -44,14 +44,14 @@
     "test": "backstage-cli package test --passWithNoTests"
   },
   "dependencies": {
-    "@aws-sdk/client-bedrock-runtime": "^3.1086.0",
-    "@aws-sdk/types": "^3.974.0",
+    "@aws-sdk/client-bedrock-runtime": "^3.1090.0",
+    "@aws-sdk/types": "^3.974.2",
     "@backstage/backend-common": "^0.25.0",
     "@backstage/backend-plugin-api": "backstage:^",
     "@backstage/catalog-client": "backstage:^",
     "@backstage/config": "backstage:^",
-    "@langchain/aws": "^1.4.2",
-    "@langchain/core": "^1.2.2",
+    "@langchain/aws": "^1.4.3",
+    "@langchain/core": "^1.2.3",
     "@webstackbuilders/plugin-ai-core-backend": "workspace:^",
     "@webstackbuilders/plugin-ai-core-node": "workspace:^",
     "@webstackbuilders/plugin-ai-retrieval-node": "workspace:^",

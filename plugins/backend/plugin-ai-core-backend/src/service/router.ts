@@ -1,0 +1,114 @@
+/*
+ * Copyright 2024 Larder Software Limited
+ * Copyright 2026 Webstack Builders, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+import express, { type NextFunction, type Request, type Response } from 'express';
+import Router from 'express-promise-router';
+import { isEmpty } from 'lodash';
+import { MiddlewareFactory } from '@backstage/backend-defaults/rootHttpRouter';
+import { SourceRegistry } from '@webstackbuilders/plugin-ai-core-node';
+import type { CreateRouterOptions, RouteController } from '../@types';
+
+/**
+ * Validates that a requested source exists in the active source registry.
+ *
+ * The special "all" source remains available as a convenience umbrella value.
+ */
+const sourceValidator = (
+  sourceRegistry: SourceRegistry,
+) => (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const source = req.params.source;
+  if (!sourceRegistry.has(source) && source !== 'all') {
+    return res.status(422).json({
+      message: `Only ${sourceRegistry
+        .list()
+        .map(it => it.id)
+        .join(
+        ', ',
+      )} are supported as AI assistant query sources for now.`,
+    });
+  }
+  return next();
+};
+
+/**
+ * Ensures embedding query endpoints receive a non-empty query string.
+ */
+const queryQueryValidator = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const query = req.query.query;
+  if (!query || typeof query !== 'string' || isEmpty(query)) {
+    return res.status(422).json({
+      message: 'You should pass in the query via query params',
+    });
+  }
+  return next();
+};
+
+/**
+ * Mounts the public HTTP surface for the AI backend controller.
+ */
+export function bindRoutes(
+  router: express.Router,
+  controller: RouteController,
+  sourceRegistry: SourceRegistry,
+) {
+  const sourceValidatorMiddleware = sourceValidator(sourceRegistry);
+
+  router
+    .route('/embeddings/:source')
+    .post(sourceValidatorMiddleware, controller.createEmbeddings)
+    .delete(sourceValidatorMiddleware, controller.deleteEmbeddings)
+    .get(
+      sourceValidatorMiddleware,
+      queryQueryValidator,
+      controller.getEmbeddings,
+    );
+
+  router.route('/agents').get(controller.listAgents);
+  router.route('/agents/:id/runs').post(controller.startRun);
+  router.route('/runs/:id/events').get(controller.streamRunEvents);
+  router.route('/runs/:id/approvals').post(controller.approveRun);
+  router.route('/triggers/:source').post(controller.triggerRun);
+  router.route('/webhooks/:provider').post(controller.webhookRun);
+
+  return router;
+}
+
+/**
+ * Creates the express router for a prebuilt AI backend controller.
+ */
+export function createRouter({
+  logger,
+  sourceRegistry,
+  controller,
+  config,
+}: CreateRouterOptions): express.Router {
+
+  const router = Router();
+  router.use(express.json());
+
+  const middleware = MiddlewareFactory.create({ config, logger });
+  router.use(middleware.error());
+
+  return bindRoutes(router, controller, sourceRegistry);
+}

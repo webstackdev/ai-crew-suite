@@ -27,7 +27,7 @@
     { "path": "./plugins/frontend/rag-ai" },
 
     // 3. Backend Core & Nodes
-    { "path": "./plugins/backend/rag-ai-backend" },
+    { "path": "./plugins/backend/plugin-ai-core-backend" },
     { "path": "./plugins/backend/rag-ai-node" },
 
     // 4. Storage & Vector Connectors

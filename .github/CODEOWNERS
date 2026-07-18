@@ -7,7 +7,7 @@
 # ----------------------------
 # Specific core team assigned to manage the unmaintained Roadie forks
 /packages/plugin-rag-ai-*                      @webstackbuilders/rag-maintainers
-/packages/plugin-rag-ai-backend                @webstackbuilders/rag-maintainers
+/packages/plugin-plugin-ai-core-backend                @webstackbuilders/rag-maintainers
 
 # Custom AI Tools & Crew Layouts
 # ------------------------------

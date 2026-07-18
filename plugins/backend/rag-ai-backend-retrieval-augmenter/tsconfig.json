@@ -1,7 +1,7 @@
 {
   "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "../../../dist-types/plugins/backend/rag-ai-backend-retrieval-augmenter"
+    "outDir": "../../../dist-types/plugins/backend/plugin-ai-core-backend-retrieval-augmenter"
   },
   "include": ["src/**/*"]
 }

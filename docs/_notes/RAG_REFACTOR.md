@@ -2,26 +2,28 @@
 
 ## TL;DR
 
-The Roadie plugins are a solid **retrieval + single-shot completion** engine. Almost every idea in the ideas doc needs **multi-step, stateful, tool-using agents** (LangGraph loops and CrewAI crews) that can *act* on external systems, not just answer questions.
+The Roadie plugins are a solid **retrieval + single-shot completion** engine. Almost every idea in the ideas doc needs **multi-step, stateful, tool-using agents** (LangGraph loops and CrewAI crews) that can _act_ on external systems, not just answer questions.
 
 The refactor is therefore less about rewriting retrieval and more about **adding an agent runtime layer on top of it** and **generalizing the seams that are currently hardcoded to "one model, one pipeline, one query endpoint, catalog/tech-docs only."**
 
-Keep: the vector store, embeddings modules, and the retriever/router/post-processor pipeline — they become *one tool* ("knowledge retrieval") available to agents.
+Keep: the vector store, embeddings modules, and the retriever/router/post-processor pipeline — they become _one tool_ ("knowledge retrieval") available to agents.
 
----
+## Summary of Plan
+
+We transformed the original Roadie RAG plugins from a single-assistant, retrieval-only chat flow into a full agent platform while preserving retrieval quality as a core capability: we introduced an extensible agent runtime with registries for agents, tools, models, sources, and triggers; wrapped the existing retrieval pipeline as a first-class tool (`knowledge.retrieve`); added stateful orchestration support (including cyclic workflows), multi-agent role collaboration, human-in-the-loop approval/resume paths for write operations, structured run/step/tool streaming over SSE, and persistent runtime state (sessions, runs, steps, checkpoints, approvals, artifacts) backed by PostgreSQL alongside pgvector. We also delivered trigger-based execution (HTTP, events, cron/webhooks), integrated operational tool packs (for systems such as GitHub/Jira/Slack/PagerDuty/Kubernetes/Scaffolder/cost use cases), moved configuration to per-agent model/prompt/tool policies with sensible defaults, and hardened the platform for real use with observability, token/cost accounting, idempotency, and reliability controls. In parallel, we completed the package modernization and integration work required to run this cleanly in our Backstage monorepo (renamed/scope-aligned packages, frontend API provider wiring for notifications/search, module resolution and federation fixes, and strict Yarn PnP compatibility), resulting in a stable foundation where development, linting, testing, and type-checking all pass consistently.
 
 ## 1. Current architecture (as copied)
 
 Packages and responsibilities:
 
-| Package | Role |
-| --- | --- |
-| `rag-ai-node` | Shared types + backend extension points (`AugmentationIndexer`, `RetrievalPipeline`, `model`). |
-| `rag-ai-backend` | Plugin wiring, `LlmService` (single prompt → stream), `RagAiController` (SSE), `router.ts` (2 routes). |
-| `rag-ai-backend-embeddings-aws` / `openai` | Provider-specific embeddings + augmenter. |
-| `rag-ai-backend-retrieval-augmenter` | `DefaultRetrievalPipeline` = routers → retrievers → post-processors. |
-| `rag-ai-storage-pgvector` | `RoadieVectorStore` on pgvector. |
-| `rag-ai` (frontend) | `RagModal` chat UI + `ragApi` client. |
+| Package                                            | Role                                                                                                   |
+| -------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| `rag-ai-node`                                      | Shared types + backend extension points (`AugmentationIndexer`, `RetrievalPipeline`, `model`).         |
+| `plugin-ai-core-backend`                           | Plugin wiring, `LlmService` (single prompt → stream), `RagAiController` (SSE), `router.ts` (2 routes). |
+| `plugin-ai-core-backend-embeddings-aws` / `openai` | Provider-specific embeddings + augmenter.                                                              |
+| `plugin-ai-core-backend-retrieval-augmenter`       | `DefaultRetrievalPipeline` = routers → retrievers → post-processors.                                   |
+| `rag-ai-storage-pgvector`                          | `RoadieVectorStore` on pgvector.                                                                       |
+| `rag-ai` (frontend)                                | `RagModal` chat UI + `ragApi` client.                                                                  |
 
 Request flow today:
 
@@ -42,7 +44,7 @@ Key characteristics that matter for the refactor:
 - **Singletons / "set once".** `RagAiController.getInstance` is a singleton and the extension points throw if set twice (`model`, `augmentationIndexer`, `retrievalPipeline` "may only be set once"). One backend = one assistant.
 - **Closed source enum.** `EmbeddingsSource = 'catalog' | 'tech-docs' | 'all'` is a union type baked into `rag-ai-node` and validated in `router.ts`.
 - **Stateless.** No session, memory, or checkpoint. Every query is independent.
-- **Retrieval-only.** The pipeline can *read* context; there is no abstraction for the agent to *do* anything (open a PR, page on-call, write TechDocs, run a Scaffolder task).
+- **Retrieval-only.** The pipeline can _read_ context; there is no abstraction for the agent to _do_ anything (open a PR, page on-call, write TechDocs, run a Scaffolder task).
 - **Transport = raw SSE text.** `events: embeddings | response | usage`. No structured agent-step / tool-call / approval events.
 
 ---
@@ -51,17 +53,17 @@ Key characteristics that matter for the refactor:
 
 Grouping the 27 ideas by the capability they demand (beyond plain RAG):
 
-| Capability the idea needs | Example ideas | Present today? |
-| --- | --- | --- |
-| **Tool / action calling** (write to GitHub, Jira, Slack, PagerDuty, K8s, Scaffolder) | Security Remediation, PR Reviewer, Release Notes, Shadow IT Detective, Alert Tuner | ❌ |
-| **Cyclic / stateful workflow** (try→fail→learn→retry) | Bridge Builder migration, Synthetic Test Gen, Incident Responder | ❌ |
-| **Multi-agent / role collaboration** (crews) | License Auditor, Cost Crew, Doc Janitor, RFC Reviewer, PRD Pipeline | ❌ |
-| **Human-in-the-loop** approval/pause-resume | Security Remediation, Policy Judge, migrations | ❌ |
-| **Event / schedule triggers** (not just HTTP request) | Drift Detector, Tech Radar, Goldilocks Tuner, Post-Mortem, Handover | ❌ |
-| **Session memory / conversation** | Tour Guide, Handover, Context-Aware Search | ❌ |
-| **Many heterogeneous sources** (PRs, commits, Jira, Slack, cloud, cost) | Microservice Archeology, Context-Aware Search, Shadow IT | ⚠️ enum-limited |
-| **Per-agent model + prompt** | all crews (different roles → different system prompts) | ❌ (global config) |
-| **Retrieval-augmented Q&A** | Service Contextualizer, Archeology, Context-Aware Search | ✅ (this is the keep) |
+| Capability the idea needs                                                            | Example ideas                                                                      | Present today?        |
+| ------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------- | --------------------- |
+| **Tool / action calling** (write to GitHub, Jira, Slack, PagerDuty, K8s, Scaffolder) | Security Remediation, PR Reviewer, Release Notes, Shadow IT Detective, Alert Tuner | ❌                    |
+| **Cyclic / stateful workflow** (try→fail→learn→retry)                                | Bridge Builder migration, Synthetic Test Gen, Incident Responder                   | ❌                    |
+| **Multi-agent / role collaboration** (crews)                                         | License Auditor, Cost Crew, Doc Janitor, RFC Reviewer, PRD Pipeline                | ❌                    |
+| **Human-in-the-loop** approval/pause-resume                                          | Security Remediation, Policy Judge, migrations                                     | ❌                    |
+| **Event / schedule triggers** (not just HTTP request)                                | Drift Detector, Tech Radar, Goldilocks Tuner, Post-Mortem, Handover                | ❌                    |
+| **Session memory / conversation**                                                    | Tour Guide, Handover, Context-Aware Search                                         | ❌                    |
+| **Many heterogeneous sources** (PRs, commits, Jira, Slack, cloud, cost)              | Microservice Archeology, Context-Aware Search, Shadow IT                           | ⚠️ enum-limited       |
+| **Per-agent model + prompt**                                                         | all crews (different roles → different system prompts)                             | ❌ (global config)    |
+| **Retrieval-augmented Q&A**                                                          | Service Contextualizer, Archeology, Context-Aware Search                           | ✅ (this is the keep) |
 
 Conclusion: retrieval is ~1 of 9 needed capabilities. The refactor adds the other 8 as a runtime the retrieval engine plugs into.
 
@@ -69,8 +71,8 @@ Conclusion: retrieval is ~1 of 9 needed capabilities. The refactor adds the othe
 
 ## 3. Target architecture
 
-Introduce an **Agent Runtime** layer. Retrieval becomes a registered *tool*; each idea
-becomes an *agent definition* (or crew) that composes tools, a model, a prompt, memory, and a trigger.
+Introduce an **Agent Runtime** layer. Retrieval becomes a registered _tool_; each idea
+becomes an _agent definition_ (or crew) that composes tools, a model, a prompt, memory, and a trigger.
 
 ```mermaid
 flowchart TB
@@ -137,20 +139,20 @@ This is backward compatible — the existing chat UI keeps working; agentic UIs 
 
 ## 4. Package-by-package changes
 
-### `rag-ai-node`  →  `plugin-ai-core-node` (shared contracts)
+### `rag-ai-node` → `plugin-ai-core-node` (shared contracts)
 
 - Add `Tool`, `AgentDefinition`, `Orchestrator`, `SessionStore`, `CheckpointStore`, `Trigger`, `ArtifactSink`, `SourceRegistry`, `ToolRegistry`, `AgentRegistry` types.
 - Change `EmbeddingsSource` to `string` + registry; deprecate the union.
 - Convert `*ExtensionPoint` from set-once setters to `add*(...)` registries.
 
-### `rag-ai-backend`  →  `plugin-ai-core-backend` (runtime host)
+### `plugin-ai-core-backend` → `plugin-ai-core-backend` (runtime host)
 
 - Extract `LlmService` into `SingleShotOrchestrator` implementing the new `Orchestrator`.
 - Add `AgentRuntime` (resolve agent → build orchestrator → run → stream structured events).
 - `router.ts`: keep `/query/:source` (back-compat, routes to a default assistant agent); add `/agents`, `/agents/:id/invoke`, `/runs/:id`, `/runs/:id/approve` (HITL resume), and trigger intake (`/events`, webhook endpoints).
 - Move source validation to the `SourceRegistry`.
 
-### `rag-ai-backend-retrieval-augmenter` → `plugin-ai-retrieval-*`
+### `plugin-ai-core-backend-retrieval-augmenter` → `plugin-ai-retrieval-*`
 
 - Unchanged internally; **expose the pipeline as a `knowledge.retrieve` `Tool`**.
 - This package stops being the center of gravity and becomes "the retrieval tool."
@@ -177,7 +179,7 @@ This is backward compatible — the existing chat UI keeps working; agentic UIs 
 - **Security Remediation / Policy Judge** → LangGraph + `approval_request` HITL + `ArtifactSink`.
 - **Drift Detector / Tech Radar / Goldilocks Tuner / Handover / Post-Mortem** → `cron` / event triggers feeding otherwise-standard agents.
 
-Every idea decomposes into: *(orchestrator) + (tools) + (trigger) + (model/prompt)* — which validates the four abstractions above.
+Every idea decomposes into: _(orchestrator) + (tools) + (trigger) + (model/prompt)_ — which validates the four abstractions above.
 
 ---
 

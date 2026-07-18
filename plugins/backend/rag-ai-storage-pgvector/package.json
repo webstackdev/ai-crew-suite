@@ -45,7 +45,7 @@
   "dependencies": {
     "@backstage/backend-plugin-api": "backstage:^",
     "@backstage/config": "backstage:^",
-    "@langchain/core": "^1.2.2",
+    "@langchain/core": "^1.2.3",
     "@webstackbuilders/plugin-ai-core-node": "workspace:^",
     "i18next": "26.3.6",
     "knex": "^3.3.0"

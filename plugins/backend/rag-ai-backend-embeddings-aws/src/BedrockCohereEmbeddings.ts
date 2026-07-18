@@ -86,9 +86,6 @@ export class BedrockCohereEmbeddings
 
         return results;
       } catch (e) {
-        console.error({
-          error: e,
-        });
         if (e instanceof Error) {
           throw new Error(
             `An error occurred while embedding documents with Bedrock: ${e.message}`,

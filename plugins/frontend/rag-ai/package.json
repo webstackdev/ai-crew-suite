@@ -35,13 +35,13 @@
     "test": "backstage-cli package test --passWithNoTests"
   },
   "dependencies": {
-    "__backstage-module-federation-runtime-shared-dependencies__": "portal:../../../internal/module-federation-runtime-shared-dependencies",
     "@backstage/catalog-model": "backstage:^",
     "@backstage/core-components": "backstage:^",
     "@backstage/core-plugin-api": "backstage:^",
     "@backstage/plugin-catalog-react": "backstage:^",
     "@material-ui/core": "^4.12.4",
     "@material-ui/icons": "^4.11.3",
+    "__backstage-module-federation-runtime-shared-dependencies__": "portal:../../../internal/module-federation-runtime-shared-dependencies",
     "eventsource-parser": "^2.0.1",
     "i18next": "26.3.6",
     "lodash": "^4.18.1",
