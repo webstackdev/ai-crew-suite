@@ -61,7 +61,9 @@ export class LlmService {
       systemPrompt?: string;
     },
   ): Promise<IterableReadableStream<string | AIMessageChunk>> {
-    this.logger.info('Starting to prompt LLM.');
+    this.logger.info(
+      `Starting LLM prompt stream with ${embeddings.length} embedding docs`,
+    );
 
     const prompts = createPromptTemplates({
       prefix: options.systemPrompt ?? this.configuredPrompts?.prefix,
@@ -76,8 +78,12 @@ export class LlmService {
       promptEmbeddings,
     )}\n ---\n${prompts.suffixPrompt(query)}\nAssistant:`;
 
-    return options.model.stream(prompt) as Promise<
-      IterableReadableStream<string | AIMessageChunk>
-    >;
+    try {
+      const stream = await options.model.stream(prompt);
+      return stream as IterableReadableStream<string | AIMessageChunk>;
+    } catch (error: any) {
+      this.logger.error(`Failed to start LLM prompt stream: ${error?.message ?? error}`);
+      throw error;
+    }
   }
 }
