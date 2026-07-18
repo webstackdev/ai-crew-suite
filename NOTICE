@@ -11,7 +11,7 @@ Derived plugin areas include:
 - plugins/backend/plugin-ai-core-backend-embeddings-aws
 - plugins/backend/plugin-ai-core-backend-embeddings-openai
 - plugins/backend/plugin-ai-core-backend-retrieval-augmenter
-- plugins/backend/rag-ai-node
+- plugins/backend/plugin-ai-core-node
 - plugins/backend/rag-ai-storage-pgvector
 - plugins/frontend/rag-ai
 

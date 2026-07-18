@@ -27,7 +27,7 @@ Scope everything under `@webstackbuilders`. Rename the copied packages and add n
 
 | Current                                      | New package                        | Notes                                                    |
 | -------------------------------------------- | ---------------------------------- | -------------------------------------------------------- |
-| `rag-ai-node`                                | `plugin-ai-core-node`              | Shared contracts + registries + extension points. <br /> |
+| `plugin-ai-core-node`                        | `plugin-ai-core-node`              | Shared contracts + registries + extension points. <br /> |
 | `plugin-ai-core-backend`                     | `plugin-ai-core-backend`           | Agent runtime host, HTTP + SSE, config. <br />           |
 | `plugin-ai-core-backend-retrieval-augmenter` | `plugin-ai-retrieval-node`         | Becomes the `knowledge.retrieve` tool. <br />            |
 | `plugin-ai-core-backend-embeddings-openai`   | `plugin-ai-embeddings-openai-node` | Provider module. <br />                                  |

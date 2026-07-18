@@ -90,7 +90,7 @@ module.exports = {
       createConfigForRole(__dirname, 'backend-plugin-module'),
     ),
     ...scopedOverrides(
-      'plugins/backend/rag-ai-node',
+      'plugins/backend/plugin-ai-core-node',
       createConfigForRole(__dirname, 'node-library'),
     ),
     ...scopedOverrides(

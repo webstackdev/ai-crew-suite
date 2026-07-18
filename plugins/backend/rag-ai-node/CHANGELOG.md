@@ -1,4 +1,4 @@
-# @webstackbuilders/rag-ai-node
+# @webstackbuilders/plugin-ai-core-node
 
 ## 0.4.0
 

@@ -18,7 +18,7 @@ Packages and responsibilities:
 
 | Package                                            | Role                                                                                                    |
 | -------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
-| `rag-ai-node`                                      | Shared types + backend extension points (`AugmentationIndexer`, `RetrievalPipeline`, `model`).          |
+| `plugin-ai-core-node`                              | Shared types + backend extension points (`AugmentationIndexer`, `RetrievalPipeline`, `model`).          |
 | `plugin-ai-core-backend`                           | Plugin wiring, `LlmService` (single prompt → stream), `AiCoreController` (SSE), `router.ts` (2 routes). |
 | `plugin-ai-core-backend-embeddings-aws` / `openai` | Provider-specific embeddings + augmenter.                                                               |
 | `plugin-ai-core-backend-retrieval-augmenter`       | `DefaultRetrievalPipeline` = routers → retrievers → post-processors.                                    |
@@ -42,7 +42,7 @@ Key characteristics that matter for the refactor:
 
 - **Single-shot completion.** `LlmService.query` builds one `prefix + embeddings + suffix + query` string and calls `model.stream(prompt)`. No loop, no tool calls, no intermediate steps.
 - **Singletons / "set once".** `AiCoreController.getInstance` is a singleton and the extension points throw if set twice (`model`, `augmentationIndexer`, `retrievalPipeline` "may only be set once"). One backend = one assistant.
-- **Closed source enum.** `EmbeddingsSource = 'catalog' | 'tech-docs' | 'all'` is a union type baked into `rag-ai-node` and validated in `router.ts`.
+- **Closed source enum.** `EmbeddingsSource = 'catalog' | 'tech-docs' | 'all'` is a union type baked into `plugin-ai-core-node` and validated in `router.ts`.
 - **Stateless.** No session, memory, or checkpoint. Every query is independent.
 - **Retrieval-only.** The pipeline can _read_ context; there is no abstraction for the agent to _do_ anything (open a PR, page on-call, write TechDocs, run a Scaffolder task).
 - **Transport = raw SSE text.** `events: embeddings | response | usage`. No structured agent-step / tool-call / approval events.
@@ -139,7 +139,7 @@ This is backward compatible — the existing chat UI keeps working; agentic UIs 
 
 ## 4. Package-by-package changes
 
-### `rag-ai-node` → `plugin-ai-core-node` (shared contracts)
+### `plugin-ai-core-node` → `plugin-ai-core-node` (shared contracts)
 
 - Add `Tool`, `AgentDefinition`, `Orchestrator`, `SessionStore`, `CheckpointStore`, `Trigger`, `ArtifactSink`, `SourceRegistry`, `ToolRegistry`, `AgentRegistry` types.
 - Change `EmbeddingsSource` to `string` + registry; deprecate the union.
