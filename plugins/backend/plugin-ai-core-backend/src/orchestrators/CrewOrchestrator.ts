@@ -73,12 +73,22 @@ export class CrewOrchestrator implements Orchestrator {
     let embeddings: EmbeddingDoc[] = [];
     try {
       embeddings = await this.executeRetrieval(input, ctx);
+      ctx.logger.info(
+        `Crew retrieval completed for run '${runId}' with ${embeddings.length} embeddings`,
+      );
       yield {
         type: 'tool_result',
-        data: { runId, tool: 'knowledge.retrieve', ok: true, summary: `${embeddings.length} embeddings retrieved` },
+        data: {
+          runId,
+          tool: 'knowledge.retrieve',
+          ok: true,
+          summary: `${embeddings.length} embeddings retrieved`,
+        },
       };
-    } catch (error: any) {
-      yield { type: 'error', data: { runId, message: error.message } };
+    } catch (error: unknown) {
+      const message = this.getErrorMessage(error, 'Retrieval failed');
+      ctx.logger.error(`Crew retrieval failed for run '${runId}': ${message}`);
+      yield { type: 'error', data: { runId, message } };
       return;
     }
 
@@ -90,11 +100,19 @@ export class CrewOrchestrator implements Orchestrator {
       yield this.createStepEvent(runId, `crew.${role.id}`, 'enter');
 
       const isFinalRole = role.id === roles[roles.length - 1].id;
+      const configuredRoleModel = role.modelRef
+        ? this.models.get(role.modelRef)
+        : undefined;
+      if (role.modelRef && !configuredRoleModel) {
+        ctx.logger.warn(
+          `Crew role '${role.id}' references unknown model '${role.modelRef}', falling back to run model`,
+        );
+      }
       const roleModel = role.modelRef
-        ? this.models.get(role.modelRef) ?? ctx.model
+        ? configuredRoleModel ?? ctx.model
         : ctx.model;
-      const roleQuery = previousOutput 
-        ? `Original request: ${input.input.query}\n\nPrevious role output:\n${previousOutput}` 
+      const roleQuery = previousOutput
+        ? `Original request: ${input.input.query}\n\nPrevious role output:\n${previousOutput}`
         : input.input.query;
 
       const stream = await this.llmService.query(embeddings, roleQuery, {
@@ -135,7 +153,12 @@ export class CrewOrchestrator implements Orchestrator {
 
     yield {
       type: 'usage',
-      data: { runId, input: usage.input || -1, output: usage.output || -1, total: usage.total || -1 },
+      data: {
+        runId,
+        input: usage.input || -1,
+        output: usage.output || -1,
+        total: usage.total || -1,
+      },
     };
 
     yield this.createStepEvent(runId, 'crew', 'exit');
@@ -145,7 +168,10 @@ export class CrewOrchestrator implements Orchestrator {
   /**
    * Resolves the knowledge base retrieval tool and extracts document embeddings.
    */
-  private async executeRetrieval(input: AgentRunInput, ctx: RunContext): Promise<EmbeddingDoc[]> {
+  private async executeRetrieval(
+    input: AgentRunInput,
+    ctx: RunContext,
+  ): Promise<EmbeddingDoc[]> {
     const retrieveArgs = {
       query: input.input.query,
       source: input.input.source,
@@ -167,7 +193,14 @@ export class CrewOrchestrator implements Orchestrator {
       signal: ctx.signal ?? new AbortController().signal,
     });
 
-    return Array.isArray(output) ? (output as EmbeddingDoc[]) : [];
+    if (!Array.isArray(output)) {
+      ctx.logger.warn(
+        `Retrieval tool 'knowledge.retrieve' returned non-array output for run '${input.runId}'`,
+      );
+      return [];
+    }
+
+    return output as EmbeddingDoc[];
   }
 
   /**
@@ -201,5 +234,15 @@ export class CrewOrchestrator implements Orchestrator {
       type: 'step',
       data: { runId, seq: this.seq, node, phase },
     };
+  }
+
+  private getErrorMessage(error: unknown, fallback: string): string {
+    if (error instanceof Error && error.message) {
+      return error.message;
+    }
+    if (typeof error === 'string' && error.length > 0) {
+      return error;
+    }
+    return fallback;
   }
 }

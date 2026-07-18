@@ -47,8 +47,13 @@ export class SingleShotOrchestrator implements Orchestrator {
     let embeddings: EmbeddingDoc[] = [];
     try {
       embeddings = await this.executeRetrieval(runId, input, ctx);
-    } catch (error: any) {
-      yield { type: 'error', data: { runId, message: error.message } };
+      ctx.logger.info(
+        `Single-shot retrieval completed for run '${runId}' with ${embeddings.length} embeddings`,
+      );
+    } catch (error: unknown) {
+      const message = this.getErrorMessage(error, 'Retrieval failed');
+      ctx.logger.error(`Single-shot retrieval failed for run '${runId}': ${message}`);
+      yield { type: 'error', data: { runId, message } };
       return;
     }
 
@@ -71,7 +76,12 @@ export class SingleShotOrchestrator implements Orchestrator {
     // Phase 3: Finalizing Metrics and Trace States
     yield {
       type: 'usage',
-      data: { runId, input: usage.input || -1, output: usage.output || -1, total: usage.total || -1 },
+      data: {
+        runId,
+        input: usage.input || -1,
+        output: usage.output || -1,
+        total: usage.total || -1,
+      },
     };
 
     yield this.emitStep(runId, 'single-shot', 'exit');
@@ -81,7 +91,11 @@ export class SingleShotOrchestrator implements Orchestrator {
   /**
    * Tool Component: Resolves and executes the registered knowledge storage engines.
    */
-  private async executeRetrieval(runId: string, input: AgentRunInput, ctx: RunContext): Promise<EmbeddingDoc[]> {
+  private async executeRetrieval(
+    runId: string,
+    input: AgentRunInput,
+    ctx: RunContext,
+  ): Promise<EmbeddingDoc[]> {
     const retrieveArgs = {
       query: input.input.query,
       source: input.input.source,
@@ -94,11 +108,23 @@ export class SingleShotOrchestrator implements Orchestrator {
     }
 
     const toolOutput = await retrievalTool.invoke(retrieveArgs, {
-      credentials: undefined, auth: undefined, discovery: undefined, logger: ctx.logger,
-      identity: ctx.identity ?? 'anonymous', runId, signal: ctx.signal ?? new AbortController().signal,
+      credentials: undefined,
+      auth: undefined,
+      discovery: undefined,
+      logger: ctx.logger,
+      identity: ctx.identity ?? 'anonymous',
+      runId,
+      signal: ctx.signal ?? new AbortController().signal,
     });
 
-    return Array.isArray(toolOutput) ? (toolOutput as EmbeddingDoc[]) : [];
+    if (!Array.isArray(toolOutput)) {
+      ctx.logger.warn(
+        `Retrieval tool 'knowledge.retrieve' returned non-array output for run '${runId}'`,
+      );
+      return [];
+    }
+
+    return toolOutput as EmbeddingDoc[];
   }
 
   /**
@@ -126,5 +152,15 @@ export class SingleShotOrchestrator implements Orchestrator {
   private emitStep(runId: string, node: string, phase: 'enter' | 'exit'): AgentEvent {
     this.seq += 1;
     return { type: 'step', data: { runId, seq: this.seq, node, phase } };
+  }
+
+  private getErrorMessage(error: unknown, fallback: string): string {
+    if (error instanceof Error && error.message) {
+      return error.message;
+    }
+    if (typeof error === 'string' && error.length > 0) {
+      return error;
+    }
+    return fallback;
   }
 }

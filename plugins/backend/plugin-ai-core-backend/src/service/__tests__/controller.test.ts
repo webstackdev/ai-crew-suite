@@ -27,6 +27,7 @@ import type {
   SessionStore,
   ToolRegistry,
 } from '@webstackbuilders/plugin-ai-core-node';
+import { createLogger, createRunStore } from '../../testHelpers';
 import { AiCoreController } from '../controller';
 
 type MockResponse = EventEmitter & {
@@ -35,14 +36,6 @@ type MockResponse = EventEmitter & {
   chunks: string[];
   headers?: Record<string, string>;
 };
-
-const createLogger = () => ({
-  info: jest.fn(),
-  warn: jest.fn(),
-  error: jest.fn(),
-  debug: jest.fn(),
-  child: jest.fn(),
-});
 
 const createRequest = ({
   params = {},
@@ -127,19 +120,6 @@ const createRun = (overrides: Partial<RunRecord> = {}): RunRecord => ({
   id: 'run-a',
   agentId: 'agent-a',
   status: 'running',
-  ...overrides,
-});
-
-const createRunStore = (overrides: Partial<RunStore> = {}): RunStore => ({
-  createRun: jest.fn(async () => undefined),
-  getRun: jest.fn(async () => undefined),
-  findRunByIdempotencyKey: jest.fn(async () => undefined),
-  updateRunStatus: jest.fn(async () => undefined),
-  appendRunStep: jest.fn(async () => undefined),
-  listRunSteps: jest.fn(async () => []),
-  createApproval: jest.fn(async () => undefined),
-  getPendingApproval: jest.fn(async () => undefined),
-  decideApproval: jest.fn(async () => undefined),
   ...overrides,
 });
 
@@ -393,7 +373,7 @@ describe('AiCoreController', () => {
 
   it('returns duplicate runs before consuming rate limits or starting runtime work', async () => {
     const existing = createRun({ id: 'existing-run', status: 'done' });
-    const runStore = createRunStore({
+    const runStore = createRunStore(undefined, {
       findRunByIdempotencyKey: jest.fn(async () => existing),
     });
     const runtime = { run: jest.fn(), resume: jest.fn() };
@@ -461,7 +441,7 @@ describe('AiCoreController', () => {
 
   it('resumes approved runs over SSE and reports resume failures as events', async () => {
     const decision: ApprovalDecision = { status: 'approved', decidedBy: 'user-a' };
-    const runStore = createRunStore({ getRun: jest.fn(async () => createRun()) });
+    const runStore = createRunStore(undefined, { getRun: jest.fn(async () => createRun()) });
     const runtime = {
       run: jest.fn(),
       resume: jest.fn(() => events([{ type: 'done', data: { runId: 'run-a' } }])),
@@ -522,7 +502,7 @@ describe('AiCoreController', () => {
       { seq: 3, type: 'unknown', payload: { ignored: true } },
       { seq: 4, type: 'done', payload: { runId: 'run-a' } },
     ];
-    const runStore = createRunStore({
+    const runStore = createRunStore(undefined, {
       getRun: jest.fn(async () => createRun()),
       listRunSteps: jest.fn(async () => steps),
     });
@@ -574,7 +554,7 @@ describe('AiCoreController', () => {
 
   it('requires idempotency keys for triggers and returns duplicate trigger runs', async () => {
     const existing = createRun({ id: 'trigger-run', status: 'paused' });
-    const runStore = createRunStore({
+    const runStore = createRunStore(undefined, {
       findRunByIdempotencyKey: jest.fn(async () => existing),
     });
     const { controller } = createController({ runStore });

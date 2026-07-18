@@ -21,11 +21,14 @@ import type {
   ApprovalDecision,
   Orchestrator,
   RunContext,
-  RunRecord,
-  RunStore,
   Tool,
-  ToolRegistry,
 } from '@webstackbuilders/plugin-ai-core-node';
+import {
+  collectEvents,
+  createLogger,
+  createRunStore,
+  createToolRegistry,
+} from '../../testHelpers';
 import { AgentRuntime } from '../AgentRuntime';
 
 type RuntimeContext = Parameters<AgentRuntime['run']>[1];
@@ -51,45 +54,15 @@ const runInput: AgentRunInput = {
   },
 };
 
-const createLogger = () => ({
-  info: jest.fn(),
-  warn: jest.fn(),
-  error: jest.fn(),
-  debug: jest.fn(),
-  child: jest.fn(),
-});
-
-const createRunStore = (run?: RunRecord): RunStore => ({
-  createRun: jest.fn(async () => undefined),
-  getRun: jest.fn(async () => run),
-  findRunByIdempotencyKey: jest.fn(async () => undefined),
-  updateRunStatus: jest.fn(async () => undefined),
-  appendRunStep: jest.fn(async () => undefined),
-  listRunSteps: jest.fn(async () => []),
-  createApproval: jest.fn(async () => undefined),
-  getPendingApproval: jest.fn(async () => undefined),
-  decideApproval: jest.fn(async () => undefined),
-});
-
-const createToolRegistry = (): ToolRegistry => ({
-  register: jest.fn(),
-  get: jest.fn((id: string): Tool | undefined => {
-    if (id !== 'catalog.write') {
-      return undefined;
-    }
-
-    return {
-      id,
-      effect: 'write',
-      invoke: jest.fn(async () => ({ ok: true })),
-    };
-  }),
-  list: jest.fn(() => []),
+const createWriteTool = (): Tool => ({
+  id: 'catalog.write',
+  effect: 'write',
+  invoke: jest.fn(async () => ({ ok: true })),
 });
 
 const createContext = (overrides: Partial<RuntimeContext> = {}): RuntimeContext => ({
   logger: createLogger() as any,
-  toolRegistry: createToolRegistry(),
+  toolRegistry: createToolRegistry([createWriteTool()]),
   model: {} as RunContext['model'],
   identity: 'user:default/alice',
   runStore: createRunStore(),
@@ -126,14 +99,6 @@ const createResumableOrchestrator = (
     }
   }) as NonNullable<Orchestrator['resume']>,
 });
-
-const collectEvents = async (events: AsyncIterable<AgentEvent>) => {
-  const collected: AgentEvent[] = [];
-  for await (const event of events) {
-    collected.push(event);
-  }
-  return collected;
-};
 
 describe('AgentRuntime', () => {
   it('logs and yields an error when a run references an unknown agent', async () => {

@@ -16,20 +16,11 @@
 import { describe, expect, it, jest } from '@jest/globals';
 import type { BaseLLM } from '@langchain/core/language_models/llms';
 import type { EmbeddingDoc } from '@webstackbuilders/plugin-ai-core-node';
+import { createAsyncIterable, createLogger } from '../../testHelpers';
 import { LlmService } from '../LlmService';
 
-const createLogger = () => ({
-  info: jest.fn(),
-  warn: jest.fn(),
-  error: jest.fn(),
-  debug: jest.fn(),
-  child: jest.fn(),
-});
-
 const createStream = () =>
-  (async function* streamChunks() {
-    yield 'response chunk';
-  })() as any;
+  createAsyncIterable(['response chunk']) as any;
 
 const createModel = (stream = createStream()) =>
   ({

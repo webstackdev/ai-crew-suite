@@ -64,8 +64,13 @@ export class LangGraphOrchestrator implements Orchestrator {
     let embeddings: EmbeddingDoc[] = [];
     try {
       embeddings = await this.executeRetrievalPipeline(runId, input, ctx);
-    } catch (error: any) {
-      yield { type: 'error', data: { runId, message: error.message } };
+      ctx.logger.info(
+        `LangGraph retrieval completed for run '${runId}' with ${embeddings.length} embeddings`,
+      );
+    } catch (error: unknown) {
+      const message = this.getErrorMessage(error, 'Retrieval failed');
+      ctx.logger.error(`LangGraph retrieval failed for run '${runId}': ${message}`);
+      yield { type: 'error', data: { runId, message } };
       return;
     }
 
@@ -101,7 +106,12 @@ export class LangGraphOrchestrator implements Orchestrator {
     // Phase 5: Normal Flow Finalization Telemetry
     yield {
       type: 'usage',
-      data: { runId, input: usage.input || -1, output: usage.output || -1, total: usage.total || -1 },
+      data: {
+        runId,
+        input: usage.input || -1,
+        output: usage.output || -1,
+        total: usage.total || -1,
+      },
     };
 
     yield this.emitStep(runId, 'langgraph', 'exit');
@@ -120,12 +130,15 @@ export class LangGraphOrchestrator implements Orchestrator {
     }>(runId);
 
     if (!state) {
+      ctx.logger.warn(`LangGraph resume requested without checkpoint for run '${runId}'`);
       yield { type: 'error', data: { runId, message: `No checkpoint found for run '${runId}'` } };
       return;
     }
 
     if (decision.status === 'rejected') {
-      yield { type: 'error', data: { runId, message: decision.note ?? 'Write action was rejected during approval' } };
+      const message = decision.note ?? 'Write action was rejected during approval';
+      ctx.logger.warn(`LangGraph resume rejected for run '${runId}': ${message}`);
+      yield { type: 'error', data: { runId, message } };
       return;
     }
 
@@ -157,8 +170,16 @@ export class LangGraphOrchestrator implements Orchestrator {
   /**
    * Tool Component: Executes downstream RAG storage tools.
    */
-  private async executeRetrievalPipeline(runId: string, input: AgentRunInput, ctx: RunContext): Promise<EmbeddingDoc[]> {
-    const retrieveArgs = { query: input.input.query, source: input.input.source, entityFilter: input.input.entityFilter };
+  private async executeRetrievalPipeline(
+    runId: string,
+    input: AgentRunInput,
+    ctx: RunContext,
+  ): Promise<EmbeddingDoc[]> {
+    const retrieveArgs = {
+      query: input.input.query,
+      source: input.input.source,
+      entityFilter: input.input.entityFilter,
+    };
     const retrievalTool = ctx.toolRegistry.get('knowledge.retrieve');
 
     if (!retrievalTool) {
@@ -166,11 +187,23 @@ export class LangGraphOrchestrator implements Orchestrator {
     }
 
     const toolOutput = await retrievalTool.invoke(retrieveArgs, {
-      credentials: undefined, auth: undefined, discovery: undefined, logger: ctx.logger,
-      identity: ctx.identity ?? 'anonymous', runId, signal: ctx.signal ?? new AbortController().signal,
+      credentials: undefined,
+      auth: undefined,
+      discovery: undefined,
+      logger: ctx.logger,
+      identity: ctx.identity ?? 'anonymous',
+      runId,
+      signal: ctx.signal ?? new AbortController().signal,
     });
 
-    return Array.isArray(toolOutput) ? (toolOutput as EmbeddingDoc[]) : [];
+    if (!Array.isArray(toolOutput)) {
+      ctx.logger.warn(
+        `Retrieval tool 'knowledge.retrieve' returned non-array output for run '${runId}'`,
+      );
+      return [];
+    }
+
+    return toolOutput as EmbeddingDoc[];
   }
 
   /**
@@ -195,7 +228,13 @@ export class LangGraphOrchestrator implements Orchestrator {
   /**
    * State Storage Component: Syncs running telemetry variables back to standard Backstage session schemas.
    */
-  private async persistSessionHistory(sessionId: string | undefined, query: string, response: string, usage: Record<string, number>, ctx: RunContext): Promise<void> {
+  private async persistSessionHistory(
+    sessionId: string | undefined,
+    query: string,
+    response: string,
+    usage: Record<string, number>,
+    ctx: RunContext,
+  ): Promise<void> {
     if (!ctx.sessionStore || !sessionId) return;
 
     this.emitStep(sessionId, 'memory.persist', 'enter');
@@ -203,7 +242,11 @@ export class LangGraphOrchestrator implements Orchestrator {
     await ctx.sessionStore.appendMessage(sessionId, {
       role: 'assistant',
       content: response,
-      tokenUsage: { input: usage.input || -1, output: usage.output || -1, total: usage.total || -1 },
+      tokenUsage: {
+        input: usage.input || -1,
+        output: usage.output || -1,
+        total: usage.total || -1,
+      },
     });
     this.emitStep(sessionId, 'memory.persist', 'exit');
   }
@@ -211,10 +254,23 @@ export class LangGraphOrchestrator implements Orchestrator {
   /**
    * Checkpoint Component: Persists run traces safely across backend frames.
    */
-  private async saveLifecycleCheckpoint(runId: string, agentId: string, sessionId: string | undefined, query: string, response: string, ctx: RunContext): Promise<void> {
+  private async saveLifecycleCheckpoint(
+    runId: string,
+    agentId: string,
+    sessionId: string | undefined,
+    query: string,
+    response: string,
+    ctx: RunContext,
+  ): Promise<void> {
     if (!ctx.checkpointStore) return;
     await ctx.checkpointStore.save(runId, {
-      runId, agentId, sessionId, query, response, status: 'done', completedAt: new Date().toISOString(),
+      runId,
+      agentId,
+      sessionId,
+      query,
+      response,
+      status: 'done',
+      completedAt: new Date().toISOString(),
     });
   }
 
@@ -229,15 +285,29 @@ export class LangGraphOrchestrator implements Orchestrator {
   /**
    * State Machine Control flow: Interrupts state loop execution thread until human validation events settle.
    */
-  private async *handleApprovalInterrupt(runId: string, agentId: string, sessionId: string | undefined, ctx: RunContext): AsyncIterable<AgentEvent> {
+  private async *handleApprovalInterrupt(
+    runId: string,
+    agentId: string,
+    sessionId: string | undefined,
+    ctx: RunContext,
+  ): AsyncIterable<AgentEvent> {
     const approvalId = randomUUID();
     await ctx.checkpointStore?.save(runId, {
-      runId, agentId, sessionId, proposedArtifact: { kind: 'draft', ref: 'pending-write-action', url: undefined }, status: 'awaiting_approval',
+      runId,
+      agentId,
+      sessionId,
+      proposedArtifact: { kind: 'draft', ref: 'pending-write-action', url: undefined },
+      status: 'awaiting_approval',
     });
 
     yield {
       type: 'approval_request',
-      data: { runId, approvalId, reason: 'This action may modify external systems and requires approval.', effect: 'write' },
+      data: {
+        runId,
+        approvalId,
+        reason: 'This action may modify external systems and requires approval.',
+        effect: 'write',
+      },
     };
   }
 
@@ -247,5 +317,15 @@ export class LangGraphOrchestrator implements Orchestrator {
   private emitStep(runId: string, node: string, phase: 'enter' | 'exit'): AgentEvent {
     this.seq += 1;
     return { type: 'step', data: { runId, seq: this.seq, node, phase } };
+  }
+
+  private getErrorMessage(error: unknown, fallback: string): string {
+    if (error instanceof Error && error.message) {
+      return error.message;
+    }
+    if (typeof error === 'string' && error.length > 0) {
+      return error;
+    }
+    return fallback;
   }
 }

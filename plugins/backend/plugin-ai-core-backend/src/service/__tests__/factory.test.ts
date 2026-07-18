@@ -21,15 +21,8 @@ import type {
   ToolDefinition,
 } from '@webstackbuilders/plugin-ai-core-node';
 import type { AiBackendConfig, AiBackendServiceOptions } from '../../@types';
+import { createLogger } from '../../testHelpers';
 import { createAiBackendServices, createSourceRegistry } from '../factory';
-
-const createLogger = () => ({
-  info: jest.fn(),
-  warn: jest.fn(),
-  error: jest.fn(),
-  debug: jest.fn(),
-  child: jest.fn(),
-});
 
 const createConfig = (aiConfig?: AiBackendConfig) => ({
   getOptional: jest.fn((key: string) => (key === 'ai' ? aiConfig : undefined)),
