@@ -13370,9 +13370,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@webstackbuilders/plugin-ai-core-node@workspace:^, @webstackbuilders/plugin-ai-core-node@workspace:plugins/backend/rag-ai-node":
+"@webstackbuilders/plugin-ai-core-node@workspace:^, @webstackbuilders/plugin-ai-core-node@workspace:plugins/backend/plugin-ai-core-node":
   version: 0.0.0-use.local
-  resolution: "@webstackbuilders/plugin-ai-core-node@workspace:plugins/backend/rag-ai-node"
+  resolution: "@webstackbuilders/plugin-ai-core-node@workspace:plugins/backend/plugin-ai-core-node"
   dependencies:
     "@backstage/backend-plugin-api": "backstage:^"
     "@backstage/cli": "backstage:^"
