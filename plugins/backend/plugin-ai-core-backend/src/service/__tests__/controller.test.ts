@@ -333,8 +333,8 @@ describe('AiCoreController', () => {
 
     expect(sessionStore.createSession).toHaveBeenCalledWith('agent-a', 'anonymous');
     expect(runtime.run).toHaveBeenCalledTimes(1);
-  const runCalls = runtime.run.mock.calls as any[];
-  expect(runCalls[0][0]).toEqual({
+    const runCalls = runtime.run.mock.calls as any[];
+    expect(runCalls[0][0]).toEqual({
       runId: expect.any(String),
       agentId: 'agent-a',
       idempotencyKey: undefined,
