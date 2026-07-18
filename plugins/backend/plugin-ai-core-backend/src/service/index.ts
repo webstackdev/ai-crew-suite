@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { createAiBackendServices, createSourceRegistry, resolveConfiguredAgents } from './factory';
+import { createAiBackendServices } from './factory';
 import { createRouter } from './router';
 import type { AiBackendServiceOptions } from '../@types';
 

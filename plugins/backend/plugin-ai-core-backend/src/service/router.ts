@@ -16,7 +16,6 @@
  */
 import express, { type NextFunction, type Request, type Response } from 'express';
 import Router from 'express-promise-router';
-import { isEmpty } from 'lodash';
 import { MiddlewareFactory } from '@backstage/backend-defaults/rootHttpRouter';
 import { SourceRegistry } from '@webstackbuilders/plugin-ai-core-node';
 import type { CreateRouterOptions, RouteController } from '../@types';
@@ -26,7 +25,7 @@ import type { CreateRouterOptions, RouteController } from '../@types';
  *
  * The special "all" source remains available as a convenience umbrella value.
  */
-const sourceValidator = (
+export const sourceValidator = (
   sourceRegistry: SourceRegistry,
 ) => (
   req: Request,
@@ -35,13 +34,9 @@ const sourceValidator = (
 ) => {
   const source = req.params.source;
   if (!sourceRegistry.has(source) && source !== 'all') {
+    const supportedSources = sourceRegistry.list().map(it => it.id).join(', ');
     return res.status(422).json({
-      message: `Only ${sourceRegistry
-        .list()
-        .map(it => it.id)
-        .join(
-        ', ',
-      )} are supported as AI assistant query sources for now.`,
+      message: `Only ${supportedSources} are currently supported as AI assistant query sources.`,
     });
   }
   return next();
@@ -50,13 +45,13 @@ const sourceValidator = (
 /**
  * Ensures embedding query endpoints receive a non-empty query string.
  */
-const queryQueryValidator = (
+export const queryValidator = (
   req: Request,
   res: Response,
   next: NextFunction,
 ) => {
   const query = req.query.query;
-  if (!query || typeof query !== 'string' || isEmpty(query)) {
+  if (!query || typeof query !== 'string' || query.trim().length === 0) {
     return res.status(422).json({
       message: 'You should pass in the query via query params',
     });
@@ -80,7 +75,7 @@ export function bindRoutes(
     .delete(sourceValidatorMiddleware, controller.deleteEmbeddings)
     .get(
       sourceValidatorMiddleware,
-      queryQueryValidator,
+      queryValidator,
       controller.getEmbeddings,
     );
 
@@ -107,8 +102,10 @@ export function createRouter({
   const router = Router();
   router.use(express.json());
 
+  bindRoutes(router, controller, sourceRegistry);
+
   const middleware = MiddlewareFactory.create({ config, logger });
   router.use(middleware.error());
 
-  return bindRoutes(router, controller, sourceRegistry);
+  return router;
 }

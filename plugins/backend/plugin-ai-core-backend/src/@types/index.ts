@@ -36,6 +36,14 @@ import type {
 } from '@webstackbuilders/plugin-ai-core-node';
 import type { AgentRuntime } from '../runtime';
 import type { RagAiController } from '../service/RagAiController';
+import type { Config } from '../../config';
+
+/** Plugin configuration */
+export type AiBackendConfig = NonNullable<Config['ai']>;
+
+export type AgentsMap = Map<string, AgentDefinition>;
+export type ModelRegistry = Map<string, BaseLLM | BaseChatModel>;
+export type ToolMap = Map<string, ToolDefinition>;
 
 /**
  * Raw dependency bundle used to assemble AI backend runtime services.
@@ -44,18 +52,18 @@ import type { RagAiController } from '../service/RagAiController';
  * with optional persistence sinks used by run orchestration endpoints.
  */
 export interface AiBackendServiceOptions {
-  logger: LoggerService;
-  sourceRegistry: SourceRegistry;
-  agents: Map<string, AgentDefinition>;
-  tools: Map<string, ToolDefinition>;
-  models: Map<string, BaseLLM | BaseChatModel>;
-  sessionStore?: SessionStore;
-  checkpointStore?: CheckpointStore;
-  runStore?: RunStore;
+  agents: AgentsMap;
   artifactSink?: ArtifactSink;
   auditLogSink?: AuditLogSink;
-  triggers?: TriggerBinding[];
+  checkpointStore?: CheckpointStore;
   config: RootConfigService;
+  logger: LoggerService;
+  models: ModelRegistry;
+  runStore?: RunStore;
+  sessionStore?: SessionStore;
+  sourceRegistry: SourceRegistry;
+  tools: ToolMap;
+  triggers?: TriggerBinding[];
 }
 
 /**
@@ -112,99 +120,6 @@ export interface CreateRouterOptions {
 }
 
 /**
- * Configuration contract for the AI backend plugin.
- *
- * Defines global defaults, per-agent overrides, orchestration behavior,
- * prompt wrappers, retrieval source allow-lists, and operational guardrails.
- *
- * @example
- * ```json
- * {
- *   "defaults": { "model": "gpt-4o" },
- *   "agents": {
- *     "scaffolding-bot": { "orchestrator": "langgraph", "memory": "session" }
- *   }
- * }
- * ```
- */
-export interface AiBackendConfig {
-  /** Fallback values used when a specific agent does not provide overrides. */
-  defaults?: {
-    /** Default agent ID used when a request does not explicitly select one. */
-    agent?: string;
-    /** Default model reference (for example, `gpt-4o` or `claude-3-5-sonnet`). */
-    model?: string;
-    /** Default system prompt applied when no agent-specific prompt is configured. */
-    systemPrompt?: string;
-  };
-
-  /** Per-agent execution settings keyed by agent ID. */
-  agents?: Record<
-    string,
-    {
-      /** Model override for this agent. */
-      model?: string;
-      /** System prompt override for this agent. */
-      systemPrompt?: string;
-      /**
-       * Orchestration strategy used to execute this agent.
-       * - `single-shot`: One-pass retrieval and response.
-       * - `langgraph`: Stateful graph-based orchestration.
-       * - `crew`: Sequential multi-role collaboration.
-       */
-      orchestrator?: 'single-shot' | 'langgraph' | 'crew';
-      /** Tool IDs that this agent is allowed to use. */
-      tools?: string[];
-      /**
-       * Memory mode for this agent.
-       * - `none`: Stateless execution.
-       * - `session`: Persist conversational state per session.
-       */
-      memory?: 'none' | 'session';
-      /** Crew role definitions, used only when `orchestrator` is `crew`. */
-      crew?: {
-        /** Ordered role list executed by the crew orchestrator. */
-        roles: {
-          /** Unique role identifier (for example, `security-auditor`). */
-          id: string;
-          /** System prompt that defines this role's behavior. */
-          systemPrompt: string;
-          /** Optional model override for this role. */
-          model?: string;
-          /** Optional tool IDs available only to this role. */
-          tools?: string[];
-        }[];
-      };
-    }
-  >;
-
-  /** Prompt wrappers applied to generated execution prompts. */
-  prompts?: {
-    /** Text prepended before the generated prompt body. */
-    prefix: string;
-    /** Text appended after the generated prompt body. */
-    suffix: string;
-  };
-
-  /** Allowed retrieval source IDs (for example, `techdocs` or `confluence`). */
-  supportedSources?: string[];
-
-  /** Runtime hardening limits for timeout, retries, token budget, and rate control. */
-  hardening?: {
-    /** Request timeout in milliseconds. */
-    timeoutMs?: number;
-    /** Maximum retry attempts for transient failures. */
-    maxRetries?: number;
-    /** Base backoff delay in milliseconds between retries. */
-    retryBackoffMs?: number;
-    /** Maximum total tokens allowed per request lifecycle. */
-    maxTotalTokens?: number;
-    /** Maximum allowed requests per rolling minute window. */
-    rateLimitPerMinute?: number;
-  };
-}
-
-/**
  * Normalized token accounting captured from model stream chunks.
  *
  * Used by orchestrators to emit consistent usage events and enforce
@@ -227,4 +142,12 @@ export type CrewRole = {
   systemPrompt: string;
   modelRef?: string;
   toolIds?: string[];
+};
+
+export type HardeningOptions = {
+  timeoutMs?: number;
+  maxRetries?: number;
+  retryBackoffMs?: number;
+  maxTotalTokens?: number;
+  rateLimitPerMinute?: number;
 };

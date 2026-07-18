@@ -23,7 +23,7 @@ import type {
 } from '@webstackbuilders/plugin-ai-core-node';
 import type { AiBackendConfig } from '../../@types';
 import { resolveConfiguredAgents } from '../factory';
-import { bindRoutes } from '../router';
+import { bindRoutes, createRouter } from '../router';
 
 const sourceRegistry: SourceRegistry = {
   register: jest.fn(),
@@ -44,6 +44,26 @@ const createController = () => ({
   approveRun: okHandler({ ok: true }),
   triggerRun: okHandler({ ok: true }),
   webhookRun: okHandler({ ok: true }),
+});
+
+const createLogger = () => {
+  const logger = {
+    info: jest.fn(),
+    warn: jest.fn(),
+    error: jest.fn(),
+    debug: jest.fn(),
+    child: jest.fn(),
+  };
+  logger.child.mockReturnValue(logger);
+  return logger;
+};
+
+const createConfig = () => ({
+  getOptional: jest.fn(),
+  getOptionalBoolean: jest.fn(),
+  getOptionalConfig: jest.fn(),
+  getOptionalString: jest.fn(),
+  getOptionalStringArray: jest.fn(),
 });
 
 const createServer = async (router: express.Router) => {
@@ -151,6 +171,10 @@ describe('router helpers', () => {
 
     const invalidResponse = await fetch(`${baseUrl}/embeddings/catalog`);
     const invalidPayload = await invalidResponse.json();
+    const blankResponse = await fetch(
+      `${baseUrl}/embeddings/catalog?query=%20%20`,
+    );
+    const blankPayload = await blankResponse.json();
     const agentsResponse = await fetch(`${baseUrl}/agents`);
     const agentsPayload = await agentsResponse.json();
 
@@ -158,9 +182,48 @@ describe('router helpers', () => {
     expect(invalidPayload.message).toBe(
       'You should pass in the query via query params',
     );
+    expect(blankResponse.status).toBe(422);
+    expect(blankPayload.message).toBe(
+      'You should pass in the query via query params',
+    );
     expect(controller.getEmbeddings).not.toHaveBeenCalled();
     expect(agentsResponse.status).toBe(200);
     expect(agentsPayload).toEqual({ agents: [] });
+    expect(controller.listAgents).toHaveBeenCalledTimes(1);
+  });
+
+  it('allows the all source umbrella value for embedding lookups', async () => {
+    const controller = createController();
+    const router = bindRoutes(express.Router(), controller, sourceRegistry);
+    const { server, baseUrl } = await createServer(router);
+    servers.push(server);
+
+    const response = await fetch(`${baseUrl}/embeddings/all?query=test`);
+    const payload = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(payload).toEqual({ ok: true });
+    expect(controller.getEmbeddings).toHaveBeenCalledTimes(1);
+  });
+
+  it('routes rejected controller promises through the Backstage error middleware', async () => {
+    const controller = createController();
+    controller.listAgents = jest.fn(async () => {
+      throw new Error('router failure');
+    });
+
+    const router = createRouter({
+      logger: createLogger() as any,
+      config: createConfig() as any,
+      sourceRegistry,
+      controller,
+    });
+    const { server, baseUrl } = await createServer(router);
+    servers.push(server);
+
+    const response = await fetch(`${baseUrl}/agents`);
+
+    expect(response.status).toBe(500);
     expect(controller.listAgents).toHaveBeenCalledTimes(1);
   });
 });

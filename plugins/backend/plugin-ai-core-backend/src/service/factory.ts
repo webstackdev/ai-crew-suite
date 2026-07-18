@@ -19,30 +19,28 @@ import type {
   Orchestrator,
   SourceRegistry,
 } from '@webstackbuilders/plugin-ai-core-node';
-import { AgentRuntime, LlmService } from '../runtime';
+import {
+  AgentRuntime,
+  LlmService
+} from '../runtime';
 import {
   CrewOrchestrator,
   LangGraphOrchestrator,
   SingleShotOrchestrator,
 } from '../orchestrators';
-import { createDefaultToolPackTools, InMemoryToolRegistry } from '../tools';
+import {
+  createDefaultToolPackTools,
+  InMemoryToolRegistry
+} from '../tools';
 import { RagAiController } from './RagAiController';
 import type {
   AiBackendConfig,
   AiBackendServiceOptions,
   AiBackendServices,
+  HardeningOptions,
+  ModelRegistry,
+  ToolMap,
 } from '../@types';
-
-type ModelRegistry = AiBackendServiceOptions['models'];
-type ToolMap = AiBackendServiceOptions['tools'];
-
-type HardeningOptions = {
-  timeoutMs?: number;
-  maxRetries?: number;
-  retryBackoffMs?: number;
-  maxTotalTokens?: number;
-  rateLimitPerMinute?: number;
-};
 
 /**
  * Creates a mutable in-memory source registry used during backend assembly.
@@ -116,6 +114,7 @@ export function resolveConfiguredAgents(
 function resolveSourceRegistry(
   sourceRegistry: SourceRegistry,
   config: AiBackendServiceOptions['config'],
+  logger: AiBackendServiceOptions['logger'],
 ): SourceRegistry {
   const resolvedSourceRegistry = createSourceRegistry();
 
@@ -125,9 +124,7 @@ function resolveSourceRegistry(
 
   const aiConfig = config.getOptionalConfig('ai');
   const configuredSources =
-    aiConfig?.getOptionalStringArray('supportedSources') ??
-    aiConfig?.getOptionalStringArray('sources') ??
-    ['catalog'];
+    aiConfig?.getOptionalStringArray('supportedSources') ?? ['catalog'];
 
   for (const sourceId of configuredSources) {
     if (!resolvedSourceRegistry.has(sourceId)) {
@@ -380,7 +377,7 @@ export function createAiBackendServices(
     config,
   } = options;
   const aiBackendConfig = config.getOptional<AiBackendConfig>('ai');
-  const resolvedSourceRegistry = resolveSourceRegistry(sourceRegistry, config);
+  const resolvedSourceRegistry = resolveSourceRegistry(sourceRegistry, config, logger);
   const { augmentationIndexer, retrievalPipeline } = resolveRuntimeDependencies(tools);
   const resolvedAgents = resolveConfiguredAgents(
     resolveBuiltInAgents(agents, tools, models, aiBackendConfig),
@@ -416,6 +413,10 @@ export function createAiBackendServices(
     auditLogSink,
     triggers ?? [],
     toHardeningOptions(aiBackendConfig),
+  );
+
+  logger.info(
+    `AI backend services initialized: defaultAgent=${defaultAgentId}, agents=${resolvedAgents.size}, models=${models.size}, tools=${toolRegistry.list().length}, sources=${resolvedSourceRegistry.list().length}`,
   );
 
   return {
