@@ -16,36 +16,79 @@
 
 export interface Config {
   /**
-   * OpenAI Embeddings configuration
+   * AI backend model provider configuration.
    *
    */
   ai: {
-    embeddings: {
-      openai: {
+    models: {
+      openrouter: {
         /**
-         * The API key for accessing OpenAI services. Defaults to process.env.OPENAI_API_KEY
+         * Optional list of OpenRouter model registrations. Use this when registering
+         * more than one model with the AI backend.
          */
-        openAiApiKey?: string;
+        models?: Array<{
+          /** Stable model registry ID used by agent modelRef values. Defaults to the model name. */
+          id?: string;
+
+          /** OpenRouter model identifier, such as openai/gpt-4o-mini. */
+          model: string;
+
+          /** API key for OpenRouter. Defaults to process.env.OPENROUTER_API_KEY. */
+          apiKey?: string;
+
+          /** Optional OpenRouter-compatible base URL. */
+          baseURL?: string;
+
+          /** Sampling temperature. */
+          temperature?: number;
+
+          /** Maximum generated tokens. */
+          maxTokens?: number;
+
+          /** Nucleus sampling value. */
+          topP?: number;
+
+          /** Optional attribution URL sent to OpenRouter. */
+          siteUrl?: string;
+
+          /** Optional attribution title sent to OpenRouter. */
+          siteName?: string;
+        }>;
 
         /**
-         * Specify URL of self-hosted OpenAI compliant endpoint. Defaults to OpenAI's public API https://api.openai.com
+         * Stable model registry ID for single-model configuration. Defaults to the model name.
          */
-        openAiBaseUrl?: string;
+        id?: string;
 
         /**
-         * Name of the OpenAI model to use to create Embeddings. Defaults to text-embedding-3-small
+         * OpenRouter model identifier for single-model configuration.
          */
-        modelName?: string;
+        model?: string;
 
         /**
-         * The size of the batch to use when creating embeddings.
+         * API key for OpenRouter. Defaults to process.env.OPENROUTER_API_KEY.
          */
-        batchSize?: number;
+        apiKey?: string;
 
         /**
-         * The number of dimensions to generate. Defaults to use the default value from the chosen model
+         * Optional OpenRouter-compatible base URL.
          */
-        embeddingsDimensions?: number;
+        baseURL?: string;
+
+        /** Sampling temperature. */
+        temperature?: number;
+
+        /** Maximum generated tokens. */
+        maxTokens?: number;
+
+        /** Nucleus sampling value. */
+        topP?: number;
+
+        /** Optional attribution URL sent to OpenRouter. */
+        siteUrl?: string;
+
+        /** Optional attribution title sent to OpenRouter. */
+        siteName?: string;
       };
     };
   };

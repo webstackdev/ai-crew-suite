@@ -6817,7 +6817,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@langchain/openai@npm:^1.5.5":
+"@langchain/openai@npm:1.5.5, @langchain/openai@npm:^1.5.5":
   version: 1.5.5
   resolution: "@langchain/openai@npm:1.5.5"
   dependencies:
@@ -6827,6 +6827,19 @@ __metadata:
   peerDependencies:
     "@langchain/core": ^1.2.2
   checksum: 10c0/3dcc163adf4a3835091d29a33d4f6abc5d55c4b72dbfa49da1a7a6fb517c0a25f84353aa1205f90facb0d42f0d7b1446c81aba74548bd9820e331531a865ca43
+  languageName: node
+  linkType: hard
+
+"@langchain/openrouter@npm:^0.4.5":
+  version: 0.4.5
+  resolution: "@langchain/openrouter@npm:0.4.5"
+  dependencies:
+    "@langchain/openai": "npm:1.5.5"
+    eventsource-parser: "npm:^3.1.0"
+    openai: "npm:^6.41.0"
+  peerDependencies:
+    "@langchain/core": ^1.0.0
+  checksum: 10c0/0787ba1f165db2f9d5b433ab0084d5a148b01ac2f8d0e042bd2b079e5e6981bce3af093694950fad77e09254b1b8c3a46b4115ebed1af154a74a71c07fa48079
   languageName: node
   linkType: hard
 
@@ -13389,6 +13402,25 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@webstackbuilders/plugin-ai-core-backend-module-openrouter@workspace:plugins/backend/plugin-ai-core-backend-module-openrouter":
+  version: 0.0.0-use.local
+  resolution: "@webstackbuilders/plugin-ai-core-backend-module-openrouter@workspace:plugins/backend/plugin-ai-core-backend-module-openrouter"
+  dependencies:
+    "@backstage/backend-common": "npm:^0.25.0"
+    "@backstage/backend-plugin-api": "backstage:^"
+    "@backstage/catalog-client": "backstage:^"
+    "@backstage/cli": "backstage:^"
+    "@backstage/config": "backstage:^"
+    "@langchain/core": "npm:^1.2.3"
+    "@langchain/openrouter": "npm:^0.4.5"
+    "@webstackbuilders/plugin-ai-core-backend-module-pgvector": "workspace:^"
+    "@webstackbuilders/plugin-ai-core-backend-module-retrieval-augmenter": "workspace:^"
+    "@webstackbuilders/plugin-ai-core-node": "workspace:^"
+    i18next: "npm:26.3.6"
+    vitest: "npm:^4.1.10"
+  languageName: unknown
+  linkType: soft
+
 "@webstackbuilders/plugin-ai-core-backend-module-pgvector@workspace:^, @webstackbuilders/plugin-ai-core-backend-module-pgvector@workspace:plugins/backend/plugin-ai-core-backend-module-pgvector":
   version: 0.0.0-use.local
   resolution: "@webstackbuilders/plugin-ai-core-backend-module-pgvector@workspace:plugins/backend/plugin-ai-core-backend-module-pgvector"
@@ -18673,7 +18705,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eventsource-parser@npm:^3.0.0, eventsource-parser@npm:^3.0.1":
+"eventsource-parser@npm:^3.0.0, eventsource-parser@npm:^3.0.1, eventsource-parser@npm:^3.1.0":
   version: 3.1.0
   resolution: "eventsource-parser@npm:3.1.0"
   checksum: 10c0/5ab4c6c9a2a042be0b387b6d03810eb580bac4ce90e299ede56458125a97ffe3af8145b2740089fc898a96cfa5aae792ee79f2a06257fba2776b0e7bce037071

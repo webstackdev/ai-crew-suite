@@ -1,6 +1,6 @@
 {
   "name": "@webstackbuilders/plugin-ai-core-backend-module-openrouter",
-  "description": "The OpenAI backend module for the @webstackbuilders/plugin-ai-core plugin.",
+  "description": "The OpenRouter model backend module for the @webstackbuilders/plugin-ai-core plugin.",
   "version": "0.0.1",
   "main": "src/index.ts",
   "types": "src/index.ts",
@@ -13,9 +13,9 @@
     "ai-crew-suite",
     "ai-core",
     "openrouter",
-    "embeddings",
-    "vector-embeddings",
-    "rag"
+    "models",
+    "llm",
+    "chat"
   ],
   "publishConfig": {
     "access": "public",
@@ -55,14 +55,9 @@
     "test": "vitest run src --exclude 'dist-types/**' --passWithNoTests"
   },
   "dependencies": {
-    "@backstage/backend-common": "^0.25.0",
     "@backstage/backend-plugin-api": "backstage:^",
-    "@backstage/catalog-client": "backstage:^",
     "@backstage/config": "backstage:^",
-    "@langchain/core": "^1.2.3",
-    "@langchain/openrouter": "^1.5.5",
-    "@webstackbuilders/plugin-ai-core-backend-module-pgvector": "workspace:^",
-    "@webstackbuilders/plugin-ai-core-backend-module-retrieval-augmenter": "workspace:^",
+    "@langchain/openrouter": "^0.4.5",
     "@webstackbuilders/plugin-ai-core-node": "workspace:^",
     "i18next": "26.3.6",
     "vitest": "^4.1.10"

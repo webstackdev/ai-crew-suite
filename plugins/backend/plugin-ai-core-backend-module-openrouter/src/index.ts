@@ -1,4 +1,4 @@
 export {
-  aiCoreBackendModuleOpenAi,
-  aiCoreBackendModuleOpenAi as default,
+  aiCoreBackendModuleOpenRouter,
+  aiCoreBackendModuleOpenRouter as default,
 } from './module';

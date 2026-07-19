@@ -36,6 +36,7 @@
     // 5. Embeddings Ecosystem
     { "path": "./plugins/backend/plugin-ai-core-backend-module-aws" },
     { "path": "./plugins/backend/plugin-ai-core-backend-module-openai" },
+    { "path": "./plugins/backend/plugin-ai-core-backend-module-openrouter" },
 
     // 6. Engine Capabilities
     {
