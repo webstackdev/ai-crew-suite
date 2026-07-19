@@ -1,5 +1,6 @@
 /*
  * Copyright 2024 Larder Software Limited
+ * Copyright 2026 Webstack Builders, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,31 +14,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { LoggerService, DatabaseService } from '@backstage/backend-plugin-api';
+import type { VectorStore } from '@webstackbuilders/plugin-ai-core-node';
 import { applyDatabaseMigrations } from '../database/migrations';
-
-import { VectorStore } from '@webstackbuilders/plugin-ai-core-node';
 import { PgVectorStore } from './PgVectorStore';
 import { PgAgentRuntimeStore } from './PgAgentRuntimeStore';
-import { Config } from '@backstage/config';
+import type { PgVectorStoreInitConfig, PgVectorStoreOptions } from '../@types';
 
-export interface PgVectorStoreInitConfig {
-  logger: LoggerService;
-  database: DatabaseService;
-  config: Config;
-}
-
-export interface PgVectorStoreOptions {
-  chunkSize?: number;
-  amount?: number;
-}
-
+/**
+ * Creates the pgvector-backed vector store used by indexing and retrieval.
+ *
+ * The factory obtains the Backstage database client, applies the packaged
+ * pgvector migrations, reads optional `ai.storage.pgVector` tuning values, and
+ * returns a configured `VectorStore` implementation.
+ */
 export async function createPgVectorStore({
   logger,
   database,
   config,
 }: PgVectorStoreInitConfig): Promise<VectorStore> {
-  logger.info('Starting  PgVectorStore');
+  logger.info('Starting PgVectorStore');
 
   const dbClient = await database.getClient();
   await applyDatabaseMigrations(dbClient);
@@ -57,6 +52,12 @@ export async function createPgVectorStore({
   });
 }
 
+/**
+ * Creates the pgvector-backed runtime store for sessions, runs, and audit data.
+ *
+ * The runtime store shares the same migration path as the vector store so a
+ * module can safely wire either or both stores during backend startup.
+ */
 export async function createPgAgentRuntimeStore({
   logger,
   database,

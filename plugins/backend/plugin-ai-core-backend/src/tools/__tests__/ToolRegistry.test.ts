@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { describe, expect, it, jest } from '@jest/globals';
+import { describe, expect, it, vi } from 'vitest';
 import type { Tool } from '@webstackbuilders/plugin-ai-core-node';
 import { InMemoryToolRegistry } from '../ToolRegistry';
 
@@ -21,7 +21,7 @@ const createTool = (id: string, description = `${id} tool`): Tool => ({
   id,
   description,
   effect: 'read',
-  invoke: jest.fn(async () => ({ ok: true })),
+  invoke: vi.fn(async () => ({ ok: true })),
 });
 
 describe('InMemoryToolRegistry', () => {

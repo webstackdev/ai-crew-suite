@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { describe, expect, it, jest } from '@jest/globals';
+import { describe, expect, it, vi, type Mock } from 'vitest';
 import type { BaseLLM } from '@langchain/core/language_models/llms';
 import type { EmbeddingDoc } from '@webstackbuilders/plugin-ai-core-node';
 import { createAsyncIterable, createLogger } from '../../testHelpers';
@@ -24,8 +24,8 @@ const createStream = () =>
 
 const createModel = (stream = createStream()) =>
   ({
-    stream: jest.fn(async (_prompt: string) => stream),
-  }) as unknown as BaseLLM & { stream: jest.Mock };
+    stream: vi.fn(async (_prompt: string) => stream),
+  }) as unknown as BaseLLM & { stream: Mock };
 
 const embeddings: EmbeddingDoc[] = [
   { content: 'catalog-info.yaml owner: platform', metadata: { source: 'catalog' } },
@@ -102,7 +102,7 @@ describe('LlmService', () => {
     const logger = createLogger();
     const failure = new Error('provider unavailable');
     const model = {
-      stream: jest.fn(async () => {
+      stream: vi.fn(async () => {
         throw failure;
       }),
     } as unknown as BaseLLM;

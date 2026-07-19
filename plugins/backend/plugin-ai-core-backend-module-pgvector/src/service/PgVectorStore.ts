@@ -1,5 +1,6 @@
 /*
  * Copyright 2024 Larder Software Limited
+ * Copyright 2026 Webstack Builders, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,48 +14,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { LoggerService } from '@backstage/backend-plugin-api';
-import {
+import type { Embeddings } from '@langchain/core/embeddings';
+import type { Knex } from 'knex';
+import type { LoggerService } from '@backstage/backend-plugin-api';
+import type {
   EmbeddingDocMetadata,
   EmbeddingDoc,
   VectorStore,
 } from '@webstackbuilders/plugin-ai-core-node';
-import { Embeddings } from '@langchain/core/embeddings';
-import { Knex } from 'knex';
-
-export interface PgVectorStoreConfig {
-  logger: LoggerService;
-  db: Knex;
-  /**
-   * The amount of documents to chunk by when
-   * adding vectors.
-   * @default 500
-   */
-  chunkSize?: number;
-
-  /**
-   * The default amount of embeddings to return when querying vectors with similarity search
-   */
-  amount?: number;
-}
+import type { PgVectorStoreConfig } from '../@types';
 
 /**
- * A class representing a vector store that uses PostgreSQL as the backend.
+ * PostgreSQL `pgvector` implementation of the AI core vector-store contract.
+ *
+ * The store persists embedded document content, metadata, and vector values in
+ * the `embeddings` table and uses pgvector distance ordering for retrieval.
  */
 export class PgVectorStore implements VectorStore {
+  /** Database table that stores vectorized documents. */
   protected readonly tableName: string = 'embeddings';
+  /** Knex client used for SQL and batch insert operations. */
   protected readonly client: Knex;
-  protected readonly chunkSize;
-  protected readonly amount;
+  /** Number of rows sent to each Knex batch insert operation. */
+  protected readonly chunkSize: number;
+  /** Default number of nearest documents returned by similarity search. */
+  protected readonly amount: number;
+  /** Embedding provider connected by the owning indexer or runtime module. */
   protected embeddings?: Embeddings;
+  /** Logger used for insertion diagnostics and guardrail failures. */
   protected readonly logger: LoggerService;
 
   /**
-   * Initializes the PgVectorStore.
-   *
-   * @param {PgVectorStoreConfig} config - The configuration for PgVectorStore.
-   *
-   * @return {Promise<PgVectorStore>} A Promise that resolves to an instance of PgVectorStore.
+   * Creates a vector store from module configuration.
    */
   static async initialize(
     config: PgVectorStoreConfig,
@@ -63,12 +54,7 @@ export class PgVectorStore implements VectorStore {
   }
 
   /**
-   * Constructor for PgVectorStore class.
-   *
-   * @param {PgVectorStoreConfig} config - The configuration object for PgVectorStore.
-   * @param {string} config.db - The database client to connect.
-   * @param {Object} config.logger - The logger object for logging.
-   * @param {number} [config.chunkSize=500] - The size of chunks for processing.
+    * Builds a store using the configured database, logger, and batch options.
    */
   protected constructor(config: PgVectorStoreConfig) {
     this.client = config.db;
@@ -77,41 +63,55 @@ export class PgVectorStore implements VectorStore {
     this.amount = config.amount ?? 4;
   }
 
+  /**
+   * Connects the embedding provider used to vectorize documents and queries.
+   */
   connectEmbeddings(embeddings: Embeddings) {
     this.embeddings = embeddings;
   }
 
+  /**
+   * Returns a query builder for the embeddings table.
+   */
   table() {
     return this.client('embeddings');
   }
 
   /**
-   * Add documents to the vector store.
+   * Embeds and inserts documents into the vector store.
    *
-   * @param {EmbeddingDoc[]} documents - The array of documents to be added.
-   * @throws {Error} When no embeddings are configured for the vector store.
-   * @returns {Promise<void>} Resolves when the documents have been added successfully.
+   * @throws {Error} When no embeddings are configured or when the embedding
+   * provider returns a vector count that does not match the document count.
    */
   async addDocuments(documents: EmbeddingDoc[]): Promise<void> {
-    const texts = documents.map(({ content }) => content);
     if (!this.embeddings) {
       throw new Error('No Embeddings configured for the vector store.');
     }
 
+    if (documents.length === 0) {
+      this.logger.debug('No documents supplied for vector insertion.');
+      return;
+    }
+
+    const texts = documents.map(({ content }) => content);
     const vectors = await this.embeddings.embedDocuments(texts);
     this.logger.info(
       `Received ${vectors.length} vectors from embeddings creation.`,
     );
-    return this.addVectors(vectors, documents);
+
+    if (vectors.length !== documents.length) {
+      const message = `Embedding provider returned ${vectors.length} vectors for ${documents.length} documents.`;
+      this.logger.error(message);
+      throw new Error(message);
+    }
+
+    await this.addVectors(vectors, documents);
   }
 
   /**
-   * Adds vectors to the database along with corresponding documents.
+    * Inserts already-generated vectors with their matching source documents.
    *
-   * @param {number[][]} vectors - The vectors to be added.
-   * @param {EmbeddingDoc[]} documents - The corresponding documents.
-   * @return {Promise<void>} - A promise that resolves when the vectors are added successfully.
-   * @throws {Error} - If there is an error inserting the vectors.
+    * @throws {Error} When the database insert fails.
    */
   protected async addVectors(
     vectors: number[][],
@@ -132,26 +132,21 @@ export class PgVectorStore implements VectorStore {
 
       await this.client.batchInsert(this.tableName, rows, this.chunkSize);
     } catch (e) {
-      this.logger.error((e as Error).message);
-      throw new Error(`Error inserting: ${(e as Error).message}`);
+      const message = e instanceof Error ? e.message : 'Unknown insertion error';
+      this.logger.error(message);
+      throw new Error(`Error inserting: ${message}`);
     }
   }
 
   /**
-   * Deletes records from the database table by their ids.
-   *
-   * @param {string[]} ids - The array of ids of the records to be deleted.
-   * @returns {Promise<void>} - A promise that resolves when the deletion is complete.
+    * Deletes stored embeddings by explicit row IDs.
    */
   protected async deleteById(ids: string[]) {
     await this.table().delete().whereIn('id', ids);
   }
 
   /**
-   * Deletes rows from the table based on the specified filter.
-   *
-   * @param {EmbeddingDocMetadata} filter - The filter to apply for deletion.
-   * @returns {Promise} - A Promise that resolves when the deletion is complete.
+    * Deletes stored embeddings whose metadata contains the supplied filter.
    */
   protected async deleteByFilter(filter: EmbeddingDocMetadata) {
     const queryString = `
@@ -162,14 +157,10 @@ export class PgVectorStore implements VectorStore {
   }
 
   /**
-   * Deletes documents based on the provided deletion parameters.
-   * Either `ids` or `filter` must be specified.
-   *
-   * @param {Object} deletionParams - The deletion parameters.
-   * @param {Array<string>} [deletionParams.ids] - The document IDs to delete.
-   * @param {EmbeddingDocMetadata} [deletionParams.filter] - The filter to match documents to be deleted.
-   *
-   * @return {Promise<void>} - A Promise that resolves once the documents have been deleted.
+    * Deletes documents by either explicit IDs or metadata filter.
+    *
+    * @throws {Error} When neither selector is provided, or when both selectors
+    * are provided at the same time.
    */
   async deleteDocuments(deletionParams: {
     ids?: string[];
@@ -197,13 +188,9 @@ export class PgVectorStore implements VectorStore {
   }
 
   /**
-   * Finds the most similar documents to a given query vector, along with their similarity scores.
-   *
-   * @param {number[]} query - The query vector to compare against.
-   * @param {number} amount - The maximum number of results to return.
-   * @param {EmbeddingDocMetadata} [filter] - Optional filter to limit the search results.
-   * @returns {Promise<[EmbeddingDoc, number][]>} - An array of document similarity results, where each
-   * result is a tuple containing the document and its similarity score.
+    * Finds nearest documents for an already-generated query vector.
+    *
+    * @returns Tuples containing matching documents and their pgvector distances.
    */
   protected async similaritySearchVectorWithScore(
     query: number[],
@@ -229,8 +216,12 @@ export class PgVectorStore implements VectorStore {
 
     const results = [] as [EmbeddingDoc, number][];
     for (const doc of documents) {
-      // eslint-ignore-next-line
-      if (doc._distance !== null && doc._distance !== undefined && doc.content !== null && doc.content !== undefined) {
+      if (
+        doc._distance !== null &&
+        doc._distance !== undefined &&
+        doc.content !== null &&
+        doc.content !== undefined
+      ) {
         const document = {
           content: doc.content,
           metadata: doc.metadata,
@@ -242,17 +233,13 @@ export class PgVectorStore implements VectorStore {
   }
 
   /**
-   * Performs a similarity search using the given query and filter.
+    * Embeds a natural-language query and returns nearest matching documents.
    *
-   * @param {string} query - The query to perform the similarity search on.
-   * @param {EmbeddingDocMetadata} filter - The filter to apply to the search results.
-   * @param {number} [amount=4] - The number of results to return.
-   * @return {Promise<EmbeddingDoc[]>} - A promise that resolves to an array of EmbeddingDoc objects representing the search results.
-   * @throws {Error} - Throws an error if there are no embeddings configured for the vector store.
+    * @throws {Error} When no embeddings provider has been connected.
    */
   async similaritySearch(
     query: string,
-    filter: EmbeddingDocMetadata,
+    filter?: EmbeddingDocMetadata,
     amount: number = this.amount,
   ): Promise<EmbeddingDoc[]> {
     if (!this.embeddings) {

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { describe, expect, it, jest } from '@jest/globals';
+import { describe, expect, it, vi } from 'vitest';
 import type {
   AgentDefinition,
   AgentEvent,
@@ -57,7 +57,7 @@ const runInput: AgentRunInput = {
 const createWriteTool = (): Tool => ({
   id: 'catalog.write',
   effect: 'write',
-  invoke: jest.fn(async () => ({ ok: true })),
+  invoke: vi.fn(async () => ({ ok: true })),
 });
 
 const createContext = (overrides: Partial<RuntimeContext> = {}): RuntimeContext => ({
@@ -67,10 +67,10 @@ const createContext = (overrides: Partial<RuntimeContext> = {}): RuntimeContext 
   identity: 'user:default/alice',
   runStore: createRunStore(),
   artifactSink: {
-    record: jest.fn(async (_artifact: unknown) => undefined),
+    record: vi.fn(async (_artifact: unknown) => undefined),
   },
   auditLogSink: {
-    recordWriteAction: jest.fn(async (_entry: unknown) => undefined),
+    recordWriteAction: vi.fn(async (_entry: unknown) => undefined),
   },
   ...overrides,
 });
@@ -82,7 +82,7 @@ const createRuntime = (orchestrator: Orchestrator, agents = [agent]) =>
   );
 
 const createOrchestrator = (events: AgentEvent[]): Orchestrator => ({
-  run: jest.fn(async function* runOrchestrator() {
+  run: vi.fn(async function* runOrchestrator() {
     for (const event of events) {
       yield event;
     }
@@ -92,8 +92,8 @@ const createOrchestrator = (events: AgentEvent[]): Orchestrator => ({
 const createResumableOrchestrator = (
   events: AgentEvent[],
 ): Orchestrator => ({
-  run: jest.fn(async function* runOrchestrator() {}) as Orchestrator['run'],
-  resume: jest.fn(async function* resumeOrchestrator() {
+  run: vi.fn(async function* runOrchestrator() {}) as Orchestrator['run'],
+  resume: vi.fn(async function* resumeOrchestrator() {
     for (const event of events) {
       yield event;
     }
@@ -151,9 +151,9 @@ describe('AgentRuntime', () => {
     const orchestrator = createOrchestrator(events);
     const runtime = createRuntime(orchestrator);
     const runStore = createRunStore();
-    const artifactSink = { record: jest.fn(async (_artifact: unknown) => undefined) };
+    const artifactSink = { record: vi.fn(async (_artifact: unknown) => undefined) };
     const auditLogSink = {
-      recordWriteAction: jest.fn(async (_entry: unknown) => undefined),
+      recordWriteAction: vi.fn(async (_entry: unknown) => undefined),
     };
 
     const collected = await collectEvents(
@@ -260,7 +260,7 @@ describe('AgentRuntime', () => {
     const logger = createLogger();
     const runStore = createRunStore();
     const orchestrator: Orchestrator = {
-      run: jest.fn(async function* throwFromRun() {
+      run: vi.fn(async function* throwFromRun() {
         throw new Error('model unavailable');
       }) as Orchestrator['run'],
     };
@@ -312,9 +312,9 @@ describe('AgentRuntime', () => {
       agentId: 'agent-a',
       status: 'paused',
     });
-    const artifactSink = { record: jest.fn(async (_artifact: unknown) => undefined) };
+    const artifactSink = { record: vi.fn(async (_artifact: unknown) => undefined) };
     const auditLogSink = {
-      recordWriteAction: jest.fn(async (_entry: unknown) => undefined),
+      recordWriteAction: vi.fn(async (_entry: unknown) => undefined),
     };
     const events: AgentEvent[] = [
       {

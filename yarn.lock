@@ -13365,6 +13365,7 @@ __metadata:
     "@webstackbuilders/plugin-ai-core-backend-module-retrieval-augmenter": "workspace:^"
     "@webstackbuilders/plugin-ai-core-node": "workspace:^"
     i18next: "npm:26.3.6"
+    vitest: "npm:^4.1.10"
   languageName: unknown
   linkType: soft
 
@@ -13382,6 +13383,7 @@ __metadata:
     "@webstackbuilders/plugin-ai-core-backend-module-retrieval-augmenter": "workspace:^"
     "@webstackbuilders/plugin-ai-core-node": "workspace:^"
     i18next: "npm:26.3.6"
+    vitest: "npm:^4.1.10"
   languageName: unknown
   linkType: soft
 
@@ -13396,6 +13398,7 @@ __metadata:
     "@webstackbuilders/plugin-ai-core-node": "workspace:^"
     i18next: "npm:26.3.6"
     knex: "npm:^3.3.0"
+    vitest: "npm:^4.1.10"
   languageName: unknown
   linkType: soft
 
@@ -13438,6 +13441,7 @@ __metadata:
     express: "npm:^4.22.2"
     express-promise-router: "npm:^4.1.1"
     i18next: "npm:26.3.6"
+    vitest: "npm:^4.1.10"
   languageName: unknown
   linkType: soft
 
@@ -13449,6 +13453,7 @@ __metadata:
     "@backstage/cli": "backstage:^"
     "@langchain/core": "npm:^1.2.3"
     i18next: "npm:26.3.6"
+    vitest: "npm:^4.1.10"
   languageName: unknown
   linkType: soft
 
@@ -13480,6 +13485,7 @@ __metadata:
     react-router-dom: "npm:^6.30.4"
     react-syntax-highlighter: "npm:^15.6.6"
     react-type-animation: "npm:^3.2.0"
+    vitest: "npm:^4.1.10"
   peerDependencies:
     react: ^18.3.1
   languageName: unknown
@@ -14011,6 +14017,7 @@ __metadata:
     react-dom: "npm:^18.3.1"
     react-router: "npm:^6.30.4"
     react-router-dom: "npm:^6.30.4"
+    vitest: "npm:^4.1.10"
   languageName: unknown
   linkType: soft
 
@@ -14673,6 +14680,7 @@ __metadata:
     better-sqlite3: "npm:^12.11.1"
     node-gyp: "npm:^13.0.1"
     pg: "npm:^8.22.0"
+    vitest: "npm:^4.1.10"
   languageName: unknown
   linkType: soft
 

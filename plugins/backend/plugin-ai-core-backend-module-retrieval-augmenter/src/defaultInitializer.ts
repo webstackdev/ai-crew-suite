@@ -15,25 +15,21 @@
  * limitations under the License.
  */
 import {
-  AuthService,
-  DiscoveryService,
-  LoggerService,
-} from '@backstage/backend-plugin-api';
-import { VectorStore } from '@webstackbuilders/plugin-ai-core-node';
-import {
   DefaultRetrievalPipeline,
   SearchRetriever,
   SourceBasedRetrievalRouter,
   VectorEmbeddingsRetriever,
 } from './retrieval';
+import type { DefaultRetrievalPipelineOptions } from './@types';
 
-export type DefaultRetrievalPipelineOptions = {
-  vectorStore: VectorStore;
-  logger: LoggerService;
-  discovery: DiscoveryService;
-  auth: AuthService;
-};
-
+/**
+ * Creates the standard retrieval pipeline used by the AI core backend module.
+ *
+ * The default pipeline combines semantic vector retrieval with Backstage Search
+ * retrieval for `catalog`, `tech-docs`, and `all` sources. Component-level
+ * logging and error handling live in the retrievers, router, and search client;
+ * this factory only composes those pieces with the Backstage services they need.
+ */
 export const createDefaultRetrievalPipeline = ({
   vectorStore,
   discovery,
@@ -65,6 +61,7 @@ export const createDefaultRetrievalPipeline = ({
       retrievers: sourceBasedRetrieverConfig,
     }),
   ];
+
   return new DefaultRetrievalPipeline({
     routers: retrievalRouters,
   });

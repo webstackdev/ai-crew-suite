@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { describe, expect, it, jest } from '@jest/globals';
+import { describe, expect, it, vi } from 'vitest';
 import type {
   AgentRunInput,
   Tool,
@@ -146,7 +146,7 @@ describe('SingleShotOrchestrator', () => {
     const retrievalTool = {
       id: 'knowledge.retrieve',
       effect: 'read',
-      invoke: jest.fn(async () => Promise.reject(undefined)),
+      invoke: vi.fn(async () => Promise.reject(undefined)),
     } as Tool;
     const orchestrator = new SingleShotOrchestrator(createLlmService() as any);
 

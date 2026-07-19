@@ -21,7 +21,18 @@ import {
   EmbeddingsSource,
 } from '@webstackbuilders/plugin-ai-core-node';
 
+/**
+ * Post-processor that concatenates retriever results into one context list.
+ *
+ * The processor preserves the insertion order of the retriever result map and
+ * the order of documents within each retriever's result array. It does not rank,
+ * deduplicate, filter, or log because it performs no fallible I/O and is meant
+ * to be the minimal default combiner for retrieval pipelines.
+ */
 export class CombiningPostProcessor implements AugmentationPostProcessor {
+  /**
+   * Flattens retriever results into the final ordered augmentation context.
+   */
   async process(
     _query: string,
     _source: EmbeddingsSource,

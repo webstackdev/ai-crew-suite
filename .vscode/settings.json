@@ -14,6 +14,7 @@
     "rjsf",
     "roadiehq",
     "SCAF",
+    "upserts",
     "zipfs"
   ],
   "search.exclude": {

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { describe, expect, it, jest } from '@jest/globals';
+import { describe, expect, it, vi } from 'vitest';
 import type {
   AgentDefinition,
   AugmentationIndexer,
@@ -25,8 +25,8 @@ import { createLogger } from '../../testHelpers';
 import { createAiBackendServices, createSourceRegistry } from '../factory';
 
 const createConfig = (aiConfig?: AiBackendConfig) => ({
-  getOptional: jest.fn((key: string) => (key === 'ai' ? aiConfig : undefined)),
-  getOptionalConfig: jest.fn((key: string) => {
+  getOptional: vi.fn((key: string) => (key === 'ai' ? aiConfig : undefined)),
+  getOptionalConfig: vi.fn((key: string) => {
     if (key !== 'ai' || !aiConfig) {
       return undefined;
     }
@@ -44,12 +44,12 @@ const createConfig = (aiConfig?: AiBackendConfig) => ({
 
 const createAugmentationIndexer = (): AugmentationIndexer => ({
   vectorStore: {} as AugmentationIndexer['vectorStore'],
-  createEmbeddings: jest.fn(async () => 0),
-  deleteEmbeddings: jest.fn(async () => undefined),
+  createEmbeddings: vi.fn(async () => 0),
+  deleteEmbeddings: vi.fn(async () => undefined),
 });
 
 const createRetrievalPipeline = (): RetrievalPipeline => ({
-  retrieveAugmentationContext: jest.fn(async () => []),
+  retrieveAugmentationContext: vi.fn(async () => []),
 });
 
 const createTool = (
@@ -61,7 +61,7 @@ const createTool = (
   effect: 'read',
   augmentationIndexer,
   retrievalPipeline,
-  invoke: jest.fn(async () => ({ ok: true })),
+  invoke: vi.fn(async () => ({ ok: true })),
 });
 
 const createOptions = (
@@ -142,7 +142,7 @@ describe('createAiBackendServices', () => {
                 id: 'catalog.read',
                 description: 'Catalog lookup tool',
                 effect: 'read',
-                invoke: jest.fn(async () => ({ ok: true })),
+                invoke: vi.fn(async () => ({ ok: true })),
               },
             ],
           ]),

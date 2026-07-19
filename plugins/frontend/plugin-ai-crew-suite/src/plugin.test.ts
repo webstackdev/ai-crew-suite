@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { describe, expect, it } from 'vitest';
 import { ragAiPlugin } from './plugin';
 
 describe('ai-crew-suite', () => {

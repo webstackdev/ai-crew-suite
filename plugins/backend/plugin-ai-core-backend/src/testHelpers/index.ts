@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { jest } from '@jest/globals';
+import { vi } from 'vitest';
 import type {
 	AgentEvent,
 	EmbeddingDoc,
@@ -25,11 +25,11 @@ import type {
 } from '@webstackbuilders/plugin-ai-core-node';
 
 export const createLogger = () => ({
-	info: jest.fn(),
-	warn: jest.fn(),
-	error: jest.fn(),
-	debug: jest.fn(),
-	child: jest.fn(),
+	info: vi.fn(),
+	warn: vi.fn(),
+	error: vi.fn(),
+	debug: vi.fn(),
+	child: vi.fn(),
 });
 
 export const createAsyncIterable = <T>(items: T[]) =>
@@ -51,15 +51,15 @@ export const createRunStore = (
 	run?: RunRecord,
 	overrides: Partial<RunStore> = {},
 ): RunStore => ({
-	createRun: jest.fn(async () => undefined),
-	getRun: jest.fn(async () => run),
-	findRunByIdempotencyKey: jest.fn(async () => undefined),
-	updateRunStatus: jest.fn(async () => undefined),
-	appendRunStep: jest.fn(async () => undefined),
-	listRunSteps: jest.fn(async () => []),
-	createApproval: jest.fn(async () => undefined),
-	getPendingApproval: jest.fn(async () => undefined),
-	decideApproval: jest.fn(async () => undefined),
+	createRun: vi.fn(async () => undefined),
+	getRun: vi.fn(async () => run),
+	findRunByIdempotencyKey: vi.fn(async () => undefined),
+	updateRunStatus: vi.fn(async () => undefined),
+	appendRunStep: vi.fn(async () => undefined),
+	listRunSteps: vi.fn(async () => []),
+	createApproval: vi.fn(async () => undefined),
+	getPendingApproval: vi.fn(async () => undefined),
+	decideApproval: vi.fn(async () => undefined),
 	...overrides,
 });
 
@@ -70,17 +70,17 @@ export const defaultEmbeddings: EmbeddingDoc[] = [
 export const createRetrievalTool = (output: unknown = defaultEmbeddings): Tool => ({
 	id: 'knowledge.retrieve',
 	effect: 'read',
-	invoke: jest.fn(async () => output),
+	invoke: vi.fn(async () => output),
 });
 
 export const createToolRegistry = (tools: Tool[] = []): ToolRegistry => ({
-	register: jest.fn(),
-	get: jest.fn((id: string) => tools.find(tool => tool.id === id)),
-	list: jest.fn(() => tools),
+	register: vi.fn(),
+	get: vi.fn((id: string) => tools.find(tool => tool.id === id)),
+	list: vi.fn(() => tools),
 });
 
 export const createLlmService = (chunks: unknown[] = ['hello ', 'world']) => ({
-	query: jest.fn(
+	query: vi.fn(
 		async (_embeddings: unknown, _query: string, _options: unknown) =>
 			createAsyncIterable(chunks) as any,
 	),

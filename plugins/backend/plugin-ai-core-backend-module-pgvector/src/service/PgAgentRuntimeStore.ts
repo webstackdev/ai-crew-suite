@@ -1,5 +1,6 @@
 /*
  * Copyright 2024 Larder Software Limited
+ * Copyright 2026 Webstack Builders, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { randomUUID } from 'crypto';
 import { Knex } from 'knex';
 import {
   AuditLogEntry,
@@ -27,13 +29,42 @@ import {
   SessionMessage,
   SessionStore,
 } from '@webstackbuilders/plugin-ai-core-node';
-import { randomUUID } from 'crypto';
 
+/**
+ * Normalizes JSON values returned by different PostgreSQL drivers.
+ *
+ * Knex may return `jsonb` columns as parsed objects or as serialized strings
+ * depending on the driver and test double. This helper keeps store methods
+ * tolerant of both shapes while preserving the public runtime-store contracts.
+ */
+const parseStoredJson = <T>(value: unknown): T => {
+  if (typeof value === 'string') {
+    return JSON.parse(value) as T;
+  }
+
+  return value as T;
+};
+
+/**
+ * PostgreSQL-backed implementation of the agent runtime persistence contracts.
+ *
+ * The store persists conversation sessions, resumable checkpoints, run records,
+ * replayable run steps, approval decisions, artifacts, and audit entries using
+ * the tables created by the pgvector module migrations.
+ */
 export class PgAgentRuntimeStore
   implements SessionStore, CheckpointStore, RunStore, ArtifactSink, AuditLogSink
 {
+  /**
+   * Creates a runtime store that uses the supplied Knex client for all queries.
+   */
   constructor(private readonly client: Knex) {}
 
+  /**
+   * Creates a persisted conversation session for an agent and optional user.
+   *
+   * @returns The generated session ID.
+   */
   async createSession(agentId: string, userRef?: string): Promise<string> {
     const id = randomUUID();
     await this.client('ai_sessions').insert({
@@ -45,6 +76,9 @@ export class PgAgentRuntimeStore
     return id;
   }
 
+  /**
+   * Appends a message to an existing session, including optional token usage.
+   */
   async appendMessage(sessionId: string, message: SessionMessage): Promise<void> {
     await this.client('ai_messages').insert({
       id: randomUUID(),
@@ -55,23 +89,33 @@ export class PgAgentRuntimeStore
     });
   }
 
+  /**
+   * Lists the most recent messages for a session in chronological order.
+   *
+   * The query reads newest rows first so the limit selects the latest window,
+   * then reverses that window so prompt construction sees normal conversation
+   * order from oldest to newest.
+   */
   async listMessages(sessionId: string, limit = 20): Promise<SessionMessage[]> {
     const rows = await this.client('ai_messages')
       .select('role', 'content', 'token_usage', 'created_at')
       .where({ session_id: sessionId })
-      .orderBy('created_at', 'asc')
+      .orderBy('created_at', 'desc')
       .limit(limit);
 
-    return rows.map(row => ({
+    return [...rows].reverse().map(row => ({
       role: row.role,
       content: row.content,
       createdAt: row.created_at ? new Date(row.created_at).toISOString() : undefined,
       tokenUsage: row.token_usage
-        ? JSON.parse(typeof row.token_usage === 'string' ? row.token_usage : '{}')
+        ? parseStoredJson<SessionMessage['tokenUsage']>(row.token_usage)
         : undefined,
     }));
   }
 
+  /**
+   * Saves or replaces resumable orchestration state for a run.
+   */
   async save(runId: string, state: unknown): Promise<void> {
     await this.client('ai_checkpoints')
       .insert({
@@ -85,6 +129,9 @@ export class PgAgentRuntimeStore
       });
   }
 
+  /**
+   * Loads resumable orchestration state for a run when a checkpoint exists.
+   */
   async load<T = unknown>(runId: string): Promise<T | undefined> {
     const row = await this.client('ai_checkpoints')
       .select('state')
@@ -95,13 +142,12 @@ export class PgAgentRuntimeStore
       return undefined;
     }
 
-    if (typeof row.state === 'string') {
-      return JSON.parse(row.state) as T;
-    }
-
-    return row.state as T;
+    return parseStoredJson<T>(row.state);
   }
 
+  /**
+   * Persists the initial lifecycle record for a run.
+   */
   async createRun(record: RunRecord): Promise<void> {
     await this.client('ai_runs').insert({
       id: record.id,
@@ -113,6 +159,9 @@ export class PgAgentRuntimeStore
     });
   }
 
+  /**
+   * Looks up a run by ID.
+   */
   async getRun(runId: string): Promise<RunRecord | undefined> {
     const row = await this.client('ai_runs')
       .select('id', 'agent_id', 'session_id', 'status', 'trigger', 'idempotency_key')
@@ -133,6 +182,9 @@ export class PgAgentRuntimeStore
     };
   }
 
+  /**
+   * Looks up a run by its idempotency key for duplicate request handling.
+   */
   async findRunByIdempotencyKey(key: string): Promise<RunRecord | undefined> {
     const row = await this.client('ai_runs')
       .select('id', 'agent_id', 'session_id', 'status', 'trigger', 'idempotency_key')
@@ -153,6 +205,9 @@ export class PgAgentRuntimeStore
     };
   }
 
+  /**
+   * Updates run lifecycle status and records an end timestamp for terminal states.
+   */
   async updateRunStatus(runId: string, status: RunRecord['status']): Promise<void> {
     await this.client('ai_runs')
       .where({ id: runId })
@@ -162,6 +217,9 @@ export class PgAgentRuntimeStore
       });
   }
 
+  /**
+   * Appends a replayable event payload to a run's event log.
+   */
   async appendRunStep(
     runId: string,
     seq: number,
@@ -177,6 +235,9 @@ export class PgAgentRuntimeStore
     });
   }
 
+  /**
+   * Lists persisted run events after the supplied sequence checkpoint.
+   */
   async listRunSteps(runId: string, sinceSeq = 0) {
     const rows = await this.client('ai_run_steps')
       .select('seq', 'type', 'payload')
@@ -187,13 +248,13 @@ export class PgAgentRuntimeStore
     return rows.map(row => ({
       seq: row.seq,
       type: row.type,
-      payload:
-        typeof row.payload === 'string'
-          ? JSON.parse(row.payload)
-          : row.payload,
+      payload: parseStoredJson(row.payload),
     }));
   }
 
+  /**
+   * Persists a pending human approval request for a run.
+   */
   async createApproval(request: ApprovalRequest): Promise<void> {
     await this.client('ai_approvals').insert({
       id: request.id,
@@ -203,6 +264,9 @@ export class PgAgentRuntimeStore
     });
   }
 
+  /**
+   * Returns the newest pending approval request for a run, if one exists.
+   */
   async getPendingApproval(runId: string): Promise<ApprovalRequest | undefined> {
     const row = await this.client('ai_approvals')
       .select('id', 'run_id', 'status', 'note')
@@ -222,6 +286,9 @@ export class PgAgentRuntimeStore
     };
   }
 
+  /**
+   * Records a human approval decision for the current pending request on a run.
+   */
   async decideApproval(runId: string, decision: ApprovalDecision): Promise<void> {
     await this.client('ai_approvals')
       .where({ run_id: runId, status: 'pending' })
@@ -233,6 +300,9 @@ export class PgAgentRuntimeStore
       });
   }
 
+  /**
+   * Persists an artifact produced by an agent run.
+   */
   async record(artifact: Artifact): Promise<void> {
     await this.client('ai_artifacts').insert({
       id: artifact.id,
@@ -243,6 +313,9 @@ export class PgAgentRuntimeStore
     });
   }
 
+  /**
+   * Persists an auditable write-related action or approval event.
+   */
   async recordWriteAction(entry: AuditLogEntry): Promise<void> {
     await this.client('ai_audit_logs').insert({
       id: entry.id,

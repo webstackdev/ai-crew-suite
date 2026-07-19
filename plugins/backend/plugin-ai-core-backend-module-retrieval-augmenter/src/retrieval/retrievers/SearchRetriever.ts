@@ -18,7 +18,7 @@
 import {
   AuthService,
   DiscoveryService,
-  LoggerService
+  LoggerService,
 } from '@backstage/backend-plugin-api';
 import {
   AugmentationRetriever,
@@ -28,7 +28,13 @@ import {
 import { SearchClient } from './SearchClient';
 
 /**
- * Context retriever that extracts relevant engineering documents from the Backstage Search Engine.
+ * Retrieves augmentation documents from the Backstage Search plugin.
+ *
+ * This retriever adapts the generic {@link AugmentationRetriever} contract to
+ * Backstage Search. It delegates HTTP/auth details to {@link SearchClient}, then
+ * records a source-specific result count for operational visibility. It does not
+ * catch client failures; those are logged by the client and allowed to propagate
+ * so the retrieval pipeline can decide whether to fail or fall back.
  */
 export class SearchRetriever implements AugmentationRetriever {
   private readonly searchClient: SearchClient;
@@ -40,13 +46,13 @@ export class SearchRetriever implements AugmentationRetriever {
     searchClient,
     auth,
   }: {
-    /** Modern Backstage endpoint discovery service token. */
+    /** Discovery service used by the default search client to locate the search plugin. */
     discovery: DiscoveryService;
-    /** Centralized logging runtime infrastructure. */
+    /** Logger used for retriever-level result telemetry. */
     logger: LoggerService;
-    /** Optional explicit instance override for underlying search clients. */
+    /** Optional client override, primarily useful for tests or custom search clients. */
     searchClient?: SearchClient;
-    /** Modern Backstage auth engine supporting service-to-service credentials validation tokens. */
+    /** Auth service used by the default search client for plugin-to-plugin tokens. */
     auth: AuthService;
   }) {
     this.searchClient =
@@ -59,13 +65,13 @@ export class SearchRetriever implements AugmentationRetriever {
     this.logger = logger;
   }
 
-  /** Unified identifier string mapping this retriever to target engine registries. */
+  /** Stable retriever identifier used by retrieval routers and diagnostics. */
   public get id(): string {
     return 'SearchRetriever';
   }
 
   /**
-   * Queries the unified index cluster and compiles matching text schemas down to retrieval arrays.
+   * Queries Backstage Search for embedding documents that match the query/source pair.
    */
   public async retrieve(
     query: string,
@@ -77,7 +83,7 @@ export class SearchRetriever implements AugmentationRetriever {
     });
 
     this.logger.info(
-      `Received ${queryResults.length} results when querying augmentations from search.`,
+      `Received ${queryResults.length} results when querying augmentations from search for source '${source}'.`,
     );
 
     return queryResults;

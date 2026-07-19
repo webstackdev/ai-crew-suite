@@ -55,13 +55,13 @@ ai:
 
   storage:
     pgvector:
-      # (Optional) The size of the chunk to flush when storing embeddings to the DB. Defaults to 500
+      # (Optional) The size of the chunk to flush when storing embeddings to the DB. Defaults to 500.
       chunksize: 500
 
   # Embeddings engine configuration options
   embeddings:
     # Generic embeddings options
-    # (Optional) The chunk size of an embedding. Determines how big or small the individual pieces of context stored alongside the vectors and sent to the LLM are. Defaults to 1000
+    # (Optional) The chunk size of an embedding. Determines how big or small the individual pieces of context stored alongside the vectors and sent to the LLM are. Defaults to 1000.
     chunkSize: 1000
 
     # (Optional) The overlap between adjacent chunks of embeddings. The bigger the number, the more overlap. Defaults to 200
@@ -345,7 +345,7 @@ async function main() {
 
 ## Embeddings creation
 
-The `@webstackbuilders/plugin-ai-core-backend` plugin does not automatically generate Embeddings or index contexts of catalog items, instead it exposes an endpoint that allows you to configure either a periodical or event based embedding generation. This approach is taken to minimize the financial impact when calling potentially expensive third party LLM endpoints. Creating embeddings from large catalog items or tech docs maybe produce large amounts of data and make multiple calls to generate embeddings.
+The `@webstackbuilders/plugin-ai-core-backend` plugin does not automatically generate Embeddings or index contexts of catalog items, instead it exposes an endpoint that allows you to configure either a periodical or event based embedding generation. This approach is taken to minimize the financial impact when calling potentially expensive third party LLM endpoints. Creating embeddings from large catalog items or tech docs may produce large amounts of data and make multiple calls to generate embeddings.
 
 The ideal option to manage embeddings creation is to make them event based. They should be triggered when new information has been added into the system.
 
@@ -369,7 +369,7 @@ The endpoint expects a supported source type and a POST request body containing 
 
 ### Scheduling periodical embeddings creation
 
-You can also periodically schedule embeddings creation endpoint to be called. It might be beneficial to compare the existing already created embeddings or possible do some additional diff checking before periodically creating embeddings for the whole catalog. In a lot of cases the information within the catalog does not change that often and uselessly calling paid 3rd party APIs may become expensive if done periodically without guardrails.
+You can also periodically schedule embeddings creation endpoint to be called. It might be beneficial to compare the existing already created embeddings or possibly do some additional diff checking before periodically creating embeddings for the whole catalog. In a lot of cases the information within the catalog does not change that often and uselessly calling paid 3rd party APIs may become expensive if done periodically without guardrails.
 
 ```typescript
 import { PluginTaskScheduler } from '@backstage/backend-tasks';
@@ -407,7 +407,3 @@ export const configureEmbeddingsCreation = async (opts: {
   });
 };
 ```
-
----
-
-Roadie gives you a hassle-free, fully customisable SaaS Backstage. Find out more here: [https://roadie.io](https://roadie.io).

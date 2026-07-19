@@ -52,7 +52,7 @@
     "postpack": "backstage-cli package postpack",
     "typecheck": "tsc --noEmit",
     "lint": "backstage-cli package lint --format stylish",
-    "test": "backstage-cli package test --passWithNoTests"
+    "test": "vitest run src --exclude 'dist-types/**' --passWithNoTests"
   },
   "dependencies": {
     "@backstage/backend-common": "^0.25.0",
@@ -63,7 +63,8 @@
     "@langchain/openai": "^1.5.5",
     "@webstackbuilders/plugin-ai-core-backend-module-retrieval-augmenter": "workspace:^",
     "@webstackbuilders/plugin-ai-core-node": "workspace:^",
-    "i18next": "26.3.6"
+    "i18next": "26.3.6",
+    "vitest": "^4.1.10"
   },
   "devDependencies": {
     "@backstage/cli": "backstage:^"

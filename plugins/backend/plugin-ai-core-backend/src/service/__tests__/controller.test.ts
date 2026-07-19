@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { EventEmitter } from 'events';
-import { beforeEach, describe, expect, it, jest } from '@jest/globals';
+import { beforeEach, describe, expect, it, vi, type Mock } from 'vitest';
 import type {
   AgentDefinition,
   AgentEvent,
@@ -52,47 +52,47 @@ const createRequest = ({
   req.params = params;
   req.body = body;
   req.query = query;
-  req.header = jest.fn((name: string) => headers[name.toLowerCase()]);
+  req.header = vi.fn((name: string) => headers[name.toLowerCase()]);
   return req;
 };
 
 const createResponse = () => {
   const res = new EventEmitter() as MockResponse & {
-    status: jest.Mock;
-    send: jest.Mock;
-    json: jest.Mock;
-    writeHead: jest.Mock;
-    write: jest.Mock;
-    end: jest.Mock;
-    flush: jest.Mock;
+    status: Mock;
+    send: Mock;
+    json: Mock;
+    writeHead: Mock;
+    write: Mock;
+    end: Mock;
+    flush: Mock;
   };
   res.chunks = [];
-  res.status = jest.fn((code: number) => {
+  res.status = vi.fn((code: number) => {
     res.statusCode = code;
     return res;
   });
-  res.send = jest.fn((body?: unknown) => {
+  res.send = vi.fn((body?: unknown) => {
     res.body = body;
     return res;
   });
-  res.json = jest.fn((body?: unknown) => {
+  res.json = vi.fn((body?: unknown) => {
     res.body = body;
     return res;
   });
-  res.writeHead = jest.fn((code: number, headers: Record<string, string>) => {
+  res.writeHead = vi.fn((code: number, headers: Record<string, string>) => {
     res.statusCode = code;
     res.headers = headers;
     return res;
   });
-  res.write = jest.fn((chunk: string) => {
+  res.write = vi.fn((chunk: string) => {
     res.chunks.push(chunk);
     return true;
   });
-  res.end = jest.fn(() => {
+  res.end = vi.fn(() => {
     res.emit('close');
     return res;
   });
-  res.flush = jest.fn();
+  res.flush = vi.fn();
   return res as any;
 };
 
@@ -126,20 +126,20 @@ const createRun = (overrides: Partial<RunRecord> = {}): RunRecord => ({
 const createController = ({
   logger = createLogger(),
   runtime = {
-    run: jest.fn(() => events([{ type: 'done', data: { runId: 'run-a' } }])),
-    resume: jest.fn(() => events([{ type: 'done', data: { runId: 'run-a' } }])),
+    run: vi.fn(() => events([{ type: 'done', data: { runId: 'run-a' } }])),
+    resume: vi.fn(() => events([{ type: 'done', data: { runId: 'run-a' } }])),
   },
   augmentationIndexer = {
     vectorStore: {},
-    createEmbeddings: jest.fn(async () => 3),
-    deleteEmbeddings: jest.fn(async () => undefined),
+    createEmbeddings: vi.fn(async () => 3),
+    deleteEmbeddings: vi.fn(async () => undefined),
   } as unknown as AugmentationIndexer,
   retrievalPipeline = {
-    retrieveAugmentationContext: jest.fn(async () => [
+    retrieveAugmentationContext: vi.fn(async () => [
       { content: 'doc', metadata: { source: 'catalog' } },
     ]),
   } as RetrievalPipeline,
-  models = new Map<string, any>([['model-a', { stream: jest.fn() }]]),
+  models = new Map<string, any>([['model-a', { stream: vi.fn() }]]),
   agents = new Map<string, AgentDefinition>([['agent-a', createAgent()]]),
   runStore = createRunStore(),
   sessionStore,
@@ -186,7 +186,7 @@ const createController = ({
 
 describe('AiCoreController', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('lists registered agents without exposing model or prompt details', async () => {
@@ -287,13 +287,13 @@ describe('AiCoreController', () => {
 
   it('streams a new run with normalized query, session creation, and hardening context', async () => {
     const runtime = {
-      run: jest.fn(() => events([{ type: 'done', data: { runId: 'generated-run' } }])),
-      resume: jest.fn(),
+      run: vi.fn(() => events([{ type: 'done', data: { runId: 'generated-run' } }])),
+      resume: vi.fn(),
     };
     const sessionStore: SessionStore = {
-      createSession: jest.fn(async () => 'session-a'),
-      appendMessage: jest.fn(async () => undefined),
-      listMessages: jest.fn(async () => []),
+      createSession: vi.fn(async () => 'session-a'),
+      appendMessage: vi.fn(async () => undefined),
+      listMessages: vi.fn(async () => []),
     };
     const { controller } = createController({
       runtime,
@@ -374,9 +374,9 @@ describe('AiCoreController', () => {
   it('returns duplicate runs before consuming rate limits or starting runtime work', async () => {
     const existing = createRun({ id: 'existing-run', status: 'done' });
     const runStore = createRunStore(undefined, {
-      findRunByIdempotencyKey: jest.fn(async () => existing),
+      findRunByIdempotencyKey: vi.fn(async () => existing),
     });
-    const runtime = { run: jest.fn(), resume: jest.fn() };
+    const runtime = { run: vi.fn(), resume: vi.fn() };
     const { controller, logger } = createController({
       runtime,
       runStore,
@@ -421,8 +421,8 @@ describe('AiCoreController', () => {
 
   it('converts runtime failures into SSE error events and logs them', async () => {
     const runtime = {
-      run: jest.fn(() => throwingEvents('runtime exploded')),
-      resume: jest.fn(),
+      run: vi.fn(() => throwingEvents('runtime exploded')),
+      resume: vi.fn(),
     };
     const { controller, logger } = createController({ runtime });
     const res = createResponse();
@@ -441,10 +441,10 @@ describe('AiCoreController', () => {
 
   it('resumes approved runs over SSE and reports resume failures as events', async () => {
     const decision: ApprovalDecision = { status: 'approved', decidedBy: 'user-a' };
-    const runStore = createRunStore(undefined, { getRun: jest.fn(async () => createRun()) });
+    const runStore = createRunStore(undefined, { getRun: vi.fn(async () => createRun()) });
     const runtime = {
-      run: jest.fn(),
-      resume: jest.fn(() => events([{ type: 'done', data: { runId: 'run-a' } }])),
+      run: vi.fn(),
+      resume: vi.fn(() => events([{ type: 'done', data: { runId: 'run-a' } }])),
     };
     const { controller } = createController({ runtime, runStore });
     const res = createResponse();
@@ -463,8 +463,8 @@ describe('AiCoreController', () => {
     expect(res.chunks.join('')).toContain('event: done');
 
     const failingRuntime = {
-      run: jest.fn(),
-      resume: jest.fn(() => throwingEvents('resume failed')),
+      run: vi.fn(),
+      resume: vi.fn(() => throwingEvents('resume failed')),
     };
     const failing = createController({ runtime: failingRuntime, runStore });
     const failingRes = createResponse();
@@ -503,8 +503,8 @@ describe('AiCoreController', () => {
       { seq: 4, type: 'done', payload: { runId: 'run-a' } },
     ];
     const runStore = createRunStore(undefined, {
-      getRun: jest.fn(async () => createRun()),
-      listRunSteps: jest.fn(async () => steps),
+      getRun: vi.fn(async () => createRun()),
+      listRunSteps: vi.fn(async () => steps),
     });
     const { controller } = createController({ runStore });
     const res = createResponse();
@@ -525,8 +525,8 @@ describe('AiCoreController', () => {
 
   it('runs named triggers with idempotency and normalized query', async () => {
     const runtime = {
-      run: jest.fn(() => events([{ type: 'done', data: { runId: 'run-a' } }])),
-      resume: jest.fn(),
+      run: vi.fn(() => events([{ type: 'done', data: { runId: 'run-a' } }])),
+      resume: vi.fn(),
     };
     const { controller } = createController({
       runtime,
@@ -555,7 +555,7 @@ describe('AiCoreController', () => {
   it('requires idempotency keys for triggers and returns duplicate trigger runs', async () => {
     const existing = createRun({ id: 'trigger-run', status: 'paused' });
     const runStore = createRunStore(undefined, {
-      findRunByIdempotencyKey: jest.fn(async () => existing),
+      findRunByIdempotencyKey: vi.fn(async () => existing),
     });
     const { controller } = createController({ runStore });
     const missingKeyRes = createResponse();
@@ -580,8 +580,8 @@ describe('AiCoreController', () => {
 
   it('normalizes webhook requests into trigger runs', async () => {
     const runtime = {
-      run: jest.fn(() => events([{ type: 'done', data: { runId: 'run-a' } }])),
-      resume: jest.fn(),
+      run: vi.fn(() => events([{ type: 'done', data: { runId: 'run-a' } }])),
+      resume: vi.fn(),
     };
     const { controller } = createController({ runtime });
     const res = createResponse();

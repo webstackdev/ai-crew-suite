@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { describe, expect, it, jest } from '@jest/globals';
+import { describe, expect, it } from 'vitest';
 import {
   agentExtensionPoint,
   AgentDefinition,

@@ -82,4 +82,3 @@ export type DefaultRetrievalPipelineOptions = {
   /** Backstage auth service used to request plugin-to-plugin access tokens. */
   auth: AuthService;
 };
-

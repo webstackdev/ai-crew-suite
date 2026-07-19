@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { describe, expect, it, jest } from '@jest/globals';
+import { describe, expect, it, vi } from 'vitest';
 import { CrewOrchestrator } from '../CrewOrchestrator';
 import type {
   AgentDefinition,
@@ -57,8 +57,8 @@ const agent: AgentDefinition = {
 };
 
 const createCheckpointStore = () => ({
-  save: jest.fn(),
-  load: jest.fn(),
+  save: vi.fn(),
+  load: vi.fn(),
 });
 
 const createModel = (label: string) => ({
@@ -73,7 +73,7 @@ const createLlmService = () => {
   ];
 
   return {
-    query: jest.fn(
+    query: vi.fn(
       async (_embeddings: unknown, _query: string, _options: unknown) =>
         streams.shift() as any,
     ),
@@ -168,7 +168,7 @@ describe('CrewOrchestrator', () => {
       createAsyncIterable(['done']),
     ];
     const llmService = {
-      query: jest.fn(
+      query: vi.fn(
         async (_embeddings: unknown, _query: string, _options: unknown) =>
           streams.shift() as any,
       ),
@@ -250,7 +250,7 @@ describe('CrewOrchestrator', () => {
   it('uses a fallback message for non-error retrieval failures', async () => {
     const logger = createLogger();
     const retrievalTool = createRetrievalTool();
-    retrievalTool.invoke = jest.fn(async () => Promise.reject(undefined));
+    retrievalTool.invoke = vi.fn(async () => Promise.reject(undefined));
     const ctx = createContext({ logger, retrievalTool });
     const orchestrator = new CrewOrchestrator(
       createLlmService() as any,

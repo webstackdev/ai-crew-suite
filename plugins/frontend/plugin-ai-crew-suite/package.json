@@ -47,7 +47,7 @@
     "postpack": "backstage-cli package postpack",
     "typecheck": "tsc --noEmit",
     "lint": "backstage-cli package lint --format stylish",
-    "test": "backstage-cli package test --passWithNoTests"
+    "test": "vitest run src --exclude 'dist-types/**' --passWithNoTests"
   },
   "dependencies": {
     "@backstage/catalog-model": "backstage:^",
@@ -64,7 +64,8 @@
     "react-hotkeys-hook": "^5.3.3",
     "react-markdown": "^8.0.3",
     "react-syntax-highlighter": "^15.6.6",
-    "react-type-animation": "^3.2.0"
+    "react-type-animation": "^3.2.0",
+    "vitest": "^4.1.10"
   },
   "peerDependencies": {
     "react": "^18.3.1"

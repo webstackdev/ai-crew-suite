@@ -21,21 +21,47 @@ import {
   RetrievalRouter,
 } from '@webstackbuilders/plugin-ai-core-node';
 
+/**
+ * Routes retrieval requests to the retrievers configured for a specific source.
+ *
+ * This router is intentionally deterministic: it does not inspect the query text
+ * or score retrievers dynamically. Instead, the source supplied by the caller is
+ * treated as the routing key, which keeps source ownership explicit and makes it
+ * easy for backend modules to register different retrieval strategies for
+ * catalog, TechDocs, or custom knowledge sources.
+ *
+ * Unsupported sources are logged and rejected so configuration gaps fail loudly
+ * instead of silently returning no augmentation context.
+ */
 export class SourceBasedRetrievalRouter implements RetrievalRouter {
   private readonly logger: LoggerService;
   private readonly retrievers: Map<EmbeddingsSource, AugmentationRetriever[]>;
 
+  /**
+   * Creates a router backed by a source-to-retriever map.
+   */
   constructor({
     logger,
     retrievers,
   }: {
+    /** Logger used to report unsupported source lookups. */
     logger: LoggerService;
+    /** Mapping from source ID to the retrievers that should handle that source. */
     retrievers: Map<EmbeddingsSource, AugmentationRetriever[]>;
   }) {
     this.retrievers = retrievers;
     this.logger = logger;
   }
 
+  /**
+   * Returns retrievers configured for the requested source.
+   *
+   * The current implementation ignores query text because routing is source
+   * based. Query-aware routing can be introduced through another
+   * {@link RetrievalRouter} implementation without changing pipeline callers.
+   *
+   * @throws Error when the source has no configured retrievers.
+   */
   async determineRetriever(
     _query: string,
     source: EmbeddingsSource,

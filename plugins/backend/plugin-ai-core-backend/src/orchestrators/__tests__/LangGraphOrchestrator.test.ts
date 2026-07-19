@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { describe, expect, it, jest } from '@jest/globals';
+import { describe, expect, it, vi } from 'vitest';
 import { LangGraphOrchestrator } from '../LangGraphOrchestrator';
 import type {
   AgentRunInput,
@@ -36,20 +36,20 @@ const input: AgentRunInput = {
 };
 
 const createSessionStore = () => ({
-  listMessages: jest.fn(async () => [
+  listMessages: vi.fn(async () => [
     { role: 'user', content: 'What changed yesterday?' },
     { role: 'assistant', content: 'The rollout was delayed.' },
   ]),
-  appendMessage: jest.fn(),
+  appendMessage: vi.fn(),
 });
 
 const createCheckpointStore = (loads: unknown[] = []) => ({
-  save: jest.fn(),
-  load: jest.fn(async () => loads.shift()),
+  save: vi.fn(),
+  load: vi.fn(async () => loads.shift()),
 });
 
 const createLlmService = (chunks: unknown[] = ['graph ', 'answer']) => ({
-  query: jest.fn(
+  query: vi.fn(
     async (_embeddings: unknown, _query: string, _options: unknown) =>
       createAsyncIterable(chunks) as any,
   ),
@@ -160,7 +160,7 @@ describe('LangGraphOrchestrator', () => {
   it('uses a fallback message for non-error retrieval failures', async () => {
     const logger = createLogger();
     const retrievalTool = createRetrievalTool();
-    retrievalTool.invoke = jest.fn(async () => Promise.reject(undefined));
+    retrievalTool.invoke = vi.fn(async () => Promise.reject(undefined));
     const ctx = createContext({ logger, retrievalTool });
     const orchestrator = new LangGraphOrchestrator(createLlmService() as any);
 
@@ -180,7 +180,7 @@ describe('LangGraphOrchestrator', () => {
     const writeTool = {
       id: 'catalog.write',
       effect: 'write',
-      invoke: jest.fn(),
+      invoke: vi.fn(),
     } as Tool;
     const ctx = createContext({
       additionalTools: [writeTool],

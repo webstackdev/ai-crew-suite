@@ -16,7 +16,7 @@
 import http from 'node:http';
 import { AddressInfo } from 'node:net';
 import express, { type Request, type Response } from 'express';
-import { afterEach, describe, expect, it, jest } from '@jest/globals';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import type {
   AgentDefinition,
   SourceRegistry,
@@ -26,13 +26,13 @@ import { resolveConfiguredAgents } from '../factory';
 import { bindRoutes, createRouter } from '../router';
 
 const sourceRegistry: SourceRegistry = {
-  register: jest.fn(),
-  has: jest.fn((id: string) => id === 'catalog'),
-  list: jest.fn(() => [{ id: 'catalog' }]),
+  register: vi.fn(),
+  has: vi.fn((id: string) => id === 'catalog'),
+  list: vi.fn(() => [{ id: 'catalog' }]),
 };
 
 const okHandler = (payload: unknown) =>
-  jest.fn(async (_req: Request, res: Response) => res.status(200).json(payload));
+  vi.fn(async (_req: Request, res: Response) => res.status(200).json(payload));
 
 const createController = () => ({
   createEmbeddings: okHandler({ ok: true }),
@@ -48,22 +48,22 @@ const createController = () => ({
 
 const createLogger = () => {
   const logger = {
-    info: jest.fn(),
-    warn: jest.fn(),
-    error: jest.fn(),
-    debug: jest.fn(),
-    child: jest.fn(),
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
+    debug: vi.fn(),
+    child: vi.fn(),
   };
   logger.child.mockReturnValue(logger);
   return logger;
 };
 
 const createConfig = () => ({
-  getOptional: jest.fn(),
-  getOptionalBoolean: jest.fn(),
-  getOptionalConfig: jest.fn(),
-  getOptionalString: jest.fn(),
-  getOptionalStringArray: jest.fn(),
+  getOptional: vi.fn(),
+  getOptionalBoolean: vi.fn(),
+  getOptionalConfig: vi.fn(),
+  getOptionalString: vi.fn(),
+  getOptionalStringArray: vi.fn(),
 });
 
 const createServer = async (router: express.Router) => {
@@ -100,7 +100,7 @@ describe('router helpers', () => {
       ),
     );
     servers.length = 0;
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('adds config-defined agents without mutating the input map', () => {
@@ -208,7 +208,7 @@ describe('router helpers', () => {
 
   it('routes rejected controller promises through the Backstage error middleware', async () => {
     const controller = createController();
-    controller.listAgents = jest.fn(async () => {
+    controller.listAgents = vi.fn(async () => {
       throw new Error('router failure');
     });
 

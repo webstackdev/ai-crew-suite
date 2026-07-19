@@ -1,5 +1,6 @@
 /*
  * Copyright 2024 Larder Software Limited
+ * Copyright 2026 Webstack Builders, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +27,7 @@ export interface Config {
        */
       chunkSize?: number;
       /**
-       * The overlap between adjacent chunks of embeddings. The bigger the number, the more overlap..
+       * The overlap between adjacent chunks of embeddings. The bigger the number, the more overlap.
        */
       chunkOverlap?: number;
       /**

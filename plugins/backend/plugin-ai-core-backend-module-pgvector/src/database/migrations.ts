@@ -17,6 +17,10 @@
 import { resolvePackagePath } from '@backstage/backend-plugin-api';
 import { Knex } from 'knex';
 
+/**
+ * Applies the packaged pgvector module database migrations to the provided
+ * Backstage database client.
+ */
 export async function applyDatabaseMigrations(knex: Knex): Promise<void> {
   const migrationsDir = resolvePackagePath(
     '@webstackbuilders/plugin-ai-core-backend-module-pgvector',

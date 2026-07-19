@@ -47,6 +47,21 @@ const TECHDOCS_ENTITY_FILTER = {
   'metadata.annotations.backstage.io/techdocs-ref': CATALOG_FILTER_EXISTS,
 };
 
+const SUPPORTED_EMBEDDING_SOURCES = new Set<EmbeddingsSource>([
+  'catalog',
+  'tech-docs',
+]);
+
+/**
+ * Base indexer that converts Backstage catalog and TechDocs content into vector documents.
+ *
+ * Subclasses provide the embedding model through the protected constructor. The
+ * indexer handles catalog authentication, document chunking, vector-store writes,
+ * and best-effort TechDocs search-index loading. Catalog/auth/vector-store
+ * failures are allowed to propagate so callers can retry or fail the indexing
+ * job, while individual TechDocs search-index failures are logged at debug level
+ * and skipped so one broken TechDocs site does not block the entire source.
+ */
 export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
   private readonly _vectorStore: VectorStore;
   private readonly catalogApi: CatalogApi;
@@ -56,6 +71,9 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
 
   private readonly augmentationOptions?: AugmentationOptions;
 
+  /**
+   * Creates a vector augmentation indexer and connects the embedding model to the vector store.
+   */
   protected constructor({
     vectorStore,
     catalogApi,
@@ -87,21 +105,24 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
   }
 
   /**
-   * Returns the splitter object. Default implementation is using a naive RecursiveCharacterTextSplitter
-   * which is likely not the best candidate for structured data splitting.
+   * Returns the text splitter used for catalog and TechDocs content.
    *
-   * It is recommended that this method is overwritten with more applicable implementation
+   * The default implementation uses a generic {@link RecursiveCharacterTextSplitter},
+   * which is intentionally conservative but may not be ideal for structured data.
+   * Subclasses can override this method to provide source-specific chunking.
    *
-   * @returns {RecursiveCharacterTextSplitter} The splitter object.
+   * @returns The splitter object.
    */
   protected getSplitter() {
-    // Defaults to 1000 chars, 200 overlap
     return new RecursiveCharacterTextSplitter({
       chunkSize: this.augmentationOptions?.chunkSize,
       chunkOverlap: this.augmentationOptions?.chunkOverlap,
     });
   }
 
+  /**
+   * Converts catalog entities into embedding documents with entity metadata.
+   */
   protected async constructCatalogEmbeddingDocuments(
     entities: Entity[],
     source: EmbeddingsSource,
@@ -126,6 +147,9 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
     return docs;
   }
 
+  /**
+   * Converts TechDocs search-index sections into embedding documents with entity and page metadata.
+   */
   protected async constructTechDocsEmbeddingDocuments(
     documents: TechDocsDocument[],
     source: EmbeddingsSource,
@@ -152,10 +176,16 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
     return docs;
   }
 
+  /**
+   * Loads and chunks documents for the requested supported source.
+   *
+   * @throws Error when the source is not supported by this default indexer.
+   */
   protected async getDocuments(
     source: EmbeddingsSource,
     filter?: EntityFilterShape,
   ) {
+    this.assertSupportedSource(source);
     const limit = pLimit(this.augmentationOptions?.concurrencyLimit ?? 10);
 
     switch (source) {
@@ -249,26 +279,37 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
         return constructTechDocsEmbeddingDocuments;
       }
       default:
+        this.logger.warn(
+          `Attempted to create embeddings for unsupported source '${source}'.`,
+        );
         throw new Error(
-          `Attempting to create embeddings for a source not implemented yet: ${source} `,
+          `Attempting to create embeddings for a source not implemented yet: ${source}`,
         );
     }
   }
 
+  /**
+   * Replaces embeddings for a supported source and returns the number of documents indexed.
+   */
   async createEmbeddings(
     source: EmbeddingsSource,
     filter: EntityFilterShape,
   ): Promise<number> {
+    this.assertSupportedSource(source);
     await this.deleteEmbeddings(source, filter);
     const documents = await this.getDocuments(source, filter);
     await this._vectorStore.addDocuments(documents);
     return documents.length;
   }
 
+  /**
+   * Deletes vector documents for entities matching the source and optional filter.
+   */
   async deleteEmbeddings(
     source: EmbeddingsSource,
     filter: EntityFilterShape,
   ): Promise<void> {
+    this.assertSupportedSource(source);
     const { token } = await this.auth.getPluginRequestToken({
       onBehalfOf: await this.auth.getOwnServiceCredentials(),
       targetPluginId: 'catalog',
@@ -287,5 +328,18 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
         filter: { source, entityRef },
       });
     }
+  }
+
+  private assertSupportedSource(source: EmbeddingsSource): void {
+    if (SUPPORTED_EMBEDDING_SOURCES.has(source)) {
+      return;
+    }
+
+    this.logger.warn(
+      `Attempted to create embeddings for unsupported source '${source}'.`,
+    );
+    throw new Error(
+      `Attempting to create embeddings for a source not implemented yet: ${source}`,
+    );
   }
 }
