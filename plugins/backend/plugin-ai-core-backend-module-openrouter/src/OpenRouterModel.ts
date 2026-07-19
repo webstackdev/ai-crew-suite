@@ -15,6 +15,7 @@
  */
 import { ChatOpenRouter } from '@langchain/openrouter';
 import type { LoggerService } from '@backstage/backend-plugin-api';
+import type { ModelDefinition } from '@webstackbuilders/plugin-ai-core-node';
 
 /**
  * Configuration for one OpenRouter chat model registration.
@@ -49,12 +50,7 @@ export type OpenRouterConfig = Partial<OpenRouterModelConfig> & {
   models?: OpenRouterModelConfig[];
 };
 
-export type OpenRouterModelRegistration = {
-  /** Stable model registry ID. */
-  id: string;
-  /** LangChain OpenRouter chat model instance. */
-  model: ChatOpenRouter;
-};
+export type OpenRouterModelRegistration = ModelDefinition;
 
 const assertPositiveNumber = (
   value: number | undefined,

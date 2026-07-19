@@ -32,7 +32,7 @@ import { EmbeddingsView } from './EmbeddingsView';
 import Dialog from '@material-ui/core/Dialog';
 import { ragAiApiRef } from '../../api';
 import { useApi } from '@backstage/core-plugin-api';
-import { AiAgentSummary, AiRunEvent, ResponseEmbedding } from '../../types';
+import { AiAgentSummary, AiRunEvent, ResponseEmbedding } from '../../@types';
 import { Thinking } from './Thinking';
 import { WarningPanel } from '@backstage/core-components';
 

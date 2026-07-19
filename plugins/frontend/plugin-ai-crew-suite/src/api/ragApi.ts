@@ -20,7 +20,7 @@ import {
   AiRunInput,
   RunApprovalInput,
   RunStartOptions,
-} from '../types';
+} from '../@types';
 
 export interface RagAiApi {
   listAgents(): Promise<AiAgentSummary[]>;

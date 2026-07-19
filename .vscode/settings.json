@@ -27,5 +27,7 @@
   "js/ts.tsdk.promptToUseWorkspaceVersion": true,
   "yaml.schemas": {
     "https://backstage.io": "app-config*.yaml"
-  }
+  },
+  "typescript.tsdk": ".yarn/sdks/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true
 }

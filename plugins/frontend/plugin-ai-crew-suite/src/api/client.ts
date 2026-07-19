@@ -1,5 +1,6 @@
 /*
  * Copyright 2024 Larder Software Limited
+ * Copyright 2026 Webstack Builders, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +15,10 @@
  * limitations under the License.
  */
 import {
+  EventSourceParserStream,
+  ParsedEvent,
+} from 'eventsource-parser/stream';
+import {
   ConfigApi,
   DiscoveryApi,
   FetchApi,
@@ -26,11 +31,7 @@ import {
   AiRunInput,
   RunApprovalInput,
   RunStartOptions,
-} from '../types';
-import {
-  EventSourceParserStream,
-  ParsedEvent,
-} from 'eventsource-parser/stream';
+} from '../@types';
 
 export class RagAiClient implements RagAiApi {
   private readonly discoveryApi: DiscoveryApi;

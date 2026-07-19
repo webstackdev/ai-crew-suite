@@ -30,7 +30,7 @@ import {
   TextField,
 } from '@material-ui/core';
 import LooksIcon from '@material-ui/icons/Looks';
-import { AiAgentSummary } from '../../types';
+import { AiAgentSummary } from '../../@types';
 
 export const QuestionBox = (props: {
   onSubmit: (query: string, source: string, agentId: string) => {};

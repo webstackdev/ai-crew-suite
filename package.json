@@ -43,7 +43,7 @@
     "install:root": "yarn add -D",
     "install:app": "yarn workspace app add",
     "install:nested": "yarn workspaces foreach -A exec yarn add",
-    "upgrade:core": "yarn backstage-cli versions:bump",
+    "upgrade:core": "yarn backstage-cli versions:bump --release main",
     "upgrade:third-party": "yarn up"
   },
   "devDependencies": {
