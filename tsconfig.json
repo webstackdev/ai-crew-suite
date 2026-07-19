@@ -24,21 +24,23 @@
     { "path": "./packages/backend" },
 
     // 2. Frontend Plugins
-    { "path": "./plugins/frontend/rag-ai" },
+    { "path": "./plugins/frontend/plugin-ai-crew-suite" },
 
     // 3. Backend Core & Nodes
     { "path": "./plugins/backend/plugin-ai-core-backend" },
     { "path": "./plugins/backend/plugin-ai-core-node" },
 
     // 4. Storage & Vector Connectors
-    { "path": "./plugins/backend/rag-ai-storage-pgvector" },
+    { "path": "./plugins/backend/plugin-ai-core-backend-module-pgvector" },
 
     // 5. Embeddings Ecosystem
-    { "path": "./plugins/backend/rag-ai-backend-embeddings-aws" },
-    { "path": "./plugins/backend/rag-ai-backend-embeddings-openai" },
+    { "path": "./plugins/backend/plugin-ai-core-backend-module-aws" },
+    { "path": "./plugins/backend/plugin-ai-core-backend-module-openai" },
 
     // 6. Engine Capabilities
-    { "path": "./plugins/backend/rag-ai-backend-retrieval-augmenter" },
+    {
+      "path": "./plugins/backend/plugin-ai-core-backend-module-retrieval-augmenter"
+    },
 
     // 7. Test Harness
     { "path": "./test" }

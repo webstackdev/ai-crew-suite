@@ -1,0 +1,66 @@
+{
+  "name": "@webstackbuilders/plugin-ai-core-backend-module-retrieval-augmenter",
+  "version": "0.0.1",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "license": "Apache-2.0",
+  "keywords": [
+    "backstage",
+    "plugin",
+    "backend",
+    "retrieval",
+    "augmenter"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "main": "dist/index.cjs.js",
+    "types": "dist/index.d.ts"
+  },
+  "backstage": {
+    "role": "backend-plugin-module",
+    "pluginId": "ai-core",
+    "pluginPackages": [
+      "@webstackbuilders/plugin-ai-core-backend",
+      "@webstackbuilders/plugin-ai-core-backend-module-retrieval-augmenter"
+    ]
+  },
+  "bugs": {
+    "url": "https://github.com/webstackdev/ai-crew-suite/issues",
+    "email": "support@webstackbuilders.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/webstackdev/ai-crew-suite",
+    "directory": "plugins/backend/plugin-ai-core-backend-module-retrieval-augmenter"
+  },
+  "devDependencies": {
+    "@backstage/cli": "backstage:^",
+    "vitest": "^4.1.10"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "start": "backstage-cli package start",
+    "build": "yarn --cwd ../../.. tsc -b plugins/backend/plugin-ai-core-backend-module-retrieval-augmenter/tsconfig.json --emitDeclarationOnly && backstage-cli package build",
+    "clean": "backstage-cli package clean",
+    "prepack": "backstage-cli package prepack",
+    "postpack": "backstage-cli package postpack",
+    "typecheck": "tsc --noEmit",
+    "lint": "backstage-cli package lint --format stylish",
+    "test": "vitest run src --exclude 'dist-types/**' --passWithNoTests"
+  },
+  "dependencies": {
+    "@backstage/backend-common": "^0.25.0",
+    "@backstage/backend-plugin-api": "backstage:^",
+    "@backstage/catalog-client": "backstage:^",
+    "@backstage/catalog-model": "backstage:^",
+    "@backstage/errors": "backstage:^",
+    "@backstage/plugin-search-common": "backstage:^",
+    "@langchain/core": "^1.2.3",
+    "@langchain/textsplitters": "^1.0.1",
+    "@webstackbuilders/plugin-ai-core-node": "workspace:^",
+    "i18next": "26.3.6",
+    "p-limit": "^3.1.0"
+  }
+}

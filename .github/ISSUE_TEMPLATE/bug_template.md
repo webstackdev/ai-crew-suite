@@ -11,8 +11,9 @@ labels: ['kind/bug', 'triage']
 ## Affected Workspaces
 
 <!-- Put an [x] next to all layers impacted by this glitch -->
+
 - [ ] **AI Tools / Crew Layouts** (e.g., `packages/tool-crew-*`)
-- [ ] **Forked RAG AI Plugins** (e.g., `packages/plugin-rag-ai-*`)
+- [ ] **Forked RAG AI Plugins** (e.g., `packages/plugin-ai-*`)
 - [ ] **Core Application Platform** (`packages/app` or `packages/backend`)
 - [ ] **Developer Infrastructure** (Turbo, Yarn, Husky, Playwright)
 

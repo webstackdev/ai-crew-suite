@@ -3,14 +3,14 @@
 </div>
 
 > ⚠️ **Reference Implementation Only**  
-> The rag-ai plugin and its modules are a reference implementation provided for demonstration and educational purposes.  
+> The plugin-ai-crew-suite plugin and its modules are a reference implementation provided for demonstration and educational purposes.  
 > We provide minimal support for these components and do not actively maintain or update them.
 
 ---
 
 # Roadie RAG AI Backend plugin for Backstage
 
-This plugin is the backend for RAG AI Backstage plugin. You can see the corresponding frontend plugin in [here](/plugins/frontend/rag-ai/README.md).
+This plugin is the backend for RAG AI Backstage plugin. You can see the corresponding frontend plugin in [here](/plugins/frontend/plugin-ai-crew-suite/README.md).
 
 This plugin provides functionality to install and configure a Retrieval Augmented Generation backend within your Backstage instance. The plugin is capable of creating embeddings to enhance questions asked from LLMs with contextual information from your Backstage catalog, giving you the opportunity to get tailored responses based on your company's entities and other configured data sets. The plugin is configurable with customizable prompts, vector embeddings queries, additional search based embeddings and can be extended to support any LLM providing an API.
 
@@ -31,7 +31,7 @@ The plugin expects 3 different pieces of implementations to work optimally:
   - This is the actual model to be used when asking questions.
   - The supported LLMs come from `langchain` and `@langchain/community` packages. It is recommended to use the same provider as is used for embeddings.
 - Vector Storage
-  - A Vector store to store and query embeddings to/from. The provided Backstage PostgreSQL compatible implementation is [RAG AI Storage PGVector](/plugins/backend/rag-ai-storage-pgvector/README.md) package within this repository.
+  - A Vector store to store and query embeddings to/from. The provided Backstage PostgreSQL compatible implementation is [RAG AI Storage PGVector](/plugins/backend/plugin-ai-core-backend-module-pgvector/README.md) package within this repository.
 
 The configuration examples for each embedding and vector storage are listed below.
 
@@ -119,9 +119,9 @@ ai:
 
 ## PGVector Vector Storage Configuration
 
-See more information from the [module package](/plugins/backend/rag-ai-storage-pgvector/README.md).
+See more information from the [module package](/plugins/backend/plugin-ai-core-backend-module-pgvector/README.md).
 
-To store embeddings vectors in the same database as the rest of your Backstage application. You can use the `rag-ai-storage-pgvector` package. Currently only PostgreSQL is supported.
+To store embeddings vectors in the same database as the rest of your Backstage application. You can use the `plugin-ai-core-backend-module-pgvector` package. Currently only PostgreSQL is supported.
 
 > Note, you need to have `uuid-ossp` and `vector` PostgreSQL extensions available on your database to be able to use this module.
 
@@ -198,10 +198,10 @@ See more information from the [module package](/plugins/backend/plugin-ai-core-b
 ```typescript
 import { createApiRoutes as initializeRagAiBackend } from '@webstackbuilders/plugin-ai-core-backend';
 import { PluginEnvironment } from '../types';
-import { createRoadiePgVectorStore } from '@webstackbuilders/plugin-ai-storage-pgvector-node';
+import { createRoadiePgVectorStore } from '@webstackbuilders/plugin-ai-core-backend-module-pgvector';
 import { CatalogClient } from '@backstage/catalog-client';
-import { createDefaultRetrievalPipeline } from '@webstackbuilders/plugin-ai-retrieval-node';
-import { initializeBedrockEmbeddings } from '@webstackbuilders/plugin-ai-embeddings-aws-node';
+import { createDefaultRetrievalPipeline } from '@webstackbuilders/plugin-ai-core-backend-module-retrieval-augmenter';
+import { initializeBedrockEmbeddings } from '@webstackbuilders/plugin-ai-core-backend-module-aws';
 import { DefaultAwsCredentialsManager } from '@backstage/integration-aws-node';
 import { Bedrock } from '@langchain/community/llms/bedrock';
 
@@ -281,9 +281,9 @@ See more information from the [module package](/plugins/backend/plugin-ai-core-b
 // './plugins/ai'
 
 import { createApiRoutes as initializeRagAiBackend } from '@webstackbuilders/plugin-ai-core-backend';
-import { initializeOpenAiEmbeddings } from '@webstackbuilders/plugin-ai-embeddings-openai-node';
-import { createRoadiePgVectorStore } from '@webstackbuilders/plugin-ai-storage-pgvector-node';
-import { createDefaultRetrievalPipeline } from '@webstackbuilders/plugin-ai-retrieval-node';
+import { initializeOpenAiEmbeddings } from '@webstackbuilders/plugin-ai-core-backend-module-openai';
+import { createRoadiePgVectorStore } from '@webstackbuilders/plugin-ai-core-backend-module-pgvector';
+import { createDefaultRetrievalPipeline } from '@webstackbuilders/plugin-ai-core-backend-module-retrieval-augmenter';
 import { OpenAI } from '@langchain/openai';
 import { CatalogClient } from '@backstage/catalog-client';
 import { DefaultAwsCredentialsManager } from '@backstage/integration-aws-node';
@@ -338,7 +338,7 @@ async function main() {
   // ...
   const aiEnv = useHotMemoize(module, () => createEnv('ai'));
   const apiRouter = Router();
-  apiRouter.use('/rag-ai', await ai(aiEnv));
+  apiRouter.use('/plugin-ai-crew-suite', await ai(aiEnv));
   // ...
 }
 ```
@@ -353,11 +353,11 @@ The ideal option to manage embeddings creation is to make them event based. They
 
 ### Calling the endpoint
 
-The endpoint exposed from the plugin lives under a path `/embeddings/:source`. Assuming the application is running on localhost port 7007 and the `@webstackbuilders/plugin-ai-core-backend` is mounted on path `rag-ai` the call to construct embeddings for Catalog entries of kind `component` would be the following:
+The endpoint exposed from the plugin lives under a path `/embeddings/:source`. Assuming the application is running on localhost port 7007 and the `@webstackbuilders/plugin-ai-core-backend` is mounted on path `plugin-ai-crew-suite` the call to construct embeddings for Catalog entries of kind `component` would be the following:
 
 ```bash
 curl --request POST \
-  --url http://localhost:7007/api/rag-ai/embeddings/catalog \
+  --url http://localhost:7007/api/plugin-ai-crew-suite/embeddings/catalog \
   --data '{
   "entityFilter": {
     "kind": "component"
@@ -383,7 +383,7 @@ export const configureEmbeddingsCreation = async (opts: {
   const { logger, discovery, scheduler } = opts;
 
   const scheduleLogger = logger.child({ name: 'EmbeddingsCreationScheduler' });
-  const baseUrl = await discovery.getBaseUrl('rag-ai');
+  const baseUrl = await discovery.getBaseUrl('plugin-ai-crew-suite');
   scheduler.scheduleTask({
     id: 'create-catalog-embeddings',
     frequency: { days: 1 },

@@ -1,8 +1,0 @@
-{
-  "extends": "../../../tsconfig.base.json",
-  "compilerOptions": {
-    "outDir": "../../../dist-types/plugins/frontend/rag-ai"
-  },
-  "include": ["src/**/*"],
-  "exclude": ["src/**/*.test.*", "src/**/*.spec.*"]
-}

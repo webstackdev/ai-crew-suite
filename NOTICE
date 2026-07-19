@@ -12,7 +12,7 @@ Derived plugin areas include:
 - plugins/backend/plugin-ai-core-backend-embeddings-openai
 - plugins/backend/plugin-ai-core-backend-retrieval-augmenter
 - plugins/backend/plugin-ai-core-node
-- plugins/backend/rag-ai-storage-pgvector
-- plugins/frontend/rag-ai
+- plugins/backend/plugin-ai-core-backend-module-pgvector
+- plugins/frontend/plugin-ai-crew-suite
 
 All derived files retain Apache-2.0 licensing and applicable source headers.

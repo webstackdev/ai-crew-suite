@@ -3,7 +3,7 @@
 ### 🛠️ Scope of Changes
 
 - **Type of Change**: [ ] New AI Feature/Tool | [ ] RAG/Plugin Refactor | [ ] Bug Fix | [ ] Maintenance
-- **Target Workspaces**: *e.g., packages/plugin-rag-ai-core, packages/tool-crew-analyst*
+- **Target Workspaces**: _e.g., packages/plugin-ai-core, packages/tool-crew-analyst_
 
 ### 🤖 AI Engine & Context Verification
 

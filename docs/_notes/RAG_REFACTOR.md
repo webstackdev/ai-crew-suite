@@ -22,8 +22,8 @@ Packages and responsibilities:
 | `plugin-ai-core-backend`                           | Plugin wiring, `LlmService` (single prompt → stream), `AiCoreController` (SSE), `router.ts` (2 routes). |
 | `plugin-ai-core-backend-embeddings-aws` / `openai` | Provider-specific embeddings + augmenter.                                                               |
 | `plugin-ai-core-backend-retrieval-augmenter`       | `DefaultRetrievalPipeline` = routers → retrievers → post-processors.                                    |
-| `rag-ai-storage-pgvector`                          | `RoadieVectorStore` on pgvector.                                                                        |
-| `rag-ai` (frontend)                                | `RagModal` chat UI + `ragApi` client.                                                                   |
+| `plugin-ai-core-backend-module-pgvector`           | `RoadieVectorStore` on pgvector.                                                                        |
+| `plugin-ai-crew-suite` (frontend)                  | `RagModal` chat UI + `ragApi` client.                                                                   |
 
 Request flow today:
 

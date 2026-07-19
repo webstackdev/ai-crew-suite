@@ -20,7 +20,6 @@ import type { AiBackendServiceOptions } from '../@types';
 
 export * from './factory';
 export * from './router';
-export type * from '../@types';
 
 /**
  * Creates the HTTP router object consumed by Backstage plugin wiring.

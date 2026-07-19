@@ -70,7 +70,7 @@ module.exports = {
       createConfigForRole(__dirname, 'backend'),
     ),
     ...scopedOverrides(
-      'plugins/frontend/rag-ai',
+      'plugins/frontend/plugin-ai-crew-suite',
       createConfigForRole(__dirname, 'frontend-plugin'),
     ),
     ...scopedOverrides(
@@ -94,7 +94,7 @@ module.exports = {
       createConfigForRole(__dirname, 'node-library'),
     ),
     ...scopedOverrides(
-      'plugins/backend/rag-ai-storage-pgvector',
+      'plugins/backend/plugin-ai-core-backend-module-pgvector',
       createConfigForRole(__dirname, 'backend-plugin-module'),
     ),
     {

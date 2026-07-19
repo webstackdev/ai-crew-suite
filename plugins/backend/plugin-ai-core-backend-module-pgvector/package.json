@@ -1,0 +1,69 @@
+{
+  "name": "@webstackbuilders/plugin-ai-core-backend-module-pgvector",
+  "version": "0.0.1",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "license": "Apache-2.0",
+  "description": "PostgreSQL pgvector storage adapter module for the AI Crew Suite, handling vector indices, checkpoint serialization, and persistent memory matrices.",
+  "keywords": [
+    "backstage",
+    "backstage-plugin-module",
+    "backend",
+    "webstack-builders",
+    "ai-crew-suite",
+    "ai-core",
+    "postgresql",
+    "pgvector",
+    "vector-storage",
+    "checkpoint-store"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "main": "dist/index.cjs.js",
+    "types": "dist/index.d.ts"
+  },
+  "backstage": {
+    "role": "backend-plugin-module",
+    "pluginId": "ai-core",
+    "pluginPackages": [
+      "@webstackbuilders/plugin-ai-core-backend",
+      "@webstackbuilders/plugin-ai-core-backend-module-pgvector"
+    ]
+  },
+  "bugs": {
+    "url": "https://github.com/webstackdev/ai-crew-suite/issues",
+    "email": "support@webstackbuilders.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/webstackdev/ai-crew-suite",
+    "directory": "packages/plugin-ai-core-backend-module-pgvector"
+  },
+  "files": [
+    "dist",
+    "migrations",
+    "config.d.ts"
+  ],
+  "configSchema": "config.d.ts",
+  "scripts": {
+    "start": "backstage-cli package start",
+    "build": "yarn --cwd ../../.. tsc -b plugins/backend/plugin-ai-core-backend-module-pgvector/tsconfig.json --emitDeclarationOnly && backstage-cli package build",
+    "clean": "backstage-cli package clean",
+    "prepack": "backstage-cli package prepack",
+    "postpack": "backstage-cli package postpack",
+    "typecheck": "tsc --noEmit",
+    "lint": "backstage-cli package lint --format stylish",
+    "test": "backstage-cli package test --passWithNoTests"
+  },
+  "dependencies": {
+    "@backstage/backend-plugin-api": "backstage:^",
+    "@backstage/config": "backstage:^",
+    "@langchain/core": "^1.2.3",
+    "@webstackbuilders/plugin-ai-core-node": "workspace:^",
+    "i18next": "26.3.6",
+    "knex": "^3.3.0"
+  },
+  "devDependencies": {
+    "@backstage/cli": "backstage:^"
+  }
+}

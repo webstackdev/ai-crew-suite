@@ -25,15 +25,15 @@ Scope everything under `@webstackbuilders`. Rename the copied packages and add n
 
 **Rename map (copied → new):**
 
-| Current                                      | New package                        | Notes                                                    |
-| -------------------------------------------- | ---------------------------------- | -------------------------------------------------------- |
-| `plugin-ai-core-node`                        | `plugin-ai-core-node`              | Shared contracts + registries + extension points. <br /> |
-| `plugin-ai-core-backend`                     | `plugin-ai-core-backend`           | Agent runtime host, HTTP + SSE, config. <br />           |
-| `plugin-ai-core-backend-retrieval-augmenter` | `plugin-ai-retrieval-node`         | Becomes the `knowledge.retrieve` tool. <br />            |
-| `plugin-ai-core-backend-embeddings-openai`   | `plugin-ai-embeddings-openai-node` | Provider module. <br />                                  |
-| `plugin-ai-core-backend-embeddings-aws`      | `plugin-ai-embeddings-aws-node`    | Provider module. <br />                                  |
-| `rag-ai-storage-pgvector`                    | `plugin-ai-storage-pgvector-node`  | Vector store **+ runtime state tables**. <br />          |
-| `rag-ai` (frontend)                          | `plugin-ai-core`                   | Agent-run UI + structured-event client.                  |
+| Current                                      | New package                                         | Notes                                                    |
+| -------------------------------------------- | --------------------------------------------------- | -------------------------------------------------------- |
+| `plugin-ai-core-node`                        | `plugin-ai-core-node`                               | Shared contracts + registries + extension points. <br /> |
+| `plugin-ai-core-backend`                     | `plugin-ai-core-backend`                            | Agent runtime host, HTTP + SSE, config. <br />           |
+| `plugin-ai-core-backend-retrieval-augmenter` | `plugin-ai-core-backend-module-retrieval-augmenter` | Becomes the `knowledge.retrieve` tool. <br />            |
+| `plugin-ai-core-backend-embeddings-openai`   | `plugin-ai-core-backend-module-openai`              | Provider module. <br />                                  |
+| `plugin-ai-core-backend-embeddings-aws`      | `plugin-ai-embeddings-aws-node`                     | Provider module. <br />                                  |
+| `plugin-ai-core-backend-module-pgvector`     | `plugin-ai-core-backend-module-pgvector`            | Vector store **+ runtime state tables**. <br />          |
+| `plugin-ai-crew-suite` (frontend)            | `plugin-ai-core`                                    | Agent-run UI + structured-event client.                  |
 
 **New packages:**
 
@@ -121,7 +121,7 @@ export interface ArtifactSink {
 
 Extension points change from **set-once setters** to **registries**: `addAgent`, `addTool`, `addModel`, `addSource`, `addTrigger` (replacing `setAugmentationIndexer` / `setRetrievalPipeline` / `setBaseLLM`).
 
-## 4. Data model & migrations (`plugin-ai-storage-pgvector-node`)
+## 4. Data model & migrations (`plugin-ai-core-backend-module-pgvector`)
 
 Keep the existing `embeddings` table. Add runtime-state tables in a **new migration** (`*_agent_runtime.js`), reusing the same Knex DB:
 

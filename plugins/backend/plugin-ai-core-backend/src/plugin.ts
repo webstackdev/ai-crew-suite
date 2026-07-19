@@ -33,7 +33,7 @@ import {
   triggerExtensionPoint,
   TriggerBinding,
 } from '@webstackbuilders/plugin-ai-core-node';
-import { createPgAgentRuntimeStore } from '@webstackbuilders/plugin-ai-storage-pgvector-node';
+import { createPgAgentRuntimeStore } from '@webstackbuilders/plugin-ai-core-backend-module-pgvector';
 import { createAiBackendServices, createRouter, createSourceRegistry } from './service';
 
 /**
