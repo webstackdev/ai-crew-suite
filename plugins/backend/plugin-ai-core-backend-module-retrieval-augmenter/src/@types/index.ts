@@ -14,17 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { CatalogApi } from '@backstage/catalog-client';
-import {
+import type { CatalogApi } from '@backstage/catalog-client';
+import type {
   AuthService,
+  DiscoveryService,
   LoggerService,
 } from '@backstage/backend-plugin-api';
-import {
-  PluginEndpointDiscovery,
-  TokenManager,
-} from '@backstage/backend-common';
-import { Entity } from '@backstage/catalog-model';
-import { VectorStore } from '@webstackbuilders/plugin-ai-core-node';
+import type { Entity } from '@backstage/catalog-model';
+import type { VectorStore } from '@webstackbuilders/plugin-ai-core-node';
 
 export type AugmentationOptions = {
   chunkSize?: number;
@@ -32,13 +29,21 @@ export type AugmentationOptions = {
   concurrencyLimit?: number;
 };
 
+/**
+ * Core environment configuration contract for calculating and registering vector embeddings.
+ */
 export interface EmbeddingsConfig {
+  /** Centralized logging runtime infrastructure. */
   logger: LoggerService;
-  tokenManager?: TokenManager;
-  auth?: AuthService;
+  /** Backstage auth service used to request plugin-to-plugin access tokens. */
+  auth: AuthService;
+  /** Vector abstraction storage engine mapping directly to your pgvector database module. */
   vectorStore: VectorStore;
+  /** External catalog proxy interface client. */
   catalogApi: CatalogApi;
-  discovery: PluginEndpointDiscovery;
+  /** Backstage discovery service used to resolve plugin base URLs. */
+  discovery: DiscoveryService;
+  /** Slicing and overlap configuration tuning bounds for ingestion payloads. */
   augmentationOptions?: AugmentationOptions;
 }
 
@@ -63,3 +68,18 @@ export type TechDocsDocument = {
   title: string;
   location: string;
 };
+
+/**
+ * Instantiation blueprint options utilized by the default context retrieval pipeline.
+ */
+export type DefaultRetrievalPipelineOptions = {
+  /** Active vector store database instance wrapper. */
+  vectorStore: VectorStore;
+  /** Centralized logging runtime infrastructure. */
+  logger: LoggerService;
+  /** Backstage discovery service used to resolve plugin base URLs. */
+  discovery: DiscoveryService;
+  /** Backstage auth service used to request plugin-to-plugin access tokens. */
+  auth: AuthService;
+};
+

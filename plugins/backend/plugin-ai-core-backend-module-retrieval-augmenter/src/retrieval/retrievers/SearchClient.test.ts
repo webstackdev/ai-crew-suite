@@ -16,9 +16,9 @@
  */
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import {
-  PluginEndpointDiscovery,
-  TokenManager,
-} from '@backstage/backend-common';
+  AuthService,
+  DiscoveryService,
+} from '@backstage/backend-plugin-api';
 import { EmbeddingsSource } from '@webstackbuilders/plugin-ai-core-node';
 import {
   SearchClient,
@@ -26,27 +26,26 @@ import {
 } from './SearchClient';
 
 describe('SearchClient', () => {
-  let mockDiscoveryApi: PluginEndpointDiscovery;
-  let mockTokenManager: TokenManager;
+  let mockDiscoveryApi: DiscoveryService;
+  let mockAuth: AuthService;
   let mockLogger: any;
   let searchClient: SearchClient;
 
   beforeEach(() => {
     mockDiscoveryApi = {
       getBaseUrl: vi.fn().mockResolvedValue('http://mock-search-url'),
-      getExternalBaseUrl: vi.fn(),
-    };
-    mockTokenManager = {
-      getToken: vi.fn().mockResolvedValue({ token: 'mock-token' }),
-      authenticate: vi.fn(),
-    };
+    } as unknown as DiscoveryService;
+    mockAuth = {
+      getOwnServiceCredentials: vi.fn().mockResolvedValue({ principal: 'mock-service' }),
+      getPluginRequestToken: vi.fn().mockResolvedValue({ token: 'mock-token' }),
+    } as unknown as AuthService;
     mockLogger = {
       warn: vi.fn(),
     };
 
     searchClient = new SearchClient({
       discoveryApi: mockDiscoveryApi,
-      tokenManager: mockTokenManager,
+      auth: mockAuth,
       logger: mockLogger,
     });
   });
@@ -74,7 +73,11 @@ describe('SearchClient', () => {
     await searchClient.query(query);
 
     expect(mockDiscoveryApi.getBaseUrl).toHaveBeenCalled();
-    expect(mockTokenManager.getToken).toHaveBeenCalled();
+    expect(mockAuth.getOwnServiceCredentials).toHaveBeenCalled();
+    expect(mockAuth.getPluginRequestToken).toHaveBeenCalledWith({
+      onBehalfOf: { principal: 'mock-service' },
+      targetPluginId: 'search',
+    });
     expect(mockFetch).toHaveBeenCalledWith(
       'http://mock-search-url/query?term=catalog&types[0]=software-catalog',
       {

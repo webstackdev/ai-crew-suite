@@ -19,22 +19,21 @@ import {
   BedrockAugmenter,
 } from './BedrockAugmenter';
 import { CatalogApi } from '@backstage/catalog-client';
-import {
-  PluginEndpointDiscovery,
-  TokenManager,
-} from '@backstage/backend-common';
 import { AwsCredentialIdentity, Provider } from '@aws-sdk/types';
 import { Config } from '@backstage/config';
 import { AugmentationOptions } from '@webstackbuilders/plugin-ai-core-backend-module-retrieval-augmenter';
-import { AuthService, LoggerService } from '@backstage/backend-plugin-api';
+import {
+  AuthService,
+  DiscoveryService,
+  LoggerService,
+} from '@backstage/backend-plugin-api';
 
 export interface BedrockEmbeddingsConfig {
   logger: LoggerService;
   vectorStore: VectorStore;
   catalogApi: CatalogApi;
-  tokenManager?: TokenManager;
-  auth?: AuthService;
-  discovery: PluginEndpointDiscovery;
+  auth: AuthService;
+  discovery: DiscoveryService;
   config: Config;
   options: {
     credentials: AwsCredentialIdentity | Provider<AwsCredentialIdentity>;
@@ -46,7 +45,6 @@ export async function initializeBedrockEmbeddings({
   logger,
   vectorStore,
   catalogApi,
-  tokenManager,
   auth,
   discovery,
   config,
@@ -72,7 +70,6 @@ export async function initializeBedrockEmbeddings({
     options,
     bedrockConfig,
     auth,
-    tokenManager,
     augmentationOptions,
   });
 }

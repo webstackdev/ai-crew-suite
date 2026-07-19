@@ -18,10 +18,6 @@ import pLimit from 'p-limit';
 import { Embeddings } from '@langchain/core/embeddings';
 import { RecursiveCharacterTextSplitter } from '@langchain/textsplitters';
 import {
-  createLegacyAuthAdapters,
-  TokenManager,
-} from '@backstage/backend-common';
-import {
   AuthService,
   DiscoveryService,
   LoggerService,
@@ -65,7 +61,6 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
     catalogApi,
     logger,
     auth,
-    tokenManager,
     embeddings,
     discovery,
     augmentationOptions,
@@ -73,8 +68,7 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
     vectorStore: VectorStore;
     catalogApi: CatalogApi;
     logger: LoggerService;
-    auth?: AuthService;
-    tokenManager?: TokenManager;
+    auth: AuthService;
     embeddings: Embeddings;
     discovery: DiscoveryService;
     augmentationOptions?: AugmentationOptions;
@@ -84,11 +78,7 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
     this.augmentationOptions = augmentationOptions;
     this.catalogApi = catalogApi;
     this.logger = logger;
-    this.auth = createLegacyAuthAdapters({
-      auth,
-      discovery,
-      tokenManager,
-    }).auth;
+    this.auth = auth;
     this.discovery = discovery;
   }
 

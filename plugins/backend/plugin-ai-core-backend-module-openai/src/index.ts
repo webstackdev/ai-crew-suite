@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { AuthService, LoggerService } from '@backstage/backend-plugin-api';
-import { CatalogApi } from '@backstage/catalog-client';
 import {
-  PluginEndpointDiscovery,
-  TokenManager,
-} from '@backstage/backend-common';
+  AuthService,
+  DiscoveryService,
+  LoggerService,
+} from '@backstage/backend-plugin-api';
+import { CatalogApi } from '@backstage/catalog-client';
 import { Config } from '@backstage/config';
 import { AugmentationOptions } from '@webstackbuilders/plugin-ai-core-backend-module-retrieval-augmenter';
 import { AugmentationIndexer, VectorStore } from '@webstackbuilders/plugin-ai-core-node';
@@ -26,17 +26,15 @@ import { OpenAiConfig, OpenAiAugmenter } from './OpenAiAugmenter';
 
 export interface BedrockEmbeddingsConfig {
   logger: LoggerService;
-  tokenManager?: TokenManager;
-  auth?: AuthService;
+  auth: AuthService;
   vectorStore: VectorStore;
   catalogApi: CatalogApi;
-  discovery: PluginEndpointDiscovery;
+  discovery: DiscoveryService;
   config: Config;
 }
 
 export async function initializeOpenAiEmbeddings({
   logger,
-  tokenManager,
   auth,
   vectorStore,
   catalogApi,
@@ -62,7 +60,6 @@ export async function initializeOpenAiEmbeddings({
     discovery,
     augmentationOptions,
     logger: logger.child({ label: 'roadie-openai-embeddings' }),
-    tokenManager,
     auth,
     config: openAiConfig,
   });

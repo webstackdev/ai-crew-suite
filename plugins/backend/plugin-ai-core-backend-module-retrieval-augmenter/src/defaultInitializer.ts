@@ -15,10 +15,8 @@
  * limitations under the License.
  */
 import {
-  PluginEndpointDiscovery,
-} from '@backstage/backend-common';
-import {
   AuthService,
+  DiscoveryService,
   LoggerService,
 } from '@backstage/backend-plugin-api';
 import { VectorStore } from '@webstackbuilders/plugin-ai-core-node';
@@ -32,8 +30,8 @@ import {
 export type DefaultRetrievalPipelineOptions = {
   vectorStore: VectorStore;
   logger: LoggerService;
-  discovery: PluginEndpointDiscovery;
-  auth?: AuthService;
+  discovery: DiscoveryService;
+  auth: AuthService;
 };
 
 export const createDefaultRetrievalPipeline = ({
