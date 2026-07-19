@@ -1,5 +1,6 @@
 /*
  * Copyright 2024 Larder Software Limited
+ * Copyright 2026 Webstack Builders, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,28 +22,50 @@ import {
 } from '@webstackbuilders/plugin-ai-core-backend-module-retrieval-augmenter';
 import { BedrockCohereEmbeddings } from './BedrockCohereEmbeddings';
 
+/**
+ * Configuration used to create AWS Bedrock embedding clients.
+ */
 export type BedrockConfig = {
+  /** Bedrock embedding model ID, such as `amazon.titan-embed-text-v1`. */
   modelName: string;
+  /** Maximum AWS SDK retry attempts for embedding requests. Defaults to `3`. */
   maxRetries?: number;
+  /** Maximum concurrent embedding requests. Defaults to `100`. */
   maxConcurrency?: number;
 };
 
+export type BedrockAugmenterConfig = EmbeddingsConfig & {
+  /** AWS client options used by the Bedrock embeddings implementation. */
+  options: {
+    /** Optional explicit credentials; omitted credentials use the AWS SDK provider chain. */
+    credentials?: AwsCredentialIdentity | Provider<AwsCredentialIdentity>;
+    /** AWS region where Bedrock embeddings should be invoked. */
+    region: string;
+  };
+  /** Bedrock model and client tuning options. */
+  bedrockConfig: BedrockConfig;
+};
+
+/**
+ * Vector augmentation indexer backed by AWS Bedrock embeddings.
+ *
+ * Cohere Bedrock embedding models use a specialized wrapper so document and
+ * query embeddings match LangChain's expected shape; all other Bedrock models
+ * use the standard `BedrockEmbeddings` implementation.
+ */
 export class BedrockAugmenter extends DefaultVectorAugmentationIndexer {
-  constructor(
-    config: EmbeddingsConfig & {
-      options: {
-        credentials: AwsCredentialIdentity | Provider<AwsCredentialIdentity>;
-        region: string;
-      };
-      bedrockConfig: BedrockConfig;
-    },
-  ) {
+  constructor(config: BedrockAugmenterConfig) {
+    if (!config.bedrockConfig.modelName?.trim()) {
+      config.logger.error('AWS Bedrock embeddings modelName is required.');
+      throw new Error('AWS Bedrock embeddings modelName is required.');
+    }
+
     const embeddingsConfig = {
       region: config.options.region,
       credentials: config.options.credentials,
       model: config.bedrockConfig.modelName,
     };
-    const embeddings = config.bedrockConfig.modelName.includes('cohere')
+    const embeddings = config.bedrockConfig.modelName.toLowerCase().includes('cohere')
       ? new BedrockCohereEmbeddings({
           ...embeddingsConfig,
           maxRetries: config.bedrockConfig.maxRetries ?? 3,

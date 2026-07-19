@@ -65,6 +65,7 @@
     "@langchain/aws": "^1.4.3",
     "@langchain/core": "^1.2.3",
     "@webstackbuilders/plugin-ai-core-backend": "workspace:^",
+    "@webstackbuilders/plugin-ai-core-backend-module-pgvector": "workspace:^",
     "@webstackbuilders/plugin-ai-core-backend-module-retrieval-augmenter": "workspace:^",
     "@webstackbuilders/plugin-ai-core-node": "workspace:^",
     "i18next": "26.3.6",

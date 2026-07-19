@@ -1,5 +1,5 @@
 {
-  "name": "@webstackbuilders/plugin-ai-core-backend-module-openai",
+  "name": "@webstackbuilders/plugin-ai-core-backend-module-openrouter",
   "description": "The OpenAI backend module for the @webstackbuilders/plugin-ai-core plugin.",
   "version": "0.0.1",
   "main": "src/index.ts",
@@ -12,7 +12,7 @@
     "webstack-builders",
     "ai-crew-suite",
     "ai-core",
-    "openai",
+    "openrouter",
     "embeddings",
     "vector-embeddings",
     "rag"
@@ -27,7 +27,7 @@
     "pluginId": "ai-core",
     "pluginPackages": [
       "@webstackbuilders/plugin-ai-core-backend",
-      "@webstackbuilders/plugin-ai-core-backend-module-openai"
+      "@webstackbuilders/plugin-ai-core-backend-module-openrouter"
     ]
   },
   "bugs": {
@@ -37,7 +37,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/webstackdev/ai-crew-suite",
-    "directory": "packages/plugin-ai-core-backend-module-openai"
+    "directory": "packages/plugin-ai-core-backend-module-openrouter"
   },
   "files": [
     "dist",
@@ -46,7 +46,7 @@
   "configSchema": "config.d.ts",
   "scripts": {
     "start": "backstage-cli package start",
-    "build": "yarn --cwd ../../.. tsc -b plugins/backend/plugin-ai-core-backend-module-openai/tsconfig.json --emitDeclarationOnly && backstage-cli package build",
+    "build": "yarn --cwd ../../.. tsc -b plugins/backend/plugin-ai-core-backend-module-openrouter/tsconfig.json --emitDeclarationOnly && backstage-cli package build",
     "clean": "backstage-cli package clean",
     "prepack": "backstage-cli package prepack",
     "postpack": "backstage-cli package postpack",
@@ -60,7 +60,7 @@
     "@backstage/catalog-client": "backstage:^",
     "@backstage/config": "backstage:^",
     "@langchain/core": "^1.2.3",
-    "@langchain/openai": "^1.5.5",
+    "@langchain/openrouter": "^1.5.5",
     "@webstackbuilders/plugin-ai-core-backend-module-pgvector": "workspace:^",
     "@webstackbuilders/plugin-ai-core-backend-module-retrieval-augmenter": "workspace:^",
     "@webstackbuilders/plugin-ai-core-node": "workspace:^",
