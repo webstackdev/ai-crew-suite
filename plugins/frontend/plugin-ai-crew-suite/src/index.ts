@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 export { ragAiPlugin, RagModal, SidebarRagModal } from './plugin';
-export { RagAiClient, ragAiApiRef } from './api';
+export { RagAiClient, ragAiApiRef, type RagAiApi } from './api';

@@ -13,5 +13,5 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export { ragAiApiRef } from './ragApi';
+export { type RagAiApi, ragAiApiRef } from './ragApi';
 export { RagAiClient } from './client';

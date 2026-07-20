@@ -10,7 +10,7 @@
 
 # Roadie RAG AI Frontend plugin for Backstage
 
-This plugin is the frontend for RAG AI Backstage plugin. You can see the corresponding backend plugin in [here](/plugins/backend/plugin-ai-core-backend/README.md).
+This plugin is the frontend for RAG AI Backstage plugin. You can see the corresponding backend plugin in [here](/plugins/backend/ai-core-backend/README.md).
 
 ![docs/petstore-rag-openapi-example.gif](docs/petstore-rag-openapi-example.gif)
 
@@ -43,7 +43,7 @@ App.tsx
 ```tsx
 
 // packages/app/src/App.tsx
-import { RagModal } from '@webstackbuilders/plugin-ai-core';
+import { RagModal } from '@webstackbuilders/ai-core';
 
 ...
 const App = () => (
@@ -62,7 +62,7 @@ You can also choose to use the `SidebarRagModal` component instead. In addition 
 
 ```tsx
 // packages/app/src/components/Root/Root.tsx
-import { SidebarRagModal } from '@webstackbuilders/plugin-ai-core';
+import { SidebarRagModal } from '@webstackbuilders/ai-core';
 ...
 export const Root = ({ children }: PropsWithChildren<{}>) => (
   <SidebarPage>
