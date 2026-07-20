@@ -1,36 +1,65 @@
-<div align="center">
-  <img src="https://images.ctfassets.net/hcqpbvoqhwhm/5J0FSNghLU8M6nZNtQHS0D/96bf022e075a5e10a5b3ba6b35ae8990/roadie-horiz-big-transp-back.png" alt="Roadie Logo" width="400"/>
-</div>
+# @webstackbuilders/plugin-ai-core-backend-module-retrieval-augmenter
 
-> ⚠️ **Reference Implementation Only**  
-> The plugin-ai-crew-suite plugin and its modules are a reference implementation provided for demonstration and educational purposes.  
-> We provide minimal support for these components and do not actively maintain or update them.
+> Core Developer Documentation for the AI Crew Suite platform.
+
+## Overview
+
+This package provides the default retrieval and indexing primitives used by AI Crew Suite. It converts Backstage catalog and TechDocs content into embedding documents, composes retrievers into query-time retrieval pipelines, and supplies the shared RAG behavior consumed by provider modules.
+
+### Core Responsibilities
+
+- **Indexing foundation**: Implements `DefaultVectorAugmentationIndexer` for catalog and TechDocs embedding creation and deletion.
+- **Retrieval routing**: Provides source-based routing for vector retrieval and Backstage Search retrieval.
+- **Post-processing**: Combines grouped retriever output into the final augmentation context supplied to agents.
+- **Pipeline factory**: Exposes `createDefaultRetrievalPipeline` for provider modules that need a standard RAG pipeline.
 
 ---
 
-# plugin-ai-core-backend-retrieval-augmenter
+## Architectural Dependency Tree
 
-This is a base module providing default functionality related to RAG AI indexing embeddings and retrieval of augmentation context. It enables a pluggable AI model initialization in a submodule and provides default, extendable functionality to create, manage, and search embeddings.
+This package acts as a retrieval implementation module within the broader AI Crew Suite ecosystem:
 
-It also contains logic to use the default Backstage search to search for additional context that can be added to the query prompts sent to configured LLMs.
+- **Upstream Interface**: Dependent upon abstract definitions provided in `plugin-ai-core-node`.
+- **Platform Services**: Uses Backstage Catalog, Discovery, Auth, and Search APIs to load and retrieve content.
+- **Storage Dependency**: Operates against any implementation of the shared `VectorStore` contract.
+- **Downstream Consumer**: Directly ingested by embeddings modules such as `plugin-ai-core-backend-module-aws` and `plugin-ai-core-backend-module-openai`.
 
-This module should be configured to be used by injecting use-case specific embeddings, retrieval, post processing and routing implementations.
+---
 
-The Roadie RAG AI backend expects a retrieval pipeline that is used to retrieve augmentation context when querying information from the LLM. This retrieval pipeline retrieves, processes and sorts information based on queries and other information, providing data that can be used to augment the query sent to the LLM.
+## Local Development Workflow
 
-This repository provides default retrieval pipeline implementations that can be configured to retrieve as much (or as little ) data as is needed. The pipeline can also be run in a pass-through mode where additional context is not added to the queries and users can interact with the configured LLMs directly.
+### 1. Prerequisites & Context
 
-A bare-bones implementation of the pipeline can be initialized by calling the `DefaultRetrievalPipeline` constructor with an empty configuration object (`{}`).
+This workspace relies on the monorepo's shared **Yarn Plug'n'Play (PnP)** caching layout. Ensure your local editor SDK configuration points directly to the active workspace TypeScript bundle.
 
-To start appending important functionality to the RAG pipeline, it is recommended to start implementing and using routers to define correct augmentation information retrievers and to use post processor with enough logic to rerank, sort, and manipulate the retrieved information. The initial starting point, to use a vector store with optional search functionality, is provided by Roadie within this repository. You can get a naive RAG pipeline running this way and start tweaking and configuring the optimal embeddings configuration to provide relevant context for your queries.
+### 2. Installation & Builds
 
-```typescript
-const retrievalPipeline = createDefaultRetrievalPipeline({
-  discovery,
-  logger,
-  vectorStore: augmentationIndexer.vectorStore,
-  tokenManager,
-});
+Run installation routines and build compilation tracks directly from the monorepo root:
+
+```bash
+# Clean lockfile sync and refresh PnP maps
+yarn install --refresh
+
+# Compile TypeScript declarations into /dist targets
+yarn workspace @webstackbuilders/plugin-ai-core-backend-module-retrieval-augmenter build
 ```
 
-> You are able to get the vector store implementation from your constructed augmentation indexer. See embeddings submodules or `@webstackbuilders/plugin-ai-core-backend` README for more information
+### 3. Running Unit & Integration Tests
+
+Test files are located inline next to the modules they validate (`*.test.ts`). Execute them via:
+
+```bash
+yarn workspace @webstackbuilders/plugin-ai-core-backend-module-retrieval-augmenter test
+```
+
+---
+
+## Technical Extension Checklist
+
+When modifying or extending code inside this workspace, ensure you update the corresponding global documentation indexes located at `/docs/core-development/` if you alter any of the following operational layers:
+
+- [ ] Modifying core interface schemas or abstract contracts.
+- [ ] Adding a source, retriever, router, indexer, or post-processor contract.
+- [ ] Introducing brand-new model adapter configurations.
+- [ ] Altering backend ingestion worker pipelines.
+- [ ] Changing chunking, source metadata, deletion, or retrieval merge semantics.

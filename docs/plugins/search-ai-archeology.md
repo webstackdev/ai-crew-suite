@@ -1,10 +1,22 @@
 ---
+layout: default
+title: Institutional Knowledge Finder
+parent: Other
 plugin_name: search-ai-archeology
-category: Other
 subcategory: Developer Productivity
 ---
 
 # Institutional Knowledge Finder
+
+{: .no_toc }
+
+<span class="label label-blue">{{ page.subcategory }}</span>
+
+---
+
+## Overview
+
+This plugin acts as a semantic search engine across deprecated spaces, legacy wikis, and historical repositories, digging up context and documentation that keyword search engines miss.
 
 - **The Task**: Identifying active subject matter experts and uncovering lost historical tribal knowledge across shifting organizational structures.
 - **The Logic**: Instead of running expensive, noisy vector embeddings over millions of historical code diffs, a **Multi-Tool Research Agent** executes a hybrid search. It uses `knowledge.retrieve` over high-level TechDocs and Architecture Decision Records (ADRs) to isolate target files and components. It then invokes time-bounded queries via the **GitHub and Jira tool packs** (e.g., historical `git blame` logs and ticket histories from specific eras) to calculate an **Expertise Matrix Artifact**, tracking down the original authors and code reviewers regardless of current catalog ownership.

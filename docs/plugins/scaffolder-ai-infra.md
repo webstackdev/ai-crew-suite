@@ -1,10 +1,22 @@
 ---
+layout: default
+title: IaC Generator
+parent: Scaffolder
 plugin_name: scaffolder-ai-infra
-category: Scaffolder
 subcategory: Golden Path Provisioning
 ---
 
 # IaC Generator
+
+{: .no_toc }
+
+<span class="label label-blue">{{ page.subcategory }}</span>
+
+---
+
+## Overview
+
+This plugin automatically generates Infrastructure as Code (IaC) files matching your organization's compliance blueprints directly during the project scaffolding step.
 
 - **The Task**: Generating tailored, security-hardened infrastructure-as-code files directly during software provisioning runs.
 - **The Logic**: Rather than acting as a loose, standalone code generator, this tool executes as an integrated **Scaffolder Action step**. When a software template is triggered, a stateful LangGraph multi-agent network split by technology roles (**Terraform Expert node** vs. **CloudFormation Expert node**) reads the specific capacity variables, pulls base corporate modules via the `urlReader`, generates structural configurations, runs pre-flight syntax checks, and returns compliant code blocks to the active workspace.

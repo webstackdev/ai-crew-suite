@@ -1,10 +1,22 @@
 ---
+layout: default
+title: Automated Release Notes
+parent: Pull Request Workflows
 plugin_name: release-notes-ai-generator
-category: Pull Request Workflows
 subcategory: Product & Delivery
 ---
 
 # Automated Release Notes
+
+{: .no_toc }
+
+<span class="label label-blue">{{ page.subcategory }}</span>
+
+---
+
+## Overview
+
+This plugin analyzes your branch diffs, commit histories, and pull request bodies to automatically generate release notes tailored for product teams and stakeholders.
 
 - **The Task:** Generating customer-facing release notes from merged PRs.
 - **The Logic:** An agent aggregates all merged PRs since the last tag and generates [customer-facing release notes](https://aakashgupta.medium.com/21-ai-agent-use-cases-that-make-pms-10x-more-productive-most-pms-use-zero-47982523a75f).

@@ -1,10 +1,22 @@
 ---
+layout: default
+title: Catalog AI Insights
+parent: Catalog
 plugin_name: catalog-ai-insights
-category: Catalog
 subcategory: Knowledge
 ---
 
 # Catalog AI Insights
+
+{: .no_toc }
+
+<span class="label label-blue">{{ page.subcategory }}</span>
+
+---
+
+## Overview
+
+This plugin leverages large language models to analyze catalog entity relations and auto-generate structural engineering summaries.
 
 - **The Task:** Answering contextual questions about any service in the Software Catalog (_"Who is the on-call?"_, _"Where are the logs?"_, _"Why did this service fail its last deployment?"_).
 - **The Logic:** An agent "reads" a service's catalog metadata, recent deployments, and linked monitoring dashboards to synthesize answers in natural language.

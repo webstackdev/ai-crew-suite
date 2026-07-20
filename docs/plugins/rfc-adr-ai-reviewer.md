@@ -1,10 +1,22 @@
 ---
+layout: default
+title: RFC & Architectural Decision Reviewer
+parent: Other
 plugin_name: rfc-adr-ai-reviewer
-category: Other
 subcategory: Developer Productivity
 ---
 
 # RFC & Architectural Decision Reviewer
+
+{: .no_toc }
+
+<span class="label label-blue">{{ page.subcategory }}</span>
+
+---
+
+## Overview
+
+This plugin automatically parses Request for Comments (RFCs) and Architecture Decision Records (ADRs) to flag design pattern deviations, security anomalies, and dependency mismatches.
 
 - **The Task**: Providing automated, multi-perspective architectural and security gate feedback on new internal RFCs or Architecture Decision Records (ADRs) submitted across the engineering org.
 - **The Logic**: When a new design document or ADR is detected (via a repository PR or a Backstage Software Template execution), a **Stateful Multi-Agent Review Loop** initializes. A **"Senior Architect" Agent Node** extracts the system design proposals and uses `knowledge.retrieve` to cross-reference them against live catalog dependencies and active API schemas. Concurrently, a **"Security Lead" Agent Node** parses the document against enterprise compliance rules. The runtime leverages **SSE structured streaming** to display the agents' multi-turn feedback debate natively in the Backstage UI before generating a final **Design Critique Artifact** and opening an automated feedback issue/PR.

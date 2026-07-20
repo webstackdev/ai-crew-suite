@@ -1,10 +1,22 @@
 ---
+layout: default
+title: Incident Triage Assistant
+parent: Incident Response
 plugin_name: kubernetes-ai-responder
-category: Incident Response
 subcategory: Operations
 ---
 
 # Incident Triage Assistant
+
+{: .no_toc }
+
+<span class="label label-blue">{{ page.subcategory }}</span>
+
+---
+
+## Overview
+
+This plugin interfaces with your active Kubernetes infrastructure to parse error states, investigate pod logs, and serve real-time remediation playbooks.
 
 - **The Task:** Providing a "likely cause" summary when a service fails.
 - **The Logic:** An agent monitors [Kubernetes](https://medium.com/@naeemulhaq/architecting-an-internal-developer-platform-idp-with-backstage-and-kubernetes-9ec6311d866d) status in Backstage and, upon failure, gathers logs, traces, and recent PRs to build a root-cause hypothesis.

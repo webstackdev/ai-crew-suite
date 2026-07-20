@@ -1,10 +1,22 @@
 ---
+layout: default
+title: Architecture Drift Detector
+parent: Scaffolder
 plugin_name: scaffolder-ai-drift-detector
-category: Scaffolder
 subcategory: Governance
 ---
 
 # Architecture Drift Detector
+
+{: .no_toc }
+
+<span class="label label-blue">{{ page.subcategory }}</span>
+
+---
+
+## Overview
+
+This plugin continuously scans repositories created via software templates to identify deviations, outdated configurations, and non-compliant pattern drift over time.
 
 - **The Task**: Detecting, analyzing, and auto-remediating variance between a component's original golden-path Scaffolder blueprint and its live, operational infrastructure state.
 - **The Logic**: Rather than performing a simple string comparison, a **Stateful Reconciliation Agent** ingests live topology data using the **Kubernetes and Cloud Provider tool packs** and contrasts it against the original Software Template specs stored in PostgreSQL. When structural anomalies or "shadow IT" resources are identified, the graph initializes an evaluation loop. Instead of just failing a check, the agent calculates the technical and financial delta, compiles a remediation patch, and routes it through a **HITL platform gate** allowing engineers to auto-sync the repo infrastructure files back to the golden path with one click.

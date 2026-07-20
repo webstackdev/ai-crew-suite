@@ -1,10 +1,22 @@
 ---
+layout: default
+title: Automated Tech Radar Management
+parent: Other
 plugin_name: tech-radar-ai-manager
-category: Other
 subcategory: Strategic Planning
 ---
 
 # Automated Tech Radar Management
+
+{: .no_toc }
+
+<span class="label label-blue">{{ page.subcategory }}</span>
+
+---
+
+## Overview
+
+This plugin continuously scans internal repositories and software lifecycle telemetry to automatically recommend status promotions or deprecations on your company's Technology Radar.
 
 - **The Task:** Maintaining the Backstage Tech Radar.
 - **The Logic:** A **LangGraph** agent monitors all new PRs and `package.json` changes across the organization.

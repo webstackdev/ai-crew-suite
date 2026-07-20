@@ -1,10 +1,22 @@
 ---
+layout: default
+title: Product Requirements Translator
+parent: Scaffolder
 plugin_name: scaffolder-ai-prd
-category: Scaffolder
 subcategory: Product & Delivery
 ---
 
 # Product Requirements Translator
+
+{: .no_toc }
+
+<span class="label label-blue">{{ page.subcategory }}</span>
+
+---
+
+## Overview
+
+This plugin automatically parses Product Requirement Documents (PRDs) and translates them into actionable engineering templates and task definitions during the scaffolding phase.
 
 - **The Task**: Transforming a raw Product Requirement Document (PRD) into a comprehensive, multi-entity project footprint spanning ticketing, code repositories, and documentation.
 - **The Logic**: When a user submits a PRD, a stateful LangGraph multi-agent network distributes the work to specialized node agents. The **Product Manager node** translates product specs into structured Jira Epics and Stories, the **Engineer node** parses technical mandates to determine which Backstage Software Templates to configure, and the **Technical Writer node** generates the baseline architectural documentation. The execution automatically freezes at a persistent database checkpoint for engineering lead sign-off before executing any write operations across external tools.

@@ -1,10 +1,22 @@
 ---
+layout: default
+title: Intent-Driven Scaffolder
+parent: Scaffolder
 plugin_name: scaffolder-ai-intent
-category: Scaffolder
 subcategory: Golden Path Provisioning
 ---
 
 # Intent-Driven Scaffolder
+
+{: .no_toc }
+
+<span class="label label-blue">{{ page.subcategory }}</span>
+
+---
+
+## Overview
+
+This plugin analyzes natural language intent inputs from users to automatically select, pre-fill, and execute appropriate software template blueprints.
 
 **Value**: High. Standard Scaffolder forms can suffer from field fatigue, often requiring complex regex validations and deep knowledge of enterprise parameter syntax.
 

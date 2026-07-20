@@ -9,6 +9,7 @@
     "jsdom",
     "llms",
     "Ollama",
+    "ossp",
     "pgvector",
     "rharkor",
     "rjsf",

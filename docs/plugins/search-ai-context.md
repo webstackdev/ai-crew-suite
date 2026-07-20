@@ -1,10 +1,22 @@
 ---
+layout: default
+title: Cross-Service Search
+parent: Other
 plugin_name: search-ai-context
-category: Other
 subcategory: Developer Productivity
 ---
 
 # Cross-Service Search
+
+{: .no_toc }
+
+<span class="label label-blue">{{ page.subcategory }}</span>
+
+---
+
+## Overview
+
+This plugin connects isolated documentation silos across disparate tools and messaging spaces to surface contextually relevant, unified engineering answers natively inside Backstage.
 
 - **The Task**: Resolving complex, multi-entity architectural dependencies and impact analysis queries that standard keyword or isolated-file searches cannot handle.
 - **The Logic**: A **Stateful Graph Investigation Agent** combines semantic text retrieval (`knowledge.retrieve`) over the Backstage Software Catalog with active tool calls to upstream repositories. When an engineering mutation occurs (such as an API deprecation), a multi-agent loop evaluates catalog ownership relationships (`dependsOn`), runs static validation checks across downstream consumer repos via the **GitHub/GitLab tool pack**, and generates an actionable **Impact Assessment Artifact** summarizing exactly which components and teams will be broken.

@@ -1,92 +1,66 @@
-<div align="center">
-  <img src="https://images.ctfassets.net/hcqpbvoqhwhm/5J0FSNghLU8M6nZNtQHS0D/96bf022e075a5e10a5b3ba6b35ae8990/roadie-horiz-big-transp-back.png" alt="Roadie Logo" width="400"/>
-</div>
+# @webstackbuilders/plugin-ai-core-backend-module-aws
 
-> ⚠️ **Reference Implementation Only**  
-> The plugin-ai-crew-suite plugin and its modules are a reference implementation provided for demonstration and educational purposes.  
-> We provide minimal support for these components and do not actively maintain or update them.
+> Core Developer Documentation for the AI Crew Suite platform.
+
+## Overview
+
+This package implements the AWS Bedrock embeddings module for AI Crew Suite. It creates a pgvector-backed retrieval and indexing dependency, wires Bedrock embedding clients into the default augmentation indexer, and registers the resulting tool with the core backend through Backstage's module system.
+
+### Core Responsibilities
+
+- **Backend module registration**: Registers `aiCoreBackendModuleAws` as an `ai-core` backend module using `createBackendModule`.
+- **Bedrock embeddings**: Creates embedding clients for Bedrock models, including Cohere-specific response handling where needed.
+- **Retrieval tool wiring**: Registers `aws.bedrock.retrieval` with an augmentation indexer and default retrieval pipeline.
+- **Storage composition**: Creates the pgvector store used for embedding writes and semantic retrieval.
 
 ---
 
-# RAG AI Backend-embeddings AWS Bedrock submodule
+## Architectural Dependency Tree
 
-`plugin-ai-core-backend-module-embeddings-aws`
+This package acts as an embeddings provider module within the broader AI Crew Suite ecosystem:
 
-This is a submodule for the `@webstackbuilders/plugin-ai-core-backend` module, which provides functionality to use AWS Bedrock embeddings to generate a RAG AI Backend plugin for Backstage. It integrates `@backstage/integration-aws-node` package for fetching AWS account credentials.
+- **Upstream Interface**: Dependent upon abstract definitions provided in `plugin-ai-core-node`.
+- **Core Consumer**: Registered into `plugin-ai-core-backend` through `toolExtensionPoint`.
+- **Storage Dependency**: Uses `plugin-ai-core-backend-module-pgvector` for vector persistence.
+- **Retrieval Dependency**: Uses `plugin-ai-core-backend-module-retrieval-augmenter` for indexing and retrieval pipeline behavior.
+- **Provider Dependency**: Uses AWS Bedrock SDK and LangChain AWS embeddings implementations.
 
-## Initialization
+---
 
-```typescript
-const vectorStore = await createRoadiePgVectorStore({ logger, database });
-const awsCredentialsManager = DefaultAwsCredentialsManager.fromConfig(config);
-const credProvider = await awsCredentialsManager.getCredentialProvider();
+## Local Development Workflow
 
-const augmentationIndexer = await initializeBedrockEmbeddings({
-  logger,
-  catalogApi,
-  vectorStore,
-  discovery,
-  config,
-  options: {
-    credentials: credProvider.sdkCredentialProvider,
-    region: 'eu-central-1',
-  },
-});
+### 1. Prerequisites & Context
+
+This workspace relies on the monorepo's shared **Yarn Plug'n'Play (PnP)** caching layout. Ensure your local editor SDK configuration points directly to the active workspace TypeScript bundle.
+
+### 2. Installation & Builds
+
+Run installation routines and build compilation tracks directly from the monorepo root:
+
+```bash
+# Clean lockfile sync and refresh PnP maps
+yarn install --refresh
+
+# Compile TypeScript declarations into /dist targets
+yarn workspace @webstackbuilders/plugin-ai-core-backend-module-aws build
 ```
 
-## Configuration Options
+### 3. Running Unit & Integration Tests
 
-The module expects 2 pieces of configuration:
+Test files are located inline next to the modules they validate (`*.test.ts`). Execute them via:
 
-1. The configuration of the module to configure AWS Bedrock
-2. AWS integration configuration for credentials provisioning
-
-### AWS Bedrock configuration
-
-The module expects the name of the embeddings generative AI model to be configured via app-config. Optionally, you can also provide the maximum number of retries for the AWS SDK client.
-
-```yaml
-ai:
-  embeddings:
-    bedrock:
-      # Name of the Bedrock model to use to create Embeddings
-      modelName: 'amazon.titan-embed-text-v1'
-      # Maximum number of retries for the AWS SDK client
-      maxRetries: 3
-      # Maximum number of concurrent requests for the AWS SDK client
-      maxConcurrency: 100
+```bash
+yarn workspace @webstackbuilders/plugin-ai-core-backend-module-aws test
 ```
 
-### AWS Credentials Configuration
+---
 
-The module depends on the `@backstage/integration-aws-node` package which helps fetch AWS account credentials for AWS SDK clients in backend packages and plugins. Users configure AWS account information and the credentials in their Backstage app configurations. This could include IAM user credentials, IAM roles, and profile names for their AWS accounts.
+## Technical Extension Checklist
 
-A full description of how to use and configure `@backstage/integration-aws-node` package can be found from the [package README](https://github.com/backstage/backstage/blob/master/packages/integration-aws-node/README.md).
+When modifying or extending code inside this workspace, ensure you update the corresponding global documentation indexes located at `/docs/core-development/` if you alter any of the following operational layers:
 
-Configuration examples:
-
-```yaml
-aws:
-  mainAccount:
-    accessKeyId: ${MY_ACCESS_KEY_ID}
-    secretAccessKey: ${MY_SECRET_ACCESS_KEY}
-  accounts:
-    - accountId: '111111111111'
-      roleName: 'my-iam-role-name'
-      externalId: 'my-external-id'
-    - accountId: '222222222222'
-      partition: 'aws-other'
-      roleName: 'my-iam-role-name'
-      region: 'not-us-east-1'
-      accessKeyId: ${MY_ACCESS_KEY_ID_FOR_ANOTHER_PARTITION}
-      secretAccessKey: ${MY_SECRET_ACCESS_KEY_FOR_ANOTHER_PARTITION}
-    - accountId: '333333333333'
-      accessKeyId: ${MY_OTHER_ACCESS_KEY_ID}
-      secretAccessKey: ${MY_OTHER_SECRET_ACCESS_KEY}
-    - accountId: '444444444444'
-      profile: my-profile-name
-    - accountId: '555555555555'
-  accountDefaults:
-    roleName: 'my-backstage-role'
-    externalId: 'my-id'
-```
+- [ ] Modifying core interface schemas or abstract contracts.
+- [ ] Changing Bedrock config validation, region resolution, retries, concurrency, or embedding dimensions.
+- [ ] Introducing brand-new model adapter configurations.
+- [ ] Altering backend ingestion worker pipelines.
+- [ ] Updating retrieval tool IDs, augmentation indexer behavior, or pgvector composition.

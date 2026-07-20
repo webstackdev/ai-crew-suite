@@ -1,40 +1,65 @@
-<div align="center">
-  <img src="https://images.ctfassets.net/hcqpbvoqhwhm/5J0FSNghLU8M6nZNtQHS0D/96bf022e075a5e10a5b3ba6b35ae8990/roadie-horiz-big-transp-back.png" alt="Roadie Logo" width="400"/>
-</div>
+# @webstackbuilders/plugin-ai-core-backend-module-pgvector
 
-> ⚠️ **Reference Implementation Only**  
-> The plugin-ai-crew-suite plugin and its modules are a reference implementation provided for demonstration and educational purposes.  
-> We provide minimal support for these components and do not actively maintain or update them.
+> Core Developer Documentation for the AI Crew Suite platform.
+
+## Overview
+
+This package implements the PostgreSQL pgvector storage layer for AI Crew Suite. It persists embedding vectors for retrieval augmentation and also provides the durable runtime store used for sessions, runs, checkpoints, approvals, artifacts, and audit logs.
+
+### Core Responsibilities
+
+- **Vector storage**: Implements the shared `VectorStore` contract on top of PostgreSQL and pgvector similarity search.
+- **Runtime persistence**: Implements session, checkpoint, run, artifact, approval, and audit-log storage contracts for `AgentRuntime`.
+- **Database lifecycle**: Applies packaged migrations before returning vector or runtime store instances.
+- **Retrieval support**: Provides metadata-filtered similarity search for source-specific and cross-source RAG queries.
 
 ---
 
-# RoadiePgVectorStore - PostgreSQL RAG AI Vector Storage
+## Architectural Dependency Tree
 
-A module enabling usage of PostgreSQL as a storage solution for RAG AI Backstage backend plugin.
+This package acts as the persistence module within the broader AI Crew Suite ecosystem:
 
-> Note, you need to have `uuid-ossp` and `vector` PostgreSQL extensions available on your database to be able to use this module.
+- **Upstream Interface**: Dependent upon abstract definitions provided in `plugin-ai-core-node`.
+- **Platform Services**: Uses Backstage's database service and Knex clients supplied by the backend runtime.
+- **Downstream Consumer**: Directly ingested by `plugin-ai-core-backend` for runtime persistence and by embeddings modules for vector storage.
+- **Database Dependency**: Requires PostgreSQL with pgvector support for embedding similarity search.
 
-This module construct a database and needed database tables to support storing embeddings vectors into your PostgreSQL DB. You can control the name of the database with the configured environment name within your Backstage backend application.
+---
 
-## How to initialize
+## Local Development Workflow
 
-You can use the exported `createRoadiePgVectorStore` function to initialize the RoadiePGVectorStore. This initialization function expects an instance of logger and a Knex DB connection.
+### 1. Prerequisites & Context
 
-Here is a TypeScript example:
+This workspace relies on the monorepo's shared **Yarn Plug'n'Play (PnP)** caching layout. Ensure your local editor SDK configuration points directly to the active workspace TypeScript bundle.
 
-```typescript
-const config = {
-  logger: Logger, // logger instance
-  db: Knex, // database connection provided by Knex
-  options: {
-    chunkSize: number, // (optional) amount of documents to chunk when adding vectors, default is 500
-    tableName: string, // (optional) Table naming to use to store embeddings. Default is 'embeddings'
-  },
-};
+### 2. Installation & Builds
 
-const vectorStore = await createRoadiePgVectorStore({
-  logger,
-  database,
-  options: { chunkSize, tableName },
-});
+Run installation routines and build compilation tracks directly from the monorepo root:
+
+```bash
+# Clean lockfile sync and refresh PnP maps
+yarn install --refresh
+
+# Compile TypeScript declarations into /dist targets
+yarn workspace @webstackbuilders/plugin-ai-core-backend-module-pgvector build
 ```
+
+### 3. Running Unit & Integration Tests
+
+Test files are located inline next to the modules they validate (`*.test.ts`). Execute them via:
+
+```bash
+yarn workspace @webstackbuilders/plugin-ai-core-backend-module-pgvector test
+```
+
+---
+
+## Technical Extension Checklist
+
+When modifying or extending code inside this workspace, ensure you update the corresponding global documentation indexes located at `/docs/core-development/` if you alter any of the following operational layers:
+
+- [ ] Modifying core interface schemas or abstract contracts.
+- [ ] Changing vector dimensions, metadata filters, insert batching, or similarity query behavior.
+- [ ] Introducing brand-new model adapter configurations.
+- [ ] Altering backend ingestion worker pipelines.
+- [ ] Updating runtime persistence schema, migrations, approval storage, or audit-log serialization.

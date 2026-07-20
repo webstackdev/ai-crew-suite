@@ -18,19 +18,10 @@ The purpose of this document is to track third-party sibling plugins that AI plu
 
 ## VCS Plugins
 
-- GithubBackend / GithubService
+- Github
 - GitLab
 - Bitbucket
 - Azure DevOps
-
-Native agentic workflows on VCS platforms:
-
-| VCS Platform     | Self-Hosted Support?               | Core AI Agent Engine               | Open Model / Custom Support?                       |
-| ---------------- | ---------------------------------- | ---------------------------------- | -------------------------------------------------- |
-| **GitLab**       | **Yes** (Self-Managed / Dedicated) | GitLab Duo Agent Platform          | **Yes** (Supports local open-source models / BYOM) |
-| **GitHub**       | Limited (Cloud-first focuses)      | GitHub Agentic Workflows / Copilot | **Yes** (Supports custom Markdown-defined scripts) |
-| **Bitbucket**    | Primarily Cloud for Agents         | Atlassian Rovo Dev / Claude Code   | **Yes** (Extensible via MCP server integration)    |
-| **Azure DevOps** | Primarily Cloud for Agents         | GitHub Copilot / Azure SRE Agents  | **Yes** (Custom workflows built via AI Foundry     |
 
 ## Observability Platforms
 

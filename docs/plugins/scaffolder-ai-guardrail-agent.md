@@ -1,10 +1,22 @@
 ---
+layout: default
+title: Policy Guardrail Agent
+parent: Scaffolder
 plugin_name: scaffolder-ai-guardrail-agent
-category: Scaffolder
 subcategory: Golden Path Provisioning
 ---
 
 # Policy Guardrail Agent
+
+{: .no_toc }
+
+<span class="label label-blue">{{ page.subcategory }}</span>
+
+---
+
+## Overview
+
+This plugin sits directly inside your software template wizard pipelines, running active compliance validation steps before any cloud resource provisioning or repository scaffolding takes place.
 
 - **The Task**: Intercepting and auditing inbound Backstage Scaffolder requests to enforce corporate architecture, security, and financial policies prior to infrastructure execution.
 - **The Logic**: Rather than relying on rigid, hardcoded schema validation, an inbound Scaffolder request triggers a **Policy Guardrail Agent**. The agent reads the request parameters and cross-references them against an organization's central policy directives. If a request violates standard operating boundaries (e.g., attempting to provision an unapproved database cluster size or selecting a non-compliant cloud region), the graph branches into a **Human-in-the-Loop (HITL) Clarification State**. This pauses execution, retains the session checkpoint in PostgreSQL, and alerts the platform security or finance team to review, override, or provide feedback directly within the Backstage UI.

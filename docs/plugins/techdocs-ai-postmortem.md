@@ -1,10 +1,22 @@
 ---
+layout: default
+title: Post-Mortem Timeline Author
+parent: Incident Response
 plugin_name: techdocs-ai-postmortem
-category: Incident Response
 subcategory: Reliability & Incident Management
 ---
 
 # Post-Mortem Timeline Author
+
+{: .no_toc }
+
+<span class="label label-blue">{{ page.subcategory }}</span>
+
+---
+
+## Overview
+
+This plugin aggregates timeline sequences from Slack channels, incident management systems, and monitoring platforms to automatically draft comprehensive post-mortem incidents.
 
 - **The Task**: Drafting post-incident timelines automatically inside Backstage TechDocs.
 - **The Logic**: Following a PagerDuty resolution event, a stateful LangGraph multi-agent network (Log Gatherer node \(\rightarrow \) Timeline Writer node) queries Datadog metrics, GitHub PR histories, and Slack transcripts to compile a sequential "Timeline of Events." It halts at an in-memory or database checkpoint for human approval before committing the final Markdown document.

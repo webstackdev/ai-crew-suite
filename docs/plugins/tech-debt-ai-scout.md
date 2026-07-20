@@ -1,10 +1,22 @@
 ---
+layout: default
+title: Tech Debt Scout
+parent: Other
 plugin_name: tech-debt-ai-scout
-category: Other
 subcategory: Code Quality
 ---
 
 # Tech Debt Scout
+
+{: .no_toc }
+
+<span class="label label-blue">{{ page.subcategory }}</span>
+
+---
+
+## Overview
+
+This plugin systematically crawls your code repositories to automatically map, prioritize, and surface code rot, deprecated library usages, and complex technical debt hotspots.
 
 - **The Task:** Surfacing tech debt across the organization's repositories.
 - **The Logic:** A crew periodically scans repositories for deprecated libraries or "TODO" comments, creating Jira tickets or Backstage Scorecard updates.

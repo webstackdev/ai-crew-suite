@@ -1,71 +1,65 @@
-<div align="center">
-  <img src="https://images.ctfassets.net/hcqpbvoqhwhm/5J0FSNghLU8M6nZNtQHS0D/96bf022e075a5e10a5b3ba6b35ae8990/roadie-horiz-big-transp-back.png" alt="Roadie Logo" width="400"/>
-</div>
+# @webstackbuilders/plugin-ai-core-backend-module-openrouter
 
-> ⚠️ **Reference Implementation Only**  
-> The plugin-ai-crew-suite plugin and its modules are a reference implementation provided for demonstration and educational purposes.  
-> We provide minimal support for these components and do not actively maintain or update them.
+> Core Developer Documentation for the AI Crew Suite platform.
 
----
+## Overview
 
-# RAG AI Backend-embeddings OpenAI submodule
+This package implements the OpenRouter model provider module for AI Crew Suite. It reads `ai.models.openrouter` configuration, creates LangChain `ChatOpenRouter` model instances, and registers them with the core backend model registry for use by agents and crew roles.
 
-This is a submodule for the `@webstackbuilders/plugin-ai-core-backend` module, which provides functionality to use OpenAI embeddings to generate a RAG AI Backend plugin for Backstage. It exposes configuration options to configure OpenAI API token and wanted embeddings model, as well as the parameters for the model.
+### Core Responsibilities
 
-## Initialization
-
-```typescript
-const vectorStore = await createRoadiePgVectorStore({ logger, database });
-
-const augmentationIndexer = await initializeOpenAiEmbeddings({
-  logger,
-  catalogApi,
-  auth,
-  vectorStore,
-  discovery,
-  config,
-});
-```
-
->
-
-## Configuration Options
-
-The module expects an API Token, the name of the embeddings generative AI model and its configuration options to be configured via app-config.
-
-You can generate an API Token in here: https://platform.openai.com/api-keys
-
-```yaml
-ai:
-  embeddings:
-    # OpenAI Embeddings configuration
-    openai:
-      # (Optional) The API key for accessing OpenAI services. Defaults to process.env.OPENAI_API_KEY
-      openAiApiKey: 'sk-123...'
-
-      # (Optional) Specify URL of self-hosted OpenAI compliant endpoint. Defaults to OpenAI's public API https://api.openai.com
-      openAiBaseUrl: ''
-
-      # (Optional) Name of the OpenAI model to use to create Embeddings. Defaults to text-embedding-3-large
-      modelName: 'text-embedding-3-large'
-
-      # The size of the batch to use when creating embeddings. Defaults to 512, max is 2048
-      batchSize: 512
-
-      # The number of dimensions to generate. Defaults to use the default value from the chosen model
-      embeddingsDimensions: 3072
-```
-
-<details><summary>Example minimal configuration</summary>
-
-```yaml
-ai:
-  embeddings:
-    openAI: {} # uses env variable OPENAI_API_KEY for API key, model 'text-embedding-3-large' for embeddings creation model
-```
-
-</details>
+- **Backend module registration**: Registers `aiCoreBackendModuleOpenRouter` as an `ai-core` backend module using `createBackendModule`.
+- **Model construction**: Creates one or more validated `ChatOpenRouter` instances from app-config.
+- **Model registry wiring**: Registers stable `ModelDefinition` IDs through `modelExtensionPoint`.
+- **Provider isolation**: Supplies generation models only; retrieval and embeddings remain owned by separate embeddings modules.
 
 ---
 
-Roadie gives you a hassle-free, fully customisable SaaS Backstage. Find out more here: [https://roadie.io](https://roadie.io).
+## Architectural Dependency Tree
+
+This package acts as a model provider module within the broader AI Crew Suite ecosystem:
+
+- **Upstream Interface**: Dependent upon abstract definitions provided in `plugin-ai-core-node`.
+- **Core Consumer**: Registered into `plugin-ai-core-backend` through `modelExtensionPoint`.
+- **Provider Dependency**: Uses `@langchain/openrouter` to create `ChatOpenRouter` model instances.
+- **Companion Modules**: Requires an embeddings module such as `plugin-ai-core-backend-module-openai` or `plugin-ai-core-backend-module-aws` when agents need retrieval-augmented context.
+
+---
+
+## Local Development Workflow
+
+### 1. Prerequisites & Context
+
+This workspace relies on the monorepo's shared **Yarn Plug'n'Play (PnP)** caching layout. Ensure your local editor SDK configuration points directly to the active workspace TypeScript bundle.
+
+### 2. Installation & Builds
+
+Run installation routines and build compilation tracks directly from the monorepo root:
+
+```bash
+# Clean lockfile sync and refresh PnP maps
+yarn install --refresh
+
+# Compile TypeScript declarations into /dist targets
+yarn workspace @webstackbuilders/plugin-ai-core-backend-module-openrouter build
+```
+
+### 3. Running Unit & Integration Tests
+
+Test files are located inline next to the modules they validate (`*.test.ts`). Execute them via:
+
+```bash
+yarn workspace @webstackbuilders/plugin-ai-core-backend-module-openrouter test
+```
+
+---
+
+## Technical Extension Checklist
+
+When modifying or extending code inside this workspace, ensure you update the corresponding global documentation indexes located at `/docs/core-development/` if you alter any of the following operational layers:
+
+- [ ] Modifying core interface schemas or abstract contracts.
+- [ ] Changing OpenRouter config validation, model ID resolution, or model construction options.
+- [ ] Introducing brand-new model adapter configurations.
+- [ ] Altering backend ingestion worker pipelines.
+- [ ] Updating model registration behavior used by agent `modelRef` values.

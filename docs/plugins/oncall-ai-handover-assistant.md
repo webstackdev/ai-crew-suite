@@ -1,10 +1,22 @@
 ---
+layout: default
+title: On-Call Handover Assistant
+parent: Incident Response
 plugin_name: oncall-ai-handover-assistant
-category: Incident Response
 subcategory: Reliability & Incident Management
 ---
 
 # On-Call Handover Assistant
+
+{: .no_toc }
+
+<span class="label label-blue">{{ page.subcategory }}</span>
+
+---
+
+## Overview
+
+This plugin automates the collection of shift events, unresolved alerts, and systemic notes to generate structured summary briefs for incoming on-call engineers.
 
 - **The Task:** Briefing the incoming on-call engineer on the previous shift.
 - **The Logic:** A **LangGraph** agent summarizes the most frequent alerts and service changes from the previous shift.

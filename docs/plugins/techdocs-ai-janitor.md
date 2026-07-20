@@ -1,10 +1,22 @@
 ---
+layout: default
+title: Documentation Janitor
+parent: TechDocs
 plugin_name: techdocs-ai-janitor
-category: TechDocs
 subcategory: Knowledge
 ---
 
 # Documentation Janitor
+
+{: .no_toc }
+
+<span class="label label-blue">{{ page.subcategory }}</span>
+
+---
+
+## Overview
+
+This plugin automatically parses your markdown documentation trees to identify and patch out-of-date setup commands, dead external URLs, and stale code syntax patterns.
 
 Traditional documentation tools evaluate files in structural isolation. While version control system (**VCS**) platforms handle isolated repository workflows well, they lack an overarching organizational context.
 

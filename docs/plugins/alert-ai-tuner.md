@@ -1,10 +1,22 @@
 ---
+layout: default
+title: Alert Fatigue Tuner
+parent: Incident Response
 plugin_name: alert-ai-tuner
-category: Incident Response
 subcategory: Operations
 ---
 
 # Alert Fatigue Tuner
+
+{: .no_toc }
+
+<span class="label label-blue">{{ page.subcategory }}</span>
+
+---
+
+## Overview
+
+This plugin analyzes alerting matrices to suppress noisy or redundant indicators automatically.
 
 - **The Task:** Reducing Alert Fatigue.
 - **The Logic:** An agent monitors your PagerDuty or Opsgenie alerts. If an alert is triggered but consistently closed without any code changes or manual action (false positives), the agent opens a PR to your Terraform repository to tweak the threshold of that specific Prometheus alert.
