@@ -22,8 +22,7 @@
     "role": "backend-plugin-module",
     "pluginId": "ai-core",
     "pluginPackage": [
-      "@webstackbuilders/ai-core-backend",
-      "@webstackbuilders/ai-core-backend-module-quality-scorecards"
+      "@webstackbuilders/plugin-ai-core-backend"
     ]
   },
   "bugs": {

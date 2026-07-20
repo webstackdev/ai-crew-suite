@@ -25,9 +25,8 @@
   "backstage": {
     "role": "backend-plugin-module",
     "pluginId": "ai-core",
-    "pluginPackages": [
-      "@webstackbuilders/plugin-ai-core-backend",
-      "@webstackbuilders/plugin-ai-core-backend-module-pgvector"
+    "pluginPackage": [
+      "@webstackbuilders/plugin-ai-core-backend"
     ]
   },
   "bugs": {

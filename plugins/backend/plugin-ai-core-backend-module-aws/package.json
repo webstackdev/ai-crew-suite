@@ -26,9 +26,8 @@
   "backstage": {
     "role": "backend-plugin-module",
     "pluginId": "ai-core",
-    "pluginPackages": [
-      "@webstackbuilders/ai-core-backend",
-      "@webstackbuilders/ai-core-backend-module-aws"
+    "pluginPackage": [
+      "@webstackbuilders/ai-core-backend"
     ]
   },
   "bugs": {

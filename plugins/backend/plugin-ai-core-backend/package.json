@@ -24,10 +24,7 @@
   },
   "backstage": {
     "role": "backend-plugin",
-    "pluginId": "ai-core",
-    "pluginPackages": [
-      "@webstackbuilders/plugin-ai-core-backend"
-    ]
+    "pluginId": "ai-core"
   },
   "bugs": {
     "url": "https://github.com/webstackdev/ai-crew-suite/issues",

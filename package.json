@@ -49,6 +49,7 @@
   "devDependencies": {
     "@backstage/cli": "backstage:^",
     "@backstage/cli-defaults": "backstage:^",
+    "@backstage/cli-module-new": "backstage:^",
     "@backstage/config": "backstage:^",
     "@backstage/eslint-plugin": "backstage:^",
     "@changesets/cli": "^2.31.0",
