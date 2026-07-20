@@ -78,24 +78,52 @@ module.exports = {
       createConfigForRole(__dirname, 'backend-plugin'),
     ),
     ...scopedOverrides(
-      'plugins/backend/plugin-ai-core-backend-embeddings-aws',
+      'plugins/backend/plugin-ai-core-backend-module-aws',
       createConfigForRole(__dirname, 'backend-plugin-module'),
     ),
     ...scopedOverrides(
-      'plugins/backend/plugin-ai-core-backend-embeddings-openai',
+      'plugins/backend/plugin-ai-core-backend-module-cloud-providers',
       createConfigForRole(__dirname, 'backend-plugin-module'),
     ),
     ...scopedOverrides(
-      'plugins/backend/plugin-ai-core-backend-retrieval-augmenter',
+      'plugins/backend/plugin-ai-core-backend-module-collaboration',
+      createConfigForRole(__dirname, 'backend-plugin-module'),
+    ),
+    ...scopedOverrides(
+      'plugins/backend/plugin-ai-core-backend-module-compliance',
+      createConfigForRole(__dirname, 'backend-plugin-module'),
+    ),
+    ...scopedOverrides(
+      'plugins/backend/plugin-ai-core-backend-module-observability',
+      createConfigForRole(__dirname, 'backend-plugin-module'),
+    ),
+    ...scopedOverrides(
+      'plugins/backend/plugin-ai-core-backend-module-openai',
+      createConfigForRole(__dirname, 'backend-plugin-module'),
+    ),
+    ...scopedOverrides(
+      'plugins/backend/plugin-ai-core-backend-module-openrouter',
+      createConfigForRole(__dirname, 'backend-plugin-module'),
+    ),
+    ...scopedOverrides(
+      'plugins/backend/plugin-ai-core-backend-module-pgvector',
+      createConfigForRole(__dirname, 'backend-plugin-module'),
+    ),
+    ...scopedOverrides(
+      'plugins/backend/plugin-ai-core-backend-module-quality-scorecards',
+      createConfigForRole(__dirname, 'backend-plugin-module'),
+    ),
+    ...scopedOverrides(
+      'plugins/backend/plugin-ai-core-backend-module-retrieval-augmenter',
+      createConfigForRole(__dirname, 'backend-plugin-module'),
+    ),
+    ...scopedOverrides(
+      'plugins/backend/plugin-ai-core-backend-module-vcs',
       createConfigForRole(__dirname, 'backend-plugin-module'),
     ),
     ...scopedOverrides(
       'plugins/backend/plugin-ai-core-node',
       createConfigForRole(__dirname, 'node-library'),
-    ),
-    ...scopedOverrides(
-      'plugins/backend/plugin-ai-core-backend-module-pgvector',
-      createConfigForRole(__dirname, 'backend-plugin-module'),
     ),
     {
       files: ['scripts/**/*.js', 'test/vitest.setup.ts'],

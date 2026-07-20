@@ -5,4 +5,4 @@
  * @packageDocumentation
  */
 
-export { pluginAiCoreModuleQualityScorecards as default } from './module';
+export { aiCoreBackendModuleQualityScorecards as default } from './module';

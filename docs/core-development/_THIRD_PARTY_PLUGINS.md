@@ -1,10 +1,8 @@
 # Third-Party Integration Modules Plan
 
-This document turns the rough third-party plugin notes into an implementation plan for AI Crew Suite integration modules. The goal is not to create one module per vendor. The goal is to create a small number of capability-oriented modules that register stable AI tools while hiding vendor-specific client details behind provider drivers.
+This document is an implementation plan for AI Crew Suite integration modules that handle groups of required sibling plugins with similar functionality, like VCS plugins for GitHub, GitLab, Bitbucket, and Azure DevOps. The goal is to not create one module per vendor and instead to create a small number of capability-oriented modules that register stable AI tools while hiding vendor-specific client details behind provider drivers.
 
-## Executive Decision
-
-Keep the six scaffolded module groups for the first implementation pass:
+## Sibling Plugin Groups
 
 | Module                                      | Primary capability boundary                                                                 | Example vendors and Backstage services                                                                         |
 | ------------------------------------------- | ------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
@@ -17,22 +15,9 @@ Keep the six scaffolded module groups for the first implementation pass:
 
 Do not scaffold additional modules yet. The six groups are broad enough for the immediate agent ideas and let us avoid premature package sprawl. Revisit grouping only after one real workflow forces a capability that does not naturally fit these boundaries.
 
-Backstage core services should not become their own module group yet. Catalog, TechDocs, Search, Scaffolder, Kubernetes, permissions, and URL reading are platform dependencies used by the six modules where appropriate.
+Backstage core services should not become their own module group yet. Catalog, TechDocs, Search, Scaffolder, Kubernetes, permissions, and URL reading are platform dependencies used by the six modules and the new AI agentic workflow plugins where appropriate.
 
-## Current Scaffold Normalization Required
-
-The newly scaffolded packages are placeholders. Before implementation, normalize them to match the existing AI Core package conventions.
-
-| Package              | Required normalization                                                                                                                                                                                                                                                              |
-| -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `cloud-providers`    | Rename package from `@webstackbuilders/backstage-plugin-ai-core-backend-module-cloud-providers` to `@webstackbuilders/plugin-ai-core-backend-module-cloud-providers`; set Backstage `pluginId` to `ai-core`; use module export naming `aiCoreBackendModuleCloudProviders`.          |
-| `collaboration`      | Rename package from `@webstackbuilders/backstage-plugin-ai-core-backend-module-collaboration` to `@webstackbuilders/plugin-ai-core-backend-module-collaboration`; set Backstage `pluginId` to `ai-core`; use module export naming `aiCoreBackendModuleCollaboration`.               |
-| `compliance`         | Rename package from `@webstackbuilders/backstage-plugin-ai-core-backend-module-compliance` to `@webstackbuilders/plugin-ai-core-backend-module-compliance`; set Backstage `pluginId` to `ai-core`; use module export naming `aiCoreBackendModuleCompliance`.                        |
-| `observability`      | Rename package from `@webstackbuilders/backstage-plugin-ai-core-backend-module-observability` to `@webstackbuilders/plugin-ai-core-backend-module-observability`; set Backstage `pluginId` to `ai-core`; use module export naming `aiCoreBackendModuleObservability`.               |
-| `quality-scorecards` | Rename package from `@webstackbuilders/backstage-plugin-ai-core-backend-module-quality-scorecards` to `@webstackbuilders/plugin-ai-core-backend-module-quality-scorecards`; set Backstage `pluginId` to `ai-core`; use module export naming `aiCoreBackendModuleQualityScorecards`. |
-| `vcs`                | Package and `pluginId` are closer to target. Still align scripts, dependencies, default export style, and tests with existing AI Core modules.                                                                                                                                      |
-
-All six modules should use `createBackendModule({ pluginId: 'ai-core', moduleId: '<category>' })` and register tools through `toolExtensionPoint` from `@webstackbuilders/plugin-ai-core-node`.
+All six modules should register tools through `toolExtensionPoint` from `@webstackbuilders/plugin-ai-core-node`.
 
 ## Architecture Model
 
@@ -286,7 +271,7 @@ Implementation notes:
 
 ## Backstage Core Plugin Dependencies
 
-Backstage core plugins are cross-cutting dependencies, not separate AI tool-pack modules yet.
+Backstage core plugins are cross-cutting dependencies, not separate AI tool-pack modules yet. This is included here for reference - there is no implementation planned for the Core Plugin Dependencies at present, so skip this.
 
 | Backstage capability | Planned usage                                                                                                      |
 | -------------------- | ------------------------------------------------------------------------------------------------------------------ |
@@ -300,7 +285,7 @@ Backstage core plugins are cross-cutting dependencies, not separate AI tool-pack
 
 ## Agent Workflow Fit
 
-The six modules cover the known workflow ideas without requiring one package per vendor.
+The six modules cover the known workflow ideas without requiring one package per vendor. This is included here for reference, so skip this.
 
 | Workflow idea             | Modules involved                                                          |
 | ------------------------- | ------------------------------------------------------------------------- |
@@ -317,7 +302,6 @@ The six modules cover the known workflow ideas without requiring one package per
 
 ### Phase 0: Normalize Scaffolds
 
-- Fix package names, Backstage `pluginId`, module export names, root TypeScript references, and workspace package scripts.
 - Add direct dependencies on `@webstackbuilders/plugin-ai-core-node` and any Backstage service packages each module actually uses.
 - Convert generated Jest-style package test scripts to the repo's Vitest pattern when tests are added.
 - Add minimal README files using the internal core-plugin developer template.
@@ -393,6 +377,4 @@ Cross-module workflow tests should live closer to the agent/workflow package tha
 
 ## Open Planning Questions
 
-No additional scaffolds are needed before implementation. The only grouping question to revisit soon is whether messaging should stay inside `collaboration` once interactive chat/bot behavior appears. For now, keep Slack/Teams-style posting with collaboration because the first workflows need outbound coordination, not a full bot runtime.
-
-The other likely future split is cost. Start cost estimation in `compliance` when it is policy/FinOps validation. Move cost inventory into `cloud-providers` if it becomes provider-resource analysis. Create a dedicated cost module only if both sides grow into substantial implementations.
+The likely future decision to make for additional additional plugins involves cost. Start cost estimation in `compliance` when it is policy/FinOps validation. Move cost inventory into `cloud-providers` if it becomes provider-resource analysis. Create a dedicated cost module only if both sides grow into substantial implementations.

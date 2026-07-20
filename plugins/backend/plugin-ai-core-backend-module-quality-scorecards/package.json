@@ -38,6 +38,7 @@
     "dist",
     "config.d.ts"
   ],
+  "configSchema": "config.d.ts",
   "scripts": {
     "start": "backstage-cli package start",
     "build": "yarn --cwd ../../.. tsc -b plugins/backend/plugin-ai-core-backend-module-quality-scorecards/tsconfig.json --emitDeclarationOnly && backstage-cli package build",
@@ -49,7 +50,10 @@
     "test": "vitest run src --exclude 'dist-types/**' --passWithNoTests"
   },
   "dependencies": {
-    "@backstage/backend-plugin-api": "backstage:^"
+    "@backstage/backend-plugin-api": "backstage:^",
+    "@backstage/config": "backstage:^",
+    "@webstackbuilders/plugin-ai-core-node": "workspace:^",
+    "vitest": "^4.1.10"
   },
   "devDependencies": {
     "@backstage/backend-test-utils": "backstage:^",

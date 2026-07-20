@@ -5,4 +5,4 @@
  * @packageDocumentation
  */
 
-export { pluginAiCoreModuleObservability as default } from './module';
+export { aiCoreBackendModuleObservability as default } from './module';

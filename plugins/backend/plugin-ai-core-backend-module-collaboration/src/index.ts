@@ -5,4 +5,4 @@
  * @packageDocumentation
  */
 
-export { pluginAiCoreModuleCollaboration as default } from './module';
+export { aiCoreBackendModuleCollaboration as default } from './module';

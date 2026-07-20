@@ -5,4 +5,4 @@
  * @packageDocumentation
  */
 
-export { pluginAiCoreModuleCloudProviders as default } from './module';
+export { aiCoreBackendModuleCloudProviders as default } from './module';

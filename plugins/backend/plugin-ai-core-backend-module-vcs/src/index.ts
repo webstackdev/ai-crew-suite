@@ -5,4 +5,4 @@
  * @packageDocumentation
  */
 
-export { aiCoreModuleVcs as default } from './module';
+export { aiCoreBackendModuleVcs as default } from './module';

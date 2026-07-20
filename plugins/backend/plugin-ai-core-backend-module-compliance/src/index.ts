@@ -5,4 +5,4 @@
  * @packageDocumentation
  */
 
-export { pluginAiCoreModuleCompliance as default } from './module';
+export { aiCoreBackendModuleCompliance as default } from './module';
