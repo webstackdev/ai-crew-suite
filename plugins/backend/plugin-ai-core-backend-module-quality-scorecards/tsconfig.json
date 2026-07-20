@@ -1,0 +1,7 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "../../../dist-types/plugins/backend/ai-core-backend"
+  },
+  "include": ["src/**/*"]
+}

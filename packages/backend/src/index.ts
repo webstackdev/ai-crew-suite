@@ -1,9 +1,17 @@
 /*
- * Hi!
+ * Copyright 2026 Webstack Builders, Inc.
  *
- * Note that this is an EXAMPLE Backstage backend. Please check the README.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * Happy hacking!
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 import { createBackend } from '@backstage/backend-defaults';
@@ -75,5 +83,12 @@ backend.add(loadBackendFeature(import('@backstage/plugin-signals-backend')));
 
 // mcp actions plugin
 backend.add(loadBackendFeature(import('@backstage/plugin-mcp-actions-backend')));
+
+backend.add(import('@webstackbuilders/plugin-ai-core-backend-module-vcs'));
+backend.add(import('@webstackbuilders/plugin-ai-core-backend-module-observability'));
+backend.add(import('@webstackbuilders/plugin-ai-core-backend-module-compliance'));
+backend.add(import('@webstackbuilders/plugin-ai-core-backend-module-cloud-providers'));
+backend.add(import('@webstackbuilders/plugin-ai-core-backend-module-collaboration'));
+backend.add(import('@webstackbuilders/plugin-ai-core-backend-module-quality-scorecards'));
 
 backend.start();
