@@ -18,11 +18,11 @@ import {
   type ExtensionDefinition,
   type FrontendFeature,
 } from '@backstage/frontend-plugin-api';
-import { ragAiApiExtension } from './extensions/api.js';
+import { ragAiApiExtension } from './extensions/api';
 import {
   ragModalExtension,
   sidebarRagModalExtension,
-} from './extensions/components.js';
+} from './extensions/components';
 
 const extension = (value: unknown): ExtensionDefinition =>
   value as ExtensionDefinition;

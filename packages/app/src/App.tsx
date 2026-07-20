@@ -18,7 +18,7 @@ import type { FrontendFeature } from '@backstage/frontend-plugin-api';
 import catalogPlugin from '@backstage/plugin-catalog/alpha';
 import notificationsPlugin from '@backstage/plugin-notifications/alpha';
 import searchPlugin from '@backstage/plugin-search/alpha';
-import { ragAiPlugin } from '@webstackbuilders/plugin-ai-crew-suite';
+import ragAiPlugin from '@webstackbuilders/plugin-ai-crew-suite/alpha';
 import { navModule } from './modules/nav';
 
 const features: FrontendFeature[] = [
@@ -26,7 +26,7 @@ const features: FrontendFeature[] = [
   notificationsPlugin as FrontendFeature,
   searchPlugin as FrontendFeature,
   navModule as FrontendFeature,
-  ragAiPlugin as FrontendFeature,
+  ragAiPlugin,
 ];
 
 const app = createApp({

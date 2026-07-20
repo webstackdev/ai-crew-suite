@@ -21,10 +21,7 @@
   },
   "backstage": {
     "role": "frontend-plugin",
-    "pluginId": "ai-crew-suite",
-    "pluginPackages": [
-      "@webstackbuilders/plugin-ai-crew-suite"
-    ]
+    "pluginId": "ai-crew-suite"
   },
   "bugs": {
     "url": "https://github.com/webstackdev/ai-crew-suite/issues",

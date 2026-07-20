@@ -47,6 +47,7 @@
     "@material-ui/icons": "^4.9.1",
     "@mui/material": "^7.3.2",
     "@rjsf/utils": "^6.6.2",
+    "@webstackbuilders/plugin-ai-crew-suite": "workspace:^",
     "__backstage-module-federation-runtime-shared-dependencies__": "portal:../../internal/module-federation-runtime-shared-dependencies",
     "i18next": "^22.5.1",
     "prop-types": "^15.8.1",

@@ -24,7 +24,8 @@ export const ragModalExtension = PageBlueprint.make({
     title: 'AI Crew Suite',
     routeRef: rootRouteRef,
     loader: () =>
-      import('../components/RagModal/index.js').then(m =>
+      // @ts-expect-error - NodeNext requires explicit .js extension, but webpack PnP cannot resolve .js to .ts source
+      import('../components/RagModal').then(m =>
         React.createElement(m.UncontrolledRagModal),
       ),
   },
@@ -36,7 +37,8 @@ export const sidebarRagModalExtension = PageBlueprint.make({
     path: '/ai-crew-suite/sidebar',
     title: 'AI Crew Suite Sidebar',
     loader: () =>
-      import('../components/RagModal/index.js').then(m =>
+      // @ts-expect-error - NodeNext requires explicit .js extension, but webpack PnP cannot resolve .js to .ts source
+      import('../components/RagModal').then(m =>
         React.createElement(m.SidebarRagModal),
       ),
   },
