@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 export { AzureDriver } from './azure';
+export { BitbucketDriver } from './bitbucket';
 export { GitHubDriver } from './github';
 export { GitLabDriver } from './gitlab';
 export type {
