@@ -106,6 +106,15 @@ export interface VcsDriver {
 }
 
 /**
+ * Azure DevOps driver configuration parameters.
+ */
+export type AzureDriverOptions = {
+  urlReader: UrlReaderService;
+  logger: LoggerService;
+  integrations: ScmIntegrations;
+};
+
+/**
  * GitHub driver configuration parameters.
  */
 export type GitHubDriverOptions = {

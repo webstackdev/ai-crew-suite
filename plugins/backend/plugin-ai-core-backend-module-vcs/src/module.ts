@@ -20,7 +20,11 @@ import {
 import { ScmIntegrations, DefaultGithubCredentialsProvider } from '@backstage/integration';
 import { toolExtensionPoint } from '@webstackbuilders/plugin-ai-core-node';
 import { readVcsConfig } from './config';
-import { GitHubDriver, VcsDriver } from './providers';
+import {
+  AzureDriver,
+  GitHubDriver,
+  VcsDriver,
+} from './providers';
 import { createVcsTools } from './tools';
 
 /**
@@ -62,12 +66,16 @@ export const aiCoreBackendModuleVcs = createBackendModule({
               credentialsProvider: githubCredentialsProvider,
             });
             break;
+          case 'azuredevops':
+            driver = new AzureDriver({
+              urlReader,
+              logger: logger.child({ label: 'vcs-azuredevops' }),
+              integrations,
+            });
+            break;
           case 'gitlab':
           case 'bitbucket':
-          case 'azuredevops':
-            throw new Error(
-              `VCS provider '${vcsConfig.provider}' is not implemented yet`,
-            );
+            throw new Error(`VCS provider '${vcsConfig.provider}' is not implemented yet`);
           default: {
             const exhaustive: never = vcsConfig.provider;
             throw new Error(`Unsupported VCS provider: ${exhaustive}`);

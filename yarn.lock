@@ -13980,6 +13980,7 @@ __metadata:
     "@backstage/plugin-scaffolder-node": "backstage:^"
     "@octokit/rest": "npm:^22.0.1"
     "@webstackbuilders/plugin-ai-core-node": "workspace:^"
+    azure-devops-node-api: "npm:15.1.2"
     git-url-parse: "npm:^16.1.0"
     vitest: "npm:^4.1.10"
   languageName: unknown
@@ -15079,6 +15080,16 @@ __metadata:
   version: 4.1.0
   resolution: "axobject-query@npm:4.1.0"
   checksum: 10c0/c470e4f95008f232eadd755b018cb55f16c03ccf39c027b941cd8820ac6b68707ce5d7368a46756db4256fbc91bb4ead368f84f7fb034b2b7932f082f6dc0775
+  languageName: node
+  linkType: hard
+
+"azure-devops-node-api@npm:15.1.2":
+  version: 15.1.2
+  resolution: "azure-devops-node-api@npm:15.1.2"
+  dependencies:
+    tunnel: "npm:0.0.6"
+    typed-rest-client: "npm:2.1.0"
+  checksum: 10c0/82cbce9eb45d191ac658eacb1a8117d848832975a4e6693cecf6467384b66bc320d7bdc59e629421a84779fcdb54c435327c8ca9a545137fe89560a35a8e84d6
   languageName: node
   linkType: hard
 
@@ -17875,7 +17886,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"des.js@npm:^1.0.0":
+"des.js@npm:^1.0.0, des.js@npm:^1.1.0":
   version: 1.1.0
   resolution: "des.js@npm:1.1.0"
   dependencies:
@@ -23283,6 +23294,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"js-md4@npm:^0.3.2":
+  version: 0.3.2
+  resolution: "js-md4@npm:0.3.2"
+  checksum: 10c0/8313e00c45f710a53bdadc199c095b48ebaf54ea7b8cdb67a3f1863c270a5e9d0f89f204436b73866002af8c7ac4cacc872fdf271fc70e26614e424c7685b577
+  languageName: node
+  linkType: hard
+
 "js-tiktoken@npm:^1.0.12":
   version: 1.0.21
   resolution: "js-tiktoken@npm:1.0.21"
@@ -28543,7 +28561,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"qs@npm:^6.12.3, qs@npm:^6.14.0, qs@npm:^6.14.1, qs@npm:^6.15.0, qs@npm:^6.15.2, qs@npm:^6.4.0, qs@npm:~6.15.1":
+"qs@npm:^6.10.3, qs@npm:^6.12.3, qs@npm:^6.14.0, qs@npm:^6.14.1, qs@npm:^6.15.0, qs@npm:^6.15.2, qs@npm:^6.4.0, qs@npm:~6.15.1":
   version: 6.15.3
   resolution: "qs@npm:6.15.3"
   dependencies:
@@ -32833,6 +32851,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"tunnel@npm:0.0.6":
+  version: 0.0.6
+  resolution: "tunnel@npm:0.0.6"
+  checksum: 10c0/e27e7e896f2426c1c747325b5f54efebc1a004647d853fad892b46d64e37591ccd0b97439470795e5262b5c0748d22beb4489a04a0a448029636670bfd801b75
+  languageName: node
+  linkType: hard
+
 "turbo@npm:^2.10.5":
   version: 2.10.5
   resolution: "turbo@npm:2.10.5"
@@ -33001,6 +33026,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"typed-rest-client@npm:2.1.0":
+  version: 2.1.0
+  resolution: "typed-rest-client@npm:2.1.0"
+  dependencies:
+    des.js: "npm:^1.1.0"
+    js-md4: "npm:^0.3.2"
+    qs: "npm:^6.10.3"
+    tunnel: "npm:0.0.6"
+    underscore: "npm:^1.12.1"
+  checksum: 10c0/b9d29db5217b6d3d0ae9aa68e87e84be8c2d885e7a932f4df3eca070bb615ded5f390035f26857996911803830d28ba2296d6cb748072dbc6d8657916107132d
+  languageName: node
+  linkType: hard
+
 "typedarray@npm:^0.0.6":
   version: 0.0.6
   resolution: "typedarray@npm:0.0.6"
@@ -33115,7 +33153,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"underscore@npm:^1.13.3, underscore@npm:~1.13.2":
+"underscore@npm:^1.12.1, underscore@npm:^1.13.3, underscore@npm:~1.13.2":
   version: 1.13.8
   resolution: "underscore@npm:1.13.8"
   checksum: 10c0/6677688daeda30484823e77c0b89ce4dcf29964a77d5a06f37299c007ab4bb1c66a0ff75e0d274620b62a1fe2a6ba29879f8214533ca611d71a1ae504f2bfc9b
