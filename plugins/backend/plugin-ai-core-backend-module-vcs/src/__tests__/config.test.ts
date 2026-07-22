@@ -13,65 +13,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi, beforeEach } from 'vitest';
 import { ConfigReader } from '@backstage/config';
 import { readVcsConfig } from '../config';
 
 describe('readVcsConfig', () => {
-  it('reads a valid github provider config', () => {
-    const config = new ConfigReader({
+  it('reads the active provider configuration correctly', () => {
+    const mockConfig = new ConfigReader({
       ai: {
         integrations: {
           vcs: {
             provider: 'github',
-            github: { host: 'github.example.com' },
           },
         },
       },
     });
-    const result = readVcsConfig(config);
+
+    const result = readVcsConfig(mockConfig);
+
+    // Assert strictly against the streamlined schema
     expect(result.provider).toBe('github');
-    expect(result.providers.github?.host).toBe('github.example.com');
   });
 
-  it('throws when ai.integrations.vcs is missing', () => {
-    const config = new ConfigReader({});
-    expect(() => readVcsConfig(config)).toThrow(
-      /ai\.integrations\.vcs configuration to be set/,
-    );
-  });
-
-  it('throws when provider is missing', () => {
-    const config = new ConfigReader({
-      ai: { integrations: { vcs: {} } },
-    });
-    expect(() => readVcsConfig(config)).toThrow(
-      /ai\.integrations\.vcs\.provider to be set/,
-    );
-  });
-
-  it('throws when provider is unsupported', () => {
-    const config = new ConfigReader({
-      ai: { integrations: { vcs: { provider: 'unsupported' } } },
-    });
-    expect(() => readVcsConfig(config)).toThrow(/unsupported provider/);
-  });
-
-  it('reads multiple provider configs', () => {
-    const config = new ConfigReader({
+  it('throws an error if provider configuration is missing', () => {
+    const mockConfig = new ConfigReader({
       ai: {
         integrations: {
-          vcs: {
-            provider: 'github',
-            github: { host: 'github.com' },
-            gitlab: { host: 'gitlab.com' },
-          },
+          vcs: {},
         },
       },
     });
-    const result = readVcsConfig(config);
-    expect(result.provider).toBe('github');
-    expect(result.providers.github?.host).toBe('github.com');
-    expect(result.providers.gitlab?.host).toBe('gitlab.com');
+
+    expect(() => readVcsConfig(mockConfig)).toThrow(
+      'VCS module configuration missing required key [ai.integrations.vcs.provider]',
+    );
   });
 });

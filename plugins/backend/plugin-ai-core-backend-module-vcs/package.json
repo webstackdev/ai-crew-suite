@@ -1,6 +1,6 @@
 {
   "name": "@webstackbuilders/plugin-ai-core-backend-module-vcs",
-  "description": "The vcs backend module for the ai-core plugin.",
+  "description": "The VCS interface backend module for the ai-core plugin.",
   "version": "0.0.1",
   "main": "src/index.ts",
   "types": "src/index.ts",
@@ -11,7 +11,13 @@
     "backend",
     "webstack-builders",
     "ai-crew-suite",
-    "ai-core"
+    "ai-core",
+    "vcs",
+    "GitHub",
+    "GitLab",
+    "Bitbucket",
+    "Azure DevOps",
+    "git"
   ],
   "publishConfig": {
     "access": "public",
@@ -52,7 +58,11 @@
   "dependencies": {
     "@backstage/backend-plugin-api": "backstage:^",
     "@backstage/config": "backstage:^",
+    "@backstage/integration": "backstage:^",
+    "@backstage/plugin-scaffolder-node": "backstage:^",
+    "@octokit/rest": "^22.0.1",
     "@webstackbuilders/plugin-ai-core-node": "workspace:^",
+    "git-url-parse": "^16.1.0",
     "vitest": "^4.1.10"
   },
   "devDependencies": {

@@ -18,6 +18,5 @@ export type {
   RepositoryMetadata,
   RepositorySearchResult,
   VcsDriver,
-} from './types';
+} from '../@types';
 export { GitHubDriver } from './github';
-export type { GitHubDriverConfig } from './github';
