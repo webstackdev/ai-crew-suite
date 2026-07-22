@@ -65,6 +65,7 @@
     "@webstackbuilders/plugin-ai-core-node": "workspace:^",
     "azure-devops-node-api": "15.1.2",
     "git-url-parse": "^16.1.0",
+    "node-fetch": "^3.3.2",
     "vitest": "^4.1.10"
   },
   "devDependencies": {

@@ -21,7 +21,13 @@ import { ScmIntegrations, DefaultGithubCredentialsProvider } from '@backstage/in
 import { toolExtensionPoint } from '@webstackbuilders/plugin-ai-core-node';
 import { readVcsConfig } from './config';
 import { vcsDriversExtensionPoint } from './extensions';
-import { GitHubDriver, AzureDriver, GitLabDriver, VcsDriver } from './providers';
+import {
+  AzureDriver,
+  BitbucketDriver,
+  GitHubDriver,
+  GitLabDriver,
+  VcsDriver,
+} from './providers';
 import { createVcsTools } from './tools';
 
 export const aiCoreBackendModuleVcs = createBackendModule({
@@ -52,12 +58,14 @@ export const aiCoreBackendModuleVcs = createBackendModule({
         const githubCredentialsProvider = DefaultGithubCredentialsProvider.fromIntegrations(integrations);
 
         // Natively bundle your core drivers right out of the box
-        const github = new GitHubDriver({ urlReader, logger, integrations, credentialsProvider: githubCredentialsProvider });
         const azure = new AzureDriver({ urlReader, logger, integrations });
+        const bitbucket = new BitbucketDriver({ urlReader, logger, integrations });
+        const github = new GitHubDriver({ urlReader, logger, integrations, credentialsProvider: githubCredentialsProvider });
         const gitlab = new GitLabDriver({ urlReader, logger, integrations });
 
-        drivers.set(github.providerId, github);
         drivers.set(azure.providerId, azure);
+        drivers.set(bitbucket.providerId, bitbucket);
+        drivers.set(github.providerId, github);
         drivers.set(gitlab.providerId, gitlab);
 
         // Dynamically extract the configured provider targeting your agents
