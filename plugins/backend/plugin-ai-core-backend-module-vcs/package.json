@@ -62,6 +62,7 @@
     "@backstage/plugin-scaffolder-node": "backstage:^",
     "@octokit/rest": "^22.0.1",
     "@webstackbuilders/plugin-ai-core-node": "workspace:^",
+    "azure-devops-node-api": "15.1.2",
     "git-url-parse": "^16.1.0",
     "vitest": "^4.1.10"
   },

@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+export { AzureDriver } from './azure';
+export { GitHubDriver } from './github';
 export type {
   PullRequestSummary,
   RepositoryMetadata,
   RepositorySearchResult,
   VcsDriver,
 } from '../@types';
-export { GitHubDriver } from './github';
