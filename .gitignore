@@ -24,6 +24,7 @@ Log.txt
 .env.production.local
 *.local.yaml
 app-config.local.yaml
+.clinerules
 
 # ==========================================
 # 3. Build Outputs & Compiled Code

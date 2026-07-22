@@ -17,6 +17,7 @@ import {
   coreServices,
   createBackendModule,
 } from '@backstage/backend-plugin-api';
+import { ScmIntegrations, DefaultGithubCredentialsProvider } from '@backstage/integration';
 import { toolExtensionPoint } from '@webstackbuilders/plugin-ai-core-node';
 import { readVcsConfig } from './config';
 import { GitHubDriver, VcsDriver } from './providers';
@@ -24,12 +25,6 @@ import { createVcsTools } from './tools';
 
 /**
  * VCS backend module for the AI Core backend plugin.
- *
- * The module contributes stable, provider-neutral repository and pull request
- * tools to the AI tool registry. Provider-specific behavior is selected through
- * `ai.integrations.vcs` configuration and hidden behind a `VcsDriver`
- * implementation. The first pass ships a GitHub driver that delegates file
- * reads to the Backstage `UrlReaderService`.
  *
  * @public
  */
@@ -50,13 +45,21 @@ export const aiCoreBackendModuleVcs = createBackendModule({
           `Initializing VCS module with provider '${vcsConfig.provider}'`,
         );
 
+        // Natively instantiate the SCM manager using the core root configuration
+        const integrations = ScmIntegrations.fromConfig(config);
+
+        // Feed the integrations instance into the credentials factory method
+        const githubCredentialsProvider = DefaultGithubCredentialsProvider.fromIntegrations(integrations);
+
+
         let driver: VcsDriver;
         switch (vcsConfig.provider) {
           case 'github':
             driver = new GitHubDriver({
               urlReader,
               logger: logger.child({ label: 'vcs-github' }),
-              config: vcsConfig.providers.github,
+              integrations,
+              credentialsProvider: githubCredentialsProvider,
             });
             break;
           case 'gitlab':

@@ -14,18 +14,7 @@
  * limitations under the License.
  */
 import { Config } from '@backstage/config';
-
-export type VcsProviderId = 'github' | 'gitlab' | 'bitbucket' | 'azuredevops';
-
-export type VcsProviderConfig = {
-  host?: string;
-  apiBaseUrl?: string;
-};
-
-export type VcsConfig = {
-  provider: VcsProviderId;
-  providers: Partial<Record<VcsProviderId, VcsProviderConfig>>;
-};
+import type { VcsProviderId, VcsConfig } from './@types';
 
 const SUPPORTED_PROVIDERS: readonly VcsProviderId[] = [
   'github',
@@ -38,12 +27,16 @@ const isVcsProviderId = (value: unknown): value is VcsProviderId =>
   typeof value === 'string' &&
   (SUPPORTED_PROVIDERS as readonly string[]).includes(value);
 
+/**
+ * Extracts the active VCS routing keys from application configs.
+ * Relies entirely on root SCM parameters for structural credentials.
+ */
 export const readVcsConfig = (config: Config): VcsConfig => {
   const vcsConfig = config.getOptionalConfig('ai.integrations.vcs');
 
   if (!vcsConfig) {
     throw new Error(
-      'VCS module requires ai.integrations.vcs configuration to be set',
+      'VCS module requires configuration parameters at [ai.integrations.vcs]',
     );
   }
 
@@ -51,27 +44,15 @@ export const readVcsConfig = (config: Config): VcsConfig => {
 
   if (!provider) {
     throw new Error(
-      'VCS module requires ai.integrations.vcs.provider to be set',
+      'VCS module configuration missing required key [ai.integrations.vcs.provider]',
     );
   }
 
   if (!isVcsProviderId(provider)) {
     throw new Error(
-      `VCS module received unsupported provider '${provider}'. Supported providers: ${SUPPORTED_PROVIDERS.join(', ')}`,
+      `Unsupported VCS provider matching key: '${provider}'. Valid configurations: ${SUPPORTED_PROVIDERS.join(', ')}`,
     );
   }
 
-  const providers: Partial<Record<VcsProviderId, VcsProviderConfig>> = {};
-
-  for (const candidate of SUPPORTED_PROVIDERS) {
-    const providerConfig = vcsConfig.getOptionalConfig(candidate);
-    if (providerConfig) {
-      providers[candidate] = {
-        host: providerConfig.getOptionalString('host'),
-        apiBaseUrl: providerConfig.getOptionalString('apiBaseUrl'),
-      };
-    }
-  }
-
-  return { provider, providers };
+  return { provider };
 };

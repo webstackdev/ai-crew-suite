@@ -13,6 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import {
+  LoggerService,
+  UrlReaderService,
+} from '@backstage/backend-plugin-api';
+import type {
+  ScmIntegrations,
+  GithubCredentialsProvider,
+} from '@backstage/integration';
+
+/** Valid active VCS identifiers supported natively by the ecosystem. */
+export type VcsProviderId = 'github' | 'gitlab' | 'bitbucket' | 'azuredevops';
+
+export type VcsConfig = {
+  /** The actively selected active driver for tools fallback routing. */
+  provider: VcsProviderId;
+};
 
 /**
  * Normalized repository metadata returned by VCS drivers.
@@ -88,3 +104,13 @@ export interface VcsDriver {
   /** Returns active pull requests for a repository. */
   listPullRequests(repoUrl: string): Promise<PullRequestSummary[]>;
 }
+
+/**
+ * GitHub driver configuration parameters.
+ */
+export type GitHubDriverOptions = {
+  urlReader: UrlReaderService;
+  logger: LoggerService;
+  integrations: ScmIntegrations;
+  credentialsProvider: GithubCredentialsProvider;
+};

@@ -14,71 +14,141 @@
  * limitations under the License.
  */
 import { LoggerService, UrlReaderService } from '@backstage/backend-plugin-api';
+import { ScmIntegrations, GithubCredentialsProvider, GithubIntegration } from '@backstage/integration';
+import { Octokit } from '@octokit/rest';
 import {
   PullRequestSummary,
   RepositoryMetadata,
   RepositorySearchResult,
   VcsDriver,
-} from './types';
+} from '../@types';
 
-export type GitHubDriverConfig = {
-  host?: string;
-  apiBaseUrl?: string;
+export type GitHubDriverOptions = {
+  urlReader: UrlReaderService;
+  logger: LoggerService;
+  integrations: ScmIntegrations;
+  credentialsProvider: GithubCredentialsProvider;
 };
 
 export class GitHubDriver implements VcsDriver {
   readonly providerId = 'github';
   private readonly urlReader: UrlReaderService;
   private readonly logger: LoggerService;
-  private readonly host: string;
+  private readonly integrations: ScmIntegrations;
+  private readonly credentialsProvider: GithubCredentialsProvider;
 
-  constructor(opts: {
-    urlReader: UrlReaderService;
-    logger: LoggerService;
-    config?: GitHubDriverConfig;
-  }) {
+  constructor(opts: GitHubDriverOptions) {
     this.urlReader = opts.urlReader;
     this.logger = opts.logger;
-    this.host = opts.config?.host ?? 'github.com';
+    this.integrations = opts.integrations;
+    this.credentialsProvider = opts.credentialsProvider;
+  }
+
+  private async getClientForRepo(repoUrl: string): Promise<{ octokit: Octokit; integration: GithubIntegration; owner: string; repo: string }> {
+    const integration = this.integrations.github.byUrl(repoUrl);
+    if (!integration) {
+      throw new Error(`No GitHub integration found configured for URL: ${repoUrl}`);
+    }
+
+    let owner: string;
+    let repo: string;
+
+    try {
+      const urlObj = new URL(repoUrl);
+      const pathParts = urlObj.pathname.split('/').filter(Boolean);
+
+      if (pathParts.length < 2) {
+        throw new Error();
+      }
+
+      owner = pathParts[0];
+      repo = pathParts[1].replace(/\.git$/, '');
+    } catch {
+      throw new Error(`GitHubDriver could not parse repository URL: ${repoUrl}`);
+    }
+
+    const { token } = await this.credentialsProvider.getCredentials({
+      url: repoUrl,
+    });
+
+    const octokit = new Octokit({
+      auth: token,
+      baseUrl: integration.config.apiBaseUrl,
+    });
+
+    return { octokit, integration, owner, repo };
   }
 
   async getRepositoryMetadata(repoUrl: string): Promise<RepositoryMetadata> {
-    const parsed = this.parseRepoUrl(repoUrl);
+    const { octokit, owner, repo } = await this.getClientForRepo(repoUrl);
+    const { data } = await octokit.repos.get({ owner, repo });
+
     return {
-      owner: parsed.owner,
-      name: parsed.name,
-      defaultBranch: 'main',
+      owner,
+      name: repo,
+      defaultBranch: data.default_branch,
       provider: this.providerId,
       url: repoUrl,
     };
   }
 
   async readFile(repoUrl: string, path: string, ref?: string): Promise<string> {
-    const parsed = this.parseRepoUrl(repoUrl);
-    const refSegment = ref ? `?ref=${encodeURIComponent(ref)}` : '';
-    const fileUrl = `https://${this.host}/${parsed.owner}/${parsed.name}/blob/${ref ?? 'HEAD'}/${path.replace(/^\//, '')}${refSegment}`;
-    this.logger.debug(`GitHubDriver reading ${fileUrl}`);
-    const response = await this.urlReader.readUrl(fileUrl);
+    const integration = this.integrations.github.byUrl(repoUrl);
+    if (!integration) {
+      throw new Error(`No GitHub integration found configured for URL: ${repoUrl}`);
+    }
+
+    let owner: string;
+    let repo: string;
+
+    try {
+      const urlObj = new URL(repoUrl);
+      const pathParts = urlObj.pathname.split('/').filter(Boolean);
+      if (pathParts.length < 2) throw new Error();
+      owner = pathParts[0];
+      repo = pathParts[1].replace(/\.git$/, '');
+    } catch {
+      throw new Error(`GitHubDriver could not parse repository URL: ${repoUrl}`);
+    }
+
+    const cleanPath = path.replace(/^\//, '');
+    const host = integration.config.host ?? 'github.com';
+    const targetUrl = `https://${host}/${owner}/${repo}/blob/${ref ?? 'HEAD'}/${cleanPath}`;
+
+    this.logger.debug(`GitHubDriver reading via UrlReader: ${targetUrl}`);
+    const response = await this.urlReader.readUrl(targetUrl);
     const buffer = await response.buffer();
     return buffer.toString('utf8');
   }
 
-  async searchRepository(
-    _repoUrl: string,
-    _query: string,
-  ): Promise<RepositorySearchResult[]> {
-    return [];
+  async searchRepository(repoUrl: string, query: string): Promise<RepositorySearchResult[]> {
+    const { octokit, owner, repo } = await this.getClientForRepo(repoUrl);
+    const q = `${query} repo:${owner}/${repo}`;
+    const { data } = await octokit.search.code({ q });
+
+    return data.items.map(item => ({
+      path: item.path,
+      url: item.html_url,
+    }));
   }
 
-  async listPullRequests(_repoUrl: string): Promise<PullRequestSummary[]> {
-    return [];
-  }
+  async listPullRequests(repoUrl: string): Promise<PullRequestSummary[]> {
+    const { octokit, owner, repo } = await this.getClientForRepo(repoUrl);
+    const { data } = await octokit.pulls.list({
+      owner,
+      repo,
+      state: 'open',
+      per_page: 20,
+    });
 
-  private parseRepoUrl(repoUrl: string): { owner: string; name: string } {
-    const match = repoUrl.match(/github\.com[/:]([^/]+)\/([^/.]+)/i);
-    if (!match) {
-      throw new Error(`GitHubDriver could not parse repository URL: ${repoUrl}`);
-    }
-    return { owner: match[1], name: match[2] };
+    return data.map(pr => ({
+      number: pr.number,
+      title: pr.title,
+      headBranch: pr.head.ref,
+      baseBranch: pr.base.ref,
+      state: pr.state as 'open' | 'closed' | 'merged',
+      url: pr.html_url,
+      author: pr.user?.login,
+    }));
   }
 }
