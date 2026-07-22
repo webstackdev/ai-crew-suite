@@ -123,3 +123,12 @@ export type GitHubDriverOptions = {
   integrations: ScmIntegrations;
   credentialsProvider: GithubCredentialsProvider;
 };
+
+/**
+ * GitLab driver configuration parameters.
+ */
+export type GitLabDriverOptions = {
+  urlReader: UrlReaderService;
+  logger: LoggerService;
+  integrations: ScmIntegrations;
+};
