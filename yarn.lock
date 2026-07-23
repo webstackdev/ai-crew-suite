@@ -12615,6 +12615,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/git-url-parse@npm:^16.0.2":
+  version: 16.0.2
+  resolution: "@types/git-url-parse@npm:16.0.2"
+  dependencies:
+    git-url-parse: "npm:*"
+  checksum: 10c0/72f97e08e637f5df1342f7bf7ca5cb504128003fea5bfb6f24be53934844701ced5cd75ced1dea0c90e9bd3dc51a790190914b4be7b327c76b5ed24820ab6542
+  languageName: node
+  linkType: hard
+
 "@types/hast@npm:^2.0.0":
   version: 2.3.10
   resolution: "@types/hast@npm:2.3.10"
@@ -14270,6 +14279,21 @@ __metadata:
     "@backstage/integration": "backstage:^"
     "@webstackbuilders/plugin-ai-core-backend-module-vcs": "workspace:*"
     "@webstackbuilders/plugin-ai-core-node": "workspace:*"
+    vitest: "npm:^4.1.10"
+  languageName: unknown
+  linkType: soft
+
+"@webstackbuilders/plugin-ai-core-backend-module-vcs-git@workspace:plugins/backend/plugin-ai-core-backend-module-vcs-git":
+  version: 0.0.0-use.local
+  resolution: "@webstackbuilders/plugin-ai-core-backend-module-vcs-git@workspace:plugins/backend/plugin-ai-core-backend-module-vcs-git"
+  dependencies:
+    "@backstage/backend-plugin-api": "backstage:^"
+    "@backstage/cli": "backstage:^"
+    "@backstage/integration": "backstage:^"
+    "@types/git-url-parse": "npm:^16.0.2"
+    "@webstackbuilders/plugin-ai-core-backend-module-vcs": "workspace:*"
+    "@webstackbuilders/plugin-ai-core-node": "workspace:*"
+    git-url-parse: "npm:^16.1.0"
     vitest: "npm:^4.1.10"
   languageName: unknown
   linkType: soft
@@ -20899,6 +20923,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"git-url-parse@npm:*, git-url-parse@npm:^16.1.0":
+  version: 16.1.0
+  resolution: "git-url-parse@npm:16.1.0"
+  dependencies:
+    git-up: "npm:^8.1.0"
+  checksum: 10c0/b8f5ebcbd5b2baf9f1bb77a217376f0247c47fe1d42811ccaac3015768eebb0759a59051f758e50e70adf5c67ae059d1975bf6b750164f36bfd39138d11b940b
+  languageName: node
+  linkType: hard
+
 "git-url-parse@npm:^14.0.0":
   version: 14.1.0
   resolution: "git-url-parse@npm:14.1.0"
@@ -20914,15 +20947,6 @@ __metadata:
   dependencies:
     git-up: "npm:^7.0.0"
   checksum: 10c0/1813a3ac8e97d348e46471db4710d776cc7b24a56a432339ab0c0f4f2323525a8627a1891aa80a53fd9be973191fe2902c0af8e17fb9b04f29445a83fbef3a4e
-  languageName: node
-  linkType: hard
-
-"git-url-parse@npm:^16.1.0":
-  version: 16.1.0
-  resolution: "git-url-parse@npm:16.1.0"
-  dependencies:
-    git-up: "npm:^8.1.0"
-  checksum: 10c0/b8f5ebcbd5b2baf9f1bb77a217376f0247c47fe1d42811ccaac3015768eebb0759a59051f758e50e70adf5c67ae059d1975bf6b750164f36bfd39138d11b940b
   languageName: node
   linkType: hard
 

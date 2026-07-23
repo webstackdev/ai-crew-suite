@@ -1,6 +1,6 @@
 {
-  "name": "@webstackbuilders/plugin-ai-core-backend-module-vcs-gerrit",
-  "description": "The Gerrit extension for the VCS interface backend module for the ai-core plugin.",
+  "name": "@webstackbuilders/plugin-ai-core-backend-module-vcs-git",
+  "description": "The Git extension for the VCS interface backend module for the ai-core plugin.",
   "version": "0.0.1",
   "main": "src/index.ts",
   "types": "src/index.ts",
@@ -13,7 +13,6 @@
     "ai-crew-suite",
     "ai-core",
     "vcs",
-    "gerrit",
     "git"
   ],
   "publishConfig": {
@@ -35,7 +34,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/webstackdev/ai-crew-suite",
-    "directory": "plugins/backend/plugin-ai-core-backend-module-vcs-gerrit"
+    "directory": "plugins/backend/plugin-ai-core-backend-module-vcs-git"
   },
   "files": [
     "dist",
@@ -44,7 +43,7 @@
   "configSchema": "config.d.ts",
   "scripts": {
     "start": "backstage-cli package start",
-    "build": "yarn --cwd ../../.. tsc -b plugins/backend/plugin-ai-core-backend-module-vcs-gerrit/tsconfig.json --emitDeclarationOnly && backstage-cli package build",
+    "build": "yarn --cwd ../../.. tsc -b plugins/backend/plugin-ai-core-backend-module-vcs-git/tsconfig.json --emitDeclarationOnly && backstage-cli package build",
     "clean": "backstage-cli package clean",
     "prepack": "backstage-cli package prepack",
     "postpack": "backstage-cli package postpack",
@@ -56,10 +55,12 @@
     "@backstage/backend-plugin-api": "backstage:^",
     "@backstage/integration": "backstage:^",
     "@webstackbuilders/plugin-ai-core-backend-module-vcs": "workspace:*",
-    "@webstackbuilders/plugin-ai-core-node": "workspace:*"
+    "@webstackbuilders/plugin-ai-core-node": "workspace:*",
+    "git-url-parse": "^16.1.0"
   },
   "devDependencies": {
     "@backstage/cli": "backstage:^",
+    "@types/git-url-parse": "^16.0.2",
     "vitest": "^4.1.10"
   }
 }
