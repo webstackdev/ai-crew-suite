@@ -135,8 +135,3 @@ export type GenericGitDriverOptions = {
   logger: LoggerService;
   integrations: ScmIntegrations;
 };
-
-/** Extension point allowing external modules to register custom drivers. */
-export interface VcsDriversExtensionPoint {
-  registerDriver(driver: VcsDriver): void;
-}

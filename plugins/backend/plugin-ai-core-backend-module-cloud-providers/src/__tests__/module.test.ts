@@ -13,24 +13,111 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { describe, expect, it } from 'vitest';
-import cloudModule, { aiCoreBackendModuleCloudProviders } from '../module';
-
-const getRegistrations = () =>
-  (aiCoreBackendModuleCloudProviders as unknown as {
-    getRegistrations(): { type: string; pluginId: string; moduleId: string; init?: unknown }[];
-  }).getRegistrations();
+import { describe, it, expect, vi } from 'vitest';
+import { startTestBackend } from '@backstage/backend-test-utils';
+import { mockServices } from '@backstage/backend-test-utils';
+import { createBackendModule } from '@backstage/backend-plugin-api';
+import {
+  toolExtensionPoint,
+  cloudDriversExtensionPoint,
+  CloudProviderDriver
+} from '@webstackbuilders/plugin-ai-core-node';
+import { aiCoreBackendModuleCloudProviders } from '../module';
 
 describe('aiCoreBackendModuleCloudProviders', () => {
-  it('exports an installable backend module for the ai-core plugin', () => {
-    expect(cloudModule).toBe(aiCoreBackendModuleCloudProviders);
-    expect(getRegistrations()).toEqual([
-      expect.objectContaining({
-        type: expect.stringMatching(/^module/),
-        pluginId: 'ai-core',
-        moduleId: 'cloud-providers',
-        init: expect.any(Object),
-      }),
-    ]);
+  const configData = {
+    ai: {
+      integrations: {
+        cloudProviders: {
+          defaultProvider: 'mock-cloud',
+          providers: {
+            'mock-cloud': { region: 'us-east-1' },
+          },
+        },
+      },
+    },
+  };
+
+  it('should boot cleanly and register tools when a matching extension driver is supplied', async () => {
+    const addedTools: any[] = [];
+    const mockToolExtensionPoint = {
+      addTool: (tool: any) => {
+        addedTools.push(tool);
+      },
+    };
+
+    const mockDriver: CloudProviderDriver = {
+      providerId: 'mock-cloud',
+      lookupAccount: vi.fn(),
+      lookupResource: vi.fn(),
+      resourceDependencies: vi.fn(),
+      kubernetesWorkloads: vi.fn(),
+    };
+
+    // Compile the driver hook via createBackendModule macro
+    const driverInterceptorModule = createBackendModule({
+      pluginId: 'ai-core',
+      moduleId: 'test-driver-registration-interceptor',
+      register(env) {
+        env.registerInit({
+          deps: {
+            cloudRegistry: cloudDriversExtensionPoint,
+          },
+          async init({ cloudRegistry }) {
+            cloudRegistry.registerDriver(mockDriver);
+          },
+        });
+      },
+    });
+
+    // Compile the tool target hook via createBackendModule macro
+    const toolInterceptorModule = createBackendModule({
+      pluginId: 'ai-core',
+      moduleId: 'test-tool-capture-interceptor',
+      register(env) {
+        env.registerExtensionPoint(toolExtensionPoint, mockToolExtensionPoint);
+        env.registerInit({ deps: {}, async init() {} });
+      },
+    });
+
+    await startTestBackend({
+      features: [
+        aiCoreBackendModuleCloudProviders,
+        driverInterceptorModule,
+        toolInterceptorModule,
+        mockServices.rootConfig.factory({ data: configData }),
+      ],
+    });
+
+    expect(addedTools.some(t => t.name === 'mock-cloud_lookup_account')).toBe(true);
+    expect(addedTools.some(t => t.name === 'mock-cloud_kubernetes_workloads')).toBe(true);
+  });
+
+  it('should throw an informative boot-time error when the required driver has not registered', async () => {
+    // Provide the tool extension point so the module can reach driver lookup,
+    // but intentionally omit any driver registration.
+    const toolExtensionPointOnlyModule = createBackendModule({
+      pluginId: 'ai-core',
+      moduleId: 'test-tool-extension-point-only',
+      register(env) {
+        env.registerExtensionPoint(toolExtensionPoint, {
+          addTool: () => {},
+        });
+        env.registerInit({ deps: {}, async init() {} });
+      },
+    });
+
+    const testExecution = startTestBackend({
+      features: [
+        aiCoreBackendModuleCloudProviders,
+        toolExtensionPointOnlyModule,
+        // No companion driver injected here
+        mockServices.rootConfig.factory({ data: configData }),
+      ],
+    });
+
+    await expect(testExecution).rejects.toThrow(
+      /No cloud driver registered for identifier 'mock-cloud'/
+    );
   });
 });

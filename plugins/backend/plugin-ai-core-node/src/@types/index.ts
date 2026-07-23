@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 export * from './agent';
+export * from './cloud';
 export * from './rag';
 export * from './run';
 export * from './session';
