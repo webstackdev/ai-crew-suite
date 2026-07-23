@@ -14261,6 +14261,19 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@webstackbuilders/plugin-ai-core-backend-module-vcs-gerrit@workspace:plugins/backend/plugin-ai-core-backend-module-vcs-gerrit":
+  version: 0.0.0-use.local
+  resolution: "@webstackbuilders/plugin-ai-core-backend-module-vcs-gerrit@workspace:plugins/backend/plugin-ai-core-backend-module-vcs-gerrit"
+  dependencies:
+    "@backstage/backend-plugin-api": "backstage:^"
+    "@backstage/cli": "backstage:^"
+    "@backstage/integration": "backstage:^"
+    "@webstackbuilders/plugin-ai-core-backend-module-vcs": "workspace:*"
+    "@webstackbuilders/plugin-ai-core-node": "workspace:*"
+    vitest: "npm:^4.1.10"
+  languageName: unknown
+  linkType: soft
+
 "@webstackbuilders/plugin-ai-core-backend-module-vcs-github@workspace:plugins/backend/plugin-ai-core-backend-module-vcs-github":
   version: 0.0.0-use.local
   resolution: "@webstackbuilders/plugin-ai-core-backend-module-vcs-github@workspace:plugins/backend/plugin-ai-core-backend-module-vcs-github"
