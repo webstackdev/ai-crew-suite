@@ -66,11 +66,11 @@
     "@webstackbuilders/plugin-ai-core-node": "workspace:^",
     "azure-devops-node-api": "15.1.2",
     "git-url-parse": "^16.1.0",
-    "node-fetch": "^3.3.2",
-    "vitest": "^4.1.10"
+    "node-fetch": "^3.3.2"
   },
   "devDependencies": {
     "@backstage/backend-test-utils": "backstage:^",
-    "@backstage/cli": "backstage:^"
+    "@backstage/cli": "backstage:^",
+    "vitest": "^4.1.10"
   }
 }

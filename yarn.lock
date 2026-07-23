@@ -5781,6 +5781,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@gitbeaker/core@npm:^40.6.0":
+  version: 40.6.0
+  resolution: "@gitbeaker/core@npm:40.6.0"
+  dependencies:
+    "@gitbeaker/requester-utils": "npm:^40.6.0"
+    qs: "npm:^6.12.2"
+    xcase: "npm:^2.0.1"
+  checksum: 10c0/832e13ad8390b36d52eef9a103d18a9379c91d7616920fd17887f98c67bc93602cbc1b02c151a649c8a665e197dcb5bf243daabc9020e5d6b2324b827722694c
+  languageName: node
+  linkType: hard
+
 "@gitbeaker/core@npm:^43.8.0":
   version: 43.8.0
   resolution: "@gitbeaker/core@npm:43.8.0"
@@ -5789,6 +5800,18 @@ __metadata:
     qs: "npm:^6.14.0"
     xcase: "npm:^2.0.1"
   checksum: 10c0/5913aea8ae89b30f37693093fe68a94fbe4ab2737e661ba6795b3d22463ffa63806076b392b938d4c662d691c0114facc022bcdde29297e7b6617b146c449ff6
+  languageName: node
+  linkType: hard
+
+"@gitbeaker/requester-utils@npm:^40.6.0":
+  version: 40.6.0
+  resolution: "@gitbeaker/requester-utils@npm:40.6.0"
+  dependencies:
+    picomatch-browser: "npm:^2.2.6"
+    qs: "npm:^6.12.2"
+    rate-limiter-flexible: "npm:^4.0.1"
+    xcase: "npm:^2.0.1"
+  checksum: 10c0/b3c2746062b61ea2612742c2e940cbe9afeed6bee40d06085485dbb238cfb923953db42ec2a61caa5dcc3bccf08d3b540bcf962de2d2c67b5d31a1a93aa19133
   languageName: node
   linkType: hard
 
@@ -5801,6 +5824,16 @@ __metadata:
     rate-limiter-flexible: "npm:^8.0.1"
     xcase: "npm:^2.0.1"
   checksum: 10c0/07fd5af56fa3b577009bac6fc59a9b54b3e188a8b412c926b253b21528fb46f8ab02dbeba5c032a9a77d169a69208550147a099c71681d5b9193c87224db8d19
+  languageName: node
+  linkType: hard
+
+"@gitbeaker/rest@npm:^40.0.0":
+  version: 40.6.0
+  resolution: "@gitbeaker/rest@npm:40.6.0"
+  dependencies:
+    "@gitbeaker/core": "npm:^40.6.0"
+    "@gitbeaker/requester-utils": "npm:^40.6.0"
+  checksum: 10c0/d14ff9b712c829cf3b3198d82e4ad8c9af5c208ba1d31f9be86465f599e02f807ce166972c1473ca0ed792e837a2f6b000892dbdd7d8cbbd32067367f611bfdc
   languageName: node
   linkType: hard
 
@@ -8699,7 +8732,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/rest@npm:^19.0.3":
+"@octokit/rest@npm:^19.0.0, @octokit/rest@npm:^19.0.3":
   version: 19.0.13
   resolution: "@octokit/rest@npm:19.0.13"
   dependencies:
@@ -14001,7 +14034,61 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@webstackbuilders/plugin-ai-core-backend-module-vcs@workspace:^, @webstackbuilders/plugin-ai-core-backend-module-vcs@workspace:plugins/backend/plugin-ai-core-backend-module-vcs":
+"@webstackbuilders/plugin-ai-core-backend-module-vcs-azure@workspace:plugins/backend/plugin-ai-core-backend-module-vcs-azure":
+  version: 0.0.0-use.local
+  resolution: "@webstackbuilders/plugin-ai-core-backend-module-vcs-azure@workspace:plugins/backend/plugin-ai-core-backend-module-vcs-azure"
+  dependencies:
+    "@backstage/backend-plugin-api": "backstage:^"
+    "@backstage/cli": "backstage:^"
+    "@backstage/integration": "backstage:^"
+    "@webstackbuilders/plugin-ai-core-backend-module-vcs": "workspace:*"
+    "@webstackbuilders/plugin-ai-core-node": "workspace:*"
+    azure-devops-node-api: "npm:^15.1.2"
+    vitest: "npm:^4.1.10"
+  languageName: unknown
+  linkType: soft
+
+"@webstackbuilders/plugin-ai-core-backend-module-vcs-bitbucket@workspace:plugins/backend/plugin-ai-core-backend-module-vcs-bitbucket":
+  version: 0.0.0-use.local
+  resolution: "@webstackbuilders/plugin-ai-core-backend-module-vcs-bitbucket@workspace:plugins/backend/plugin-ai-core-backend-module-vcs-bitbucket"
+  dependencies:
+    "@backstage/backend-plugin-api": "backstage:^"
+    "@backstage/cli": "backstage:^"
+    "@backstage/integration": "backstage:^"
+    "@webstackbuilders/plugin-ai-core-backend-module-vcs": "workspace:*"
+    "@webstackbuilders/plugin-ai-core-node": "workspace:*"
+    vitest: "npm:^4.1.10"
+  languageName: unknown
+  linkType: soft
+
+"@webstackbuilders/plugin-ai-core-backend-module-vcs-github@workspace:plugins/backend/plugin-ai-core-backend-module-vcs-github":
+  version: 0.0.0-use.local
+  resolution: "@webstackbuilders/plugin-ai-core-backend-module-vcs-github@workspace:plugins/backend/plugin-ai-core-backend-module-vcs-github"
+  dependencies:
+    "@backstage/backend-plugin-api": "backstage:^"
+    "@backstage/cli": "backstage:^"
+    "@backstage/integration": "backstage:^"
+    "@backstage/plugin-scaffolder-node": "backstage:^"
+    "@octokit/rest": "npm:^19.0.0"
+    "@webstackbuilders/plugin-ai-core-node": "workspace:*"
+    vitest: "npm:^4.1.10"
+  languageName: unknown
+  linkType: soft
+
+"@webstackbuilders/plugin-ai-core-backend-module-vcs-gitlab@workspace:plugins/backend/plugin-ai-core-backend-module-vcs-gitlab":
+  version: 0.0.0-use.local
+  resolution: "@webstackbuilders/plugin-ai-core-backend-module-vcs-gitlab@workspace:plugins/backend/plugin-ai-core-backend-module-vcs-gitlab"
+  dependencies:
+    "@backstage/backend-plugin-api": "backstage:^"
+    "@backstage/cli": "backstage:^"
+    "@backstage/integration": "backstage:^"
+    "@gitbeaker/rest": "npm:^40.0.0"
+    "@webstackbuilders/plugin-ai-core-node": "workspace:*"
+    vitest: "npm:^4.1.10"
+  languageName: unknown
+  linkType: soft
+
+"@webstackbuilders/plugin-ai-core-backend-module-vcs@workspace:*, @webstackbuilders/plugin-ai-core-backend-module-vcs@workspace:^, @webstackbuilders/plugin-ai-core-backend-module-vcs@workspace:plugins/backend/plugin-ai-core-backend-module-vcs":
   version: 0.0.0-use.local
   resolution: "@webstackbuilders/plugin-ai-core-backend-module-vcs@workspace:plugins/backend/plugin-ai-core-backend-module-vcs"
   dependencies:
@@ -14045,12 +14132,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@webstackbuilders/plugin-ai-core-node@workspace:^, @webstackbuilders/plugin-ai-core-node@workspace:plugins/backend/plugin-ai-core-node":
+"@webstackbuilders/plugin-ai-core-node@workspace:*, @webstackbuilders/plugin-ai-core-node@workspace:^, @webstackbuilders/plugin-ai-core-node@workspace:plugins/backend/plugin-ai-core-node":
   version: 0.0.0-use.local
   resolution: "@webstackbuilders/plugin-ai-core-node@workspace:plugins/backend/plugin-ai-core-node"
   dependencies:
     "@backstage/backend-plugin-api": "backstage:^"
     "@backstage/cli": "backstage:^"
+    "@backstage/integration": "backstage:^"
     "@langchain/core": "npm:^1.2.3"
     i18next: "npm:26.3.6"
     vitest: "npm:^4.1.10"
@@ -15126,6 +15214,16 @@ __metadata:
     tunnel: "npm:0.0.6"
     typed-rest-client: "npm:2.1.0"
   checksum: 10c0/82cbce9eb45d191ac658eacb1a8117d848832975a4e6693cecf6467384b66bc320d7bdc59e629421a84779fcdb54c435327c8ca9a545137fe89560a35a8e84d6
+  languageName: node
+  linkType: hard
+
+"azure-devops-node-api@npm:^15.1.2":
+  version: 15.1.3
+  resolution: "azure-devops-node-api@npm:15.1.3"
+  dependencies:
+    tunnel: "npm:0.0.6"
+    typed-rest-client: "npm:2.1.0"
+  checksum: 10c0/0c4ddc6fe4e586cc13bf3ac85e6ac145e0fa675805cb3acf41237451971faf6abcae88b8700c10e8472f18e24f2c53d800cfcd92ccb0fc71b45d99c1440d4e14
   languageName: node
   linkType: hard
 
@@ -28648,7 +28746,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"qs@npm:^6.10.3, qs@npm:^6.12.3, qs@npm:^6.14.0, qs@npm:^6.14.1, qs@npm:^6.15.0, qs@npm:^6.15.2, qs@npm:^6.4.0, qs@npm:~6.15.1":
+"qs@npm:^6.10.3, qs@npm:^6.12.2, qs@npm:^6.12.3, qs@npm:^6.14.0, qs@npm:^6.14.1, qs@npm:^6.15.0, qs@npm:^6.15.2, qs@npm:^6.4.0, qs@npm:~6.15.1":
   version: 6.15.3
   resolution: "qs@npm:6.15.3"
   dependencies:
@@ -28803,6 +28901,13 @@ __metadata:
   peerDependencies:
     express-rate-limit: ">= 6"
   checksum: 10c0/0d2e202fb3358cb19fc2994bf9f32212789ccb9c1a724f1366835aa9c43c46dd0e2a69ddc866cfb757d1190aef120bbf74ce916c07001521497ff8820def6b95
+  languageName: node
+  linkType: hard
+
+"rate-limiter-flexible@npm:^4.0.1":
+  version: 4.0.1
+  resolution: "rate-limiter-flexible@npm:4.0.1"
+  checksum: 10c0/93db9ed61a62c4d7d411713e12ed9cd7ea196a08b81cb289156f7ff0fe85bd4607916e82be750d2d8c44248dafefaff3f4a1cd4b7caae077b078573ad7f24fa6
   languageName: node
   linkType: hard
 

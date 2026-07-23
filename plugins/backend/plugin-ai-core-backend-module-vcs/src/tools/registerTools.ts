@@ -15,26 +15,13 @@
  */
 import { LoggerService } from '@backstage/backend-plugin-api';
 import { ToolDefinition } from '@webstackbuilders/plugin-ai-core-node';
-import { VcsDriver } from '../providers';
-
-type ReadFileArgs = {
-  repoUrl: string;
-  path: string;
-  ref?: string;
-};
-
-type GetMetadataArgs = {
-  repoUrl: string;
-};
-
-type SearchRepositoryArgs = {
-  repoUrl: string;
-  query: string;
-};
-
-type ListPullRequestsArgs = {
-  repoUrl: string;
-};
+import {
+  ReadFileArgs,
+  GetMetadataArgs,
+  SearchRepositoryArgs,
+  ListPullRequestsArgs,
+  VcsDriver,
+} from '@webstackbuilders/plugin-ai-core-node'
 
 export const createVcsTools = (opts: {
   driver: VcsDriver;

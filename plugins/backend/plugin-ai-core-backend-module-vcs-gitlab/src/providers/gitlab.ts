@@ -22,7 +22,7 @@ import {
   RepositoryMetadata,
   RepositorySearchResult,
   VcsDriver,
-} from '../@types';
+} from '@webstackbuilders/plugin-ai-core-node';
 
 export class GitLabDriver implements VcsDriver {
   readonly providerId = 'gitlab';

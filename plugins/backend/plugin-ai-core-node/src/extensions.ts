@@ -21,6 +21,7 @@ import {
   SourceDescriptor,
   ToolDefinition,
   TriggerBinding,
+  VcsDriversExtensionPoint,
 } from './@types';
 import { createExtensionPoint } from '@backstage/backend-plugin-api';
 
@@ -140,4 +141,12 @@ export interface TriggerExtensionPoint {
 export const triggerExtensionPoint =
   createExtensionPoint<TriggerExtensionPoint>({
     id: 'plugin-ai.trigger',
+  });
+
+/**
+ * Backstage extension point used by modules that contribute VCS drivers.
+ */
+export const vcsDriversExtensionPoint =
+  createExtensionPoint<VcsDriversExtensionPoint>({
+    id: 'plugin-ai.vcs.drivers',
   });

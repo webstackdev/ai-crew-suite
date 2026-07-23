@@ -1,5 +1,4 @@
 /*
- * Copyright 2024 Larder Software Limited
  * Copyright 2026 Webstack Builders, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,11 +13,4 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export * from './agent';
-export * from './rag';
-export * from './run';
-export * from './session';
-export * from './source';
-export * from './tool';
-export * from './vcs';
-export * from './vector';
+export { aiCoreBackendModuleVcsAzure as default } from './module';

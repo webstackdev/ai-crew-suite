@@ -1,21 +1,20 @@
 {
-  "name": "@webstackbuilders/plugin-ai-core-node",
+  "name": "@webstackbuilders/plugin-ai-core-backend-module-vcs-azure",
+  "description": "The Azure DevOps extension for the VCS interface backend module for the ai-core plugin.",
   "version": "0.0.1",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "license": "Apache-2.0",
-  "description": "Core extension point registry for the AI Crew Suite platform.",
   "keywords": [
     "backstage",
-    "backstage-plugin",
+    "backstage-plugin-module",
     "backend",
     "webstack-builders",
     "ai-crew-suite",
-    "ai-orchestration",
-    "langgraph",
-    "multi-agent",
-    "rag",
-    "extension-points"
+    "ai-core",
+    "vcs",
+    "Azure DevOps",
+    "git"
   ],
   "publishConfig": {
     "access": "public",
@@ -23,7 +22,7 @@
     "types": "dist/index.d.ts"
   },
   "backstage": {
-    "role": "node-library",
+    "role": "backend-plugin-module",
     "pluginId": "ai-core",
     "pluginPackage": [
       "@webstackbuilders/plugin-ai-core-backend"
@@ -36,14 +35,16 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/webstackdev/ai-crew-suite",
-    "directory": "packages/plugin-ai-core-node"
+    "directory": "plugins/backend/ai-core-backend-module-vcs-azure"
   },
   "files": [
-    "dist"
+    "dist",
+    "config.d.ts"
   ],
+  "configSchema": "config.d.ts",
   "scripts": {
     "start": "backstage-cli package start",
-    "build": "yarn --cwd ../../.. tsc -b plugins/backend/plugin-ai-core-node/tsconfig.json --emitDeclarationOnly && backstage-cli package build",
+    "build": "yarn --cwd ../../.. tsc -b plugins/backend/plugin-ai-core-backend-module-vcs-azure/tsconfig.json --emitDeclarationOnly && backstage-cli package build",
     "clean": "backstage-cli package clean",
     "prepack": "backstage-cli package prepack",
     "postpack": "backstage-cli package postpack",
@@ -54,11 +55,12 @@
   "dependencies": {
     "@backstage/backend-plugin-api": "backstage:^",
     "@backstage/integration": "backstage:^",
-    "@langchain/core": "^1.2.3",
-    "i18next": "26.3.6",
-    "vitest": "^4.1.10"
+    "@webstackbuilders/plugin-ai-core-backend-module-vcs": "workspace:*",
+    "@webstackbuilders/plugin-ai-core-node": "workspace:*",
+    "azure-devops-node-api": "^15.1.2"
   },
   "devDependencies": {
-    "@backstage/cli": "backstage:^"
+    "@backstage/cli": "backstage:^",
+    "vitest": "^4.1.10"
   }
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { Config } from '@backstage/config';
-import type { VcsProviderId, VcsConfig } from './@types';
+import type { VcsProviderId, VcsConfig } from '@webstackbuilders/plugin-ai-core-node';
 
 const SUPPORTED_PROVIDERS: readonly VcsProviderId[] = [
   'github',

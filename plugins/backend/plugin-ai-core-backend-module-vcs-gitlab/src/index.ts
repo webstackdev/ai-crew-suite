@@ -13,13 +13,4 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export { AzureDriver } from './azure';
-export { BitbucketDriver } from './bitbucket';
-export { GitHubDriver } from './github';
-export { GitLabDriver } from './gitlab';
-export type {
-  PullRequestSummary,
-  RepositoryMetadata,
-  RepositorySearchResult,
-  VcsDriver,
-} from '../@types';
+export { aiCoreBackendModuleVcsGitLab as default } from './module';
