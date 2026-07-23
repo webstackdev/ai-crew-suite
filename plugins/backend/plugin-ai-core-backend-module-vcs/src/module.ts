@@ -50,7 +50,7 @@ export const aiCoreBackendModuleVcs = createBackendModule({
       },
       async init({ config, logger, tools }) {
         const vcsConfig = readVcsConfig(config);
-        
+
         // 3. Resolve the driver dictated by the user's config completely from the dynamic Map
         const driver = drivers.get(vcsConfig.provider);
 
@@ -73,4 +73,3 @@ export const aiCoreBackendModuleVcs = createBackendModule({
 });
 
 export default aiCoreBackendModuleVcs;
-

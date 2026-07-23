@@ -17,13 +17,82 @@
 
 import {
   AgentDefinition,
+  CloudProviderDriver,
   ModelDefinition,
   SourceDescriptor,
   ToolDefinition,
   TriggerBinding,
-  VcsDriversExtensionPoint,
+  VcsDriver,
 } from './@types';
 import { createExtensionPoint } from '@backstage/backend-plugin-api';
+
+/**
+ * Extension point for registering executable agent profiles.
+ *
+ * Agent definitions describe the model, prompt, tools, memory mode, orchestration
+ * strategy, and optional crew roles used for a runtime execution. This is the
+ * main integration point for sub-plugins that want to add domain-specific AI
+ * capabilities to the shared backend runtime.
+ */
+export interface AgentExtensionPoint {
+  /**
+   * Registers an agent profile.
+   *
+   * Duplicate agent IDs are rejected at boot time so different modules cannot
+   * accidentally publish conflicting profiles under the same route/trigger ID.
+   */
+  addAgent(agent: AgentDefinition): void;
+}
+
+/**
+ * Backstage extension point used by modules that contribute AI agent profiles.
+ */
+export const agentExtensionPoint = createExtensionPoint<AgentExtensionPoint>({
+  id: 'plugin-ai.agent',
+});
+
+/**
+ * Extension point for registering custom Cloud Provider Drivers.
+ * Sibling modules use this to register themselves dynamically at boot time.
+ */
+export interface CloudDriversExtensionPoint {
+  /**
+   * Registers a cloud provider driver.
+   * Duplicate provider IDs overwrite or reject depending on core module map rules.
+   */
+  registerDriver(driver: CloudProviderDriver): void;
+}
+
+/**
+ * Backstage extension point used by modules that contribute Cloud Provider drivers.
+ */
+export const cloudDriversExtensionPoint = createExtensionPoint<CloudDriversExtensionPoint>({
+  id: 'ai-core.cloud-drivers',
+});
+
+/**
+ * Extension point for registering language models by stable ID.
+ *
+ * Agent profiles and crew roles reference these IDs through `modelRef`. Modules
+ * should use this extension point when they provide a configured LangChain LLM or
+ * chat model instance for the AI backend to execute.
+ */
+export interface ModelExtensionPoint {
+  /**
+   * Registers a model definition.
+   *
+   * Duplicate model IDs are rejected at boot time to prevent silent model
+   * replacement across modules.
+   */
+  addModel(model: ModelDefinition): void;
+}
+
+/**
+ * Backstage extension point used by modules that contribute AI model instances.
+ */
+export const modelExtensionPoint = createExtensionPoint<ModelExtensionPoint>({
+  id: 'plugin-ai.model',
+});
 
 /**
  * Extension point for registering retrieval/indexing sources with the AI backend.
@@ -75,55 +144,6 @@ export const toolExtensionPoint = createExtensionPoint<ToolExtensionPoint>({
 });
 
 /**
- * Extension point for registering language models by stable ID.
- *
- * Agent profiles and crew roles reference these IDs through `modelRef`. Modules
- * should use this extension point when they provide a configured LangChain LLM or
- * chat model instance for the AI backend to execute.
- */
-export interface ModelExtensionPoint {
-  /**
-   * Registers a model definition.
-   *
-   * Duplicate model IDs are rejected at boot time to prevent silent model
-   * replacement across modules.
-   */
-  addModel(model: ModelDefinition): void;
-}
-
-/**
- * Backstage extension point used by modules that contribute AI model instances.
- */
-export const modelExtensionPoint = createExtensionPoint<ModelExtensionPoint>({
-  id: 'plugin-ai.model',
-});
-
-/**
- * Extension point for registering executable agent profiles.
- *
- * Agent definitions describe the model, prompt, tools, memory mode, orchestration
- * strategy, and optional crew roles used for a runtime execution. This is the
- * main integration point for sub-plugins that want to add domain-specific AI
- * capabilities to the shared backend runtime.
- */
-export interface AgentExtensionPoint {
-  /**
-   * Registers an agent profile.
-   *
-   * Duplicate agent IDs are rejected at boot time so different modules cannot
-   * accidentally publish conflicting profiles under the same route/trigger ID.
-   */
-  addAgent(agent: AgentDefinition): void;
-}
-
-/**
- * Backstage extension point used by modules that contribute AI agent profiles.
- */
-export const agentExtensionPoint = createExtensionPoint<AgentExtensionPoint>({
-  id: 'plugin-ai.agent',
-});
-
-/**
  * Extension point for registering external trigger bindings.
  *
  * Trigger bindings connect webhook-like or scheduled sources to agent execution.
@@ -138,15 +158,25 @@ export interface TriggerExtensionPoint {
 /**
  * Backstage extension point used by modules that contribute trigger bindings.
  */
-export const triggerExtensionPoint =
-  createExtensionPoint<TriggerExtensionPoint>({
+export const triggerExtensionPoint = createExtensionPoint<TriggerExtensionPoint>({
     id: 'plugin-ai.trigger',
   });
 
 /**
+ * Extension point for registering VCS drivers.
+ * Sibling modules use this to register themselves dynamically at boot time.
+ */
+export interface VcsDriversExtensionPoint {
+  /**
+   * Registers a VCS driver.
+   * Duplicate driver IDs overwrite or reject depending on core module map rules.
+   */
+  registerDriver(driver: VcsDriver): void;
+}
+
+/**
  * Backstage extension point used by modules that contribute VCS drivers.
  */
-export const vcsDriversExtensionPoint =
-  createExtensionPoint<VcsDriversExtensionPoint>({
-    id: 'plugin-ai.vcs.drivers',
-  });
+export const vcsDriversExtensionPoint = createExtensionPoint<VcsDriversExtensionPoint>({
+  id: 'plugin-ai.vcs.drivers',
+});

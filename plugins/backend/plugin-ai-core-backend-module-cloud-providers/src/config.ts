@@ -13,23 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+// plugins/backend/plugin-ai-core-backend-module-cloud-providers/src/config.ts
 import { Config } from '@backstage/config';
-
-export type CloudProviderId = 'aws' | 'azure' | 'gcp';
-
-export type ProviderConnectionConfig = {
-  region?: string;
-};
-
-export type CloudProvidersConfig = {
-  defaultProvider: CloudProviderId;
-  providers: Partial<Record<CloudProviderId, ProviderConnectionConfig>>;
-};
-
-const CLOUD_PROVIDERS: readonly CloudProviderId[] = ['aws', 'azure', 'gcp'];
-
-const isCloudProvider = (value: unknown): value is CloudProviderId =>
-  typeof value === 'string' && (CLOUD_PROVIDERS as readonly string[]).includes(value);
+import { CloudProvidersConfig } from '@webstackbuilders/plugin-ai-core-node';
 
 export const readCloudProvidersConfig = (config: Config): CloudProvidersConfig => {
   const cloudConfig = config.getOptionalConfig('ai.integrations.cloudProviders');
@@ -39,19 +25,22 @@ export const readCloudProvidersConfig = (config: Config): CloudProvidersConfig =
     );
   }
 
-  const defaultProvider = cloudConfig.getOptionalString('defaultProvider');
+  const defaultProvider = cloudConfig.getOptionalString('defaultProvider') as any;
   if (!defaultProvider) {
     throw new Error('Cloud providers module requires ai.integrations.cloudProviders.defaultProvider to be set');
   }
-  if (!isCloudProvider(defaultProvider)) {
-    throw new Error(`Unsupported cloud provider '${defaultProvider}'. Supported: ${CLOUD_PROVIDERS.join(', ')}`);
-  }
 
-  const providers: Partial<Record<CloudProviderId, ProviderConnectionConfig>> = {};
-  for (const candidate of CLOUD_PROVIDERS) {
-    const providerConfig = cloudConfig.getOptionalConfig(candidate);
+  const providers: any = {};
+  const rootObj = cloudConfig.getOptional('providers') || {};
+
+  // Extract keys dynamically to support open-ended driver vendor namespaces
+  for (const providerId of Object.keys(rootObj)) {
+    const providerConfig = cloudConfig.getOptionalConfig(`providers.${providerId}`);
     if (providerConfig) {
-      providers[candidate] = { region: providerConfig.getOptionalString('region') };
+      providers[providerId] = {
+        region: providerConfig.getOptionalString('region'),
+        targetNamespaces: providerConfig.getOptionalStringArray('targetNamespaces'),
+      };
     }
   }
 

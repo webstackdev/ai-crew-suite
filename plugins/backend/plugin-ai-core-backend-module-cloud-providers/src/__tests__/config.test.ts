@@ -13,35 +13,58 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { describe, expect, it } from 'vitest';
+// plugins/backend/plugin-ai-core-backend-module-cloud-providers/src/__tests__/config.test.ts
+import { describe, it, expect } from 'vitest';
 import { ConfigReader } from '@backstage/config';
 import { readCloudProvidersConfig } from '../config';
 
 describe('readCloudProvidersConfig', () => {
-  it('reads a valid aws config', () => {
-    const config = new ConfigReader({
-      ai: { integrations: { cloudProviders: { defaultProvider: 'aws', aws: { region: 'us-east-1' } } } },
+  it('should successfully parse valid configuration topologies', () => {
+    const mockConfig = new ConfigReader({
+      ai: {
+        integrations: {
+          cloudProviders: {
+            defaultProvider: 'kubernetes',
+            providers: {
+              kubernetes: {
+                targetNamespaces: ['development', 'production'],
+              },
+              aws: {
+                region: 'us-west-2',
+              },
+            },
+          },
+        },
+      },
     });
-    const result = readCloudProvidersConfig(config);
-    expect(result.defaultProvider).toBe('aws');
-    expect(result.providers.aws?.region).toBe('us-east-1');
+
+    const parsed = readCloudProvidersConfig(mockConfig);
+    expect(parsed.defaultProvider).toBe('kubernetes');
+    expect(parsed.providers.kubernetes?.targetNamespaces).toEqual(['development', 'production']);
+    expect(parsed.providers.aws?.region).toBe('us-west-2');
   });
 
-  it('throws when config is missing', () => {
-    expect(() => readCloudProvidersConfig(new ConfigReader({}))).toThrow(
-      /ai\.integrations\.cloudProviders configuration to be set/,
+  it('should throw an explicit error if cloudProviders block is completely absent', () => {
+    const mockConfig = new ConfigReader({});
+    expect(() => readCloudProvidersConfig(mockConfig)).toThrow(
+      /Cloud providers module requires ai.integrations.cloudProviders configuration to be set/
     );
   });
 
-  it('throws when defaultProvider is missing', () => {
-    const config = new ConfigReader({ ai: { integrations: { cloudProviders: {} } } });
-    expect(() => readCloudProvidersConfig(config)).toThrow(/defaultProvider to be set/);
-  });
-
-  it('throws when defaultProvider is unsupported', () => {
-    const config = new ConfigReader({
-      ai: { integrations: { cloudProviders: { defaultProvider: 'bad' } } },
+  it('should throw an explicit error if defaultProvider is missing', () => {
+    const mockConfig = new ConfigReader({
+      ai: {
+        integrations: {
+          cloudProviders: {
+            providers: {
+              aws: { region: 'us-east-1' },
+            },
+          },
+        },
+      },
     });
-    expect(() => readCloudProvidersConfig(config)).toThrow(/Unsupported cloud provider/);
+    expect(() => readCloudProvidersConfig(mockConfig)).toThrow(
+      /Cloud providers module requires ai.integrations.cloudProviders.defaultProvider to be set/
+    );
   });
 });

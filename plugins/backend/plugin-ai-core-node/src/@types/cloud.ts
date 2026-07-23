@@ -13,6 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+// plugins/backend/plugin-ai-core-node/src/@types/cloud.ts
+import { LoggerService } from '@backstage/backend-plugin-api';
+
+export type CloudProviderId = 'aws' | 'azure' | 'gcp' | 'kubernetes';
+
+export type ProviderConnectionConfig = {
+  region?: string;
+  targetNamespaces?: string[];
+};
+
+export type CloudProvidersConfig = {
+  defaultProvider: CloudProviderId;
+  providers: Partial<Record<CloudProviderId, ProviderConnectionConfig>>;
+};
+
+export type DriverOptions = {
+  logger: LoggerService;
+  config?: ProviderConnectionConfig;
+  kubernetesClient?: any;
+};
 
 export type CloudAccountSummary = {
   id: string;
@@ -49,22 +69,31 @@ export type KubernetesWorkloadSummary = {
 
 export interface CloudProviderDriver {
   readonly providerId: string;
+
   lookupAccount(input: {
     accountId?: string;
     name?: string;
   }): Promise<CloudAccountSummary | undefined>;
+
   lookupResource(input: {
     service?: string;
     tags?: Record<string, string>;
     owner?: string;
     catalogEntityRef?: string;
   }): Promise<CloudResourceSummary[]>;
+
   resourceDependencies(input: {
     resourceId: string;
   }): Promise<CloudDependencySummary>;
+
   kubernetesWorkloads(input: {
     cluster?: string;
     namespace?: string;
     catalogEntityRef?: string;
   }): Promise<KubernetesWorkloadSummary[]>;
+}
+
+export interface CreateCloudProviderToolsOptions {
+  driver: CloudProviderDriver;
+  logger: LoggerService;
 }
