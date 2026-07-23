@@ -122,6 +122,13 @@ export type BitbucketDriverOptions = {
   integrations: ScmIntegrations;
 };
 
+/** Gerrit driver configuration parameters. */
+export type GerritDriverOptions = {
+  urlReader: UrlReaderService;
+  logger: LoggerService;
+  integrations: ScmIntegrations;
+};
+
 /** Extension point allowing external modules to register custom drivers. */
 export interface VcsDriversExtensionPoint {
   registerDriver(driver: VcsDriver): void;
