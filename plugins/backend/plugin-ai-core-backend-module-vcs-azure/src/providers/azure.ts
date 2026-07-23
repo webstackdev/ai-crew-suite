@@ -78,8 +78,6 @@ export class AzureDriver implements VcsDriver {
       }
 
       repoName = repoName.replace(/\.git$/, '');
-
-      // Move this inside the try block so that the 'org' string is safely available
       orgUrl = `https://${urlObj.host}/${org}`;
     } catch {
       throw new Error(`AzureDriver could not parse repository URL: ${repoUrl}`);
@@ -123,8 +121,7 @@ export class AzureDriver implements VcsDriver {
 
     const cleanPath = path.replace(/^\//, '');
     const versionSegment = ref ? `&version=${encodeURIComponent(ref)}` : '';
-    
-    // Fix: Use standard template literals to satisfy lint rules banning direct + operators
+
     const targetUrl = `${repoUrl}?path=${encodeURIComponent(`/${cleanPath}`)}${versionSegment}`;
 
     this.logger.debug(`AzureDriver reading via UrlReader: ${targetUrl}`);
@@ -135,10 +132,9 @@ export class AzureDriver implements VcsDriver {
 
   async searchRepository(repoUrl: string, query: string): Promise<RepositorySearchResult[]> {
     const { gitApi, project, repoName } = await this.getClientForRepo(repoUrl);
-    
+
     this.logger.warn(`Azure Search invoked for ${repoName} with query: ${query}.`);
-    
-    // Fix: Swap '3' literal for VersionControlRecursionType enum value
+
     const items = await gitApi.getItems(
       repoName,
       project,

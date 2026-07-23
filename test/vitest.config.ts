@@ -1,6 +1,8 @@
 import { defineConfig, defineProject } from 'vitest/config';
 
 export default defineConfig({
+  // redirects cache out of node_modules
+  cacheDir: '.vitest-cache',
   test: {
     coverage: {
       provider: 'v8',
