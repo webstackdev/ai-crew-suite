@@ -15,7 +15,7 @@
  */
 import { LoggerService, UrlReaderService } from '@backstage/backend-plugin-api';
 import { ScmIntegrations } from '@backstage/integration';
-import fetch from 'node-fetch'; // Standard package available across Backstage workspaces
+import fetch from 'node-fetch';
 import {
   PullRequestSummary,
   RepositoryMetadata,
