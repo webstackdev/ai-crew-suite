@@ -17,18 +17,12 @@ import { LoggerService, UrlReaderService } from '@backstage/backend-plugin-api';
 import { ScmIntegrations, GithubCredentialsProvider, GithubIntegration } from '@backstage/integration';
 import { Octokit } from '@octokit/rest';
 import {
+  GitHubDriverOptions,
   PullRequestSummary,
   RepositoryMetadata,
   RepositorySearchResult,
   VcsDriver,
-} from '../@types';
-
-export type GitHubDriverOptions = {
-  urlReader: UrlReaderService;
-  logger: LoggerService;
-  integrations: ScmIntegrations;
-  credentialsProvider: GithubCredentialsProvider;
-};
+} from '@webstackbuilders/plugin-ai-core-node';
 
 export class GitHubDriver implements VcsDriver {
   readonly providerId = 'github';

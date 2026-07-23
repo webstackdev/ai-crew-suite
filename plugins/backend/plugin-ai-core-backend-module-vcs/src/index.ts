@@ -14,5 +14,9 @@
  * limitations under the License.
  */
 export { aiCoreBackendModuleVcs as default } from './module';
-export { vcsDriversExtensionPoint } from './extensions';
-export type { VcsDriversExtensionPoint } from './extensions';
+export {
+  vcsDriversExtensionPoint,
+} from '@webstackbuilders/plugin-ai-core-node';
+export type {
+  VcsDriversExtensionPoint,
+} from '@webstackbuilders/plugin-ai-core-node';

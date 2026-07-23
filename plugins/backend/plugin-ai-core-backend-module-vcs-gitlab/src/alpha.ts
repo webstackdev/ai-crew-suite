@@ -13,17 +13,4 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { createExtensionPoint } from '@backstage/backend-plugin-api';
-import { VcsDriver } from './@types';
-
-/**
- * Extension Point that allows sibling plugins to dynamically append 
- * custom source control host drivers into the main AI Core agent plugin.
- */
-export interface VcsDriversExtensionPoint {
-  registerDriver(driver: VcsDriver): void;
-}
-
-export const vcsDriversExtensionPoint = createExtensionPoint<VcsDriversExtensionPoint>({
-  id: 'ai-core.vcs.drivers',
-});
+export { aiCoreBackendModuleVcsGitLab as default } from './module';

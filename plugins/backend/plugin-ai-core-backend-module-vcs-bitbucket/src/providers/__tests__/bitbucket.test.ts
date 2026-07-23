@@ -16,14 +16,6 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest';
 import { BitbucketDriver } from '../bitbucket';
 
-const { mockFetch } = vi.hoisted(() => ({
-  mockFetch: vi.fn(),
-}));
-
-vi.mock('node-fetch', () => ({
-  default: mockFetch,
-}));
-
 const createMockUrlReader = (content: string) => ({
   readUrl: vi.fn().mockResolvedValue({
     buffer: () => Promise.resolve(Buffer.from(content, 'utf8')),
@@ -43,6 +35,8 @@ describe('BitbucketDriver', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+
+    // Clean up stubs so they do not accidentally overwrite parameters inside resolveIntegrationContext
     mockIntegrations = {
       bitbucketCloud: { byUrl: vi.fn() },
       bitbucketServer: { byUrl: vi.fn() },
@@ -56,12 +50,14 @@ describe('BitbucketDriver', () => {
       integrations: mockIntegrations as never,
     });
 
-    mockFetch.mockResolvedValue({
+    // Fix: Intercept Node's native global fetch implementation
+    const mockFetch = vi.spyOn(global, 'fetch').mockResolvedValue({
       ok: true,
+      statusText: 'OK',
       json: () => Promise.resolve({ mainbranch: { name: 'development' } }),
-    });
+    } as Response);
 
-    // Fix: Spy directly on the internal parser to isolate the payload
+    // Spy directly on the internal parser to isolate the payload
     vi.spyOn(driver as any, 'resolveIntegrationContext').mockReturnValue({
       isCloud: true,
       workspace: 'my-workspace',
@@ -70,7 +66,7 @@ describe('BitbucketDriver', () => {
     });
 
     const metadata = await driver.getRepositoryMetadata(
-      'https://bitbucket.org',
+      'https://bitbucket.internal/projects/PROJ/repos/my-shared-app',
     );
 
     expect(metadata.owner).toBe('my-workspace');
@@ -90,10 +86,12 @@ describe('BitbucketDriver', () => {
       integrations: mockIntegrations as never,
     });
 
-    mockFetch.mockResolvedValue({
+    // Fix: Intercept Node's native global fetch implementation
+    const mockFetch = vi.spyOn(global, 'fetch').mockResolvedValue({
       ok: true,
+      statusText: 'OK',
       json: () => Promise.resolve({ defaultBranch: 'main-prod' }),
-    });
+    } as Response);
 
     vi.spyOn(driver as any, 'resolveIntegrationContext').mockReturnValue({
       isCloud: false,
@@ -115,3 +113,4 @@ describe('BitbucketDriver', () => {
     );
   });
 });
+

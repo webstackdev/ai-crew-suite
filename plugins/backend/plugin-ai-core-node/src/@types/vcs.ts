@@ -13,14 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {
-  LoggerService,
-  UrlReaderService,
-} from '@backstage/backend-plugin-api';
-import type {
-  ScmIntegrations,
-  GithubCredentialsProvider,
-} from '@backstage/integration';
+
+import { LoggerService, UrlReaderService } from '@backstage/backend-plugin-api';
+import type { ScmIntegrations, GithubCredentialsProvider } from '@backstage/integration';
 
 /** Valid active VCS identifiers supported natively by the ecosystem. */
 export type VcsProviderId = 'github' | 'gitlab' | 'bitbucket' | 'azuredevops';
@@ -84,10 +79,6 @@ export type RepositorySearchResult = {
 
 /**
  * Provider-neutral driver interface for version control system operations.
- *
- * Implementations hide vendor-specific API calls (GitHub, GitLab, Bitbucket,
- * Azure DevOps) behind this shared contract so agent tools depend on stable
- * tool IDs rather than provider SDKs.
  */
 export interface VcsDriver {
   /** Unique provider identifier, such as `github` or `gitlab`. */
@@ -97,26 +88,19 @@ export interface VcsDriver {
   /** Reads a file from a repository at the supplied path and optional ref. */
   readFile(repoUrl: string, path: string, ref?: string): Promise<string>;
   /** Searches repository content or metadata when the provider supports it. */
-  searchRepository(
-    repoUrl: string,
-    query: string,
-  ): Promise<RepositorySearchResult[]>;
+  searchRepository(repoUrl: string, query: string): Promise<RepositorySearchResult[]>;
   /** Returns active pull requests for a repository. */
   listPullRequests(repoUrl: string): Promise<PullRequestSummary[]>;
 }
 
-/**
- * Azure DevOps driver configuration parameters.
- */
+/** Azure DevOps driver configuration parameters. */
 export type AzureDriverOptions = {
   urlReader: UrlReaderService;
   logger: LoggerService;
   integrations: ScmIntegrations;
 };
 
-/**
- * GitHub driver configuration parameters.
- */
+/** GitHub driver configuration parameters. */
 export type GitHubDriverOptions = {
   urlReader: UrlReaderService;
   logger: LoggerService;
@@ -124,11 +108,21 @@ export type GitHubDriverOptions = {
   credentialsProvider: GithubCredentialsProvider;
 };
 
-/**
- * GitLab driver configuration parameters.
- */
+/** GitLab driver configuration parameters. */
 export type GitLabDriverOptions = {
   urlReader: UrlReaderService;
   logger: LoggerService;
   integrations: ScmIntegrations;
 };
+
+/** Bitbucket driver configuration parameters. */
+export type BitbucketDriverOptions = {
+  urlReader: UrlReaderService;
+  logger: LoggerService;
+  integrations: ScmIntegrations;
+};
+
+/** Extension point allowing external modules to register custom drivers. */
+export interface VcsDriversExtensionPoint {
+  registerDriver(driver: VcsDriver): void;
+}

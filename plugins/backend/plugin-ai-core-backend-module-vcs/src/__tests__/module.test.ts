@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { startTestBackend } from '@backstage/backend-test-utils';
-import { mockServices } from '@backstage/backend-test-utils';
-import { createBackendPlugin } from '@backstage/backend-plugin-api';
+import { startTestBackend, mockServices } from '@backstage/backend-test-utils';
+import { createBackendPlugin, createBackendModule } from '@backstage/backend-plugin-api';
 import { toolExtensionPoint } from '@webstackbuilders/plugin-ai-core-node';
+import { vcsDriversExtensionPoint } from '@webstackbuilders/plugin-ai-core-node';
 import { describe, expect, it, vi } from 'vitest';
 import { aiCoreBackendModuleVcs } from '../module';
 
@@ -44,24 +44,50 @@ describe('aiCoreBackendModuleVcs', () => {
       addTool: vi.fn(),
     };
 
+    // 1. Core parent plugin host container
     const mockAiCorePlugin = createBackendPlugin({
       pluginId: 'ai-core',
       register(env) {
-        // Register the missing tool registry extension point expected by the VCS module dependency array
         env.registerExtensionPoint(toolExtensionPoint, mockToolExtensionPoint);
         env.registerInit({
           deps: {},
-          async init() {},
+          async init() {
+            // Keep this block execution footprint empty as it is just a host stub
+          },
         });
       },
     });
 
-    // Spin up an isolated backend test harness with valid backend feature blocks
+    // 2. Construct a valid inline test backend module
+    const inlineMockDriverModule = createBackendModule({
+      pluginId: 'ai-core',
+      moduleId: 'vcs-github-mock',
+      register(env) {
+        env.registerInit({
+          deps: {
+            vcsRegistry: vcsDriversExtensionPoint,
+          },
+          async init({ vcsRegistry }) {
+            // Populate the registry to satisfy the core plugin's startup query
+            vcsRegistry.registerDriver({
+              providerId: 'github',
+              getRepositoryMetadata: vi.fn(),
+              readFile: vi.fn(),
+              searchRepository: vi.fn(),
+              listPullRequests: vi.fn(),
+            });
+          },
+        });
+      },
+    });
+
+    // 3. Spin up the isolated test backend with 100% compliant framework components
     await expect(
       startTestBackend({
         features: [
-          mockAiCorePlugin, // The main plugin host container
-          aiCoreBackendModuleVcs, // Our VCS module attaching to it
+          mockAiCorePlugin, 
+          aiCoreBackendModuleVcs, 
+          inlineMockDriverModule,
           mockServices.rootConfig.factory({ data: configData }),
           mockServices.logger.factory(),
           mockServices.urlReader.factory(),

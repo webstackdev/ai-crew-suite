@@ -15,19 +15,15 @@
  */
 import { LoggerService, UrlReaderService } from '@backstage/backend-plugin-api';
 import { ScmIntegrations } from '@backstage/integration';
-import fetch from 'node-fetch';
 import {
+  BitbucketDriverOptions,
   PullRequestSummary,
   RepositoryMetadata,
   RepositorySearchResult,
   VcsDriver,
-} from '../@types';
+} from '@webstackbuilders/plugin-ai-core-node';
 
-export type BitbucketDriverOptions = {
-  urlReader: UrlReaderService;
-  logger: LoggerService;
-  integrations: ScmIntegrations;
-};
+const bitBucketApiVer = '2.0';
 
 export class BitbucketDriver implements VcsDriver {
   readonly providerId = 'bitbucket';
@@ -60,7 +56,7 @@ export class BitbucketDriver implements VcsDriver {
         token: cloudIntegration.config.token,
         username: cloudIntegration.config.username,
         appPassword: cloudIntegration.config.appPassword,
-        apiBaseUrl: 'https://bitbucket.org',
+        apiBaseUrl: `https://api.bitbucket.org/${bitBucketApiVer}`,
       };
     }
 
