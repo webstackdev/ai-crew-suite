@@ -22,22 +22,28 @@ import { toolExtensionPoint } from '@webstackbuilders/plugin-ai-core-node';
 import { readVcsConfig } from './config';
 import { vcsDriversExtensionPoint } from './extensions';
 import {
-  AzureDriver,
-  BitbucketDriver,
   GitHubDriver,
+  AzureDriver,
   GitLabDriver,
-  VcsDriver,
+  BitbucketDriver,
+  VcsDriver
 } from './providers';
 import { createVcsTools } from './tools';
 
+/**
+ * VCS backend module for the AI Core backend plugin.
+ * Now refactored to support open-ended driver registrations via Extension Points.
+ *
+ * @public
+ */
 export const aiCoreBackendModuleVcs = createBackendModule({
   pluginId: 'ai-core',
   moduleId: 'vcs',
   register(env) {
-    // Shared registry instance inside the module lifetime block
+    // 1. Maintain an internal module-scoped map of registered drivers
     const drivers = new Map<string, VcsDriver>();
 
-    // Expose the registration hooks to external modules at boot time
+    // 2. Expose the Extension Point interface to the Backstage framework
     env.registerExtensionPoint(vcsDriversExtensionPoint, {
       registerDriver(driver) {
         drivers.set(driver.providerId, driver);
@@ -54,31 +60,36 @@ export const aiCoreBackendModuleVcs = createBackendModule({
       async init({ config, logger, urlReader, tools }) {
         const vcsConfig = readVcsConfig(config);
 
+        // Setup central Backstage SCM parameters used by built-in drivers
         const integrations = ScmIntegrations.fromConfig(config);
         const githubCredentialsProvider = DefaultGithubCredentialsProvider.fromIntegrations(integrations);
 
-        // Natively bundle your core drivers right out of the box
-        const azure = new AzureDriver({ urlReader, logger, integrations });
-        const bitbucket = new BitbucketDriver({ urlReader, logger, integrations });
-        const github = new GitHubDriver({ urlReader, logger, integrations, credentialsProvider: githubCredentialsProvider });
-        const gitlab = new GitLabDriver({ urlReader, logger, integrations });
+        // 3. Register native ecosystem drivers out of the box
+        const nativeDrivers: VcsDriver[] = [
+          new GitHubDriver({ urlReader, logger: logger.child({ label: 'vcs-github' }), integrations, credentialsProvider: githubCredentialsProvider }),
+          new AzureDriver({ urlReader, logger: logger.child({ label: 'vcs-azuredevops' }), integrations }),
+          new GitLabDriver({ urlReader, logger: logger.child({ label: 'vcs-gitlab' }), integrations }),
+          new BitbucketDriver({ urlReader, logger: logger.child({ label: 'vcs-bitbucket' }), integrations }),
+        ];
 
-        drivers.set(azure.providerId, azure);
-        drivers.set(bitbucket.providerId, bitbucket);
-        drivers.set(github.providerId, github);
-        drivers.set(gitlab.providerId, gitlab);
+        for (const nativeDriver of nativeDrivers) {
+          drivers.set(nativeDriver.providerId, nativeDriver);
+        }
 
-        // Dynamically extract the configured provider targeting your agents
+        // 4. Resolve the driver dictated by the user's ai.integrations.vcs.provider config
         const driver = drivers.get(vcsConfig.provider);
 
         if (!driver) {
           throw new Error(
-            `VCS active provider configuration error: Driver matching '${vcsConfig.provider}' was not registered.`,
+            `VCS provider configuration mismatch: No driver registered for provider identifier '${vcsConfig.provider}'. Available options: ${Array.from(drivers.keys()).join(', ')}`,
           );
         }
 
-        logger.info(`Initializing active AI Tool wrapper utilizing driver: '${driver.providerId}'`);
+        logger.info(
+          `Initializing active VCS agent wrapper utilizing registered driver: '${driver.providerId}'`,
+        );
 
+        // 5. Expose the tools to the main AI plugin
         for (const tool of createVcsTools({ driver, logger })) {
           tools.addTool(tool);
         }

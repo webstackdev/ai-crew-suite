@@ -13,29 +13,60 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { describe, expect, it } from 'vitest';
-import vcsModule, { aiCoreBackendModuleVcs } from '../module';
-
-const getRegistrations = () =>
-  (aiCoreBackendModuleVcs as unknown as {
-    getRegistrations(): {
-      type: string;
-      pluginId: string;
-      moduleId: string;
-      init?: unknown;
-    }[];
-  }).getRegistrations();
+import { startTestBackend } from '@backstage/backend-test-utils';
+import { mockServices } from '@backstage/backend-test-utils';
+import { createBackendPlugin } from '@backstage/backend-plugin-api';
+import { toolExtensionPoint } from '@webstackbuilders/plugin-ai-core-node';
+import { describe, expect, it, vi } from 'vitest';
+import { aiCoreBackendModuleVcs } from '../module';
 
 describe('aiCoreBackendModuleVcs', () => {
-  it('exports an installable backend module for the ai-core plugin', () => {
-    expect(vcsModule).toBe(aiCoreBackendModuleVcs);
-    expect(getRegistrations()).toEqual([
-      expect.objectContaining({
-        type: expect.stringMatching(/^module/),
-        pluginId: 'ai-core',
-        moduleId: 'vcs',
-        init: expect.any(Object),
+  it('should initialize successfully with a valid provider configuration', async () => {
+    const configData = {
+      ai: {
+        integrations: {
+          vcs: {
+            provider: 'github',
+          },
+        },
+      },
+      integrations: {
+        github: [
+          {
+            host: 'github.com',
+            token: 'mock-token',
+          },
+        ],
+      },
+    };
+
+    const mockToolExtensionPoint = {
+      addTool: vi.fn(),
+    };
+
+    const mockAiCorePlugin = createBackendPlugin({
+      pluginId: 'ai-core',
+      register(env) {
+        // Register the missing tool registry extension point expected by the VCS module dependency array
+        env.registerExtensionPoint(toolExtensionPoint, mockToolExtensionPoint);
+        env.registerInit({
+          deps: {},
+          async init() {},
+        });
+      },
+    });
+
+    // Spin up an isolated backend test harness with valid backend feature blocks
+    await expect(
+      startTestBackend({
+        features: [
+          mockAiCorePlugin, // The main plugin host container
+          aiCoreBackendModuleVcs, // Our VCS module attaching to it
+          mockServices.rootConfig.factory({ data: configData }),
+          mockServices.logger.factory(),
+          mockServices.urlReader.factory(),
+        ],
       }),
-    ]);
+    ).resolves.toBeDefined();
   });
 });

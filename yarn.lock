@@ -14005,6 +14005,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@webstackbuilders/plugin-ai-core-backend-module-vcs@workspace:plugins/backend/plugin-ai-core-backend-module-vcs"
   dependencies:
+    "@backstage/backend-defaults": "backstage:^"
     "@backstage/backend-plugin-api": "backstage:^"
     "@backstage/backend-test-utils": "backstage:^"
     "@backstage/cli": "backstage:^"
