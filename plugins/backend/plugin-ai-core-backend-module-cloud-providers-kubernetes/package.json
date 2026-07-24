@@ -54,6 +54,10 @@
   },
   "dependencies": {
     "@backstage/backend-plugin-api": "backstage:^",
+    "@backstage/config": "backstage:^",
+    "@backstage/plugin-kubernetes-backend": "backstage:^",
+    "@backstage/plugin-kubernetes-node": "backstage:^",
+    "@kubernetes/client-node": "^1.4.0",
     "@webstackbuilders/plugin-ai-core-node": "workspace:*"
   },
   "devDependencies": {

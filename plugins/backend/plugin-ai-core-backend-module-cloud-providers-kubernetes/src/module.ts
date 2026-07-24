@@ -28,21 +28,25 @@ export const aiCoreBackendModuleCloudProvidersKubernetes = createBackendModule({
         cloudRegistry: cloudDriversExtensionPoint,
       },
       async init({ config, logger, cloudRegistry }) {
-        logger.info('Initializing decoupled AI Kubernetes Cloud Provider module...');
+        logger.info('Initializing AI Kubernetes Cloud Provider module reading from app-config...');
 
-        // Safely extract the optional block scoped down to this specific sub-namespace
         const k8sConfigSection = config.getOptionalConfig(
           'ai.integrations.cloudProviders.providers.kubernetes'
         );
-
         const targetNamespaces = k8sConfigSection?.getOptionalStringArray('targetNamespaces') || ['default'];
+
+        // Extract the official global kubernetes block instead of a custom one
+        const globalK8sConfig = config.getOptionalConfig('kubernetes');
+        if (!globalK8sConfig) {
+          throw new Error('No global kubernetes configurations detected in app-config.yaml');
+        }
 
         const driver = new KubernetesDriver({
           logger: logger.child({ label: 'cloud-provider-kubernetes-driver' }),
+          rootConfig: config,
           config: { targetNamespaces },
         });
 
-        // Register seamlessly into the shared orchestrator mapping registry
         cloudRegistry.registerDriver(driver);
       },
     });

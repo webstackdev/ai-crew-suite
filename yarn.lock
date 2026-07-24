@@ -4006,7 +4006,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage/plugin-kubernetes-node@npm:^0.4.6":
+"@backstage/plugin-kubernetes-node@backstage:^::backstage=1.53.0&npm=0.4.6, @backstage/plugin-kubernetes-node@npm:^0.4.6":
   version: 0.4.6
   resolution: "@backstage/plugin-kubernetes-node@npm:0.4.6"
   dependencies:
@@ -7512,7 +7512,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@kubernetes/client-node@npm:1.4.0":
+"@kubernetes/client-node@npm:1.4.0, @kubernetes/client-node@npm:^1.4.0":
   version: 1.4.0
   resolution: "@kubernetes/client-node@npm:1.4.0"
   dependencies:
@@ -14446,6 +14446,10 @@ __metadata:
   dependencies:
     "@backstage/backend-plugin-api": "backstage:^"
     "@backstage/backend-test-utils": "backstage:^"
+    "@backstage/config": "backstage:^"
+    "@backstage/plugin-kubernetes-backend": "backstage:^"
+    "@backstage/plugin-kubernetes-node": "backstage:^"
+    "@kubernetes/client-node": "npm:^1.4.0"
     "@webstackbuilders/plugin-ai-core-node": "workspace:*"
     vitest: "npm:^4.1.10"
   languageName: unknown

@@ -13,69 +13,103 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+// plugins/backend/plugin-ai-core-backend-module-cloud-providers-kubernetes/src/providers/KubernetesDriver.test.ts
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { mockServices } from '@backstage/backend-test-utils';
+import { ConfigReader } from '@backstage/config';
 import { KubernetesDriver } from '../KubernetesDriver';
+import { CoreV1Api } from '@kubernetes/client-node';
 
-describe('KubernetesDriver Boundary Evaluation', () => {
-  const logger = mockServices.logger.mock();
+// Automatically mock the official Kubernetes client node module
+vi.mock('@kubernetes/client-node', async (importOriginal) => {
+  const original = await importOriginal<typeof import('@kubernetes/client-node')>();
+  return {
+    ...original,
+    CoreV1Api: vi.fn().mockImplementation(() => ({
+      listNamespacedPod: vi.fn(),
+    })),
+  };
+});
+
+describe('KubernetesDriver Configuration Mapping Suite', () => {
+  const mockLogger = { debug: vi.fn(), error: vi.fn() };
+  
+  // Scaffold a valid root config mimicking an authentic app-config.yaml environment
+  const mockRootConfig = new ConfigReader({
+    kubernetes: {
+      clusters: [
+        {
+          name: 'production-cluster',
+          url: 'https://corp.internal',
+          serviceAccountToken: 'mock-sa-token-abc-123',
+        },
+      ],
+    },
+  });
+
   let driver: KubernetesDriver;
 
   beforeEach(() => {
     driver = new KubernetesDriver({
-      logger,
-      config: { targetNamespaces: ['production'] },
+      logger: mockLogger,
+      rootConfig: mockRootConfig,
+      config: { targetNamespaces: ['production-namespace'] },
     });
     vi.restoreAllMocks();
   });
 
-  it('correctly maps raw OOMKilled container payload fields to standard domain summary contracts', async () => {
-    // Structural Interceptor Mock satisfying global fetch pipeline
-    vi.spyOn(global, 'fetch').mockResolvedValueOnce({
-      ok: true,
-      json: async () => ({
-        items: [
-          {
-            metadata: { name: 'auth-service-pod-xyz' },
-            status: {
-              phase: 'Running',
-              containerStatuses: [
-                {
-                  state: {
-                    waiting: { reason: 'OOMKilled' },
-                  },
+  it('correctly extracts clusters from global config and normalizes raw pod data into standard contracts', async () => {
+    // Instantiate a dedicated mock handle mirroring the internal list method
+    const mockListNamespacedPod = vi.fn().mockResolvedValue({
+      items: [
+        {
+          metadata: { name: 'payment-service-deployment-xyz' },
+          status: {
+            phase: 'Running',
+            containerStatuses: [
+              {
+                state: {
+                  waiting: { reason: 'ImagePullBackOff' },
                 },
-              ],
-            },
-            spec: {
-              containers: [{ image: 'node:20-alpine' }],
-            },
+              },
+            ],
           },
-        ],
-      }),
-    } as Response);
+          spec: {
+            containers: [{ image: 'internal-registry.io/payment:v1.2.0' }],
+          },
+        },
+      ],
+    });
 
-    const workloads = await driver.kubernetesWorkloads({ namespace: 'production' });
+    // Wire up our custom spy handle to catch the class instantiation routine
+    vi.mocked(CoreV1Api).mockImplementation(() => ({
+      listNamespacedPod: mockListNamespacedPod,
+    } as any));
 
+    const workloads = await driver.kubernetesWorkloads({ namespace: 'production-namespace' });
+
+    // Validate that the correct cluster context list routine was executed
+    expect(mockListNamespacedPod).toHaveBeenCalledWith({ namespace: 'production-namespace' });
+  
+    // Verify structural data translation integrity matches agentic domain models
     expect(workloads).toHaveLength(1);
     expect(workloads[0]).toEqual({
-      name: 'auth-service-pod-xyz',
+      name: 'payment-service-deployment-xyz',
       kind: 'Pod',
-      namespace: 'production',
-      status: 'OOMKilled', // Successfully extracted and translated from deep container hooks
+      namespace: 'production-namespace',
+      status: 'ImagePullBackOff',
       replicas: 1,
-      images: ['node:20-alpine'],
+      images: ['internal-registry.io/payment:v1.2.0'],
     });
   });
 
-  it('safely surfaces underlying network API connection rejections up the runtime chain', async () => {
-    vi.spyOn(global, 'fetch').mockResolvedValueOnce({
-      ok: false,
-      status: 500,
-    } as Response);
+  it('surfaces native SDK connection rejections transparently up the runtime stack', async () => {
+    const mockRejectCall = vi.fn().mockRejectedValue(new Error('KubeAPI Connection Timeout'));
+    vi.mocked(CoreV1Api).mockImplementation(() => ({
+      listNamespacedPod: mockRejectCall,
+    } as any));
 
-    await expect(driver.kubernetesWorkloads({ namespace: 'production' })).rejects.toThrow(
-      /K8s API returned non-OK status: 500/
-    );
+    await expect(
+      driver.kubernetesWorkloads({ namespace: 'production-namespace' })
+    ).rejects.toThrow(/KubeAPI Connection Timeout/);
   });
 });
