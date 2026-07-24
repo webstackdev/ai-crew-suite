@@ -1,6 +1,14 @@
 import { vi, beforeEach, afterEach, beforeAll, afterAll } from 'vitest';
 
 // ----------------------------------------------------
+// Jest Compatibility Polyfills (Required by Backstage Mock Services)
+// ----------------------------------------------------
+globalThis.jest = {
+  fn: (...args: any[]) => vi.fn(...args),
+  spyOn: (...args: any[]) => vi.spyOn(...(args as [any, any])),
+} as any;
+
+// ----------------------------------------------------
 // 1. Environment Detection
 // ----------------------------------------------------
 

@@ -14147,6 +14147,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@webstackbuilders/plugin-ai-core-backend-module-cloud-providers-kubernetes@workspace:plugins/backend/plugin-ai-core-backend-module-cloud-providers-kubernetes":
+  version: 0.0.0-use.local
+  resolution: "@webstackbuilders/plugin-ai-core-backend-module-cloud-providers-kubernetes@workspace:plugins/backend/plugin-ai-core-backend-module-cloud-providers-kubernetes"
+  dependencies:
+    "@backstage/backend-plugin-api": "backstage:^"
+    "@backstage/backend-test-utils": "backstage:^"
+    "@webstackbuilders/plugin-ai-core-node": "workspace:*"
+    vitest: "npm:^4.1.10"
+  languageName: unknown
+  linkType: soft
+
 "@webstackbuilders/plugin-ai-core-backend-module-cloud-providers@workspace:^, @webstackbuilders/plugin-ai-core-backend-module-cloud-providers@workspace:plugins/backend/plugin-ai-core-backend-module-cloud-providers":
   version: 0.0.0-use.local
   resolution: "@webstackbuilders/plugin-ai-core-backend-module-cloud-providers@workspace:plugins/backend/plugin-ai-core-backend-module-cloud-providers"

@@ -51,7 +51,7 @@
     "postpack": "backstage-cli package postpack",
     "typecheck": "tsc --noEmit",
     "lint": "backstage-cli package lint --format stylish",
-    "test": "vitest run src --exclude 'dist-types/**' --passWithNoTests"
+    "test": "vitest run src --exclude 'dist-types/**' --passWithNoTests --config ../../../test/vitest.config.ts"
   },
   "dependencies": {
     "@aws-sdk/client-codecommit": "^3.1093.0",
