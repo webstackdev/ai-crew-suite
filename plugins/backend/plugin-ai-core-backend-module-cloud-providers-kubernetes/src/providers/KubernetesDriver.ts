@@ -13,100 +13,124 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { 
-  CloudProviderDriver, 
-  DriverOptions, 
-  CloudAccountSummary, 
-  CloudResourceSummary, 
-  CloudDependencySummary, 
-  KubernetesWorkloadSummary 
+import { CoreV1Api, KubeConfig } from '@kubernetes/client-node';
+import { Config } from '@backstage/config';
+import {
+  CloudProviderDriver,
+  CloudAccountSummary,
+  CloudResourceSummary,
+  CloudDependencySummary,
+  KubernetesWorkloadSummary
 } from '@webstackbuilders/plugin-ai-core-node';
+
+export interface KubernetesDriverOptions {
+  logger: any;
+  rootConfig: Config;
+  config: { targetNamespaces: string[] };
+}
 
 export class KubernetesDriver implements CloudProviderDriver {
   readonly providerId = 'kubernetes';
   private readonly logger: any;
+  private readonly rootConfig: Config;
   private readonly targetNamespaces: string[];
 
-  constructor(options: DriverOptions) {
+  constructor(options: KubernetesDriverOptions) {
     this.logger = options.logger;
-    this.targetNamespaces = options.config?.targetNamespaces || ['default'];
+    this.rootConfig = options.rootConfig;
+    this.targetNamespaces = options.config.targetNamespaces;
   }
 
   // Mandatory implementation placeholder satisfying the unified interface contract
   async lookupAccount(): Promise<CloudAccountSummary | undefined> {
-    return {
-      id: 'k8s-local-cluster',
-      name: 'In-Cluster Context',
-      provider: 'kubernetes',
-    };
+    return { id: 'k8s-local-cluster', name: 'In-Cluster Context', provider: 'kubernetes' };
   }
-
-  // Mandatory implementation placeholder satisfying the unified interface contract
-  async lookupResource(): Promise<CloudResourceSummary[]> {
-    return [];
-  }
-
-  // Mandatory implementation placeholder satisfying the unified interface contract
+  async lookupResource(): Promise<CloudResourceSummary[]> { return []; }
   async resourceDependencies(): Promise<CloudDependencySummary> {
     return { resourceId: 'kubernetes', dependsOn: [], dependedBy: [] };
   }
 
   /**
-   * Fetches live pods and deployments across targeted namespaces,
-   * isolating container statuses like OOMKilled or ImagePullBackOff.
+   * Manually builds native KubeConfig profiles by parsing the official shared 'kubernetes' configuration block,
+   * reusing the precise credentials (serviceAccount token, cluster URL) platform users already configured.
    */
-  async kubernetesWorkloads(input: { namespace?: string }): Promise<KubernetesWorkloadSummary[]> {
+  private getKubeClients(): { name: string; client: CoreV1Api }[] {
+    const clients: { name: string; client: CoreV1Api }[] = [];
+    const k8sConfig = this.rootConfig.getOptionalConfig('kubernetes');
+    if (!k8sConfig) return clients;
+
+    const clusters = k8sConfig.getOptionalConfigArray('clusters') || [];
+
+    for (const clusterConfig of clusters) {
+      const name = clusterConfig.getString('name');
+      const url = clusterConfig.getString('url');
+      const serviceAccountToken = clusterConfig.getOptionalString('serviceAccountToken');
+
+      const kc = new KubeConfig();
+      
+      // Inject standard target environments matching your user's existing settings
+      kc.loadFromString(JSON.stringify({
+        apiVersion: 'v1',
+        kind: 'Config',
+        clusters: [{ name, cluster: { server: url, 'insecure-skip-tls-verify': true } }],
+        contexts: [{ name, context: { cluster: name, user: name } }],
+        'current-context': name,
+        users: [{ name, user: { token: serviceAccountToken } }],
+      }));
+
+      clients.push({
+        name,
+        client: kc.makeApiClient(CoreV1Api),
+      });
+    }
+
+    return clients;
+  }
+
+  async kubernetesWorkloads(input: { cluster?: string; namespace?: string }): Promise<KubernetesWorkloadSummary[]> {
     const namespacesToScan = input.namespace ? [input.namespace] : this.targetNamespaces;
     const summaries: KubernetesWorkloadSummary[] = [];
 
-    for (const ns of namespacesToScan) {
-      this.logger.debug(`Polling workload data from live cluster API for namespace: ${ns}`);
-      
-      try {
-        // Query pods directly from the core Kubernetes v1 endpoint
-        const response = await fetch(`https://default.svc{ns}/pods`, {
-          method: 'GET',
-          headers: { Accept: 'application/json' },
-        });
+    const clusterClients = this.getKubeClients();
+    const targets = input.cluster ? clusterClients.filter(c => c.name === input.cluster) : clusterClients;
 
-        if (!response.ok) {
-          throw new Error(`K8s API returned non-OK status: ${response.status}`);
-        }
+    for (const target of targets) {
+      for (const ns of namespacesToScan) {
+        this.logger.debug(`Polling live cluster pods for target cluster [${target.name}] inside namespace: ${ns}`);
 
-        const rawData = await response.json();
-        const pods = rawData.items || [];
+        try {
+          // Native SDK call execution
+          const response = await target.client.listNamespacedPod({ namespace: ns });
+          const pods = response.items || [];
 
-        for (const pod of pods) {
-          const name = pod.metadata?.name || 'unknown';
-          
-          // Determine status by analyzing lifecycle structures
-          let status = pod.status?.phase || 'Unknown';
-          const containerStatuses = pod.status?.containerStatuses || [];
-          
-          for (const cs of containerStatuses) {
-            if (cs.state?.waiting) {
-              // Extract actionable failure signatures like OOMKilled or ImagePullBackOff
-              status = cs.state.waiting.reason || status;
-            } else if (cs.state?.terminated) {
-              status = cs.state.terminated.reason || status;
+          for (const pod of pods) {
+            const name = pod.metadata?.name || 'unknown';
+            let status = pod.status?.phase || 'Unknown';
+            const containerStatuses = pod.status?.containerStatuses || [];
+
+            for (const cs of containerStatuses) {
+              if (cs.state?.waiting) {
+                status = cs.state.waiting.reason || status;
+              } else if (cs.state?.terminated) {
+                status = cs.state.terminated.reason || status;
+              }
             }
+
+            const images = pod.spec?.containers?.map(c => c.image || '') || [];
+
+            summaries.push({
+              name,
+              kind: 'Pod',
+              namespace: ns,
+              status,
+              replicas: 1,
+              images,
+            });
           }
-
-          // Isolate image tags securely
-          const images = pod.spec?.containers?.map((c: any) => c.image as string) || [];
-
-          summaries.push({
-            name,
-            kind: 'Pod',
-            namespace: ns,
-            status,
-            replicas: 1,
-            images,
-          });
+        } catch (err: any) {
+          this.logger.error(`Error loading cluster workloads for target '${target.name}/${ns}': ${err.message}`);
+          throw err;
         }
-      } catch (err: any) {
-        this.logger.error(`Failed executing scan block inside namespace '${ns}': ${err.message}`);
-        throw err;
       }
     }
 
