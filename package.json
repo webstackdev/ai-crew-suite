@@ -21,6 +21,7 @@
   ],
   "scripts": {
     "clean": "turbo clean",
+    "clean:node_modules": "find plugins -name node_modules -type d -exec rm -rf {} +",
     "dev": "turbo start --filter=app --filter=backend --concurrency=10",
     "dev:ci": "concurrently \"http-server packages/app/dist -a localhost --port 3000 --gzip --proxy http://localhost:3000?\" \"turbo run start-backend\"",
     "start": "turbo start --filter=app",

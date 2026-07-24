@@ -1,6 +1,6 @@
 {
-  "name": "@webstackbuilders/plugin-ai-core-backend-module-vcs-bitbucket",
-  "description": "The BitBucket extension for the VCS interface backend module for the ai-core plugin.",
+  "name": "@webstackbuilders/plugin-ai-core-backend-module-cloud-providers-kubernetes",
+  "description": "The Kubernetes extension for the cloud providers interface backend module for the ai-core plugin.",
   "version": "0.0.1",
   "main": "src/index.ts",
   "types": "src/index.ts",
@@ -12,9 +12,9 @@
     "webstack-builders",
     "ai-crew-suite",
     "ai-core",
-    "vcs",
-    "Bitbucket",
-    "git"
+    "cloud",
+    "kubernetes",
+    "k8s"
   ],
   "publishConfig": {
     "access": "public",
@@ -35,7 +35,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/webstackdev/ai-crew-suite",
-    "directory": "plugins/backend/ai-core-backend-module-vcs-bitbucket"
+    "directory": "plugins/backend/plugin-ai-core-backend-module-cloud-providers-kubernetes"
   },
   "files": [
     "dist",
@@ -44,7 +44,7 @@
   "configSchema": "config.d.ts",
   "scripts": {
     "start": "backstage-cli package start",
-    "build": "yarn --cwd ../../.. tsc -b plugins/backend/plugin-ai-core-backend-module-vcs-bitbucket/tsconfig.json --emitDeclarationOnly && backstage-cli package build",
+    "build": "yarn --cwd ../../.. tsc -b plugins/backend/plugin-ai-core-backend-module-cloud-providers-kubernetes/tsconfig.json --emitDeclarationOnly && backstage-cli package build",
     "clean": "backstage-cli package clean",
     "prepack": "backstage-cli package prepack",
     "postpack": "backstage-cli package postpack",
@@ -54,12 +54,10 @@
   },
   "dependencies": {
     "@backstage/backend-plugin-api": "backstage:^",
-    "@backstage/integration": "backstage:^",
-    "@webstackbuilders/plugin-ai-core-backend-module-vcs": "workspace:*",
     "@webstackbuilders/plugin-ai-core-node": "workspace:*"
   },
   "devDependencies": {
-    "@backstage/cli": "backstage:^",
+    "@backstage/backend-test-utils": "backstage:^",
     "vitest": "^4.1.10"
   }
 }
