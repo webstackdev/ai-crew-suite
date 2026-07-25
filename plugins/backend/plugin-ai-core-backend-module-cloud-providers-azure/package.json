@@ -1,6 +1,6 @@
 {
-  "name": "@webstackbuilders/plugin-ai-core-backend-module-cloud-providers-aws",
-  "description": "The AWS extension for the cloud providers interface backend module for the ai-core plugin.",
+  "name": "@webstackbuilders/plugin-ai-core-backend-module-cloud-providers-azure",
+  "description": "The Azure extension for the cloud providers interface backend module for the ai-core plugin.",
   "version": "0.0.1",
   "main": "src/index.ts",
   "types": "src/index.ts",
@@ -13,7 +13,7 @@
     "ai-crew-suite",
     "ai-core",
     "cloud",
-    "aws",
+    "azure",
     "k8s"
   ],
   "publishConfig": {
@@ -35,7 +35,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/webstackdev/ai-crew-suite",
-    "directory": "plugins/backend/plugin-ai-core-backend-module-cloud-providers-aws"
+    "directory": "plugins/backend/plugin-ai-core-backend-module-cloud-providers-azure"
   },
   "files": [
     "dist",
@@ -44,7 +44,7 @@
   "configSchema": "config.d.ts",
   "scripts": {
     "start": "backstage-cli package start",
-    "build": "yarn --cwd ../../.. tsc -b plugins/backend/plugin-ai-core-backend-module-cloud-providers-aws/tsconfig.json --emitDeclarationOnly && backstage-cli package build",
+    "build": "yarn --cwd ../../.. tsc -b plugins/backend/plugin-ai-core-backend-module-cloud-providers-azure/tsconfig.json --emitDeclarationOnly && backstage-cli package build",
     "clean": "backstage-cli package clean",
     "prepack": "backstage-cli package prepack",
     "postpack": "backstage-cli package postpack",
@@ -53,10 +53,10 @@
     "test": "vitest run src --exclude 'dist-types/**' --passWithNoTests --config ../../../test/vitest.config.ts"
   },
   "dependencies": {
-    "@aws-sdk/client-resource-groups-tagging-api": "^3.1095.0",
-    "@aws-sdk/client-sts": "^3.1095.0",
+    "@azure/arm-resources": "^8.0.0",
+    "@azure/identity": "^4.13.1",
     "@backstage/backend-plugin-api": "backstage:^",
-    "@backstage/integration-aws-node": "backstage:^",
+    "@backstage/config": "backstage:^",
     "@webstackbuilders/plugin-ai-core-node": "workspace:*"
   },
   "devDependencies": {
