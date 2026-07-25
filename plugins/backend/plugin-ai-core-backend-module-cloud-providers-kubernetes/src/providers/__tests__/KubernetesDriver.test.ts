@@ -32,7 +32,7 @@ vi.mock('@kubernetes/client-node', async (importOriginal) => {
 
 describe('KubernetesDriver Configuration Mapping Suite', () => {
   const mockLogger = { debug: vi.fn(), error: vi.fn() };
-  
+
   // Scaffold a valid root config mimicking an authentic app-config.yaml environment
   const mockRootConfig = new ConfigReader({
     kubernetes: {
