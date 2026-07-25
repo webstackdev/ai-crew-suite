@@ -13,19 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { coreServices, createBackendModule } from '@backstage/backend-plugin-api';
 import {
-  coreServices,
-  createBackendModule,
-} from '@backstage/backend-plugin-api';
-import { toolExtensionPoint } from '@webstackbuilders/plugin-ai-core-node';
+  toolExtensionPoint,
+  qualityScorecardsExtensionPoint,
+  QualityScorecardsDriver
+} from '@webstackbuilders/plugin-ai-core-node';
 import { readQualityScorecardsConfig } from './config';
-import { QualityScorecardDriver, SoundcheckDriver } from './providers';
-import { createQualityScorecardTools } from './tools';
+import { createQualityScorecardsTools } from './registerTools';
 
 export const aiCoreBackendModuleQualityScorecards = createBackendModule({
   pluginId: 'ai-core',
   moduleId: 'quality-scorecards',
   register(env) {
+    // 1. Maintain an internal module-scoped map of registered quality compliance drivers
+    const drivers = new Map<string, QualityScorecardsDriver>();
+
+    // 2. Expose the Extension Point interface to handle dynamic boot registration loops
+    env.registerExtensionPoint(qualityScorecardsExtensionPoint, {
+      registerDriver(driver) {
+        drivers.set(driver.providerId, driver);
+      },
+    });
+
     env.registerInit({
       deps: {
         config: coreServices.rootConfig,
@@ -34,30 +44,23 @@ export const aiCoreBackendModuleQualityScorecards = createBackendModule({
       },
       async init({ config, logger, tools }) {
         const qualityConfig = readQualityScorecardsConfig(config);
-        logger.info(
-          `Initializing quality scorecards module with provider '${qualityConfig.provider}'`,
-        );
 
-        let driver: QualityScorecardDriver;
-        switch (qualityConfig.provider) {
-          case 'soundcheck':
-            driver = new SoundcheckDriver({
-              logger: logger.child({ label: 'quality-scorecards-soundcheck' }),
-              config: qualityConfig.providers.soundcheck,
-            });
-            break;
-          case 'scorecards':
-          case 'internal':
-            throw new Error(
-              `Quality scorecards provider '${qualityConfig.provider}' is not implemented yet`,
-            );
-          default: {
-            const exhaustive: never = qualityConfig.provider;
-            throw new Error(`Unsupported quality provider: ${exhaustive}`);
-          }
+        // 3. Resolve the driver dictated by config values completely from the runtime Map
+        const driver = drivers.get(qualityConfig.provider);
+
+        if (!driver) {
+          throw new Error(
+            `No compliance driver registered for identifier '${qualityConfig.provider}'. ` +
+            `Ensure the matching plugin bundle package '@webstackbuilders/plugin-ai-core-backend-module-quality-scorecards-${qualityConfig.provider}' is fully imported.`
+          );
         }
 
-        for (const tool of createQualityScorecardTools({ driver, logger })) {
+        logger.info(
+          `Initializing active Quality Scorecards agent wrapper utilizing registered driver: '${driver.providerId}'`
+        );
+
+        // 4. Translate capabilities and mount tools inside the central execution registry
+        for (const tool of createQualityScorecardsTools({ driver, logger })) {
           tools.addTool(tool);
         }
       },

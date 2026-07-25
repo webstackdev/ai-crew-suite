@@ -52,11 +52,10 @@
   "dependencies": {
     "@backstage/backend-plugin-api": "backstage:^",
     "@backstage/config": "backstage:^",
-    "@webstackbuilders/plugin-ai-core-node": "workspace:^",
-    "vitest": "^4.1.10"
+    "@webstackbuilders/plugin-ai-core-node": "workspace:^"
   },
   "devDependencies": {
     "@backstage/backend-test-utils": "backstage:^",
-    "@backstage/cli": "backstage:^"
+    "vitest": "^4.1.10"
   }
 }

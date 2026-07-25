@@ -13,4 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export { createQualityScorecardTools } from './registerTools';
+import { createExtensionPoint } from '@backstage/backend-plugin-api';
+import { QualityScorecardsDriver } from './@types';
+
+/**
+ * Extension Point allowing external sibling modules to register custom compliance drivers.
+ */
+export interface QualityScorecardsExtensionPoint {
+  registerDriver(driver: QualityScorecardsDriver): void;
+}
+
+export const qualityScorecardsExtensionPoint = createExtensionPoint<QualityScorecardsExtensionPoint>({
+  id: 'ai-core.quality-scorecards-drivers',
+});
