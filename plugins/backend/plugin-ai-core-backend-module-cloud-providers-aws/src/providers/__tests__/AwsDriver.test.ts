@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// plugins/backend/plugin-ai-core-backend-module-cloud-providers-aws/src/providers/AwsDriver.test.ts
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { AwsDriver } from '../AwsDriver';
 import { STSClient, GetCallerIdentityCommand } from '@aws-sdk/client-sts';
