@@ -14484,7 +14484,6 @@ __metadata:
   dependencies:
     "@backstage/backend-plugin-api": "backstage:^"
     "@backstage/backend-test-utils": "backstage:^"
-    "@backstage/cli": "backstage:^"
     "@backstage/config": "backstage:^"
     "@webstackbuilders/plugin-ai-core-node": "workspace:^"
     vitest: "npm:^4.1.10"

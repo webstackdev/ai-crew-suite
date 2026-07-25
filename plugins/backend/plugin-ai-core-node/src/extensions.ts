@@ -19,6 +19,7 @@ import {
   AgentDefinition,
   CloudProviderDriver,
   ModelDefinition,
+  QualityScorecardsDriver,
   SourceDescriptor,
   ToolDefinition,
   TriggerBinding,
@@ -92,6 +93,31 @@ export interface ModelExtensionPoint {
  */
 export const modelExtensionPoint = createExtensionPoint<ModelExtensionPoint>({
   id: 'plugin-ai.model',
+});
+
+/**
+ * Extension point for registering compliance, software health, and code quality scoring
+ * engines with the AI backend framework.
+ *
+ * Backend modules use this to make a scorecard provider available to the AI runtime before
+ * the plugin boots. A quality provider represents an internal ecosystem compliance evaluator,
+ * for example Spotify Soundcheck, SonarQube quality gates, or custom enterprise matrix drivers.
+ */
+export interface QualityScorecardsExtensionPoint {
+  /**
+   * Registers a quality scorecards provider driver.
+   *
+   * The registered driver exposes normalized entity health summary schemas and architecture
+   * radar proposal pipelines to downstream agentic workflow consumers.
+   */
+  registerDriver(driver: QualityScorecardsDriver): void;
+}
+
+/**
+ * Backstage extension point used by modules that contribute Quality Scorecard drivers.
+ */
+export const qualityScorecardsExtensionPoint = createExtensionPoint<QualityScorecardsExtensionPoint>({
+  id: 'ai-core.quality-scorecards-drivers',
 });
 
 /**

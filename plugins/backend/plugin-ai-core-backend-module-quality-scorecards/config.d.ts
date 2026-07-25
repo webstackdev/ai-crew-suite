@@ -13,14 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 export interface Config {
   ai?: {
     integrations?: {
       qualityScorecards?: {
-        provider: 'soundcheck' | 'scorecards' | 'internal';
-        soundcheck?: { baseUrl?: string };
-        scorecards?: { baseUrl?: string };
-        internal?: { baseUrl?: string };
+        /**
+         * The active driver identifier currently selected for agentic fallback routing.
+         * The core orchestrator module reads this string value to resolve the active 
+         * driver from the internal Map managed by the Extension Point.
+         */
+        provider: string;
       };
     };
   };

@@ -14,46 +14,20 @@
  * limitations under the License.
  */
 import { Config } from '@backstage/config';
-
-export type QualityProviderId = 'soundcheck' | 'scorecards' | 'internal';
-
-export type ProviderConnectionConfig = {
-  baseUrl?: string;
-};
-
-export type QualityScorecardsConfig = {
-  provider: QualityProviderId;
-  providers: Partial<Record<QualityProviderId, ProviderConnectionConfig>>;
-};
-
-const QUALITY_PROVIDERS: readonly QualityProviderId[] = ['soundcheck', 'scorecards', 'internal'];
-
-const isQualityProvider = (value: unknown): value is QualityProviderId =>
-  typeof value === 'string' && (QUALITY_PROVIDERS as readonly string[]).includes(value);
+import { QualityScorecardsConfig } from '@webstackbuilders/plugin-ai-core-node';
 
 export const readQualityScorecardsConfig = (config: Config): QualityScorecardsConfig => {
   const qualityConfig = config.getOptionalConfig('ai.integrations.qualityScorecards');
   if (!qualityConfig) {
     throw new Error(
-      'Quality scorecards module requires ai.integrations.qualityScorecards configuration to be set',
+      'Quality Scorecards module requires ai.integrations.qualityScorecards configuration to be set'
     );
   }
 
   const provider = qualityConfig.getOptionalString('provider');
   if (!provider) {
-    throw new Error('Quality scorecards module requires ai.integrations.qualityScorecards.provider to be set');
-  }
-  if (!isQualityProvider(provider)) {
-    throw new Error(`Unsupported quality provider '${provider}'. Supported: ${QUALITY_PROVIDERS.join(', ')}`);
+    throw new Error('Quality Scorecards module requires ai.integrations.qualityScorecards.provider to be set');
   }
 
-  const providers: Partial<Record<QualityProviderId, ProviderConnectionConfig>> = {};
-  for (const candidate of QUALITY_PROVIDERS) {
-    const providerConfig = qualityConfig.getOptionalConfig(candidate);
-    if (providerConfig) {
-      providers[candidate] = { baseUrl: providerConfig.getOptionalString('baseUrl') };
-    }
-  }
-
-  return { provider, providers };
+  return { provider };
 };

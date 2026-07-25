@@ -13,35 +13,44 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+// plugins/backend/plugin-ai-core-backend-module-quality-scorecards/src/__tests__/config.test.ts
 import { describe, expect, it } from 'vitest';
 import { ConfigReader } from '@backstage/config';
 import { readQualityScorecardsConfig } from '../config';
 
 describe('readQualityScorecardsConfig', () => {
-  it('reads a valid soundcheck config', () => {
+  it('reads a valid core scorecard configuration mapping descriptor', () => {
     const config = new ConfigReader({
-      ai: { integrations: { qualityScorecards: { provider: 'soundcheck', soundcheck: { baseUrl: 'https://sc.example.com' } } } },
+      ai: {
+        integrations: {
+          qualityScorecards: {
+            provider: 'soundcheck'
+          }
+        }
+      },
     });
+
     const result = readQualityScorecardsConfig(config);
     expect(result.provider).toBe('soundcheck');
-    expect(result.providers.soundcheck?.baseUrl).toBe('https://sc.example.com');
   });
 
-  it('throws when config is missing', () => {
+  it('throws an informative error when the integration block is completely missing', () => {
     expect(() => readQualityScorecardsConfig(new ConfigReader({}))).toThrow(
-      /ai\.integrations\.qualityScorecards configuration to be set/,
+      /Quality Scorecards module requires ai\.integrations\.qualityScorecards configuration to be set/
     );
   });
 
-  it('throws when provider is missing', () => {
-    const config = new ConfigReader({ ai: { integrations: { qualityScorecards: {} } } });
-    expect(() => readQualityScorecardsConfig(config)).toThrow(/provider to be set/);
-  });
-
-  it('throws when provider is unsupported', () => {
+  it('throws an informative error when the default target provider string is missing', () => {
     const config = new ConfigReader({
-      ai: { integrations: { qualityScorecards: { provider: 'bad' } } },
+      ai: {
+        integrations: {
+          qualityScorecards: {}
+        }
+      }
     });
-    expect(() => readQualityScorecardsConfig(config)).toThrow(/Unsupported quality provider/);
+
+    expect(() => readQualityScorecardsConfig(config)).toThrow(
+      /requires ai\.integrations\.qualityScorecards\.provider to be set/
+    );
   });
 });

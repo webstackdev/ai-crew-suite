@@ -16,6 +16,7 @@
  */
 export * from './agent';
 export * from './cloud';
+export * from './qualityScorecards';
 export * from './rag';
 export * from './run';
 export * from './session';

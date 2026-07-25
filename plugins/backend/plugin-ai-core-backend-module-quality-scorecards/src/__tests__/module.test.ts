@@ -13,24 +13,82 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { describe, expect, it } from 'vitest';
-import qualityModule, { aiCoreBackendModuleQualityScorecards } from '../module';
+import { describe, it, expect, vi } from 'vitest';
+import { startTestBackend } from '@backstage/backend-test-utils';
+import { mockServices } from '@backstage/backend-test-utils';
+import { createBackendModule, createServiceFactory, coreServices } from '@backstage/backend-plugin-api';
+import {
+  toolExtensionPoint,
+  qualityScorecardsExtensionPoint,
+  QualityScorecardsDriver
+} from '@webstackbuilders/plugin-ai-core-node';
+import { aiCoreBackendModuleQualityScorecards } from '../module';
 
-const getRegistrations = () =>
-  (aiCoreBackendModuleQualityScorecards as unknown as {
-    getRegistrations(): { type: string; pluginId: string; moduleId: string; init?: unknown }[];
-  }).getRegistrations();
+describe('aiCoreBackendModuleQualityScorecards Orchestration', () => {
+  const configFactory = createServiceFactory({
+    service: coreServices.rootConfig,
+    deps: {},
+    async factory() {
+      return mockServices.rootConfig({
+        data: {
+          ai: {
+            integrations: {
+              qualityScorecards: {
+                provider: 'mock-compliance-provider',
+              },
+            },
+          },
+        },
+      });
+    },
+  });
 
-describe('aiCoreBackendModuleQualityScorecards', () => {
-  it('exports an installable backend module for the ai-core plugin', () => {
-    expect(qualityModule).toBe(aiCoreBackendModuleQualityScorecards);
-    expect(getRegistrations()).toEqual([
-      expect.objectContaining({
-        type: expect.stringMatching(/^module/),
-        pluginId: 'ai-core',
-        moduleId: 'quality-scorecards',
-        init: expect.any(Object),
-      }),
-    ]);
+  it('boots cleanly and registers tool boundaries when a matching sub-driver is supplied', async () => {
+    const addedTools: any[] = [];
+    const mockToolExtensionPoint = {
+      addTool: (tool: any) => {
+        addedTools.push(tool);
+      },
+    };
+
+    const mockDriver: QualityScorecardsDriver = {
+      providerId: 'mock-compliance-provider',
+      getEntityScorecard: vi.fn(),
+      submitRadarProposal: vi.fn(),
+    };
+
+    const driverInterceptor = createBackendModule({
+      pluginId: 'ai-core',
+      moduleId: 'test-driver-interceptor',
+      register(env) {
+        env.registerInit({
+          deps: { registry: qualityScorecardsExtensionPoint },
+          async init({ registry }) {
+            registry.registerDriver(mockDriver);
+          },
+        });
+      },
+    });
+
+    const toolInterceptor = createBackendModule({
+      pluginId: 'ai-core',
+      moduleId: 'test-tool-interceptor',
+      register(env) {
+        env.registerExtensionPoint(toolExtensionPoint, mockToolExtensionPoint);
+        env.registerInit({ deps: {}, async init() {} });
+      },
+    });
+
+    await startTestBackend({
+      features: [
+        aiCoreBackendModuleQualityScorecards, 
+        driverInterceptor, 
+        toolInterceptor,
+        configFactory
+      ],
+    });
+
+    expect(addedTools.some(t => t.id === 'quality.scorecard.get_entity_scorecard')).toBe(true);
+    expect(addedTools.some(t => t.id === 'quality.scorecard.submit_radar_proposal')).toBe(true);
   });
 });
