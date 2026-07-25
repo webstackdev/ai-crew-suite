@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// plugins/backend/plugin-ai-core-backend-module-cloud-providers-azure/src/module.ts
 import { coreServices, createBackendModule } from '@backstage/backend-plugin-api';
 import { cloudDriversExtensionPoint } from '@webstackbuilders/plugin-ai-core-node';
 import { AzureDriver } from './providers/AzureDriver';

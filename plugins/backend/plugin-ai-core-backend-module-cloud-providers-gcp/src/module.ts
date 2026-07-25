@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 import { coreServices, createBackendModule } from '@backstage/backend-plugin-api';
-import { DefaultAwsCredentialsManager } from '@backstage/integration-aws-node';
 import { cloudDriversExtensionPoint } from '@webstackbuilders/plugin-ai-core-node';
-import { AwsDriver } from './providers/AwsDriver';
+import { GcpDriver } from './providers/GcpDriver';
 
-export const aiCoreBackendModuleCloudProvidersAws = createBackendModule({
+export const aiCoreBackendModuleCloudProvidersGcp = createBackendModule({
   pluginId: 'ai-core',
-  moduleId: 'cloud-providers-aws',
+  moduleId: 'cloud-providers-gcp',
   register(env) {
     env.registerInit({
       deps: {
@@ -29,19 +28,16 @@ export const aiCoreBackendModuleCloudProvidersAws = createBackendModule({
         cloudRegistry: cloudDriversExtensionPoint,
       },
       async init({ config, logger, cloudRegistry }) {
-        logger.info('Initializing AI AWS Cloud Provider module utilizing global Backstage integration-aws keys...');
+        logger.info('Initializing decoupled AI GCP Cloud Provider module...');
 
-        const awsConfigSection = config.getOptionalConfig(
-          'ai.integrations.cloudProviders.providers.aws'
+        const gcpConfigSection = config.getOptionalConfig(
+          'ai.integrations.cloudProviders.providers.gcp'
         );
-        const region = awsConfigSection?.getOptionalString('region') || 'us-east-1';
+        const region = gcpConfigSection?.getOptionalString('zone') || 'us-central1';
 
-        // Spin up the official Backstage credentials manager from the root config map
-        const credentialsManager = DefaultAwsCredentialsManager.fromConfig(config);
-
-        const driver = new AwsDriver({
-          logger: logger.child({ label: 'cloud-provider-aws-driver' }),
-          credentialsManager,
+        const driver = new GcpDriver({
+          logger: logger.child({ label: 'cloud-provider-gcp-driver' }),
+          rootConfig: config,
           config: { region },
         });
 
@@ -51,4 +47,4 @@ export const aiCoreBackendModuleCloudProvidersAws = createBackendModule({
   },
 });
 
-export default aiCoreBackendModuleCloudProvidersAws;
+export default aiCoreBackendModuleCloudProvidersGcp;
