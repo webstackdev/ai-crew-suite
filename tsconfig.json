@@ -31,7 +31,9 @@
     { "path": "./plugins/backend/plugin-ai-core-node" },
 
     // 4. Storage & Vector Connectors
-    { "path": "./plugins/backend/plugin-ai-core-backend-module-pgvector" },
+    {
+      "path": "./plugins/backend/plugin-ai-core-backend-module-storage-pgvector"
+    },
 
     // 5. Embeddings Ecosystem
     { "path": "./plugins/backend/plugin-ai-core-backend-module-llm-aws" },

@@ -21,7 +21,7 @@ This package acts as an embeddings provider module within the broader AI Crew Su
 
 - **Upstream Interface**: Dependent upon abstract definitions provided in `plugin-ai-core-node`.
 - **Core Consumer**: Registered into `plugin-ai-core-backend` through `toolExtensionPoint`.
-- **Storage Dependency**: Uses `plugin-ai-core-backend-module-pgvector` for vector persistence.
+- **Storage Dependency**: Uses `plugin-ai-core-backend-module-storage-pgvector` for vector persistence.
 - **Retrieval Dependency**: Uses `plugin-ai-core-backend-module-retrieval-augmenter` for indexing and retrieval pipeline behavior.
 - **Provider Dependency**: Uses LangChain OpenAI embeddings implementations.
 

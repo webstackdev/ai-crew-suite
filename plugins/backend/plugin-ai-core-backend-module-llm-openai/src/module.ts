@@ -18,7 +18,7 @@ import {
   createBackendModule,
 } from '@backstage/backend-plugin-api';
 import { CatalogClient } from '@backstage/catalog-client';
-import { createPgVectorStore } from '@webstackbuilders/plugin-ai-core-backend-module-pgvector';
+import { createPgVectorStore } from '@webstackbuilders/plugin-ai-core-backend-module-storage-pgvector';
 import {
   AugmentationOptions,
   createDefaultRetrievalPipeline,

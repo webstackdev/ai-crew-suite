@@ -34,7 +34,7 @@ Indexers connect the embedding model before writing documents. Retrievers use `s
 
 ### pgvector Module
 
-`@webstackbuilders/plugin-ai-core-backend-module-pgvector` provides two factories:
+`@webstackbuilders/plugin-ai-core-backend-module-storage-pgvector` provides two factories:
 
 | Factory                     | Purpose                                                                                                                |
 | --------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
