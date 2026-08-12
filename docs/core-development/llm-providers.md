@@ -46,7 +46,7 @@ The core backend fails startup if no model is registered. It also fails startup 
 
 ### OpenRouter Module
 
-`@webstackbuilders/plugin-ai-core-backend-module-openrouter` registers one or more LangChain `ChatOpenRouter` instances through `modelExtensionPoint`.
+`@webstackbuilders/plugin-ai-core-backend-module-llm-openrouter` registers one or more LangChain `ChatOpenRouter` instances through `modelExtensionPoint`.
 
 Example config:
 
@@ -82,11 +82,11 @@ If `apiKey` is omitted, `ChatOpenRouter` falls back to its normal `OPENROUTER_AP
 
 Do not assume a provider module registers both a chat model and embeddings. In this repo:
 
-| Package                                    | Registers models | Registers retrieval/indexing tool | Notes                                                  |
-| ------------------------------------------ | ---------------- | --------------------------------- | ------------------------------------------------------ |
-| `plugin-ai-core-backend-module-openrouter` | Yes              | No                                | Uses `ChatOpenRouter`; pair with an embeddings module. |
-| `plugin-ai-core-backend-module-openai`     | No               | Yes                               | Uses OpenAI embeddings and pgvector retrieval.         |
-| `plugin-ai-core-backend-module-aws`        | No               | Yes                               | Uses AWS Bedrock embeddings and pgvector retrieval.    |
+| Package                                        | Registers models | Registers retrieval/indexing tool | Notes                                                  |
+| ---------------------------------------------- | ---------------- | --------------------------------- | ------------------------------------------------------ |
+| `plugin-ai-core-backend-module-llm-openrouter` | Yes              | No                                | Uses `ChatOpenRouter`; pair with an embeddings module. |
+| `plugin-ai-core-backend-module-llm-openai`     | No               | Yes                               | Uses OpenAI embeddings and pgvector retrieval.         |
+| `plugin-ai-core-backend-module-llm-aws`        | No               | Yes                               | Uses AWS Bedrock embeddings and pgvector retrieval.    |
 
 This split lets teams combine one model provider with a different embeddings provider. For example, an OpenRouter chat model can answer with context retrieved from OpenAI or Bedrock embeddings.
 

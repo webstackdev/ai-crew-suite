@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 import { describe, expect, it } from 'vitest';
-import openAiModule, { aiCoreBackendModuleOpenAi } from '../module';
+import openRouterModule, { aiCoreBackendModuleLlmOpenRouter } from '../module';
 
 const getRegistrations = () =>
-  (aiCoreBackendModuleOpenAi as unknown as {
+  (aiCoreBackendModuleLlmOpenRouter as unknown as {
     getRegistrations(): {
       type: string;
       pluginId: string;
@@ -26,14 +26,14 @@ const getRegistrations = () =>
     }[];
   }).getRegistrations();
 
-describe('aiCoreBackendModuleOpenAi', () => {
+describe('aiCoreBackendModuleLlmOpenRouter', () => {
   it('exports an installable backend module for the ai-core plugin', () => {
-    expect(openAiModule).toBe(aiCoreBackendModuleOpenAi);
+    expect(openRouterModule).toBe(aiCoreBackendModuleLlmOpenRouter);
     expect(getRegistrations()).toEqual([
       expect.objectContaining({
         type: expect.stringMatching(/^module/),
         pluginId: 'ai-core',
-        moduleId: 'openai-embeddings',
+        moduleId: 'openrouter-models',
         init: expect.any(Object),
       }),
     ]);

@@ -48,9 +48,9 @@ The important design rule is that core packages communicate through contracts, n
 | `@webstackbuilders/plugin-ai-core-backend`                            | Runtime backend plugin that assembles registries, validates wiring, creates the controller, runs orchestrators, and exposes HTTP/SSE routes.         |
 | `@webstackbuilders/plugin-ai-core-backend-module-retrieval-augmenter` | Default catalog/TechDocs indexing, vector retrieval, Backstage Search retrieval, source routing, and retrieval post-processing.                      |
 | `@webstackbuilders/plugin-ai-core-backend-module-pgvector`            | PostgreSQL pgvector storage plus runtime persistence for sessions, runs, checkpoints, approvals, artifacts, and audit logs.                          |
-| `@webstackbuilders/plugin-ai-core-backend-module-aws`                 | AWS Bedrock embeddings module that contributes an embeddings-backed retrieval/indexing tool.                                                         |
-| `@webstackbuilders/plugin-ai-core-backend-module-openai`              | OpenAI embeddings module that contributes an embeddings-backed retrieval/indexing tool.                                                              |
-| `@webstackbuilders/plugin-ai-core-backend-module-openrouter`          | OpenRouter model provider module that contributes LangChain chat models to the model registry.                                                       |
+| `@webstackbuilders/plugin-ai-core-backend-module-llm-aws`             | AWS Bedrock embeddings module that contributes an embeddings-backed retrieval/indexing tool.                                                         |
+| `@webstackbuilders/plugin-ai-core-backend-module-llm-openai`          | OpenAI embeddings module that contributes an embeddings-backed retrieval/indexing tool.                                                              |
+| `@webstackbuilders/plugin-ai-core-backend-module-llm-openrouter`      | OpenRouter model provider module that contributes LangChain chat models to the model registry.                                                       |
 | `@webstackbuilders/plugin-ai-crew-suite`                              | Frontend plugin surface for interacting with AI Crew Suite capabilities in Backstage.                                                                |
 
 See [docs/core-development/index.md](docs/core-development/index.md) for the deeper core development documentation.
@@ -111,7 +111,7 @@ Run package-specific commands from the monorepo root so Yarn PnP and workspace r
 
 ```bash
 yarn workspace @webstackbuilders/plugin-ai-core-backend test
-yarn workspace @webstackbuilders/plugin-ai-core-backend-module-openrouter build
+yarn workspace @webstackbuilders/plugin-ai-core-backend-module-llm-openrouter build
 yarn tsc -b plugins/frontend/plugin-ai-crew-suite/tsconfig.json --noEmit
 ```
 

@@ -1,4 +1,4 @@
-# @webstackbuilders/plugin-ai-core-backend-module-openrouter
+# @webstackbuilders/plugin-ai-core-backend-module-llm-openrouter
 
 > Core Developer Documentation for the AI Crew Suite platform.
 
@@ -8,7 +8,7 @@ This package implements the OpenRouter model provider module for AI Crew Suite. 
 
 ### Core Responsibilities
 
-- **Backend module registration**: Registers `aiCoreBackendModuleOpenRouter` as an `ai-core` backend module using `createBackendModule`.
+- **Backend module registration**: Registers `aiCoreBackendModuleLlmOpenRouter` as an `ai-core` backend module using `createBackendModule`.
 - **Model construction**: Creates one or more validated `ChatOpenRouter` instances from app-config.
 - **Model registry wiring**: Registers stable `ModelDefinition` IDs through `modelExtensionPoint`.
 - **Provider isolation**: Supplies generation models only; retrieval and embeddings remain owned by separate embeddings modules.
@@ -22,7 +22,7 @@ This package acts as a model provider module within the broader AI Crew Suite ec
 - **Upstream Interface**: Dependent upon abstract definitions provided in `plugin-ai-core-node`.
 - **Core Consumer**: Registered into `plugin-ai-core-backend` through `modelExtensionPoint`.
 - **Provider Dependency**: Uses `@langchain/openrouter` to create `ChatOpenRouter` model instances.
-- **Companion Modules**: Requires an embeddings module such as `plugin-ai-core-backend-module-openai` or `plugin-ai-core-backend-module-aws` when agents need retrieval-augmented context.
+- **Companion Modules**: Requires an embeddings module such as `plugin-ai-core-backend-module-llm-openai` or `plugin-ai-core-backend-module-llm-aws` when agents need retrieval-augmented context.
 
 ---
 
@@ -41,7 +41,7 @@ Run installation routines and build compilation tracks directly from the monorep
 yarn install --refresh
 
 # Compile TypeScript declarations into /dist targets
-yarn workspace @webstackbuilders/plugin-ai-core-backend-module-openrouter build
+yarn workspace @webstackbuilders/plugin-ai-core-backend-module-llm-openrouter build
 ```
 
 ### 3. Running Unit & Integration Tests
@@ -49,7 +49,7 @@ yarn workspace @webstackbuilders/plugin-ai-core-backend-module-openrouter build
 Test files are located inline next to the modules they validate (`*.test.ts`). Execute them via:
 
 ```bash
-yarn workspace @webstackbuilders/plugin-ai-core-backend-module-openrouter test
+yarn workspace @webstackbuilders/plugin-ai-core-backend-module-llm-openrouter test
 ```
 
 ---

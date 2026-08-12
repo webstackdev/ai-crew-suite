@@ -39,7 +39,7 @@ const getBedrockRegion = () =>
  *
  * @public
  */
-export const aiCoreBackendModuleAws = createBackendModule({
+export const aiCoreBackendModuleLlmAws = createBackendModule({
 	pluginId: 'ai-core',
 	moduleId: 'aws-bedrock-embeddings',
 	register(env) {
@@ -110,4 +110,4 @@ export const aiCoreBackendModuleAws = createBackendModule({
 	},
 });
 
-export default aiCoreBackendModuleAws;
+export default aiCoreBackendModuleLlmAws;
