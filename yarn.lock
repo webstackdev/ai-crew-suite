@@ -15374,8 +15374,8 @@ __metadata:
     "@langchain/aws": "npm:^1.4.3"
     "@langchain/core": "npm:^1.2.3"
     "@webstackbuilders/plugin-ai-core-backend": "workspace:^"
-    "@webstackbuilders/plugin-ai-core-backend-module-pgvector": "workspace:^"
     "@webstackbuilders/plugin-ai-core-backend-module-retrieval-augmenter": "workspace:^"
+    "@webstackbuilders/plugin-ai-core-backend-module-storage-pgvector": "workspace:^"
     "@webstackbuilders/plugin-ai-core-node": "workspace:^"
     i18next: "npm:26.3.6"
     vitest: "npm:^4.1.10"
@@ -15393,8 +15393,8 @@ __metadata:
     "@backstage/config": "backstage:^"
     "@langchain/core": "npm:^1.2.3"
     "@langchain/openai": "npm:^1.5.5"
-    "@webstackbuilders/plugin-ai-core-backend-module-pgvector": "workspace:^"
     "@webstackbuilders/plugin-ai-core-backend-module-retrieval-augmenter": "workspace:^"
+    "@webstackbuilders/plugin-ai-core-backend-module-storage-pgvector": "workspace:^"
     "@webstackbuilders/plugin-ai-core-node": "workspace:^"
     i18next: "npm:26.3.6"
     vitest: "npm:^4.1.10"
@@ -15412,21 +15412,6 @@ __metadata:
     "@langchain/openrouter": "npm:^0.4.5"
     "@webstackbuilders/plugin-ai-core-node": "workspace:^"
     i18next: "npm:26.3.6"
-    vitest: "npm:^4.1.10"
-  languageName: unknown
-  linkType: soft
-
-"@webstackbuilders/plugin-ai-core-backend-module-pgvector@workspace:^, @webstackbuilders/plugin-ai-core-backend-module-pgvector@workspace:plugins/backend/plugin-ai-core-backend-module-pgvector":
-  version: 0.0.0-use.local
-  resolution: "@webstackbuilders/plugin-ai-core-backend-module-pgvector@workspace:plugins/backend/plugin-ai-core-backend-module-pgvector"
-  dependencies:
-    "@backstage/backend-plugin-api": "backstage:^"
-    "@backstage/cli": "backstage:^"
-    "@backstage/config": "backstage:^"
-    "@langchain/core": "npm:^1.2.3"
-    "@webstackbuilders/plugin-ai-core-node": "workspace:^"
-    i18next: "npm:26.3.6"
-    knex: "npm:^3.3.0"
     vitest: "npm:^4.1.10"
   languageName: unknown
   linkType: soft
@@ -15486,6 +15471,21 @@ __metadata:
     "@webstackbuilders/plugin-ai-core-node": "workspace:^"
     i18next: "npm:26.3.6"
     p-limit: "npm:^3.1.0"
+    vitest: "npm:^4.1.10"
+  languageName: unknown
+  linkType: soft
+
+"@webstackbuilders/plugin-ai-core-backend-module-storage-pgvector@workspace:^, @webstackbuilders/plugin-ai-core-backend-module-storage-pgvector@workspace:plugins/backend/plugin-ai-core-backend-module-storage-pgvector":
+  version: 0.0.0-use.local
+  resolution: "@webstackbuilders/plugin-ai-core-backend-module-storage-pgvector@workspace:plugins/backend/plugin-ai-core-backend-module-storage-pgvector"
+  dependencies:
+    "@backstage/backend-plugin-api": "backstage:^"
+    "@backstage/cli": "backstage:^"
+    "@backstage/config": "backstage:^"
+    "@langchain/core": "npm:^1.2.3"
+    "@webstackbuilders/plugin-ai-core-node": "workspace:^"
+    i18next: "npm:26.3.6"
+    knex: "npm:^3.3.0"
     vitest: "npm:^4.1.10"
   languageName: unknown
   linkType: soft
@@ -15621,7 +15621,7 @@ __metadata:
     "@opentelemetry/api": "npm:^1.9.1"
     "@types/compression": "npm:^1.8.1"
     "@types/express": "npm:4.17.25"
-    "@webstackbuilders/plugin-ai-core-backend-module-pgvector": "workspace:^"
+    "@webstackbuilders/plugin-ai-core-backend-module-storage-pgvector": "workspace:^"
     "@webstackbuilders/plugin-ai-core-node": "workspace:^"
     express: "npm:^4.22.2"
     express-promise-router: "npm:^4.1.1"
@@ -16959,7 +16959,7 @@ __metadata:
     "@webstackbuilders/plugin-ai-core-backend-module-llm-aws": "workspace:^"
     "@webstackbuilders/plugin-ai-core-backend-module-llm-openai": "workspace:^"
     "@webstackbuilders/plugin-ai-core-backend-module-llm-openrouter": "workspace:^"
-    "@webstackbuilders/plugin-ai-core-backend-module-pgvector": "workspace:^"
+    "@webstackbuilders/plugin-ai-core-backend-module-storage-pgvector": "workspace:^"
     "@webstackbuilders/plugin-ai-core-backend-module-vcs": "workspace:^"
     "@webstackbuilders/plugin-ai-core-node": "workspace:^"
     app: "link:../app"

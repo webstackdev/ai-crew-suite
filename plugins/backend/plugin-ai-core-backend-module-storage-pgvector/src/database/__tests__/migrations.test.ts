@@ -32,7 +32,7 @@ describe('applyDatabaseMigrations', () => {
     await applyDatabaseMigrations(knex);
 
     expect(resolvePackagePath).toHaveBeenCalledWith(
-      '@webstackbuilders/plugin-ai-core-backend-module-pgvector',
+      '@webstackbuilders/plugin-ai-core-backend-module-storage-pgvector',
       'migrations',
     );
     expect(latest).toHaveBeenCalledWith({

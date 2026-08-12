@@ -1,7 +1,7 @@
 {
   "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "../../../dist-types/plugins/backend/plugin-ai-core-backend-module-pgvector"
+    "outDir": "../../../dist-types/plugins/backend/plugin-ai-core-backend-module-storage-pgvector"
   },
   "include": ["src/**/*"]
 }

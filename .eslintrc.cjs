@@ -106,15 +106,15 @@ module.exports = {
       createConfigForRole(__dirname, 'backend-plugin-module'),
     ),
     ...scopedOverrides(
-      'plugins/backend/plugin-ai-core-backend-module-pgvector',
-      createConfigForRole(__dirname, 'backend-plugin-module'),
-    ),
-    ...scopedOverrides(
       'plugins/backend/plugin-ai-core-backend-module-quality-scorecards',
       createConfigForRole(__dirname, 'backend-plugin-module'),
     ),
     ...scopedOverrides(
       'plugins/backend/plugin-ai-core-backend-module-retrieval-augmenter',
+      createConfigForRole(__dirname, 'backend-plugin-module'),
+    ),
+    ...scopedOverrides(
+      'plugins/backend/plugin-ai-core-backend-module-storage-pgvector',
       createConfigForRole(__dirname, 'backend-plugin-module'),
     ),
     ...scopedOverrides(

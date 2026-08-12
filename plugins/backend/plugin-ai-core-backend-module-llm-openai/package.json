@@ -60,8 +60,8 @@
     "@backstage/config": "backstage:^",
     "@langchain/core": "^1.2.3",
     "@langchain/openai": "^1.5.5",
-    "@webstackbuilders/plugin-ai-core-backend-module-pgvector": "workspace:^",
     "@webstackbuilders/plugin-ai-core-backend-module-retrieval-augmenter": "workspace:^",
+    "@webstackbuilders/plugin-ai-core-backend-module-storage-pgvector": "workspace:^",
     "@webstackbuilders/plugin-ai-core-node": "workspace:^",
     "i18next": "26.3.6",
     "vitest": "^4.1.10"
