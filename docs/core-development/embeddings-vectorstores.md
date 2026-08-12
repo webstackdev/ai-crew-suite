@@ -67,6 +67,29 @@ ai:
 
 Message listing returns recent messages in chronological order after applying the limit. JSONB payloads are parsed defensively so callers receive structured payloads even when database drivers return serialized JSON strings.
 
+### Qdrant Module
+
+`@webstackbuilders/plugin-ai-core-backend-module-storage-qdrant` provides `createQdrantVectorStore`, an alternate `VectorStore` implementation backed by a Qdrant server instead of PostgreSQL. It covers vector storage and similarity search only; agent runtime persistence (sessions, checkpoints, runs, artifacts, approvals, and audit logs) remains owned by the pgvector storage module.
+
+The store lazily creates the configured collection on first use, deriving the vector size from the first embedded batch and using cosine distance. Metadata filters translate to Qdrant `must` match clauses on `metadata.*` payload keys, and documents are stored as point payloads with `content` and `metadata` fields.
+
+Example vector storage config:
+
+```yaml
+ai:
+  storage:
+    qdrant:
+      url: http://localhost:6333
+      apiKey: ${QDRANT_API_KEY}
+      collectionName: embeddings
+      chunkSize: 500
+      amount: 10
+```
+
+`url` falls back to the `QDRANT_URL` environment variable and then `http://localhost:6333`; `apiKey` falls back to `QDRANT_API_KEY`. `collectionName` defaults to `embeddings`. `chunkSize` controls batched upserts and `amount` controls the default number of similar documents returned, matching their pgvector counterparts.
+
+Point IDs are generated UUIDs, so deletion by explicit ID only accepts Qdrant point IDs. Metadata-filter deletion and similarity search behave the same as the pgvector store from the caller's perspective.
+
 ### Embeddings Provider Modules
 
 Embeddings providers register tools through `toolExtensionPoint`. Each tool exposes both an `augmentationIndexer` and a `retrievalPipeline`, which lets `plugin-ai-core-backend` create the generic `knowledge.retrieve` tool.
