@@ -56,7 +56,7 @@
     "@backstage/catalog-model": "backstage:^",
     "@backstage/errors": "backstage:^",
     "@backstage/plugin-search-common": "backstage:^",
-    "@langchain/core": "^1.2.3",
+    "@langchain/core": "^1.2.5",
     "@langchain/textsplitters": "^1.0.1",
     "@webstackbuilders/plugin-ai-core-node": "workspace:^",
     "i18next": "26.3.6",

@@ -55,14 +55,14 @@
     "test": "vitest run src --exclude 'dist-types/**' --passWithNoTests"
   },
   "dependencies": {
-    "@aws-sdk/client-bedrock-runtime": "^3.1090.0",
+    "@aws-sdk/client-bedrock-runtime": "^3.1108.0",
     "@aws-sdk/types": "^3.974.2",
     "@backstage/backend-common": "^0.25.0",
     "@backstage/backend-plugin-api": "backstage:^",
     "@backstage/catalog-client": "backstage:^",
     "@backstage/config": "backstage:^",
     "@langchain/aws": "^1.4.3",
-    "@langchain/core": "^1.2.3",
+    "@langchain/core": "^1.2.5",
     "@webstackbuilders/plugin-ai-core-backend": "workspace:^",
     "@webstackbuilders/plugin-ai-core-backend-module-retrieval-augmenter": "workspace:^",
     "@webstackbuilders/plugin-ai-core-backend-module-storage-pgvector": "workspace:^",

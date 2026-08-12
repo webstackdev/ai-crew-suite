@@ -56,8 +56,8 @@
   "dependencies": {
     "@backstage/backend-plugin-api": "backstage:^",
     "@backstage/config": "backstage:^",
-    "@langchain/core": "^1.2.3",
-    "@langchain/openrouter": "^0.4.5",
+    "@langchain/core": "^1.2.5",
+    "@langchain/openrouter": "^0.4.6",
     "@webstackbuilders/plugin-ai-core-node": "workspace:^",
     "i18next": "26.3.6",
     "vitest": "^4.1.10"
