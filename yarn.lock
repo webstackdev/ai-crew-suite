@@ -15291,28 +15291,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@webstackbuilders/plugin-ai-core-backend-module-aws@workspace:^, @webstackbuilders/plugin-ai-core-backend-module-aws@workspace:plugins/backend/plugin-ai-core-backend-module-aws":
-  version: 0.0.0-use.local
-  resolution: "@webstackbuilders/plugin-ai-core-backend-module-aws@workspace:plugins/backend/plugin-ai-core-backend-module-aws"
-  dependencies:
-    "@aws-sdk/client-bedrock-runtime": "npm:^3.1090.0"
-    "@aws-sdk/types": "npm:^3.974.2"
-    "@backstage/backend-common": "npm:^0.25.0"
-    "@backstage/backend-plugin-api": "backstage:^"
-    "@backstage/catalog-client": "backstage:^"
-    "@backstage/cli": "backstage:^"
-    "@backstage/config": "backstage:^"
-    "@langchain/aws": "npm:^1.4.3"
-    "@langchain/core": "npm:^1.2.3"
-    "@webstackbuilders/plugin-ai-core-backend": "workspace:^"
-    "@webstackbuilders/plugin-ai-core-backend-module-pgvector": "workspace:^"
-    "@webstackbuilders/plugin-ai-core-backend-module-retrieval-augmenter": "workspace:^"
-    "@webstackbuilders/plugin-ai-core-node": "workspace:^"
-    i18next: "npm:26.3.6"
-    vitest: "npm:^4.1.10"
-  languageName: unknown
-  linkType: soft
-
 "@webstackbuilders/plugin-ai-core-backend-module-cloud-providers-aws@workspace:plugins/backend/plugin-ai-core-backend-module-cloud-providers-aws":
   version: 0.0.0-use.local
   resolution: "@webstackbuilders/plugin-ai-core-backend-module-cloud-providers-aws@workspace:plugins/backend/plugin-ai-core-backend-module-cloud-providers-aws"
@@ -15382,9 +15360,31 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@webstackbuilders/plugin-ai-core-backend-module-openai@workspace:^, @webstackbuilders/plugin-ai-core-backend-module-openai@workspace:plugins/backend/plugin-ai-core-backend-module-openai":
+"@webstackbuilders/plugin-ai-core-backend-module-llm-aws@workspace:^, @webstackbuilders/plugin-ai-core-backend-module-llm-aws@workspace:plugins/backend/plugin-ai-core-backend-module-llm-aws":
   version: 0.0.0-use.local
-  resolution: "@webstackbuilders/plugin-ai-core-backend-module-openai@workspace:plugins/backend/plugin-ai-core-backend-module-openai"
+  resolution: "@webstackbuilders/plugin-ai-core-backend-module-llm-aws@workspace:plugins/backend/plugin-ai-core-backend-module-llm-aws"
+  dependencies:
+    "@aws-sdk/client-bedrock-runtime": "npm:^3.1090.0"
+    "@aws-sdk/types": "npm:^3.974.2"
+    "@backstage/backend-common": "npm:^0.25.0"
+    "@backstage/backend-plugin-api": "backstage:^"
+    "@backstage/catalog-client": "backstage:^"
+    "@backstage/cli": "backstage:^"
+    "@backstage/config": "backstage:^"
+    "@langchain/aws": "npm:^1.4.3"
+    "@langchain/core": "npm:^1.2.3"
+    "@webstackbuilders/plugin-ai-core-backend": "workspace:^"
+    "@webstackbuilders/plugin-ai-core-backend-module-pgvector": "workspace:^"
+    "@webstackbuilders/plugin-ai-core-backend-module-retrieval-augmenter": "workspace:^"
+    "@webstackbuilders/plugin-ai-core-node": "workspace:^"
+    i18next: "npm:26.3.6"
+    vitest: "npm:^4.1.10"
+  languageName: unknown
+  linkType: soft
+
+"@webstackbuilders/plugin-ai-core-backend-module-llm-openai@workspace:^, @webstackbuilders/plugin-ai-core-backend-module-llm-openai@workspace:plugins/backend/plugin-ai-core-backend-module-llm-openai":
+  version: 0.0.0-use.local
+  resolution: "@webstackbuilders/plugin-ai-core-backend-module-llm-openai@workspace:plugins/backend/plugin-ai-core-backend-module-llm-openai"
   dependencies:
     "@backstage/backend-common": "npm:^0.25.0"
     "@backstage/backend-plugin-api": "backstage:^"
@@ -15401,9 +15401,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@webstackbuilders/plugin-ai-core-backend-module-openrouter@workspace:^, @webstackbuilders/plugin-ai-core-backend-module-openrouter@workspace:plugins/backend/plugin-ai-core-backend-module-openrouter":
+"@webstackbuilders/plugin-ai-core-backend-module-llm-openrouter@workspace:^, @webstackbuilders/plugin-ai-core-backend-module-llm-openrouter@workspace:plugins/backend/plugin-ai-core-backend-module-llm-openrouter":
   version: 0.0.0-use.local
-  resolution: "@webstackbuilders/plugin-ai-core-backend-module-openrouter@workspace:plugins/backend/plugin-ai-core-backend-module-openrouter"
+  resolution: "@webstackbuilders/plugin-ai-core-backend-module-llm-openrouter@workspace:plugins/backend/plugin-ai-core-backend-module-llm-openrouter"
   dependencies:
     "@backstage/backend-plugin-api": "backstage:^"
     "@backstage/cli": "backstage:^"
@@ -16955,10 +16955,10 @@ __metadata:
     "@webstackbuilders/backstage-plugin-ai-core-backend-module-observability": "workspace:^"
     "@webstackbuilders/backstage-plugin-ai-core-backend-module-quality-scorecards": "workspace:^"
     "@webstackbuilders/plugin-ai-core-backend": "workspace:^"
-    "@webstackbuilders/plugin-ai-core-backend-module-aws": "workspace:^"
     "@webstackbuilders/plugin-ai-core-backend-module-cloud-providers": "workspace:^"
-    "@webstackbuilders/plugin-ai-core-backend-module-openai": "workspace:^"
-    "@webstackbuilders/plugin-ai-core-backend-module-openrouter": "workspace:^"
+    "@webstackbuilders/plugin-ai-core-backend-module-llm-aws": "workspace:^"
+    "@webstackbuilders/plugin-ai-core-backend-module-llm-openai": "workspace:^"
+    "@webstackbuilders/plugin-ai-core-backend-module-llm-openrouter": "workspace:^"
     "@webstackbuilders/plugin-ai-core-backend-module-pgvector": "workspace:^"
     "@webstackbuilders/plugin-ai-core-backend-module-vcs": "workspace:^"
     "@webstackbuilders/plugin-ai-core-node": "workspace:^"

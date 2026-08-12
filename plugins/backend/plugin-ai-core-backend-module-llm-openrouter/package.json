@@ -1,6 +1,6 @@
 {
-  "name": "@webstackbuilders/plugin-ai-core-backend-module-openai",
-  "description": "The OpenAI backend module for the @webstackbuilders/plugin-ai-core plugin.",
+  "name": "@webstackbuilders/plugin-ai-core-backend-module-llm-openrouter",
+  "description": "The OpenRouter model backend module for the @webstackbuilders/plugin-ai-core plugin.",
   "version": "0.0.1",
   "main": "src/index.ts",
   "types": "src/index.ts",
@@ -12,10 +12,10 @@
     "webstack-builders",
     "ai-crew-suite",
     "ai-core",
-    "openai",
-    "embeddings",
-    "vector-embeddings",
-    "rag"
+    "openrouter",
+    "models",
+    "llm",
+    "chat"
   ],
   "publishConfig": {
     "access": "public",
@@ -36,7 +36,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/webstackdev/ai-crew-suite",
-    "directory": "packages/plugin-ai-core-backend-module-openai"
+    "directory": "plugins/backend/plugin-ai-core-backend-module-llm-openrouter"
   },
   "files": [
     "dist",
@@ -45,7 +45,7 @@
   "configSchema": "config.d.ts",
   "scripts": {
     "start": "backstage-cli package start",
-    "build": "yarn --cwd ../../.. tsc -b plugins/backend/plugin-ai-core-backend-module-openai/tsconfig.json --emitDeclarationOnly && backstage-cli package build",
+    "build": "yarn --cwd ../../.. tsc -b plugins/backend/plugin-ai-core-backend-module-llm-openrouter/tsconfig.json --emitDeclarationOnly && backstage-cli package build",
     "clean": "backstage-cli package clean",
     "prepack": "backstage-cli package prepack",
     "postpack": "backstage-cli package postpack",
@@ -54,14 +54,10 @@
     "test": "vitest run src --exclude 'dist-types/**' --passWithNoTests --config ../../../test/vitest.config.ts"
   },
   "dependencies": {
-    "@backstage/backend-common": "^0.25.0",
     "@backstage/backend-plugin-api": "backstage:^",
-    "@backstage/catalog-client": "backstage:^",
     "@backstage/config": "backstage:^",
     "@langchain/core": "^1.2.3",
-    "@langchain/openai": "^1.5.5",
-    "@webstackbuilders/plugin-ai-core-backend-module-pgvector": "workspace:^",
-    "@webstackbuilders/plugin-ai-core-backend-module-retrieval-augmenter": "workspace:^",
+    "@langchain/openrouter": "^0.4.5",
     "@webstackbuilders/plugin-ai-core-node": "workspace:^",
     "i18next": "26.3.6",
     "vitest": "^4.1.10"

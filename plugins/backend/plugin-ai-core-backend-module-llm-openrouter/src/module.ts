@@ -29,7 +29,7 @@ import { createOpenRouterModels, OpenRouterConfig } from './OpenRouterModel';
  *
  * @public
  */
-export const aiCoreBackendModuleOpenRouter = createBackendModule({
+export const aiCoreBackendModuleLlmOpenRouter = createBackendModule({
   pluginId: 'ai-core',
   moduleId: 'openrouter-models',
   register(env) {
@@ -52,4 +52,4 @@ export const aiCoreBackendModuleOpenRouter = createBackendModule({
   },
 });
 
-export default aiCoreBackendModuleOpenRouter;
+export default aiCoreBackendModuleLlmOpenRouter;

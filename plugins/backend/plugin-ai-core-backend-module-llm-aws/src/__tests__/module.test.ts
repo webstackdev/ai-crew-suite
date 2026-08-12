@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 import { describe, expect, it } from 'vitest';
-import awsModule, { aiCoreBackendModuleAws } from '../module';
+import awsModule, { aiCoreBackendModuleLlmAws } from '../module';
 
 const getRegistrations = () =>
-  (aiCoreBackendModuleAws as unknown as {
+  (aiCoreBackendModuleLlmAws as unknown as {
     getRegistrations(): {
       type: string;
       pluginId: string;
@@ -26,9 +26,9 @@ const getRegistrations = () =>
     }[];
   }).getRegistrations();
 
-describe('aiCoreBackendModuleAws', () => {
+describe('aiCoreBackendModuleLlmAws', () => {
   it('exports an installable backend module for the ai-core plugin', () => {
-    expect(awsModule).toBe(aiCoreBackendModuleAws);
+    expect(awsModule).toBe(aiCoreBackendModuleLlmAws);
     expect(getRegistrations()).toEqual([
       expect.objectContaining({
         type: expect.stringMatching(/^module/),

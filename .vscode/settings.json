@@ -12,6 +12,7 @@
     "jsdom",
     "llms",
     "Ollama",
+    "oriflame",
     "ossp",
     "pgvector",
     "rharkor",

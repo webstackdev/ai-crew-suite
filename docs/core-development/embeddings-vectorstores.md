@@ -73,7 +73,7 @@ Embeddings providers register tools through `toolExtensionPoint`. Each tool expo
 
 #### AWS Bedrock
 
-`@webstackbuilders/plugin-ai-core-backend-module-aws` creates a pgvector store, constructs `BedrockAugmenter`, creates the default retrieval pipeline, and registers `aws.bedrock.retrieval`.
+`@webstackbuilders/plugin-ai-core-backend-module-llm-aws` creates a pgvector store, constructs `BedrockAugmenter`, creates the default retrieval pipeline, and registers `aws.bedrock.retrieval`.
 
 Provider config lives at `ai.embeddings.bedrock`:
 
@@ -94,7 +94,7 @@ ai:
 
 #### OpenAI
 
-`@webstackbuilders/plugin-ai-core-backend-module-openai` creates a pgvector store, constructs `OpenAiAugmenter`, creates the default retrieval pipeline, and registers `openai.embeddings.retrieval`.
+`@webstackbuilders/plugin-ai-core-backend-module-llm-openai` creates a pgvector store, constructs `OpenAiAugmenter`, creates the default retrieval pipeline, and registers `openai.embeddings.retrieval`.
 
 Provider config lives at `ai.embeddings.openai`:
 

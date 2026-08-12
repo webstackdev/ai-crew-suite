@@ -22,7 +22,7 @@ This package acts as a retrieval implementation module within the broader AI Cre
 - **Upstream Interface**: Dependent upon abstract definitions provided in `plugin-ai-core-node`.
 - **Platform Services**: Uses Backstage Catalog, Discovery, Auth, and Search APIs to load and retrieve content.
 - **Storage Dependency**: Operates against any implementation of the shared `VectorStore` contract.
-- **Downstream Consumer**: Directly ingested by embeddings modules such as `plugin-ai-core-backend-module-aws` and `plugin-ai-core-backend-module-openai`.
+- **Downstream Consumer**: Directly ingested by embeddings modules such as `plugin-ai-core-backend-module-llm-aws` and `plugin-ai-core-backend-module-llm-openai`.
 
 ---
 

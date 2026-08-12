@@ -36,7 +36,7 @@ import { OpenAiAugmenter, OpenAiConfig } from './OpenAiAugmenter';
  *
  * @public
  */
-export const aiCoreBackendModuleOpenAi = createBackendModule({
+export const aiCoreBackendModuleLlmOpenAi = createBackendModule({
   pluginId: 'ai-core',
   moduleId: 'openai-embeddings',
   register(env) {
@@ -104,4 +104,4 @@ export const aiCoreBackendModuleOpenAi = createBackendModule({
   },
 });
 
-export default aiCoreBackendModuleOpenAi;
+export default aiCoreBackendModuleLlmOpenAi;

@@ -78,10 +78,6 @@ module.exports = {
       createConfigForRole(__dirname, 'backend-plugin'),
     ),
     ...scopedOverrides(
-      'plugins/backend/plugin-ai-core-backend-module-aws',
-      createConfigForRole(__dirname, 'backend-plugin-module'),
-    ),
-    ...scopedOverrides(
       'plugins/backend/plugin-ai-core-backend-module-cloud-providers',
       createConfigForRole(__dirname, 'backend-plugin-module'),
     ),
@@ -94,15 +90,19 @@ module.exports = {
       createConfigForRole(__dirname, 'backend-plugin-module'),
     ),
     ...scopedOverrides(
+      'plugins/backend/plugin-ai-core-backend-module-llm-aws',
+      createConfigForRole(__dirname, 'backend-plugin-module'),
+    ),
+    ...scopedOverrides(
+      'plugins/backend/plugin-ai-core-backend-module-llm-openai',
+      createConfigForRole(__dirname, 'backend-plugin-module'),
+    ),
+    ...scopedOverrides(
+      'plugins/backend/plugin-ai-core-backend-module-llm-openrouter',
+      createConfigForRole(__dirname, 'backend-plugin-module'),
+    ),
+    ...scopedOverrides(
       'plugins/backend/plugin-ai-core-backend-module-observability',
-      createConfigForRole(__dirname, 'backend-plugin-module'),
-    ),
-    ...scopedOverrides(
-      'plugins/backend/plugin-ai-core-backend-module-openai',
-      createConfigForRole(__dirname, 'backend-plugin-module'),
-    ),
-    ...scopedOverrides(
-      'plugins/backend/plugin-ai-core-backend-module-openrouter',
       createConfigForRole(__dirname, 'backend-plugin-module'),
     ),
     ...scopedOverrides(
