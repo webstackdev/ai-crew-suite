@@ -118,6 +118,10 @@ module.exports = {
       createConfigForRole(__dirname, 'backend-plugin-module'),
     ),
     ...scopedOverrides(
+      'plugins/backend/plugin-ai-core-backend-module-storage-qdrant',
+      createConfigForRole(__dirname, 'backend-plugin-module'),
+    ),
+    ...scopedOverrides(
       'plugins/backend/plugin-ai-core-backend-module-vcs',
       createConfigForRole(__dirname, 'backend-plugin-module'),
     ),

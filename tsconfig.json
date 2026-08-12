@@ -34,6 +34,9 @@
     {
       "path": "./plugins/backend/plugin-ai-core-backend-module-storage-pgvector"
     },
+    {
+      "path": "./plugins/backend/plugin-ai-core-backend-module-storage-qdrant"
+    },
 
     // 5. Embeddings Ecosystem
     { "path": "./plugins/backend/plugin-ai-core-backend-module-llm-aws" },
