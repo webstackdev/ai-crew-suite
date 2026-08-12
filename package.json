@@ -45,7 +45,7 @@
     "install:app": "yarn workspace app add",
     "install:nested": "yarn workspaces foreach -A exec yarn add",
     "upgrade:core": "yarn backstage-cli versions:bump --release main",
-    "upgrade:third-party": "yarn up"
+    "upgrade:third-party": "turbo clean && yarn up"
   },
   "devDependencies": {
     "@backstage/cli": "backstage:^",
@@ -65,7 +65,7 @@
     "@typescript-eslint/parser": "^8.67.0",
     "@vitest/coverage-v8": "^4.1.10",
     "concurrently": "^10.0.4",
-    "eslint": "^10.8.1",
+    "eslint": "^8.57.1",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-deprecation": "^3.0.0",
     "eslint-plugin-import": "^2.32.0",
