@@ -37,6 +37,9 @@
     {
       "path": "./plugins/backend/plugin-ai-core-backend-module-storage-qdrant"
     },
+    {
+      "path": "./plugins/backend/plugin-ai-core-backend-module-runtime-store"
+    },
 
     // 5. Embeddings Ecosystem
     { "path": "./plugins/backend/plugin-ai-core-backend-module-llm-aws" },

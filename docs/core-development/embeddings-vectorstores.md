@@ -34,12 +34,7 @@ Indexers connect the embedding model before writing documents. Retrievers use `s
 
 ### pgvector Module
 
-`@webstackbuilders/plugin-ai-core-backend-module-storage-pgvector` provides two factories:
-
-| Factory                     | Purpose                                                                                                                |
-| --------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| `createPgVectorStore`       | Applies migrations, reads vector-store config, and returns a `VectorStore` implementation.                             |
-| `createPgAgentRuntimeStore` | Applies migrations and returns a store implementing sessions, checkpoints, runs, artifacts, approvals, and audit logs. |
+`@webstackbuilders/plugin-ai-core-backend-module-storage-pgvector` provides the `createPgVectorStore` factory, which applies migrations, reads vector-store config, and returns a `VectorStore` implementation. Agent runtime persistence is provided separately by `@webstackbuilders/plugin-ai-core-backend-module-runtime-store`.
 
 The module uses the Backstage database service and Knex. PostgreSQL must support the `vector` extension for embedding similarity search. The historical `uuid-ossp` requirement may still matter for existing deployments or migrations; verify the active migration before changing database extension assumptions.
 
@@ -57,7 +52,7 @@ ai:
 
 ### Runtime Persistence
 
-`PgAgentRuntimeStore` is used by the core backend plugin during startup. It implements:
+Agent runtime persistence is owned by `@webstackbuilders/plugin-ai-core-backend-module-runtime-store`, which registers stores with the core backend plugin through the `runtimeStoreExtensionPoint`. Its SQL implementation, `SqlAgentRuntimeStore`, runs on any database supplied by the Backstage database service (PostgreSQL, MySQL, or SQLite) and implements:
 
 - `SessionStore` for conversation messages.
 - `CheckpointStore` for resumable orchestration state.
@@ -65,7 +60,9 @@ ai:
 - `ArtifactSink` for generated artifact references.
 - `AuditLogSink` for approval and write-action audit records.
 
-Message listing returns recent messages in chronological order after applying the limit. JSONB payloads are parsed defensively so callers receive structured payloads even when database drivers return serialized JSON strings.
+Sessions and checkpoints can optionally be redirected to a dedicated Redis connection through `ai.runtime.stores` configuration; run, approval, artifact, and audit records always use the SQL store.
+
+Message listing returns recent messages in chronological order after applying the limit. JSON payloads are parsed defensively so callers receive structured payloads even when database drivers return serialized JSON strings.
 
 ### Qdrant Module
 

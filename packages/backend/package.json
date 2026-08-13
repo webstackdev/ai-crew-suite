@@ -56,6 +56,7 @@
     "@webstackbuilders/plugin-ai-core-backend-module-llm-aws": "workspace:^",
     "@webstackbuilders/plugin-ai-core-backend-module-llm-openai": "workspace:^",
     "@webstackbuilders/plugin-ai-core-backend-module-llm-openrouter": "workspace:^",
+    "@webstackbuilders/plugin-ai-core-backend-module-runtime-store": "workspace:^",
     "@webstackbuilders/plugin-ai-core-backend-module-storage-pgvector": "workspace:^",
     "@webstackbuilders/plugin-ai-core-backend-module-vcs": "workspace:^",
     "@webstackbuilders/plugin-ai-core-node": "workspace:^",

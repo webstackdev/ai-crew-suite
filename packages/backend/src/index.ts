@@ -90,5 +90,6 @@ backend.add(loadBackendFeature(import('@webstackbuilders/backstage-plugin-ai-cor
 backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-core-backend-module-cloud-providers')));
 backend.add(loadBackendFeature(import('@webstackbuilders/backstage-plugin-ai-core-backend-module-collaboration')));
 backend.add(loadBackendFeature(import('@webstackbuilders/backstage-plugin-ai-core-backend-module-quality-scorecards')));
+backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-core-backend-module-runtime-store')));
 
 backend.start();

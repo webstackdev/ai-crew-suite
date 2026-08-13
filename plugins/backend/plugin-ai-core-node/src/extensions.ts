@@ -17,9 +17,14 @@
 
 import {
   AgentDefinition,
+  ArtifactSink,
+  AuditLogSink,
+  CheckpointStore,
   CloudProviderDriver,
   ModelDefinition,
   QualityScorecardsDriver,
+  RunStore,
+  SessionStore,
   SourceDescriptor,
   ToolDefinition,
   TriggerBinding,
@@ -187,6 +192,57 @@ export interface TriggerExtensionPoint {
 export const triggerExtensionPoint = createExtensionPoint<TriggerExtensionPoint>({
     id: 'plugin-ai.trigger',
   });
+
+/**
+ * Extension point for registering agent runtime persistence stores.
+ *
+ * Runtime stores hold the durable state of the agent runtime: conversation
+ * sessions, resumable checkpoints, run lifecycle and event logs, approval
+ * decisions, artifacts, and audit records. Storage modules use this extension
+ * point to supply implementations before the AI backend boots. When no store
+ * is registered for a contract, the runtime operates without that persistence.
+ */
+export interface RuntimeStoreExtensionPoint {
+  /**
+   * Registers the store used for conversation session persistence.
+   *
+   * A second registration is rejected at boot time so two storage modules
+   * cannot silently compete for the same runtime state.
+   */
+  setSessionStore(store: SessionStore): void;
+  /**
+   * Registers the store used for resumable orchestration checkpoints.
+   *
+   * A second registration is rejected at boot time.
+   */
+  setCheckpointStore(store: CheckpointStore): void;
+  /**
+   * Registers the store used for run lifecycle records, event logs, and approvals.
+   *
+   * A second registration is rejected at boot time.
+   */
+  setRunStore(store: RunStore): void;
+  /**
+   * Registers the sink that records artifacts produced by runs.
+   *
+   * A second registration is rejected at boot time.
+   */
+  setArtifactSink(sink: ArtifactSink): void;
+  /**
+   * Registers the sink that records auditable write actions and approval decisions.
+   *
+   * A second registration is rejected at boot time.
+   */
+  setAuditLogSink(sink: AuditLogSink): void;
+}
+
+/**
+ * Backstage extension point used by modules that contribute agent runtime
+ * persistence stores.
+ */
+export const runtimeStoreExtensionPoint = createExtensionPoint<RuntimeStoreExtensionPoint>({
+  id: 'plugin-ai.runtime-store',
+});
 
 /**
  * Extension point for registering VCS drivers.

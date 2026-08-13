@@ -29,7 +29,7 @@ flowchart LR
   Contracts --> Core[plugin-ai-core-backend]
   Core --> Runtime[AgentRuntime]
   Runtime --> Orchestrators[Single-shot, LangGraph, crew]
-  Runtime --> Store[PostgreSQL runtime store]
+  Runtime --> Stores[Runtime stores - SQL or Redis]
   Orchestrators --> Tools[Tool registry]
   Orchestrators --> Models[Model registry]
   Tools --> Retrieval[knowledge.retrieve]
