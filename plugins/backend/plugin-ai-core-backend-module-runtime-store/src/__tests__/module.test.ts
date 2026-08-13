@@ -14,11 +14,34 @@
  * limitations under the License.
  */
 import { startTestBackend, mockServices } from '@backstage/backend-test-utils';
-import { createBackendPlugin } from '@backstage/backend-plugin-api';
+import {
+  coreServices,
+  createBackendPlugin,
+  createServiceFactory,
+} from '@backstage/backend-plugin-api';
+import type { DatabaseService } from '@backstage/backend-plugin-api';
+import type { Knex } from 'knex';
 import { runtimeStoreExtensionPoint } from '@webstackbuilders/plugin-ai-core-node';
 import { describe, expect, it, vi } from 'vitest';
+import { applyDatabaseMigrations } from '../database/migrations';
 import { aiCoreBackendModuleRuntimeStore } from '../module';
 import { SqlAgentRuntimeStore } from '../service/SqlAgentRuntimeStore';
+
+// The migration runner is mocked so the test backend never loads
+// better-sqlite3: its unplugged native binary is compiled for one Node ABI
+// at a time and breaks under any other locally installed Node version.
+vi.mock('../database/migrations', () => ({
+  applyDatabaseMigrations: vi.fn(async () => undefined),
+}));
+
+const databaseFactory = createServiceFactory({
+  service: coreServices.database,
+  deps: {},
+  factory: async () =>
+    ({
+      getClient: vi.fn(async () => ({}) as Knex),
+    }) as unknown as DatabaseService,
+});
 
 describe('aiCoreBackendModuleRuntimeStore', () => {
   it('applies migrations and registers SQL-backed runtime stores by default', async () => {
@@ -49,13 +72,14 @@ describe('aiCoreBackendModuleRuntimeStore', () => {
         features: [
           mockAiCorePlugin,
           aiCoreBackendModuleRuntimeStore,
+          databaseFactory,
           mockServices.rootConfig.factory({ data: {} }),
           mockServices.logger.factory(),
-          mockServices.database.factory(),
         ],
       }),
     ).resolves.toBeDefined();
 
+    expect(applyDatabaseMigrations).toHaveBeenCalledTimes(1);
     expect(runtimeStores.setSessionStore).toHaveBeenCalledWith(
       expect.any(SqlAgentRuntimeStore),
     );

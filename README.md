@@ -15,11 +15,23 @@ AI Crew Suite adds the missing runtime layers:
 - **Model registry**: Provider modules contribute LangChain models by stable IDs, and agents reference those IDs through `modelRef`.
 - **Source registry**: Retrieval sources are open-ended strings rather than a closed catalog/TechDocs-only enum.
 - **Structured orchestration**: Runs emit normalized `step`, `token`, `tool_call`, `tool_result`, `approval_request`, `artifact`, `usage`, `done`, and `error` events.
-- **Stateful execution**: Sessions, run steps, checkpoints, approvals, artifacts, and audit logs are persisted in PostgreSQL alongside pgvector embeddings.
+- **Stateful execution**: Sessions, run steps, checkpoints, approvals, artifacts, and audit logs are persisted through configurable runtime stores — SQL via the Backstage database service, with optional Redis for sessions and checkpoints.
 - **Human-in-the-loop controls**: Write-capable actions can pause for approval and resume with an auditable decision.
 - **Backstage module system**: Provider packages register through Backstage backend extension points instead of legacy set-once wiring.
 
 The result is an agent platform where RAG is still first-class, but no longer the whole system.
+
+## Node.js Versions
+
+This workspace supports Node.js 22 and 24, matching the Backstage framework's declared engine range (`"node": "22 || 24"`). CI runs the full pipeline against both versions.
+
+The workspace uses Yarn PnP with a few ABI-pinned native dependencies (for example `better-sqlite3`, `isolated-vm`, and `tree-sitter`). A native build targets exactly one Node ABI at a time, so after switching local Node versions, recompile them:
+
+```sh
+yarn rebuild:native
+```
+
+Unit tests are intentionally native-module free, so `yarn lint`, `yarn typecheck`, and `yarn test` pass under either Node version without rebuilding.
 
 ## Architecture At A Glance
 
