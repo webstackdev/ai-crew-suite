@@ -46,13 +46,15 @@ const parseStoredJson = <T>(value: unknown): T => {
 };
 
 /**
- * PostgreSQL-backed implementation of the agent runtime persistence contracts.
+ * SQL-backed implementation of the agent runtime persistence contracts.
  *
  * The store persists conversation sessions, resumable checkpoints, run records,
  * replayable run steps, approval decisions, artifacts, and audit entries using
- * the tables created by the pgvector module migrations.
+ * the tables created by the runtime store module migrations. It uses only
+ * portable Knex query-builder calls, so it works with any database supplied by
+ * the Backstage core database service (PostgreSQL, MySQL, or SQLite).
  */
-export class PgAgentRuntimeStore
+export class SqlAgentRuntimeStore
   implements SessionStore, CheckpointStore, RunStore, ArtifactSink, AuditLogSink
 {
   /**

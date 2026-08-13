@@ -4,7 +4,7 @@
 
 ## Overview
 
-This package implements a Qdrant-backed vector store for AI Crew Suite. It persists embedding vectors in a Qdrant collection and executes metadata-filtered similarity search through the shared `VectorStore` contract, offering an alternative to PostgreSQL pgvector for deployments that already run Qdrant or prefer a dedicated vector database. Agent runtime persistence (sessions, runs, checkpoints, approvals, artifacts, and audit logs) is intentionally out of scope and remains provided by `plugin-ai-core-backend-module-storage-pgvector`.
+This package implements a Qdrant-backed vector store for AI Crew Suite. It persists embedding vectors in a Qdrant collection and executes metadata-filtered similarity search through the shared `VectorStore` contract, offering an alternative to PostgreSQL pgvector for deployments that already run Qdrant or prefer a dedicated vector database. Agent runtime persistence (sessions, runs, checkpoints, approvals, artifacts, and audit logs) is intentionally out of scope and is provided by `plugin-ai-core-backend-module-runtime-store`.
 
 ### Core Responsibilities
 

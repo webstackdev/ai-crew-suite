@@ -17,7 +17,6 @@
 import type { VectorStore } from '@webstackbuilders/plugin-ai-core-node';
 import { applyDatabaseMigrations } from '../database/migrations';
 import { PgVectorStore } from './PgVectorStore';
-import { PgAgentRuntimeStore } from './PgAgentRuntimeStore';
 import type { PgVectorStoreInitConfig, PgVectorStoreOptions } from '../@types';
 
 /**
@@ -50,20 +49,4 @@ export async function createPgVectorStore({
     chunkSize: options?.chunkSize,
     amount: options?.amount,
   });
-}
-
-/**
- * Creates the pgvector-backed runtime store for sessions, runs, and audit data.
- *
- * The runtime store shares the same migration path as the vector store so a
- * module can safely wire either or both stores during backend startup.
- */
-export async function createPgAgentRuntimeStore({
-  logger,
-  database,
-}: Omit<PgVectorStoreInitConfig, 'config'>): Promise<PgAgentRuntimeStore> {
-  logger.info('Starting PgAgentRuntimeStore');
-  const dbClient = await database.getClient();
-  await applyDatabaseMigrations(dbClient);
-  return new PgAgentRuntimeStore(dbClient);
 }

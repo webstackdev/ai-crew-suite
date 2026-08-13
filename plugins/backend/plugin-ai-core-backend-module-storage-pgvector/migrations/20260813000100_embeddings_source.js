@@ -1,5 +1,6 @@
 /*
  * Copyright 2024 Larder Software Limited
+ * Copyright 2026 Webstack Builders, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,19 +16,22 @@
  */
 
 exports.up = async function up(knex) {
-  await knex.schema.createTable('ai_audit_logs', table => {
-    table.uuid('id').primary().notNullable();
-    table.uuid('run_id').notNullable().references('id').inTable('ai_runs').onDelete('CASCADE');
-    table.string('agent_id').notNullable();
-    table.string('action').notNullable();
-    table.string('tool_id').nullable();
-    table.jsonb('payload').nullable();
-    table.string('actor').nullable();
-    table.timestamp('created_at').notNullable().defaultTo(knex.fn.now());
-    table.index(['run_id', 'created_at'], 'idx_ai_audit_logs_run_created_at');
+  await knex.schema.alterTable('embeddings', table => {
+    table.string('source').nullable();
+  });
+
+  await knex.schema.raw(
+    "UPDATE embeddings SET source = COALESCE(metadata->>'source', 'unknown') WHERE source IS NULL",
+  );
+
+  await knex.schema.alterTable('embeddings', table => {
+    table.index(['source'], 'idx_embeddings_source');
   });
 };
 
 exports.down = async function down(knex) {
-  await knex.schema.dropTableIfExists('ai_audit_logs');
+  await knex.schema.alterTable('embeddings', table => {
+    table.dropIndex(['source'], 'idx_embeddings_source');
+    table.dropColumn('source');
+  });
 };

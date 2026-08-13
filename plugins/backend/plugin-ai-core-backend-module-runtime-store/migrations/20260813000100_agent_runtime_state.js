@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Larder Software Limited
+ * Copyright 2026 Webstack Builders, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,23 +15,11 @@
  */
 
 exports.up = async function up(knex) {
-  await knex.schema.alterTable('embeddings', table => {
-    table.string('source').nullable();
-  });
-
-  await knex.schema.raw(
-    "UPDATE embeddings SET source = COALESCE(metadata->>'source', 'unknown') WHERE source IS NULL",
-  );
-
-  await knex.schema.alterTable('embeddings', table => {
-    table.index(['source'], 'idx_embeddings_source');
-  });
-
   await knex.schema.createTable('ai_sessions', table => {
     table.uuid('id').primary().notNullable();
     table.string('agent_id').notNullable();
     table.string('user_ref').nullable();
-    table.jsonb('metadata').notNullable().defaultTo('{}');
+    table.json('metadata').notNullable().defaultTo('{}');
     table.timestamp('created_at').notNullable().defaultTo(knex.fn.now());
   });
 
@@ -40,7 +28,7 @@ exports.up = async function up(knex) {
     table.uuid('session_id').notNullable().references('id').inTable('ai_sessions').onDelete('CASCADE');
     table.string('role').notNullable();
     table.text('content').notNullable();
-    table.jsonb('token_usage').nullable();
+    table.json('token_usage').nullable();
     table.timestamp('created_at').notNullable().defaultTo(knex.fn.now());
     table.index(['session_id', 'created_at'], 'idx_ai_messages_session_created_at');
   });
@@ -62,14 +50,14 @@ exports.up = async function up(knex) {
     table.uuid('run_id').notNullable().references('id').inTable('ai_runs').onDelete('CASCADE');
     table.integer('seq').notNullable();
     table.string('type').notNullable();
-    table.jsonb('payload').notNullable();
+    table.json('payload').notNullable();
     table.timestamp('created_at').notNullable().defaultTo(knex.fn.now());
     table.index(['run_id', 'seq'], 'idx_ai_run_steps_run_seq');
   });
 
   await knex.schema.createTable('ai_checkpoints', table => {
     table.uuid('run_id').primary().notNullable();
-    table.jsonb('state').notNullable();
+    table.json('state').notNullable();
     table.timestamp('updated_at').notNullable().defaultTo(knex.fn.now());
   });
 
@@ -102,9 +90,4 @@ exports.down = async function down(knex) {
   await knex.schema.dropTableIfExists('ai_runs');
   await knex.schema.dropTableIfExists('ai_messages');
   await knex.schema.dropTableIfExists('ai_sessions');
-
-  await knex.schema.alterTable('embeddings', table => {
-    table.dropIndex(['source'], 'idx_embeddings_source');
-    table.dropColumn('source');
-  });
 };

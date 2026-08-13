@@ -17,6 +17,8 @@ import { describe, expect, it } from 'vitest';
 import {
   agentExtensionPoint,
   AgentDefinition,
+  RunStore,
+  runtimeStoreExtensionPoint,
   sourceExtensionPoint,
   SourceDescriptor,
 } from '@webstackbuilders/plugin-ai-core-node';
@@ -72,6 +74,21 @@ describe('ragAiPlugin boot registration', () => {
 
     expect(() => agents.addAgent(createAgent('service-contextualizer'))).toThrow(
       "Agent 'service-contextualizer' may only be registered once",
+    );
+    expect(registration.init).toBeDefined();
+  });
+
+  it('fails safely when two modules register conflicting runtime stores', () => {
+    const { registration, extensionPoints } = capturePluginRegistrations();
+    const runtimeStores = extensionPoints.get(runtimeStoreExtensionPoint) as {
+      setRunStore(store: RunStore): void;
+    };
+    const runStore = {} as unknown as RunStore;
+
+    runtimeStores.setRunStore(runStore);
+
+    expect(() => runtimeStores.setRunStore(runStore)).toThrow(
+      'RunStore may only be registered once',
     );
     expect(registration.init).toBeDefined();
   });

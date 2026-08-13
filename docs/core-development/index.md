@@ -17,11 +17,12 @@ The core stack is intentionally split into a small contract package, one runtime
 
 | Package                                                               | Role                                                                                                               | Primary integration surface                                                                                         |
 | --------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------- |
-| `@webstackbuilders/plugin-ai-core-node`                               | Shared contracts and Backstage extension points.                                                                   | `sourceExtensionPoint`, `toolExtensionPoint`, `modelExtensionPoint`, `agentExtensionPoint`, `triggerExtensionPoint` |
+| `@webstackbuilders/plugin-ai-core-node`                               | Shared contracts and Backstage extension points.                                                                   | `sourceExtensionPoint`, `toolExtensionPoint`, `modelExtensionPoint`, `agentExtensionPoint`, `triggerExtensionPoint`, `runtimeStoreExtensionPoint` |
 | `@webstackbuilders/plugin-ai-core-backend`                            | Runtime plugin that registers extension points, resolves config, creates agents, and exposes HTTP/SSE routes.      | `ragAiPlugin`, `createAiBackendServices`, `AgentRuntime`, orchestrators                                             |
 | `@webstackbuilders/plugin-ai-core-backend-module-retrieval-augmenter` | Default indexing and retrieval primitives for catalog, TechDocs, vector retrieval, and Backstage Search retrieval. | `DefaultVectorAugmentationIndexer`, `DefaultRetrievalPipeline`                                                      |
-| `@webstackbuilders/plugin-ai-core-backend-module-storage-pgvector`    | PostgreSQL storage for embeddings, sessions, runs, checkpoints, artifacts, approvals, and audit logs.              | `createPgVectorStore`, `createPgAgentRuntimeStore`                                                                  |
+| `@webstackbuilders/plugin-ai-core-backend-module-storage-pgvector`    | PostgreSQL vector storage for embeddings with metadata-filtered similarity search.                                 | `createPgVectorStore`, `PgVectorStore`                                                                              |
 | `@webstackbuilders/plugin-ai-core-backend-module-storage-qdrant`      | Qdrant vector storage for embeddings with metadata-filtered similarity search.                                     | `createQdrantVectorStore`, `QdrantVectorStore`                                                                      |
+| `@webstackbuilders/plugin-ai-core-backend-module-runtime-store`       | Agent runtime persistence for sessions, checkpoints, runs, approvals, artifacts, and audit logs.                   | `aiCoreBackendModuleRuntimeStore`, `createAgentRuntimeStores`, `SqlAgentRuntimeStore`                               |
 | `@webstackbuilders/plugin-ai-core-backend-module-llm-aws`             | AWS Bedrock embeddings module that contributes a retrieval/indexing tool.                                          | `aiCoreBackendModuleLlmAws`, `BedrockAugmenter`                                                                     |
 | `@webstackbuilders/plugin-ai-core-backend-module-llm-openai`          | OpenAI embeddings module that contributes a retrieval/indexing tool.                                               | `aiCoreBackendModuleLlmOpenAi`, `OpenAiAugmenter`                                                                   |
 | `@webstackbuilders/plugin-ai-core-backend-module-llm-openrouter`      | OpenRouter chat model module that contributes LangChain chat models.                                               | `aiCoreBackendModuleLlmOpenRouter`, `createOpenRouterModels`                                                        |
@@ -42,7 +43,7 @@ flowchart LR
   Retrieval --> Pipeline[DefaultRetrievalPipeline]
   Pipeline --> Vector[pgvector similarity search]
   Pipeline --> Search[Backstage Search]
-  Runtime --> Store[PgAgentRuntimeStore]
+  Runtime --> Stores[Agent runtime stores]
 ```
 
 The `plugin-ai-core-node` package is the boundary package. It defines the portable types that modules share: sources, embedding documents, vector stores, retrieval pipelines, tools, model definitions, agent definitions, run stores, session stores, approval records, artifacts, audit logs, agent events, and orchestrators.

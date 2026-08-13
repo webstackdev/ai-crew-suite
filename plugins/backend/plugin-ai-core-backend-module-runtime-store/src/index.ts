@@ -1,5 +1,4 @@
 /*
- * Copyright 2024 Larder Software Limited
  * Copyright 2026 Webstack Builders, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+export { aiCoreBackendModuleRuntimeStore as default } from './module';
+export { aiCoreBackendModuleRuntimeStore } from './module';
+export * from './config';
 export * from './service';
-export * from './service/PgVectorStore';
-export * from './@types';

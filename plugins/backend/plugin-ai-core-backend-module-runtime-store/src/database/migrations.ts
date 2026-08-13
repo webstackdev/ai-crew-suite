@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Larder Software Limited
+ * Copyright 2026 Webstack Builders, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,15 +34,19 @@ const findMigrationsDir = (): string => {
   const match = candidates.find(dir => existsSync(dir));
   if (!match) {
     throw new Error(
-      `Could not locate the pgvector migrations directory from ${__dirname}`,
+      `Could not locate the runtime store migrations directory from ${__dirname}`,
     );
   }
   return match;
 };
 
 /**
- * Applies the packaged pgvector module database migrations to the provided
+ * Applies the packaged runtime store database migrations to the provided
  * Backstage database client.
+ *
+ * The migrations use only portable Knex schema-builder calls so they run on
+ * any database dialect supplied by the Backstage core database service
+ * (PostgreSQL, MySQL, or SQLite).
  */
 export async function applyDatabaseMigrations(knex: Knex): Promise<void> {
   await knex.migrate.latest({

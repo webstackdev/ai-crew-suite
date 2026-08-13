@@ -1,10 +1,10 @@
 {
-  "name": "@webstackbuilders/plugin-ai-core-backend-module-storage-pgvector",
+  "name": "@webstackbuilders/plugin-ai-core-backend-module-runtime-store",
+  "description": "Configurable agent runtime persistence for the AI Crew Suite, providing session, checkpoint, run, artifact, and audit stores backed by the site database or Redis.",
   "version": "0.0.1",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "license": "Apache-2.0",
-  "description": "PostgreSQL pgvector vector store for the AI Crew Suite, providing embedding persistence and metadata-filtered similarity search.",
   "keywords": [
     "backstage",
     "backstage-plugin-module",
@@ -12,9 +12,10 @@
     "webstack-builders",
     "ai-crew-suite",
     "ai-core",
-    "postgresql",
-    "pgvector",
-    "vector-storage"
+    "runtime-store",
+    "session-store",
+    "checkpoint-store",
+    "redis"
   ],
   "publishConfig": {
     "access": "public",
@@ -35,7 +36,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/webstackdev/ai-crew-suite",
-    "directory": "plugins/backend/plugin-ai-core-backend-module-storage-pgvector"
+    "directory": "plugins/backend/plugin-ai-core-backend-module-runtime-store"
   },
   "files": [
     "dist",
@@ -45,24 +46,24 @@
   "configSchema": "config.d.ts",
   "scripts": {
     "start": "backstage-cli package start",
-    "build": "backstage-cli package build",
+    "build": "yarn --cwd ../../.. tsc -b plugins/backend/plugin-ai-core-backend-module-runtime-store/tsconfig.json --emitDeclarationOnly && backstage-cli package build",
     "clean": "backstage-cli package clean",
     "prepack": "backstage-cli package prepack",
     "postpack": "backstage-cli package postpack",
     "typecheck": "tsc --noEmit",
     "lint": "backstage-cli package lint --format stylish",
-    "test": "vitest run src --exclude 'dist-types/**' --passWithNoTests --config ../../../test/vitest.config.ts"
+    "test": "vitest run src --exclude 'dist-types/**' --passWithNoTests"
   },
   "dependencies": {
     "@backstage/backend-plugin-api": "backstage:^",
     "@backstage/config": "backstage:^",
-    "@langchain/core": "^1.2.6",
     "@webstackbuilders/plugin-ai-core-node": "workspace:^",
-    "i18next": "26.3.6",
-    "knex": "^3.3.0",
-    "vitest": "^4.1.10"
+    "ioredis": "^5.11.1",
+    "knex": "^3.3.0"
   },
   "devDependencies": {
-    "@backstage/cli": "backstage:^"
+    "@backstage/backend-test-utils": "backstage:^",
+    "@backstage/cli": "backstage:^",
+    "vitest": "^4.1.10"
   }
 }

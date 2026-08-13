@@ -22,7 +22,7 @@ import type {
   AuditLogEntry,
   RunRecord,
 } from '@webstackbuilders/plugin-ai-core-node';
-import { PgAgentRuntimeStore } from '../PgAgentRuntimeStore';
+import { SqlAgentRuntimeStore } from '../SqlAgentRuntimeStore';
 
 type QueryDouble = {
   insert: ReturnType<typeof vi.fn>;
@@ -94,14 +94,14 @@ const runRecord: RunRecord = {
   idempotencyKey: 'idem-a',
 };
 
-describe('PgAgentRuntimeStore', () => {
+describe('SqlAgentRuntimeStore', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
   it('creates sessions and appends messages with serialized token usage', async () => {
     const { client, queries } = createClient();
-    const store = new PgAgentRuntimeStore(client as unknown as Knex);
+    const store = new SqlAgentRuntimeStore(client as unknown as Knex);
 
     const sessionId = await store.createSession('agent-a', 'user:default/alice');
     await store.appendMessage('session-a', {
@@ -131,7 +131,7 @@ describe('PgAgentRuntimeStore', () => {
   it('lists the most recent session messages in chronological order', async () => {
     const { client, queueQuery } = createClient();
     const messagesQuery = queueQuery();
-    const store = new PgAgentRuntimeStore(client as unknown as Knex);
+    const store = new SqlAgentRuntimeStore(client as unknown as Knex);
     messagesQuery.limit.mockResolvedValueOnce([
       {
         role: 'assistant',
@@ -171,7 +171,7 @@ describe('PgAgentRuntimeStore', () => {
 
   it('upserts and loads checkpoints using jsonb-compatible payloads', async () => {
     const { client, queries, queueQuery } = createClient();
-    const store = new PgAgentRuntimeStore(client as unknown as Knex);
+    const store = new SqlAgentRuntimeStore(client as unknown as Knex);
     const state = { status: 'awaiting_approval', nested: { count: 1 } };
 
     await store.save('run-a', state);
@@ -204,7 +204,7 @@ describe('PgAgentRuntimeStore', () => {
 
   it('creates and maps run records, including idempotency lookups', async () => {
     const { client, queries, queueQuery } = createClient();
-    const store = new PgAgentRuntimeStore(client as unknown as Knex);
+    const store = new SqlAgentRuntimeStore(client as unknown as Knex);
 
     await store.createRun(runRecord);
     expect(client).toHaveBeenCalledWith('ai_runs');
@@ -234,7 +234,7 @@ describe('PgAgentRuntimeStore', () => {
 
   it('updates run status and only clears ended_at for running runs', async () => {
     const { client, queries } = createClient();
-    const store = new PgAgentRuntimeStore(client as unknown as Knex);
+    const store = new SqlAgentRuntimeStore(client as unknown as Knex);
 
     await store.updateRunStatus('run-a', 'running');
     await store.updateRunStatus('run-a', 'done');
@@ -248,7 +248,7 @@ describe('PgAgentRuntimeStore', () => {
 
   it('appends and lists replayable run steps after a sequence checkpoint', async () => {
     const { client, queries, queueQuery } = createClient();
-    const store = new PgAgentRuntimeStore(client as unknown as Knex);
+    const store = new SqlAgentRuntimeStore(client as unknown as Knex);
     const payload = { runId: 'run-a', text: 'hello' };
 
     await store.appendRunStep('run-a', 7, 'token', payload);
@@ -279,7 +279,7 @@ describe('PgAgentRuntimeStore', () => {
 
   it('persists and resolves approval requests and decisions', async () => {
     const { client, queries, queueQuery } = createClient();
-    const store = new PgAgentRuntimeStore(client as unknown as Knex);
+    const store = new SqlAgentRuntimeStore(client as unknown as Knex);
     const request: ApprovalRequest = {
       id: 'approval-a',
       runId: 'run-a',
@@ -329,7 +329,7 @@ describe('PgAgentRuntimeStore', () => {
 
   it('records artifacts and audit log entries with nullable optional fields', async () => {
     const { client, queries } = createClient();
-    const store = new PgAgentRuntimeStore(client as unknown as Knex);
+    const store = new SqlAgentRuntimeStore(client as unknown as Knex);
     const artifact: Artifact = {
       id: 'artifact-a',
       runId: 'run-a',

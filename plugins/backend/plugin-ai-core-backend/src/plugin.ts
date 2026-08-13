@@ -24,8 +24,14 @@ import { BaseChatModel } from '@langchain/core/language_models/chat_models';
 import {
   agentExtensionPoint,
   AgentDefinition,
+  ArtifactSink,
+  AuditLogSink,
+  CheckpointStore,
   modelExtensionPoint,
   ModelDefinition,
+  RunStore,
+  runtimeStoreExtensionPoint,
+  SessionStore,
   sourceExtensionPoint,
   SourceRegistry,
   toolExtensionPoint,
@@ -33,14 +39,17 @@ import {
   triggerExtensionPoint,
   TriggerBinding,
 } from '@webstackbuilders/plugin-ai-core-node';
-import { createPgAgentRuntimeStore } from '@webstackbuilders/plugin-ai-core-backend-module-storage-pgvector';
 import { createAiBackendServices, createRouter, createSourceRegistry } from './service';
 
 /**
  * Registers and boots the AI backend runtime.
  *
- * The plugin composes sources, tools, models, agents, triggers, and runtime
- * state stores, then exposes the HTTP/SSE API surface through the router.
+ * The plugin composes sources, tools, models, agents, and triggers, then
+ * exposes the HTTP/SSE API surface through the router. Runtime persistence
+ * stores (sessions, checkpoints, runs, artifacts, and audit logs) are
+ * contributed by storage modules through the runtime store extension point;
+ * when no module registers a store, the runtime operates without that
+ * persistence.
  *
  * @public
  */
@@ -52,6 +61,13 @@ export const ragAiPlugin = createBackendPlugin({
     const tools = new Map<string, ToolDefinition>();
     const agents = new Map<string, AgentDefinition>();
     const triggers: TriggerBinding[] = [];
+    const runtimeStores: {
+      sessionStore?: SessionStore;
+      checkpointStore?: CheckpointStore;
+      runStore?: RunStore;
+      artifactSink?: ArtifactSink;
+      auditLogSink?: AuditLogSink;
+    } = {};
 
     env.registerExtensionPoint(sourceExtensionPoint, {
       addSource(source) {
@@ -95,20 +111,48 @@ export const ragAiPlugin = createBackendPlugin({
       },
     });
 
+    env.registerExtensionPoint(runtimeStoreExtensionPoint, {
+      setSessionStore(store) {
+        if (runtimeStores.sessionStore) {
+          throw new Error('SessionStore may only be registered once');
+        }
+        runtimeStores.sessionStore = store;
+      },
+      setCheckpointStore(store) {
+        if (runtimeStores.checkpointStore) {
+          throw new Error('CheckpointStore may only be registered once');
+        }
+        runtimeStores.checkpointStore = store;
+      },
+      setRunStore(store) {
+        if (runtimeStores.runStore) {
+          throw new Error('RunStore may only be registered once');
+        }
+        runtimeStores.runStore = store;
+      },
+      setArtifactSink(sink) {
+        if (runtimeStores.artifactSink) {
+          throw new Error('ArtifactSink may only be registered once');
+        }
+        runtimeStores.artifactSink = sink;
+      },
+      setAuditLogSink(sink) {
+        if (runtimeStores.auditLogSink) {
+          throw new Error('AuditLogSink may only be registered once');
+        }
+        runtimeStores.auditLogSink = sink;
+      },
+    });
+
     env.registerInit({
       deps: {
         logger: coreServices.logger,
         config: coreServices.rootConfig,
         httpRouter: coreServices.httpRouter,
-        database: coreServices.database,
       },
-      async init({ logger, config, httpRouter, database }) {
+      async init({ logger, config, httpRouter }) {
         logger.debug(`Registered ${triggers.length} AI triggers`);
 
-        const runtimeStore = await createPgAgentRuntimeStore({
-          logger,
-          database,
-        });
         const services = createAiBackendServices({
           logger,
           config,
@@ -116,11 +160,11 @@ export const ragAiPlugin = createBackendPlugin({
           agents,
           tools,
           models,
-          sessionStore: runtimeStore,
-          checkpointStore: runtimeStore,
-          runStore: runtimeStore,
-          artifactSink: runtimeStore,
-          auditLogSink: runtimeStore,
+          sessionStore: runtimeStores.sessionStore,
+          checkpointStore: runtimeStores.checkpointStore,
+          runStore: runtimeStores.runStore,
+          artifactSink: runtimeStores.artifactSink,
+          auditLogSink: runtimeStores.auditLogSink,
           triggers,
         });
 

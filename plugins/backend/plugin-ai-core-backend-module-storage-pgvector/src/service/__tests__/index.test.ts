@@ -18,9 +18,8 @@ import type { Config } from '@backstage/config';
 import type { Knex } from 'knex';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { applyDatabaseMigrations } from '../../database/migrations';
-import { PgAgentRuntimeStore } from '../PgAgentRuntimeStore';
 import { PgVectorStore } from '../PgVectorStore';
-import { createPgAgentRuntimeStore, createPgVectorStore } from '..';
+import { createPgVectorStore } from '..';
 
 vi.mock('../../database/migrations', () => ({
   applyDatabaseMigrations: vi.fn(async () => undefined),
@@ -105,18 +104,5 @@ describe('pgvector service factories', () => {
       chunkSize: undefined,
       amount: undefined,
     });
-  });
-
-  it('runs migrations before returning the agent runtime store', async () => {
-    const logger = createLogger();
-    const dbClient = {} as Knex;
-    const database = createDatabase(dbClient);
-
-    const store = await createPgAgentRuntimeStore({ logger, database });
-
-    expect(store).toBeInstanceOf(PgAgentRuntimeStore);
-    expect(logger.info).toHaveBeenCalledWith('Starting PgAgentRuntimeStore');
-    expect(database.getClient).toHaveBeenCalledTimes(1);
-    expect(applyDatabaseMigrations).toHaveBeenCalledWith(dbClient);
   });
 });
