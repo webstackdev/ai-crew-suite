@@ -25,7 +25,6 @@ But the backend plugin does. `plugin-ai-core-backend/package.json:62` has a hard
 ## Practical consequence
 
 If you deploy the AI Crew Suite with Qdrant as your vector store, you still:
-Is it reasonable to think that end users deploying this in a cloud environment might want to use a different backend than postgresql for the durable runtime store for the `AgentRuntime`, like maybe Redis?
 - get the pgvector package installed (via plugin-ai-core-backend), and
 - need a reachable PostgreSQL database — not for embeddings, but for agent sessions, runs, checkpoints, approvals, artifacts, and audit logs.
 
@@ -91,7 +90,7 @@ The target engines to consider for your plugins are broken down below:
 
 Both questions now have definitive answers from the code.
 
-## 1. `artifactSink` — it is implemented and it is used
+## `artifactSink` — it is implemented and it is used
 
 I left it out of the Redis-fit table for brevity, not because it's dead code — and I should have included it, because it's fully wired:
 
@@ -108,7 +107,7 @@ So it's live whenever the sink is wired in (`plugin.ts:122`), though optional-ch
 
 **Why its omission matters to your Redis question:** the artifact record is tiny — `id`, `runId`, `kind`, `ref`, `url`. The artifact *content* lives elsewhere; this table is only a pointer. So technically any backend (Redis included) can hold it. The real design question is **grouping**: artifact records are the "what did this run produce" ledger, so they belong with the system-of-record data (runs, approvals, audit) rather than the cache-tier data (sessions, checkpoints). If you split stores by durability, `ArtifactSink` goes on the durable side — that's the row it deserved in my table.
 
-## 2. The session store is database-agnostic *code* with Postgres-specific *packaging*
+## The session store is database-agnostic *code* with Postgres-specific *packaging*
 
 **The code runs on whatever database the adopter configured.** Tracing the wiring:
 

@@ -3319,7 +3319,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage/core-app-api@npm:^1.20.3":
+"@backstage/core-app-api@npm:^1.20.2, @backstage/core-app-api@npm:^1.20.3":
   version: 1.20.3
   resolution: "@backstage/core-app-api@npm:1.20.3"
   dependencies:
@@ -7399,7 +7399,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jest/environment-jsdom-abstract@npm:^30.4.1":
+"@jest/environment-jsdom-abstract@npm:*, @jest/environment-jsdom-abstract@npm:^30.4.1":
   version: 30.4.1
   resolution: "@jest/environment-jsdom-abstract@npm:30.4.1"
   dependencies:
@@ -8980,7 +8980,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/material@npm:^7.3.2":
+"@mui/material@npm:^7.3.11, @mui/material@npm:^7.3.2":
   version: 7.3.11
   resolution: "@mui/material@npm:7.3.11"
   dependencies:
@@ -23821,7 +23821,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"i18next@npm:26.3.6":
+"i18next@npm:26.3.6, i18next@npm:^26.3.6":
   version: 26.3.6
   resolution: "i18next@npm:26.3.6"
   peerDependencies:
@@ -25108,7 +25108,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest-environment-node@npm:30.4.1":
+"jest-environment-node@npm:*, jest-environment-node@npm:30.4.1":
   version: 30.4.1
   resolution: "jest-environment-node@npm:30.4.1"
   dependencies:
@@ -25271,7 +25271,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest-runtime@npm:30.4.2":
+"jest-runtime@npm:*, jest-runtime@npm:30.4.2":
   version: 30.4.2
   resolution: "jest-runtime@npm:30.4.2"
   dependencies:
@@ -25627,6 +25627,40 @@ __metadata:
   languageName: node
   linkType: hard
 
+"jsdom@npm:*, jsdom@npm:^30.0.1":
+  version: 30.0.1
+  resolution: "jsdom@npm:30.0.1"
+  dependencies:
+    "@asamuzakjp/css-color": "npm:^6.0.5"
+    "@asamuzakjp/dom-selector": "npm:^8.3.0"
+    "@bramus/specificity": "npm:^2.4.2"
+    "@csstools/css-syntax-patches-for-csstree": "npm:^1.1.7"
+    "@exodus/bytes": "npm:^1.15.1"
+    css-tree: "npm:^3.2.1"
+    data-urls: "npm:^7.0.0"
+    decimal.js: "npm:^10.6.0"
+    html-encoding-sniffer: "npm:^6.0.0"
+    is-potential-custom-element-name: "npm:^1.0.1"
+    lru-cache: "npm:^11.5.2"
+    parse5: "npm:^8.0.1"
+    saxes: "npm:^6.0.0"
+    symbol-tree: "npm:^3.2.4"
+    tough-cookie: "npm:^6.0.2"
+    undici: "npm:^8.9.0"
+    w3c-xmlserializer: "npm:^5.0.0"
+    webidl-conversions: "npm:^8.0.1"
+    whatwg-mimetype: "npm:^5.0.0"
+    whatwg-url: "npm:^17.1.0"
+    xml-name-validator: "npm:^5.0.0"
+  peerDependencies:
+    canvas: ^3.2.3
+  peerDependenciesMeta:
+    canvas:
+      optional: true
+  checksum: 10c0/2e3c04c30da46f373259b33ffb1a7786d351370aada3bfa3d7766dc97956659727dc78f49e01813b313e873d32851c842dc319b89d099f9e9decb55339dca155
+  languageName: node
+  linkType: hard
+
 "jsdom@npm:^28.0.0":
   version: 28.1.0
   resolution: "jsdom@npm:28.1.0"
@@ -25658,40 +25692,6 @@ __metadata:
     canvas:
       optional: true
   checksum: 10c0/341ecb4005be2dab3247dacc349a20285d7991b5cee3382301fcd69a4294b705b4147e7d9ae1ddfab466ba4b3aace97ded4f7b070de285262221cb2782965b25
-  languageName: node
-  linkType: hard
-
-"jsdom@npm:^30.0.1":
-  version: 30.0.1
-  resolution: "jsdom@npm:30.0.1"
-  dependencies:
-    "@asamuzakjp/css-color": "npm:^6.0.5"
-    "@asamuzakjp/dom-selector": "npm:^8.3.0"
-    "@bramus/specificity": "npm:^2.4.2"
-    "@csstools/css-syntax-patches-for-csstree": "npm:^1.1.7"
-    "@exodus/bytes": "npm:^1.15.1"
-    css-tree: "npm:^3.2.1"
-    data-urls: "npm:^7.0.0"
-    decimal.js: "npm:^10.6.0"
-    html-encoding-sniffer: "npm:^6.0.0"
-    is-potential-custom-element-name: "npm:^1.0.1"
-    lru-cache: "npm:^11.5.2"
-    parse5: "npm:^8.0.1"
-    saxes: "npm:^6.0.0"
-    symbol-tree: "npm:^3.2.4"
-    tough-cookie: "npm:^6.0.2"
-    undici: "npm:^8.9.0"
-    w3c-xmlserializer: "npm:^5.0.0"
-    webidl-conversions: "npm:^8.0.1"
-    whatwg-mimetype: "npm:^5.0.0"
-    whatwg-url: "npm:^17.1.0"
-    xml-name-validator: "npm:^5.0.0"
-  peerDependencies:
-    canvas: ^3.2.3
-  peerDependenciesMeta:
-    canvas:
-      optional: true
-  checksum: 10c0/2e3c04c30da46f373259b33ffb1a7786d351370aada3bfa3d7766dc97956659727dc78f49e01813b313e873d32851c842dc319b89d099f9e9decb55339dca155
   languageName: node
   linkType: hard
 
@@ -36061,7 +36061,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"use-sync-external-store@npm:^1.4.0, use-sync-external-store@npm:^1.6.0":
+"use-sync-external-store@npm:^1.4.0, use-sync-external-store@npm:^1.5.0, use-sync-external-store@npm:^1.6.0":
   version: 1.6.0
   resolution: "use-sync-external-store@npm:1.6.0"
   peerDependencies:
@@ -37098,19 +37098,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"yaml@npm:^1.10.0, yaml@npm:^1.10.2, yaml@npm:^1.7.2":
-  version: 1.10.3
-  resolution: "yaml@npm:1.10.3"
-  checksum: 10c0/c309ff85a0a569a981d71ab9cf0fef68672a16b9cdf40639d1c3b30034f6cd16ee428602bd6d64ecf006f8c8bee499023cac236538f79898aa99fb5db529a2ed
-  languageName: node
-  linkType: hard
-
-"yaml@npm:^2.0.0, yaml@npm:^2.2.1, yaml@npm:^2.2.2, yaml@npm:^2.9.0":
+"yaml@npm:*, yaml@npm:^2.0.0, yaml@npm:^2.2.1, yaml@npm:^2.2.2, yaml@npm:^2.9.0":
   version: 2.9.0
   resolution: "yaml@npm:2.9.0"
   bin:
     yaml: bin.mjs
   checksum: 10c0/f340718df45e97a9551b9bf9dac61c80050bc464513b710debfb5067c380c8472e3b67809cffacb4ab5ffb5e66ef9310816c88b05f371cec60abfedd8c88e0a2
+  languageName: node
+  linkType: hard
+
+"yaml@npm:^1.10.0, yaml@npm:^1.10.2, yaml@npm:^1.7.2":
+  version: 1.10.3
+  resolution: "yaml@npm:1.10.3"
+  checksum: 10c0/c309ff85a0a569a981d71ab9cf0fef68672a16b9cdf40639d1c3b30034f6cd16ee428602bd6d64ecf006f8c8bee499023cac236538f79898aa99fb5db529a2ed
   languageName: node
   linkType: hard
 
