@@ -36,10 +36,94 @@ import type {
 } from '@webstackbuilders/plugin-ai-core-node';
 import type { AgentRuntime } from '../runtime';
 import type { AiCoreController } from '../service/controller';
-import type { Config } from '../../config';
 
-/** Plugin configuration */
-export type AiBackendConfig = NonNullable<Config['ai']>;
+/**
+ * Plugin configuration for the `ai` root config section.
+ *
+ * This type intentionally mirrors the `ai` object declared in the package's
+ * `config.d.ts` instead of importing it: `config.d.ts` lives at the package
+ * root so it can ship standalone as the published config schema, and
+ * importing it from `src` would leak a `../../config` reference into the
+ * emitted `dist-types` tree that the declaration bundler cannot resolve.
+ * A compile-time assertion in `src/__tests__/configSchemaSync.test-d.ts`
+ * keeps the two declarations from drifting apart.
+ */
+export type AiBackendConfig = {
+  /** Fallback values used when a specific agent does not provide overrides. */
+  defaults?: {
+    /** Default agent ID used when a request does not explicitly select one. */
+    agent?: string;
+    /** Default model reference (for example, `gpt-4o` or `claude-3-5-sonnet`). */
+    model?: string;
+    /** Default system prompt applied when no agent-specific prompt is configured. */
+    systemPrompt?: string;
+  };
+
+  /** Per-agent execution settings keyed by agent ID. */
+  agents?: Record<
+    string,
+    {
+      /** Model override for this agent. */
+      model?: string;
+      /** System prompt override for this agent. */
+      systemPrompt?: string;
+      /**
+       * Orchestration strategy used to execute this agent.
+       * - `single-shot`: One-pass retrieval and response.
+       * - `langgraph`: Stateful graph-based orchestration.
+       * - `crew`: Sequential multi-role collaboration.
+       */
+      orchestrator?: 'single-shot' | 'langgraph' | 'crew';
+      /** Tool IDs that this agent is allowed to use. */
+      tools?: string[];
+      /**
+       * Memory mode for this agent.
+       * - `none`: Stateless execution.
+       * - `session`: Persist conversational state per session.
+       */
+      memory?: 'none' | 'session';
+      /** Crew role definitions, used only when `orchestrator` is `crew`. */
+      crew?: {
+        /** Ordered role list executed by the crew orchestrator. */
+        roles: {
+          /** Unique role identifier (for example, `security-auditor`). */
+          id: string;
+          /** System prompt that defines this role's behavior. */
+          systemPrompt: string;
+          /** Optional model override for this role. */
+          model?: string;
+          /** Optional tool IDs available only to this role. */
+          tools?: string[];
+        }[];
+      };
+    }
+  >;
+
+  /** Prompt wrappers applied to generated execution prompts. */
+  prompts?: {
+    /** Text prepended before the generated prompt body. */
+    prefix: string;
+    /** Text appended after the generated prompt body. */
+    suffix: string;
+  };
+
+  /** Allowed retrieval source IDs (for example, `techdocs` or `confluence`). */
+  supportedSources?: string[];
+
+  /** Runtime hardening limits for timeout, retries, token budget, and rate control. */
+  hardening?: {
+    /** Request timeout in milliseconds. */
+    timeoutMs?: number;
+    /** Maximum retry attempts for transient failures. */
+    maxRetries?: number;
+    /** Base backoff delay in milliseconds between retries. */
+    retryBackoffMs?: number;
+    /** Maximum total tokens allowed per request lifecycle. */
+    maxTotalTokens?: number;
+    /** Maximum allowed requests per rolling minute window. */
+    rateLimitPerMinute?: number;
+  };
+};
 
 export type AgentsMap = Map<string, AgentDefinition>;
 export type ModelRegistry = Map<string, BaseLLM | BaseChatModel>;
