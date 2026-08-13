@@ -15829,7 +15829,6 @@ __metadata:
     "@types/react": "npm:*"
     "@types/react-dom": "npm:*"
     "@types/react-syntax-highlighter": "npm:^15.5.13"
-    __backstage-module-federation-runtime-shared-dependencies__: "portal:../../../internal/module-federation-runtime-shared-dependencies"
     eventsource-parser: "npm:^2.0.1"
     i18next: "npm:26.3.6"
     lodash: "npm:^4.18.1"
@@ -15976,30 +15975,6 @@ __metadata:
   checksum: 10c0/70c2fa011bf28a517a8ee4264dd93d7590f6e3d02c6d4feb50533f405ca3b100cb156f11405b9a34f7c51c6893d3d8b051554dddfd5afaae2067f921512447a3
   languageName: node
   linkType: hard
-
-"__backstage-module-federation-runtime-shared-dependencies__@portal:../../../internal/module-federation-runtime-shared-dependencies::locator=%40webstackbuilders%2Fplugin-ai-crew-suite%40workspace%3Aplugins%2Ffrontend%2Fplugin-ai-crew-suite":
-  version: 0.0.0-use.local
-  resolution: "__backstage-module-federation-runtime-shared-dependencies__@portal:../../../internal/module-federation-runtime-shared-dependencies::locator=%40webstackbuilders%2Fplugin-ai-crew-suite%40workspace%3Aplugins%2Ffrontend%2Fplugin-ai-crew-suite"
-  peerDependencies:
-    "@material-ui/core": ^4.12.2
-    react: ^18.0.0
-    react-dom: ^18.0.0
-    react-router: ^6.30.4
-    react-router-dom: ^6.30.4
-  languageName: node
-  linkType: soft
-
-"__backstage-module-federation-runtime-shared-dependencies__@portal:../../internal/module-federation-runtime-shared-dependencies::locator=app%40workspace%3Apackages%2Fapp":
-  version: 0.0.0-use.local
-  resolution: "__backstage-module-federation-runtime-shared-dependencies__@portal:../../internal/module-federation-runtime-shared-dependencies::locator=app%40workspace%3Apackages%2Fapp"
-  peerDependencies:
-    "@material-ui/core": ^4.12.2
-    react: ^18.0.0
-    react-dom: ^18.0.0
-    react-router: ^6.30.4
-    react-router-dom: ^6.30.4
-  languageName: node
-  linkType: soft
 
 "a-sync-waterfall@npm:^1.0.0":
   version: 1.0.1
@@ -16421,7 +16396,6 @@ __metadata:
     "@types/react": "npm:*"
     "@types/react-dom": "npm:*"
     "@webstackbuilders/plugin-ai-crew-suite": "workspace:^"
-    __backstage-module-federation-runtime-shared-dependencies__: "portal:../../internal/module-federation-runtime-shared-dependencies"
     cross-env: "npm:^10.1.0"
     i18next: "npm:^22.5.1"
     prop-types: "npm:^15.8.1"
