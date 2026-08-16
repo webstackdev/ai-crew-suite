@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import { describe, expect, it, vi, beforeEach } from 'vitest';
+import gitUrlParse from 'git-url-parse';
 import { GenericGitDriver } from '../git';
 
 vi.mock('git-url-parse', () => ({
@@ -43,6 +44,11 @@ describe('GenericGitDriver', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.mocked(gitUrlParse).mockReturnValue({
+      source: 'company.com',
+      owner: 'legacy-group',
+      name: 'monolith-service',
+    } as ReturnType<typeof gitUrlParse>);
     mockIntegrations = {};
   });
 

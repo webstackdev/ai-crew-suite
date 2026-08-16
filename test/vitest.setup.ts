@@ -19,6 +19,12 @@ const isBrowserEnv = typeof window !== 'undefined';
 // ----------------------------------------------------
 
 if (isBrowserEnv) {
+  // JSDOM exposes CSS.escape as an unbound Web IDL method, unlike browsers.
+  Object.defineProperty(window.CSS, 'escape', {
+    configurable: true,
+    value: (value: string) => String(value).replace(/[^a-zA-Z0-9_-]/g, '\\$&'),
+  });
+
   // Polyfill for standard fetch if using an older node layer inside JSDOM
   if (!window.fetch) {
     // @ts-ignore
@@ -33,16 +39,16 @@ if (isBrowserEnv) {
   // Mock window.matchMedia (Commonly required by Material-UI / Backstage themes)
   Object.defineProperty(window, 'matchMedia', {
     writable: true,
-    value: vi.fn().mockImplementation(query => ({
+    value: (query: string) => ({
       matches: false,
       media: query,
       onchange: null,
-      addListener: vi.fn(), // Deprecated but required by older UI packages
-      removeListener: vi.fn(),
-      addEventListener: vi.fn(),
-      removeEventListener: vi.fn(),
-      dispatchEvent: vi.fn(),
-    })),
+      addListener() {}, // Deprecated but required by older UI packages
+      removeListener() {},
+      addEventListener() {},
+      removeEventListener() {},
+      dispatchEvent: () => false,
+    }),
   });
 
   // Mock IntersectionObserver (Commonly used in Backstage catalog grids)
@@ -59,20 +65,7 @@ if (isBrowserEnv) {
 }
 
 // ----------------------------------------------------
-// 3. Shared Global Backstage Mocking Layer
-// ----------------------------------------------------
-
-// Mock global environment config values if your plugins leverage standard Backstage configApi
-vi.mock('@backstage/config', () => ({
-  ConfigReader: class {
-    getString(key: string) { return `mocked-${key}`; }
-    getOptionalString(key: string) { return `mocked-${key}`; }
-    getBoolean() { return true; }
-  },
-}));
-
-// ----------------------------------------------------
-// 4. Global Lifecycle Hooks (Cleaners and Resetters)
+// 3. Global Lifecycle Hooks (Cleaners and Resetters)
 // ----------------------------------------------------
 
 beforeAll(() => {

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { ConfigReader } from '@backstage/config';
+import { mockServices } from '@backstage/backend-test-utils';
 import { GcpDriver } from '../GcpDriver';
 import { ProjectsClient } from '@google-cloud/resource-manager';
 
@@ -29,23 +29,23 @@ vi.mock('@google-cloud/resource-manager', () => {
 describe('GcpDriver Integration Evaluation', () => {
   const mockLogger = { debug: vi.fn(), error: vi.fn() };
   
-  const mockRootConfig = new ConfigReader({
+  const mockRootConfig = mockServices.rootConfig({ data: {
     integrations: {
       gcp: {
         projectId: 'gcp-platform-prod',
       },
     },
-  });
+  }});
 
   let driver: GcpDriver;
 
   beforeEach(() => {
+    vi.clearAllMocks();
     driver = new GcpDriver({
       logger: mockLogger,
       rootConfig: mockRootConfig,
       config: { region: 'us-east4' },
     });
-    vi.restoreAllMocks();
   });
 
   it('correctly isolates active project configurations and normalizes resource label maps', async () => {
@@ -58,9 +58,11 @@ describe('GcpDriver Integration Evaluation', () => {
       },
     }]);
 
-    vi.mocked(ProjectsClient).mockImplementation(() => ({
+    vi.mocked(ProjectsClient).mockImplementation(function () {
+      return {
       getProject: mockGetProject,
-    } as any));
+      } as any;
+    });
 
     const resources = await driver.lookupResource({});
 

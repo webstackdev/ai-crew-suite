@@ -13,13 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { describe, expect, it, vi, beforeEach } from 'vitest';
-import { ConfigReader } from '@backstage/config';
+import { mockServices } from '@backstage/backend-test-utils';
+import { describe, expect, it } from 'vitest';
 import { readVcsConfig } from '../config';
+
+const configWith = (data: object) => mockServices.rootConfig({ data });
 
 describe('readVcsConfig', () => {
   it('reads the active provider configuration correctly', () => {
-    const mockConfig = new ConfigReader({
+    const mockConfig = configWith({
       ai: {
         integrations: {
           vcs: {
@@ -36,7 +38,7 @@ describe('readVcsConfig', () => {
   });
 
   it('throws an error if provider configuration is missing', () => {
-    const mockConfig = new ConfigReader({
+    const mockConfig = configWith({
       ai: {
         integrations: {
           vcs: {},

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { ConfigReader } from '@backstage/config';
+import { mockServices } from '@backstage/backend-test-utils';
 import { AzureDriver } from '../AzureDriver';
 import { ResourceManagementClient } from '@azure/arm-resources';
 
@@ -37,23 +37,23 @@ vi.mock('@azure/identity', () => ({
 describe('AzureDriver Integration Evaluation', () => {
   const mockLogger = { debug: vi.fn(), error: vi.fn() };
   
-  const mockRootConfig = new ConfigReader({
+  const mockRootConfig = mockServices.rootConfig({ data: {
     integrations: {
       azure: {
         subscriptionId: 'sub-12345-abcde',
       },
     },
-  });
+  }});
 
   let driver: AzureDriver;
 
   beforeEach(() => {
+    vi.clearAllMocks();
     driver = new AzureDriver({
       logger: mockLogger,
       rootConfig: mockRootConfig,
       config: { region: 'westus2' },
     });
-    vi.restoreAllMocks();
   });
 
   it('correctly isolates active subscription targets and formats resource profiles', async () => {
@@ -70,11 +70,13 @@ describe('AzureDriver Integration Evaluation', () => {
       };
     };
 
-    vi.mocked(ResourceManagementClient).mockImplementation(() => ({
+    vi.mocked(ResourceManagementClient).mockImplementation(function () {
+      return {
       resources: {
         list: mockListResources,
       },
-    } as any));
+      } as any;
+    });
 
     const resources = await driver.lookupResource({ service: 'Microsoft.Compute/virtualMachines' });
 

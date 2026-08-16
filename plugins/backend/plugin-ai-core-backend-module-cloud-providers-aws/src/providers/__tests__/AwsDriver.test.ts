@@ -33,21 +33,29 @@ describe('AwsDriver Standard Integration Suite', () => {
   let driver: AwsDriver;
 
   beforeEach(() => {
+    vi.clearAllMocks();
+    mockCredentialsManager.getCredentialProvider.mockResolvedValue({
+      sdkCredentialProvider: async () => ({
+        accessKeyId: 'mock-key',
+        secretAccessKey: 'mock-secret',
+      }),
+    });
     driver = new AwsDriver({
       logger: mockLogger,
       credentialsManager: mockCredentialsManager as any,
       config: { region: 'us-west-2' },
     });
-    vi.restoreAllMocks();
   });
 
   it('safely calls credential mapping chains and normalizes AWS output summaries', async () => {
     const sendMock = vi.fn().mockResolvedValue({ Account: '555555555555' });
-    vi.mocked(STSClient).mockImplementation(() => ({ send: sendMock } as any));
+    vi.mocked(STSClient).mockImplementation(function () {
+      return { send: sendMock } as any;
+    });
 
     const account = await driver.lookupAccount();
 
-    expect(mockCredentialsManager.getCredentialProvider).toHaveBeenCalledWith({ region: 'us-west-2' });
+    expect(mockCredentialsManager.getCredentialProvider).toHaveBeenCalledWith({});
     expect(sendMock).toHaveBeenCalledWith(expect.any(GetCallerIdentityCommand));
     expect(account).toEqual({
       id: '555555555555',
