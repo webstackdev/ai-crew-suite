@@ -1,4 +1,4 @@
-# @webstackbuilders/backstage-plugin-ai-core-backend-module-compliance
+# @webstackbuilders/plugin-ai-core-backend-module-compliance
 
 > Core Developer Documentation for the AI Crew Suite platform.
 
@@ -36,6 +36,6 @@ Supported policy providers: `opa`, `static`.
 
 ```bash
 yarn install --refresh
-yarn workspace @webstackbuilders/backstage-plugin-ai-core-backend-module-compliance build
-yarn workspace @webstackbuilders/backstage-plugin-ai-core-backend-module-compliance test
+yarn workspace @webstackbuilders/plugin-ai-core-backend-module-compliance build
+yarn workspace @webstackbuilders/plugin-ai-core-backend-module-compliance test
 ```

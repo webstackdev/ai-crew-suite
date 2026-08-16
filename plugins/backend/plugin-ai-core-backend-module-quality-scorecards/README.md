@@ -1,4 +1,4 @@
-# @webstackbuilders/backstage-plugin-ai-core-backend-module-quality-scorecards
+# @webstackbuilders/plugin-ai-core-backend-module-quality-scorecards
 
 > Core Developer Documentation for the AI Crew Suite platform.
 
@@ -34,6 +34,6 @@ Supported providers: `soundcheck`, `scorecards`, `internal`.
 
 ```bash
 yarn install --refresh
-yarn workspace @webstackbuilders/backstage-plugin-ai-core-backend-module-quality-scorecards build
-yarn workspace @webstackbuilders/backstage-plugin-ai-core-backend-module-quality-scorecards test
+yarn workspace @webstackbuilders/plugin-ai-core-backend-module-quality-scorecards build
+yarn workspace @webstackbuilders/plugin-ai-core-backend-module-quality-scorecards test
 ```

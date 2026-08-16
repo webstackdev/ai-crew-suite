@@ -1,4 +1,4 @@
-# @webstackbuilders/backstage-plugin-ai-core-backend-module-observability
+# @webstackbuilders/plugin-ai-core-backend-module-observability
 
 > Core Developer Documentation for the AI Crew Suite platform.
 
@@ -37,6 +37,6 @@ Supported alerting: `pagerduty`, `opsgenie`. Supported metrics: `datadog`, `newr
 
 ```bash
 yarn install --refresh
-yarn workspace @webstackbuilders/backstage-plugin-ai-core-backend-module-observability build
-yarn workspace @webstackbuilders/backstage-plugin-ai-core-backend-module-observability test
+yarn workspace @webstackbuilders/plugin-ai-core-backend-module-observability build
+yarn workspace @webstackbuilders/plugin-ai-core-backend-module-observability test
 ```

@@ -1,5 +1,5 @@
 {
-  "name": "@webstackbuilders/backstage-plugin-ai-core-backend-module-quality-scorecards",
+  "name": "@webstackbuilders/plugin-ai-core-backend-module-quality-scorecards",
   "description": "The quality-scorecards backend module for the ai-core plugin.",
   "version": "0.0.1",
   "main": "src/index.ts",
@@ -33,7 +33,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/webstackdev/ai-crew-suite",
-    "directory": "plugins/backend/ai-core-backend-module-quality-scorecards"
+    "directory": "plugins/backend/plugin-ai-core-backend-module-quality-scorecards"
   },
   "files": [
     "dist",

@@ -85,13 +85,13 @@ backend.add(loadBackendFeature(import('@backstage/plugin-signals-backend')));
 backend.add(loadBackendFeature(import('@backstage/plugin-mcp-actions-backend')));
 
 backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-core-backend-module-vcs')));
-backend.add(loadBackendFeature(import('@webstackbuilders/backstage-plugin-ai-core-backend-module-observability')));
-backend.add(loadBackendFeature(import('@webstackbuilders/backstage-plugin-ai-core-backend-module-compliance')));
+backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-core-backend-module-observability')));
+backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-core-backend-module-compliance')));
 backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-core-backend-module-cloud-providers')));
 backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-core-backend-module-collaboration')));
 backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-core-backend-module-collaboration-jira')));
 backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-core-backend-module-collaboration-slack')));
-backend.add(loadBackendFeature(import('@webstackbuilders/backstage-plugin-ai-core-backend-module-quality-scorecards')));
+backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-core-backend-module-quality-scorecards')));
 backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-core-backend-module-runtime-store')));
 
 backend.start();
