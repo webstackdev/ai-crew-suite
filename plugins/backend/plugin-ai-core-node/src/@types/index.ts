@@ -16,7 +16,11 @@
  */
 export * from './agent';
 export * from './cloud';
-export * from './collaboration';
+export * from './common';
+export * from './communication';
+export * from './incidentManagement';
+export * from './observability';
+export * from './projectManagement';
 export * from './qualityScorecards';
 export * from './rag';
 export * from './run';

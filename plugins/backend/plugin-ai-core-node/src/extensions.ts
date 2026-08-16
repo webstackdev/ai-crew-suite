@@ -21,10 +21,12 @@ import {
   AuditLogSink,
   CheckpointStore,
   CloudProviderDriver,
-  MessagingProviderDriver,
+  CommunicationDriver,
+  IncidentManagementDriver,
   ModelDefinition,
+  ObservabilityDriver,
+  ProjectManagementDriver,
   QualityScorecardsDriver,
-  TicketProviderDriver,
   RunStore,
   SessionStore,
   SourceDescriptor,
@@ -79,50 +81,101 @@ export const cloudDriversExtensionPoint = createExtensionPoint<CloudDriversExten
 });
 
 /**
- * Extension point for registering ticket management drivers such as Jira,
- * Linear, Asana, GitHub Projects, or GitLab Issues.
+ * Extension point for registering transactional work tracking drivers such as
+ * Jira, Linear, Asana, GitHub Projects, or GitLab Issues.
  *
  * Sibling modules use this to register themselves dynamically at boot time. The
- * core collaboration module resolves the driver named by
- * `ai.integrations.collaboration.ticketing` from the resulting registry.
+ * core project management module resolves the driver named by
+ * `ai.integrations.projectManagement.provider` from the resulting registry.
  */
-export interface TicketDriversExtensionPoint {
+export interface ProjectManagementDriversExtensionPoint {
   /**
-   * Registers a ticket provider driver.
+   * Registers a project management driver.
    * Duplicate provider IDs overwrite or reject depending on core module map rules.
    */
-  registerDriver(driver: TicketProviderDriver): void;
+  registerDriver(driver: ProjectManagementDriver): void;
 }
 
 /**
- * Backstage extension point used by modules that contribute ticket drivers.
+ * Backstage extension point used by modules that contribute project management drivers.
  */
-export const ticketDriversExtensionPoint = createExtensionPoint<TicketDriversExtensionPoint>({
-  id: 'ai-core.collaboration.ticket-drivers',
-});
+export const projectManagementDriversExtensionPoint =
+  createExtensionPoint<ProjectManagementDriversExtensionPoint>({
+    id: 'ai-core.project-management-drivers',
+  });
 
 /**
- * Extension point for registering team communication drivers such as Slack or
- * Microsoft Teams.
+ * Extension point for registering real-time human communication drivers such as
+ * Slack or Microsoft Teams.
  *
  * Sibling modules use this to register themselves dynamically at boot time. The
- * core collaboration module resolves the driver named by
- * `ai.integrations.collaboration.messaging` from the resulting registry.
+ * core communication module resolves the driver named by
+ * `ai.integrations.communication.provider` from the resulting registry.
  */
-export interface MessagingDriversExtensionPoint {
+export interface CommunicationDriversExtensionPoint {
   /**
-   * Registers a messaging provider driver.
+   * Registers a communication driver.
    * Duplicate provider IDs overwrite or reject depending on core module map rules.
    */
-  registerDriver(driver: MessagingProviderDriver): void;
+  registerDriver(driver: CommunicationDriver): void;
 }
 
 /**
- * Backstage extension point used by modules that contribute messaging drivers.
+ * Backstage extension point used by modules that contribute communication drivers.
  */
-export const messagingDriversExtensionPoint = createExtensionPoint<MessagingDriversExtensionPoint>({
-  id: 'ai-core.collaboration.messaging-drivers',
-});
+export const communicationDriversExtensionPoint =
+  createExtensionPoint<CommunicationDriversExtensionPoint>({
+    id: 'ai-core.communication-drivers',
+  });
+
+/**
+ * Extension point for registering on-call, paging, and incident lifecycle
+ * drivers such as PagerDuty, Opsgenie, or incident.io.
+ *
+ * Sibling modules use this to register themselves dynamically at boot time. The
+ * core incident management module resolves the driver named by
+ * `ai.integrations.incidentManagement.provider` from the resulting registry.
+ */
+export interface IncidentManagementDriversExtensionPoint {
+  /**
+   * Registers an incident management driver.
+   * Duplicate provider IDs overwrite or reject depending on core module map rules.
+   */
+  registerDriver(driver: IncidentManagementDriver): void;
+}
+
+/**
+ * Backstage extension point used by modules that contribute incident management drivers.
+ */
+export const incidentManagementDriversExtensionPoint =
+  createExtensionPoint<IncidentManagementDriversExtensionPoint>({
+    id: 'ai-core.incident-management-drivers',
+  });
+
+/**
+ * Extension point for registering telemetry platform drivers that serve metrics,
+ * logs, traces, and dashboards, such as Datadog, New Relic, Splunk, Prometheus,
+ * or Jaeger.
+ *
+ * Sibling modules use this to register themselves dynamically at boot time. The
+ * core observability module resolves the driver named by
+ * `ai.integrations.observability.provider` from the resulting registry.
+ */
+export interface ObservabilityDriversExtensionPoint {
+  /**
+   * Registers an observability driver.
+   * Duplicate provider IDs overwrite or reject depending on core module map rules.
+   */
+  registerDriver(driver: ObservabilityDriver): void;
+}
+
+/**
+ * Backstage extension point used by modules that contribute observability drivers.
+ */
+export const observabilityDriversExtensionPoint =
+  createExtensionPoint<ObservabilityDriversExtensionPoint>({
+    id: 'ai-core.observability-drivers',
+  });
 
 /**
  * Extension point for registering language models by stable ID.

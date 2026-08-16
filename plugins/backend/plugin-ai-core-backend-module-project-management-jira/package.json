@@ -1,0 +1,65 @@
+{
+  "name": "@webstackbuilders/plugin-ai-core-backend-module-project-management-jira",
+  "description": "The Jira driver for the project management backend module for the ai-core plugin.",
+  "version": "0.0.1",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "license": "Apache-2.0",
+  "keywords": [
+    "backstage",
+    "backstage-plugin-module",
+    "backend",
+    "webstack-builders",
+    "ai-crew-suite",
+    "ai-core",
+    "project management",
+    "jira"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "main": "dist/index.cjs.js",
+    "types": "dist/index.d.ts"
+  },
+  "backstage": {
+    "role": "backend-plugin-module",
+    "pluginId": "ai-core",
+    "pluginPackage": [
+      "@webstackbuilders/plugin-ai-core-backend"
+    ]
+  },
+  "bugs": {
+    "url": "https://github.com/webstackdev/ai-crew-suite/issues",
+    "email": "support@webstackbuilders.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/webstackdev/ai-crew-suite",
+    "directory": "plugins/backend/plugin-ai-core-backend-module-project-management-jira"
+  },
+  "files": [
+    "dist",
+    "config.d.ts"
+  ],
+  "configSchema": "config.d.ts",
+  "scripts": {
+    "start": "backstage-cli package start",
+    "build": "yarn --cwd ../../.. tsc -b plugins/backend/plugin-ai-core-backend-module-project-management-jira/tsconfig.json --emitDeclarationOnly && backstage-cli package build",
+    "clean": "backstage-cli package clean",
+    "prepack": "backstage-cli package prepack",
+    "postpack": "backstage-cli package postpack",
+    "typecheck": "tsc --noEmit",
+    "lint": "backstage-cli package lint --format stylish",
+    "test": "vitest run src --exclude 'dist-types/**' --passWithNoTests --config ../../../test/vitest.config.ts"
+  },
+  "dependencies": {
+    "@backstage/backend-plugin-api": "backstage:^",
+    "@backstage/config": "backstage:^",
+    "@webstackbuilders/plugin-ai-core-backend-module-project-management": "workspace:*",
+    "@webstackbuilders/plugin-ai-core-node": "workspace:*"
+  },
+  "devDependencies": {
+    "@backstage/backend-test-utils": "backstage:^",
+    "@backstage/cli": "backstage:^",
+    "vitest": "^4.1.10"
+  }
+}

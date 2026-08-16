@@ -15449,37 +15449,23 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@webstackbuilders/plugin-ai-core-backend-module-collaboration-jira@workspace:^, @webstackbuilders/plugin-ai-core-backend-module-collaboration-jira@workspace:plugins/backend/plugin-ai-core-backend-module-collaboration-jira":
+"@webstackbuilders/plugin-ai-core-backend-module-communication-slack@workspace:^, @webstackbuilders/plugin-ai-core-backend-module-communication-slack@workspace:plugins/backend/plugin-ai-core-backend-module-communication-slack":
   version: 0.0.0-use.local
-  resolution: "@webstackbuilders/plugin-ai-core-backend-module-collaboration-jira@workspace:plugins/backend/plugin-ai-core-backend-module-collaboration-jira"
+  resolution: "@webstackbuilders/plugin-ai-core-backend-module-communication-slack@workspace:plugins/backend/plugin-ai-core-backend-module-communication-slack"
   dependencies:
     "@backstage/backend-plugin-api": "backstage:^"
     "@backstage/backend-test-utils": "backstage:^"
     "@backstage/cli": "backstage:^"
     "@backstage/config": "backstage:^"
-    "@webstackbuilders/plugin-ai-core-backend-module-collaboration": "workspace:*"
+    "@webstackbuilders/plugin-ai-core-backend-module-communication": "workspace:*"
     "@webstackbuilders/plugin-ai-core-node": "workspace:*"
     vitest: "npm:^4.1.10"
   languageName: unknown
   linkType: soft
 
-"@webstackbuilders/plugin-ai-core-backend-module-collaboration-slack@workspace:^, @webstackbuilders/plugin-ai-core-backend-module-collaboration-slack@workspace:plugins/backend/plugin-ai-core-backend-module-collaboration-slack":
+"@webstackbuilders/plugin-ai-core-backend-module-communication@workspace:*, @webstackbuilders/plugin-ai-core-backend-module-communication@workspace:^, @webstackbuilders/plugin-ai-core-backend-module-communication@workspace:plugins/backend/plugin-ai-core-backend-module-communication":
   version: 0.0.0-use.local
-  resolution: "@webstackbuilders/plugin-ai-core-backend-module-collaboration-slack@workspace:plugins/backend/plugin-ai-core-backend-module-collaboration-slack"
-  dependencies:
-    "@backstage/backend-plugin-api": "backstage:^"
-    "@backstage/backend-test-utils": "backstage:^"
-    "@backstage/cli": "backstage:^"
-    "@backstage/config": "backstage:^"
-    "@webstackbuilders/plugin-ai-core-backend-module-collaboration": "workspace:*"
-    "@webstackbuilders/plugin-ai-core-node": "workspace:*"
-    vitest: "npm:^4.1.10"
-  languageName: unknown
-  linkType: soft
-
-"@webstackbuilders/plugin-ai-core-backend-module-collaboration@workspace:*, @webstackbuilders/plugin-ai-core-backend-module-collaboration@workspace:^, @webstackbuilders/plugin-ai-core-backend-module-collaboration@workspace:plugins/backend/plugin-ai-core-backend-module-collaboration":
-  version: 0.0.0-use.local
-  resolution: "@webstackbuilders/plugin-ai-core-backend-module-collaboration@workspace:plugins/backend/plugin-ai-core-backend-module-collaboration"
+  resolution: "@webstackbuilders/plugin-ai-core-backend-module-communication@workspace:plugins/backend/plugin-ai-core-backend-module-communication"
   dependencies:
     "@backstage/backend-plugin-api": "backstage:^"
     "@backstage/backend-test-utils": "backstage:^"
@@ -15493,6 +15479,33 @@ __metadata:
 "@webstackbuilders/plugin-ai-core-backend-module-compliance@workspace:^, @webstackbuilders/plugin-ai-core-backend-module-compliance@workspace:plugins/backend/plugin-ai-core-backend-module-compliance":
   version: 0.0.0-use.local
   resolution: "@webstackbuilders/plugin-ai-core-backend-module-compliance@workspace:plugins/backend/plugin-ai-core-backend-module-compliance"
+  dependencies:
+    "@backstage/backend-plugin-api": "backstage:^"
+    "@backstage/backend-test-utils": "backstage:^"
+    "@backstage/cli": "backstage:^"
+    "@backstage/config": "backstage:^"
+    "@webstackbuilders/plugin-ai-core-node": "workspace:^"
+    vitest: "npm:^4.1.10"
+  languageName: unknown
+  linkType: soft
+
+"@webstackbuilders/plugin-ai-core-backend-module-incident-management-pagerduty@workspace:^, @webstackbuilders/plugin-ai-core-backend-module-incident-management-pagerduty@workspace:plugins/backend/plugin-ai-core-backend-module-incident-management-pagerduty":
+  version: 0.0.0-use.local
+  resolution: "@webstackbuilders/plugin-ai-core-backend-module-incident-management-pagerduty@workspace:plugins/backend/plugin-ai-core-backend-module-incident-management-pagerduty"
+  dependencies:
+    "@backstage/backend-plugin-api": "backstage:^"
+    "@backstage/backend-test-utils": "backstage:^"
+    "@backstage/cli": "backstage:^"
+    "@backstage/config": "backstage:^"
+    "@webstackbuilders/plugin-ai-core-backend-module-incident-management": "workspace:*"
+    "@webstackbuilders/plugin-ai-core-node": "workspace:*"
+    vitest: "npm:^4.1.10"
+  languageName: unknown
+  linkType: soft
+
+"@webstackbuilders/plugin-ai-core-backend-module-incident-management@workspace:*, @webstackbuilders/plugin-ai-core-backend-module-incident-management@workspace:^, @webstackbuilders/plugin-ai-core-backend-module-incident-management@workspace:plugins/backend/plugin-ai-core-backend-module-incident-management":
+  version: 0.0.0-use.local
+  resolution: "@webstackbuilders/plugin-ai-core-backend-module-incident-management@workspace:plugins/backend/plugin-ai-core-backend-module-incident-management"
   dependencies:
     "@backstage/backend-plugin-api": "backstage:^"
     "@backstage/backend-test-utils": "backstage:^"
@@ -15559,9 +15572,50 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@webstackbuilders/plugin-ai-core-backend-module-observability@workspace:^, @webstackbuilders/plugin-ai-core-backend-module-observability@workspace:plugins/backend/plugin-ai-core-backend-module-observability":
+"@webstackbuilders/plugin-ai-core-backend-module-observability-datadog@workspace:^, @webstackbuilders/plugin-ai-core-backend-module-observability-datadog@workspace:plugins/backend/plugin-ai-core-backend-module-observability-datadog":
+  version: 0.0.0-use.local
+  resolution: "@webstackbuilders/plugin-ai-core-backend-module-observability-datadog@workspace:plugins/backend/plugin-ai-core-backend-module-observability-datadog"
+  dependencies:
+    "@backstage/backend-plugin-api": "backstage:^"
+    "@backstage/backend-test-utils": "backstage:^"
+    "@backstage/cli": "backstage:^"
+    "@backstage/config": "backstage:^"
+    "@webstackbuilders/plugin-ai-core-backend-module-observability": "workspace:*"
+    "@webstackbuilders/plugin-ai-core-node": "workspace:*"
+    vitest: "npm:^4.1.10"
+  languageName: unknown
+  linkType: soft
+
+"@webstackbuilders/plugin-ai-core-backend-module-observability@workspace:*, @webstackbuilders/plugin-ai-core-backend-module-observability@workspace:^, @webstackbuilders/plugin-ai-core-backend-module-observability@workspace:plugins/backend/plugin-ai-core-backend-module-observability":
   version: 0.0.0-use.local
   resolution: "@webstackbuilders/plugin-ai-core-backend-module-observability@workspace:plugins/backend/plugin-ai-core-backend-module-observability"
+  dependencies:
+    "@backstage/backend-plugin-api": "backstage:^"
+    "@backstage/backend-test-utils": "backstage:^"
+    "@backstage/cli": "backstage:^"
+    "@backstage/config": "backstage:^"
+    "@webstackbuilders/plugin-ai-core-node": "workspace:^"
+    vitest: "npm:^4.1.10"
+  languageName: unknown
+  linkType: soft
+
+"@webstackbuilders/plugin-ai-core-backend-module-project-management-jira@workspace:^, @webstackbuilders/plugin-ai-core-backend-module-project-management-jira@workspace:plugins/backend/plugin-ai-core-backend-module-project-management-jira":
+  version: 0.0.0-use.local
+  resolution: "@webstackbuilders/plugin-ai-core-backend-module-project-management-jira@workspace:plugins/backend/plugin-ai-core-backend-module-project-management-jira"
+  dependencies:
+    "@backstage/backend-plugin-api": "backstage:^"
+    "@backstage/backend-test-utils": "backstage:^"
+    "@backstage/cli": "backstage:^"
+    "@backstage/config": "backstage:^"
+    "@webstackbuilders/plugin-ai-core-backend-module-project-management": "workspace:*"
+    "@webstackbuilders/plugin-ai-core-node": "workspace:*"
+    vitest: "npm:^4.1.10"
+  languageName: unknown
+  linkType: soft
+
+"@webstackbuilders/plugin-ai-core-backend-module-project-management@workspace:*, @webstackbuilders/plugin-ai-core-backend-module-project-management@workspace:^, @webstackbuilders/plugin-ai-core-backend-module-project-management@workspace:plugins/backend/plugin-ai-core-backend-module-project-management":
+  version: 0.0.0-use.local
+  resolution: "@webstackbuilders/plugin-ai-core-backend-module-project-management@workspace:plugins/backend/plugin-ai-core-backend-module-project-management"
   dependencies:
     "@backstage/backend-plugin-api": "backstage:^"
     "@backstage/backend-test-utils": "backstage:^"
@@ -17123,14 +17177,18 @@ __metadata:
     "@backstage/plugin-techdocs-backend": "backstage:^"
     "@webstackbuilders/plugin-ai-core-backend": "workspace:^"
     "@webstackbuilders/plugin-ai-core-backend-module-cloud-providers": "workspace:^"
-    "@webstackbuilders/plugin-ai-core-backend-module-collaboration": "workspace:^"
-    "@webstackbuilders/plugin-ai-core-backend-module-collaboration-jira": "workspace:^"
-    "@webstackbuilders/plugin-ai-core-backend-module-collaboration-slack": "workspace:^"
+    "@webstackbuilders/plugin-ai-core-backend-module-communication": "workspace:^"
+    "@webstackbuilders/plugin-ai-core-backend-module-communication-slack": "workspace:^"
     "@webstackbuilders/plugin-ai-core-backend-module-compliance": "workspace:^"
+    "@webstackbuilders/plugin-ai-core-backend-module-incident-management": "workspace:^"
+    "@webstackbuilders/plugin-ai-core-backend-module-incident-management-pagerduty": "workspace:^"
     "@webstackbuilders/plugin-ai-core-backend-module-llm-aws": "workspace:^"
     "@webstackbuilders/plugin-ai-core-backend-module-llm-openai": "workspace:^"
     "@webstackbuilders/plugin-ai-core-backend-module-llm-openrouter": "workspace:^"
     "@webstackbuilders/plugin-ai-core-backend-module-observability": "workspace:^"
+    "@webstackbuilders/plugin-ai-core-backend-module-observability-datadog": "workspace:^"
+    "@webstackbuilders/plugin-ai-core-backend-module-project-management": "workspace:^"
+    "@webstackbuilders/plugin-ai-core-backend-module-project-management-jira": "workspace:^"
     "@webstackbuilders/plugin-ai-core-backend-module-quality-scorecards": "workspace:^"
     "@webstackbuilders/plugin-ai-core-backend-module-runtime-store": "workspace:^"
     "@webstackbuilders/plugin-ai-core-backend-module-storage-pgvector": "workspace:^"

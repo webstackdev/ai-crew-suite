@@ -13,73 +13,100 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { describe, expect, it, vi } from 'vitest';
+import { mockServices } from '@backstage/backend-test-utils';
+import {
+  ObservabilityDriver,
+  ToolContext,
+} from '@webstackbuilders/plugin-ai-core-node';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createObservabilityTools } from '../registerTools';
-import { ObservabilityDriver } from '../../providers';
 
-const createMockDriver = (overrides: Partial<ObservabilityDriver> = {}): ObservabilityDriver => ({
-  providerId: 'mock',
-  listActiveIncidents: vi.fn().mockResolvedValue([]),
-  getAlertHistory: vi.fn().mockResolvedValue([]),
-  queryMetrics: vi.fn().mockResolvedValue([]),
-  searchLogs: vi.fn().mockResolvedValue([]),
-  searchTraces: vi.fn().mockResolvedValue([]),
-  annotateIncident: vi.fn().mockResolvedValue({ incidentId: 'INC-1', annotated: true }),
-  suggestAlertTuning: vi.fn().mockResolvedValue({ alertId: 'A-1', suggestion: 'tune' }),
-  ...overrides,
-});
-
-const createMockLogger = () => ({
-  debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn(), child: vi.fn().mockReturnThis(),
-});
-
-const ctx = {
-  logger: createMockLogger() as never,
-  identity: 'test-user',
-  runId: 'test-run',
+const ctx: ToolContext = {
+  logger: mockServices.logger.mock(),
+  identity: 'user:default/tester',
+  runId: 'run-1',
   signal: new AbortController().signal,
 };
 
+const createDriver = (): ObservabilityDriver => ({
+  providerId: 'test-telemetry',
+  queryMetrics: vi.fn().mockResolvedValue([]),
+  searchLogs: vi.fn().mockResolvedValue([]),
+  searchTraces: vi.fn().mockResolvedValue([]),
+  listDashboards: vi.fn().mockResolvedValue([]),
+});
+
 describe('createObservabilityTools', () => {
-  it('registers the expected stable tool IDs', () => {
-    const tools = createObservabilityTools({
-      alertingDriver: createMockDriver(),
-      metricsDriver: createMockDriver(),
-      tracesDriver: createMockDriver(),
-      logger: createMockLogger() as never,
-    });
-    expect(tools.map(t => t.id)).toEqual([
-      'observability.incident.list_active',
-      'observability.alert.history',
-      'observability.metrics.query',
-      'observability.logs.search',
-      'observability.traces.search',
-      'observability.incident.annotate',
-      'observability.alert.suggest_tuning',
-    ]);
+  let driver: ObservabilityDriver;
+
+  const getTool = (id: string) => {
+    const tool = createObservabilityTools({
+      driver,
+      logger: mockServices.logger.mock(),
+    }).find(candidate => candidate.id === id);
+
+    if (!tool) throw new Error(`Tool '${id}' was not registered`);
+    return tool;
+  };
+
+  beforeEach(() => {
+    driver = createDriver();
   });
 
-  it('marks incident.annotate as write', () => {
-    const tools = createObservabilityTools({
-      alertingDriver: createMockDriver(),
-      metricsDriver: createMockDriver(),
-      tracesDriver: createMockDriver(),
-      logger: createMockLogger() as never,
+  it('delegates metric queries to the driver', async () => {
+    await getTool('observability.metrics.query').invoke(
+      { query: 'avg:http.latency{service:checkout}', since: '2026-01-01T00:00:00.000Z' },
+      ctx,
+    );
+
+    expect(driver.queryMetrics).toHaveBeenCalledWith({
+      query: 'avg:http.latency{service:checkout}',
+      since: '2026-01-01T00:00:00.000Z',
     });
-    const annotateTool = tools.find(t => t.id === 'observability.incident.annotate');
-    expect(annotateTool?.effect).toBe('write');
   });
 
-  it('observability.incident.list_active delegates to alertingDriver', async () => {
-    const alertingDriver = createMockDriver();
-    const tools = createObservabilityTools({
-      alertingDriver,
-      metricsDriver: createMockDriver(),
-      tracesDriver: createMockDriver(),
-      logger: createMockLogger() as never,
+  it('delegates log search to the driver', async () => {
+    await getTool('observability.logs.search').invoke(
+      { service: 'checkout', levels: ['error'] },
+      ctx,
+    );
+
+    expect(driver.searchLogs).toHaveBeenCalledWith({
+      service: 'checkout',
+      levels: ['error'],
     });
-    const tool = tools.find(t => t.id === 'observability.incident.list_active')!;
-    await tool.invoke({ service: 'api' }, ctx);
-    expect(alertingDriver.listActiveIncidents).toHaveBeenCalledWith({ service: 'api' });
+  });
+
+  it('delegates trace search to the driver', async () => {
+    await getTool('observability.traces.search').invoke(
+      { service: 'checkout', errorOnly: true },
+      ctx,
+    );
+
+    expect(driver.searchTraces).toHaveBeenCalledWith({
+      service: 'checkout',
+      errorOnly: true,
+    });
+  });
+
+  it('delegates dashboard listing to the driver', async () => {
+    await getTool('observability.dashboard.list').invoke({ team: 'payments' }, ctx);
+
+    expect(driver.listDashboards).toHaveBeenCalledWith({ team: 'payments' });
+  });
+
+  it('requires a query string for metric lookups', async () => {
+    await expect(
+      getTool('observability.metrics.query').invoke({}, ctx),
+    ).rejects.toThrow(/'query'/);
+  });
+
+  it('marks every telemetry tool as read-only', () => {
+    const tools = createObservabilityTools({
+      driver,
+      logger: mockServices.logger.mock(),
+    });
+
+    expect(tools.every(tool => tool.effect === 'read')).toBe(true);
   });
 });

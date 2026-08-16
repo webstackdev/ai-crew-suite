@@ -14,94 +14,92 @@
  * limitations under the License.
  */
 import { LoggerService } from '@backstage/backend-plugin-api';
-import { ToolDefinition } from '@webstackbuilders/plugin-ai-core-node';
-import { ObservabilityDriver } from '../providers';
+import {
+  DashboardQuery,
+  LogQuery,
+  MetricsQuery,
+  ObservabilityDriver,
+  ToolDefinition,
+  TraceQuery,
+} from '@webstackbuilders/plugin-ai-core-node';
 
-type ListActiveIncidentsArgs = { service?: string; team?: string };
-type AlertHistoryArgs = { service?: string; since?: string; until?: string };
-type MetricsQueryArgs = { query: string; since?: string; until?: string };
-type LogsSearchArgs = { query: string; service?: string; since?: string; until?: string };
-type TracesSearchArgs = { service?: string; operation?: string; errorOnly?: boolean; since?: string; until?: string };
-type AnnotateIncidentArgs = { incidentId: string; note: string };
-type SuggestTuningArgs = { alertId: string };
-
-export const createObservabilityTools = (opts: {
-  alertingDriver: ObservabilityDriver;
-  metricsDriver: ObservabilityDriver;
-  tracesDriver: ObservabilityDriver;
+export interface CreateObservabilityToolsOptions {
+  driver: ObservabilityDriver;
   logger: LoggerService;
-}): ToolDefinition[] => {
-  const { alertingDriver, metricsDriver, tracesDriver, logger } = opts;
+}
+
+/**
+ * Creates the stable telemetry tool definitions backed by the resolved driver.
+ *
+ * Every tool is read-only. Telemetry platforms are a source of evidence for
+ * agents, never a target for autonomous writes.
+ */
+export const createObservabilityTools = (
+  options: CreateObservabilityToolsOptions,
+): ToolDefinition[] => {
+  const { driver, logger } = options;
 
   return [
     {
-      id: 'observability.incident.list_active',
-      description: 'List active incidents for a service, team, or escalation policy',
-      effect: 'read',
-      async invoke(args: unknown) {
-        const payload = args as ListActiveIncidentsArgs;
-        logger.debug('observability.incident.list_active invoked', payload);
-        return alertingDriver.listActiveIncidents(payload);
-      },
-    },
-    {
-      id: 'observability.alert.history',
-      description: 'Return alert history and noise patterns for a service',
-      effect: 'read',
-      async invoke(args: unknown) {
-        const payload = args as AlertHistoryArgs;
-        logger.debug('observability.alert.history invoked', payload);
-        return alertingDriver.getAlertHistory(payload);
-      },
-    },
-    {
       id: 'observability.metrics.query',
-      description: 'Query metrics over a bounded time window',
+      description:
+        'Runs a provider-native metric query over a bounded time window.',
       effect: 'read',
       async invoke(args: unknown) {
-        const payload = args as MetricsQueryArgs;
-        logger.debug('observability.metrics.query invoked', payload);
-        return metricsDriver.queryMetrics(payload);
+        const payload = args as MetricsQuery;
+        logger.debug('observability.metrics.query invoked', {
+          query: payload?.query,
+        });
+
+        if (!payload?.query) {
+          throw new Error("Missing required argument: 'query'");
+        }
+
+        return driver.queryMetrics(payload);
       },
     },
     {
       id: 'observability.logs.search',
-      description: 'Search logs around a time range and entity',
+      description:
+        'Searches logs by service, severity, and time window to surface error spikes.',
       effect: 'read',
       async invoke(args: unknown) {
-        const payload = args as LogsSearchArgs;
-        logger.debug('observability.logs.search invoked', payload);
-        return metricsDriver.searchLogs(payload);
+        const payload = (args ?? {}) as LogQuery;
+        logger.debug('observability.logs.search invoked', {
+          service: payload.service,
+        });
+
+        return driver.searchLogs(payload);
       },
     },
     {
       id: 'observability.traces.search',
-      description: 'Search traces by service, operation, or error signature',
+      description:
+        'Searches distributed trace spans by service, operation, error status, or duration.',
       effect: 'read',
       async invoke(args: unknown) {
-        const payload = args as TracesSearchArgs;
-        logger.debug('observability.traces.search invoked', payload);
-        return tracesDriver.searchTraces(payload);
+        const payload = (args ?? {}) as TraceQuery;
+        logger.debug('observability.traces.search invoked', {
+          service: payload.service,
+          operation: payload.operation,
+        });
+
+        return driver.searchTraces(payload);
       },
     },
     {
-      id: 'observability.incident.annotate',
-      description: 'Add a diagnostic note or run link to an incident',
-      effect: 'write',
-      async invoke(args: unknown) {
-        const payload = args as AnnotateIncidentArgs;
-        logger.debug('observability.incident.annotate invoked', { incidentId: payload.incidentId });
-        return alertingDriver.annotateIncident(payload.incidentId, payload.note);
-      },
-    },
-    {
-      id: 'observability.alert.suggest_tuning',
-      description: 'Produce a provider-normalized alert tuning artifact',
+      id: 'observability.dashboard.list',
+      description:
+        'Lists provider-hosted dashboards relevant to a service or team.',
       effect: 'read',
       async invoke(args: unknown) {
-        const payload = args as SuggestTuningArgs;
-        logger.debug('observability.alert.suggest_tuning invoked', { alertId: payload.alertId });
-        return alertingDriver.suggestAlertTuning(payload.alertId);
+        const payload = (args ?? {}) as DashboardQuery;
+        logger.debug('observability.dashboard.list invoked', {
+          service: payload.service,
+          team: payload.team,
+        });
+
+        return driver.listDashboards(payload);
       },
     },
   ];
