@@ -13,14 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+export { aiCoreBackendModuleCollaborationSlack as default } from './module';
+export { SlackDriver } from './providers/SlackDriver';
 export type {
-  ChannelSummary,
-  CollaborationDriver,
-  TicketComment,
-  TicketDetail,
-  TicketSummary,
-} from './types';
-export { JiraDriver } from './jira';
-export type { JiraDriverConfig } from './jira';
-export { SlackDriver } from './slack';
-export type { SlackDriverConfig } from './slack';
+  SlackDriverConfig,
+  SlackDriverOptions,
+} from './providers/SlackDriver';

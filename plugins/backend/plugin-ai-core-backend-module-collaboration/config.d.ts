@@ -13,20 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 export interface Config {
+  /**
+   * AI Crew Suite integration configuration.
+   */
   ai?: {
+    /**
+     * Third-party integration modules.
+     */
     integrations?: {
+      /**
+       * Collaboration service integration configuration.
+       *
+       * Provider connection details are owned by the sibling
+       * `plugin-ai-core-backend-module-collaboration-<provider>` packages.
+       */
       collaboration?: {
-        ticketing: 'jira' | 'linear';
-        messaging: 'slack' | 'teams';
-        ticketingProviders?: {
-          jira?: { baseUrl?: string };
-          linear?: { baseUrl?: string };
-        };
-        messagingProviders?: {
-          slack?: { baseUrl?: string };
-          teams?: { baseUrl?: string };
-        };
+        /**
+         * Identifier of the registered ticket driver to activate, such as `jira`.
+         * The core module resolves this from the ticket driver extension point.
+         */
+        ticketing: string;
+        /**
+         * Identifier of the registered messaging driver to activate, such as `slack`.
+         * The core module resolves this from the messaging driver extension point.
+         */
+        messaging: string;
       };
     };
   };

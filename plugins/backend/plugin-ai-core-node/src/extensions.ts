@@ -21,8 +21,10 @@ import {
   AuditLogSink,
   CheckpointStore,
   CloudProviderDriver,
+  MessagingProviderDriver,
   ModelDefinition,
   QualityScorecardsDriver,
+  TicketProviderDriver,
   RunStore,
   SessionStore,
   SourceDescriptor,
@@ -74,6 +76,52 @@ export interface CloudDriversExtensionPoint {
  */
 export const cloudDriversExtensionPoint = createExtensionPoint<CloudDriversExtensionPoint>({
   id: 'ai-core.cloud-drivers',
+});
+
+/**
+ * Extension point for registering ticket management drivers such as Jira,
+ * Linear, Asana, GitHub Projects, or GitLab Issues.
+ *
+ * Sibling modules use this to register themselves dynamically at boot time. The
+ * core collaboration module resolves the driver named by
+ * `ai.integrations.collaboration.ticketing` from the resulting registry.
+ */
+export interface TicketDriversExtensionPoint {
+  /**
+   * Registers a ticket provider driver.
+   * Duplicate provider IDs overwrite or reject depending on core module map rules.
+   */
+  registerDriver(driver: TicketProviderDriver): void;
+}
+
+/**
+ * Backstage extension point used by modules that contribute ticket drivers.
+ */
+export const ticketDriversExtensionPoint = createExtensionPoint<TicketDriversExtensionPoint>({
+  id: 'ai-core.collaboration.ticket-drivers',
+});
+
+/**
+ * Extension point for registering team communication drivers such as Slack or
+ * Microsoft Teams.
+ *
+ * Sibling modules use this to register themselves dynamically at boot time. The
+ * core collaboration module resolves the driver named by
+ * `ai.integrations.collaboration.messaging` from the resulting registry.
+ */
+export interface MessagingDriversExtensionPoint {
+  /**
+   * Registers a messaging provider driver.
+   * Duplicate provider IDs overwrite or reject depending on core module map rules.
+   */
+  registerDriver(driver: MessagingProviderDriver): void;
+}
+
+/**
+ * Backstage extension point used by modules that contribute messaging drivers.
+ */
+export const messagingDriversExtensionPoint = createExtensionPoint<MessagingDriversExtensionPoint>({
+  id: 'ai-core.collaboration.messaging-drivers',
 });
 
 /**

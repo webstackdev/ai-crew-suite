@@ -13,63 +13,51 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { mockServices } from '@backstage/backend-test-utils';
 import { describe, expect, it } from 'vitest';
-import { ConfigReader } from '@backstage/config';
 import { readCollaborationConfig } from '../config';
 
+const configOf = (data: object) => mockServices.rootConfig({ data });
+
 describe('readCollaborationConfig', () => {
-  it('reads a valid jira+slack config', () => {
-    const config = new ConfigReader({
+  it('reads the ticketing and messaging driver identifiers', () => {
+    const config = configOf({
       ai: {
         integrations: {
-          collaboration: {
-            ticketing: 'jira',
-            messaging: 'slack',
-            ticketingProviders: { jira: { baseUrl: 'https://jira.example.com' } },
-            messagingProviders: { slack: { baseUrl: 'https://slack.example.com' } },
-          },
+          collaboration: { ticketing: 'jira', messaging: 'slack' },
         },
       },
     });
-    const result = readCollaborationConfig(config);
-    expect(result.ticketing).toBe('jira');
-    expect(result.messaging).toBe('slack');
-    expect(result.ticketingProviders.jira?.baseUrl).toBe('https://jira.example.com');
-    expect(result.messagingProviders.slack?.baseUrl).toBe('https://slack.example.com');
+
+    expect(readCollaborationConfig(config)).toEqual({
+      ticketing: 'jira',
+      messaging: 'slack',
+    });
   });
 
-  it('throws when collaboration config is missing', () => {
-    const config = new ConfigReader({});
-    expect(() => readCollaborationConfig(config)).toThrow(
-      /ai\.integrations\.collaboration configuration to be set/,
+  it('throws when the collaboration section is missing', () => {
+    expect(() => readCollaborationConfig(configOf({}))).toThrow(
+      /requires ai.integrations.collaboration configuration/,
     );
   });
 
-  it('throws when ticketing provider is missing', () => {
-    const config = new ConfigReader({
+  it('throws when the ticketing identifier is missing', () => {
+    const config = configOf({
       ai: { integrations: { collaboration: { messaging: 'slack' } } },
     });
-    expect(() => readCollaborationConfig(config)).toThrow(/ticketing to be set/);
+
+    expect(() => readCollaborationConfig(config)).toThrow(
+      /ai.integrations.collaboration.ticketing/,
+    );
   });
 
-  it('throws when messaging provider is missing', () => {
-    const config = new ConfigReader({
+  it('throws when the messaging identifier is missing', () => {
+    const config = configOf({
       ai: { integrations: { collaboration: { ticketing: 'jira' } } },
     });
-    expect(() => readCollaborationConfig(config)).toThrow(/messaging to be set/);
-  });
 
-  it('throws when ticketing provider is unsupported', () => {
-    const config = new ConfigReader({
-      ai: { integrations: { collaboration: { ticketing: 'unsupported', messaging: 'slack' } } },
-    });
-    expect(() => readCollaborationConfig(config)).toThrow(/unsupported ticketing provider/);
-  });
-
-  it('throws when messaging provider is unsupported', () => {
-    const config = new ConfigReader({
-      ai: { integrations: { collaboration: { ticketing: 'jira', messaging: 'unsupported' } } },
-    });
-    expect(() => readCollaborationConfig(config)).toThrow(/unsupported messaging provider/);
+    expect(() => readCollaborationConfig(config)).toThrow(
+      /ai.integrations.collaboration.messaging/,
+    );
   });
 });

@@ -77,22 +77,29 @@ Use `effect: 'read'` for context-gathering tools and `effect: 'write'` for tools
 
 ### Provider Driver Pattern
 
-Each module exposes a small internal driver interface and one or more provider implementations.
+An integration group is split into a **core module** that owns the driver interface, extension point, config selector, and tool registration, plus one **sibling driver module per third-party service** that owns the vendor SDK, credentials, and response mapping. The core module never imports vendor code.
 
 ```
-src/
-  module.ts
-  tools/
-    registerTools.ts
-  providers/
-    types.ts
-    github.ts
-    gitlab.ts
-  config.ts
-  __tests__/
+plugin-ai-core-backend-module-<group>/          # core
+  src/
+    module.ts          # registers the extension point and resolves the driver
+    tools/
+      registerTools.ts # thin wrappers over the driver interface
+    config.ts          # reads the driver selector only
+  config.d.ts
+
+plugin-ai-core-backend-module-<group>-<provider>/   # sibling
+  src/
+    module.ts          # deps on the extension point, calls registerDriver
+    providers/
+      <Provider>Driver.ts
+    config.ts          # reads ai.integrations.<group>.<provider>
+  config.d.ts
 ```
 
-The module boot sequence reads config, builds a driver, and registers tools. Tools are intentionally thin wrappers around the driver so agent definitions can depend on stable tool IDs while provider selection stays in the module boot sequence.
+Driver interfaces and their extension points live in `@webstackbuilders/plugin-ai-core-node` so both sides of the boundary import the same contract without a circular dependency.
+
+The core module boot sequence reads config, resolves the driver registered under that identifier, and registers tools. Boot fails with an explicit error when the selected identifier has no registered driver. Tools are intentionally thin wrappers around the driver so agent definitions can depend on stable tool IDs while provider selection stays in configuration.
 
 ### Configuration
 
@@ -213,26 +220,35 @@ The GitHub driver delegates file reads to the Backstage `UrlReaderService` so cr
 
 ### Adding a VCS Provider
 
-Create a new driver implementation that satisfies the `VcsDriver` interface and add a case to the module's provider switch statement. The driver should normalize provider-specific responses into the shared `RepositoryMetadata`, `PullRequestSummary`, and `RepositorySearchResult` types.
+Create `plugin-ai-core-backend-module-vcs-<provider>`, implement the `VcsDriver` interface from `@webstackbuilders/plugin-ai-core-node`, depend on `vcsDriversExtensionPoint` in `createBackendModule`, and call `registerDriver` during `init`. The driver should normalize provider-specific responses into the shared `RepositoryMetadata`, `PullRequestSummary`, and `RepositorySearchResult` types.
 
 ---
 
 ## Collaboration Module
 
-The collaboration module provides work coordination and human communication tools. It registers stable, provider-neutral ticketing and messaging tools while hiding vendor-specific API calls behind a `CollaborationDriver` interface.
+The collaboration module provides work coordination and human communication tools. Like the VCS and quality scorecards groups, it is split into a core module that owns the contracts and tool surface, plus one sibling module per third-party service.
+
+| Package                                                    | Role                                                  |
+| ---------------------------------------------------------- | ----------------------------------------------------- |
+| `plugin-ai-core-backend-module-collaboration`               | Extension points, driver resolution, tool registration |
+| `plugin-ai-core-backend-module-collaboration-jira`          | `TicketProviderDriver` for Jira Cloud                  |
+| `plugin-ai-core-backend-module-collaboration-slack`         | `MessagingProviderDriver` for Slack                    |
 
 ### Registered Tools
 
-| Tool ID                        | Effect  | Purpose                                                        |
-| ------------------------------ | ------- | -------------------------------------------------------------- |
-| `collaboration.ticket.search`  | `read`  | Search tickets by query, service, team, or incident reference. |
-| `collaboration.ticket.get`     | `read`  | Fetch ticket details and linked discussions.                   |
-| `collaboration.channel.lookup` | `read`  | Resolve a team or service to a messaging channel.              |
-| `collaboration.ticket.create`  | `write` | Create a ticket from an agent artifact.                        |
-| `collaboration.ticket.comment` | `write` | Add a comment with trace/run links to a ticket.                |
-| `collaboration.message.post`   | `write` | Post a summary message to a messaging channel.                 |
+| Tool ID                         | Effect  | Purpose                                                             |
+| ------------------------------- | ------- | ------------------------------------------------------------------- |
+| `collaboration.ticket.search`   | `read`  | Search tickets by text, team, assignee, state, or label.            |
+| `collaboration.ticket.get`      | `read`  | Fetch ticket details, comments, and assignee history.               |
+| `collaboration.channel.lookup`  | `read`  | Resolve a team or service to a messaging channel.                   |
+| `collaboration.channel.history` | `read`  | Read back a channel or thread transcript.                           |
+| `collaboration.ticket.create`   | `write` | Create a ticket from an agent artifact.                             |
+| `collaboration.ticket.comment`  | `write` | Add a comment with trace/run links to a ticket.                     |
+| `collaboration.message.post`    | `write` | Post a summary message to a messaging channel or thread.            |
 
 ### Configuration
+
+The core module owns only the driver selectors. Connection details are owned by the sibling driver packages.
 
 ```yaml
 ai:
@@ -240,19 +256,25 @@ ai:
     collaboration:
       ticketing: jira
       messaging: slack
-      ticketingProviders:
-        jira:
-          baseUrl: https://my-org.atlassian.net
-      messagingProviders:
-        slack:
-          baseUrl: https://my-org.slack.com
+      jira:
+        baseUrl: https://my-org.atlassian.net
+        email: ${JIRA_EMAIL}
+        apiToken: ${JIRA_API_TOKEN}
+        defaultProjectKey: OPS
+      slack:
+        token: ${SLACK_BOT_TOKEN}
+        workspaceDomain: my-org.slack.com
 ```
 
-Supported ticketing providers: `jira`, `linear`. Supported messaging providers: `slack`, `teams`. Only `jira` and `slack` are implemented in the first pass.
+Boot fails with an explicit error when the selected identifier has no registered driver.
 
 ### Driver Separation
 
-Ticketing and messaging live in one collaboration module because they share human workflow semantics. The module builds separate drivers for ticketing and messaging so a ticket search call goes to Jira while a message post goes to Slack. If chat/messaging grows into interactive bot behavior, split messaging into a dedicated module later.
+Ticketing and messaging live in one integration group because they share human workflow semantics, but they are separate contracts. `TicketProviderDriver` covers ticket management services (Jira, Linear, Asana, GitHub Projects, GitLab Issues) and `MessagingProviderDriver` covers team communication services (Slack, Microsoft Teams). A driver module only implements the interface for the capability it actually supports, so a ticket search call goes to Jira while a message post goes to Slack.
+
+### Adding a Provider
+
+Create `plugin-ai-core-backend-module-collaboration-<provider>`, implement the relevant driver interface from `@webstackbuilders/plugin-ai-core-node`, depend on `ticketDriversExtensionPoint` or `messagingDriversExtensionPoint` in `createBackendModule`, call `registerDriver` during `init`, and own `ai.integrations.collaboration.<provider>` in the package's `config.d.ts`.
 
 ---
 

@@ -14,76 +14,16 @@
  * limitations under the License.
  */
 import { Config } from '@backstage/config';
+import { CollaborationConfig } from '@webstackbuilders/plugin-ai-core-node';
 
 /**
- * Supported ticketing provider identifiers.
- */
-export type TicketingProviderId = 'jira' | 'linear';
-
-/**
- * Supported messaging provider identifiers.
- */
-export type MessagingProviderId = 'slack' | 'teams';
-
-/**
- * Provider-specific connection configuration.
- */
-export type ProviderConnectionConfig = {
-  /** Optional base URL for the provider API. */
-  baseUrl?: string;
-};
-
-/**
- * Collaboration module configuration read from `ai.integrations.collaboration`.
- */
-export type CollaborationConfig = {
-  /** Selected ticketing provider identifier. */
-  ticketing: TicketingProviderId;
-  /** Selected messaging provider identifier. */
-  messaging: MessagingProviderId;
-  /** Ticketing provider connection details keyed by provider id. */
-  ticketingProviders: Partial<Record<TicketingProviderId, ProviderConnectionConfig>>;
-  /** Messaging provider connection details keyed by provider id. */
-  messagingProviders: Partial<Record<MessagingProviderId, ProviderConnectionConfig>>;
-};
-
-const TICKETING_PROVIDERS: readonly TicketingProviderId[] = ['jira', 'linear'];
-const MESSAGING_PROVIDERS: readonly MessagingProviderId[] = ['slack', 'teams'];
-
-const isTicketingProvider = (value: unknown): value is TicketingProviderId =>
-  typeof value === 'string' &&
-  (TICKETING_PROVIDERS as readonly string[]).includes(value);
-
-const isMessagingProvider = (value: unknown): value is MessagingProviderId =>
-  typeof value === 'string' &&
-  (MESSAGING_PROVIDERS as readonly string[]).includes(value);
-
-const readProviderConfigs = <T extends string>(
-  config: Config,
-  path: string,
-  providers: readonly T[],
-): Partial<Record<T, ProviderConnectionConfig>> => {
-  const result: Partial<Record<T, ProviderConnectionConfig>> = {};
-  const section = config.getOptionalConfig(path);
-  if (!section) return result;
-  for (const candidate of providers) {
-    const providerConfig = section.getOptionalConfig(candidate);
-    if (providerConfig) {
-      result[candidate] = {
-        baseUrl: providerConfig.getOptionalString('baseUrl'),
-      };
-    }
-  }
-  return result;
-};
-
-/**
- * Reads and validates collaboration module configuration from
- * `ai.integrations.collaboration`.
+ * Reads the driver selectors from `ai.integrations.collaboration`.
+ *
+ * Provider connection details are owned by the sibling driver modules, so this
+ * reader only resolves which registered drivers should back the shared tools.
  */
 export const readCollaborationConfig = (config: Config): CollaborationConfig => {
   const collabConfig = config.getOptionalConfig('ai.integrations.collaboration');
-
   if (!collabConfig) {
     throw new Error(
       'Collaboration module requires ai.integrations.collaboration configuration to be set',
@@ -96,11 +36,6 @@ export const readCollaborationConfig = (config: Config): CollaborationConfig => 
       'Collaboration module requires ai.integrations.collaboration.ticketing to be set',
     );
   }
-  if (!isTicketingProvider(ticketing)) {
-    throw new Error(
-      `Collaboration module received unsupported ticketing provider '${ticketing}'. Supported: ${TICKETING_PROVIDERS.join(', ')}`,
-    );
-  }
 
   const messaging = collabConfig.getOptionalString('messaging');
   if (!messaging) {
@@ -108,24 +43,6 @@ export const readCollaborationConfig = (config: Config): CollaborationConfig => 
       'Collaboration module requires ai.integrations.collaboration.messaging to be set',
     );
   }
-  if (!isMessagingProvider(messaging)) {
-    throw new Error(
-      `Collaboration module received unsupported messaging provider '${messaging}'. Supported: ${MESSAGING_PROVIDERS.join(', ')}`,
-    );
-  }
 
-  return {
-    ticketing,
-    messaging,
-    ticketingProviders: readProviderConfigs(
-      collabConfig,
-      'ticketingProviders',
-      TICKETING_PROVIDERS,
-    ),
-    messagingProviders: readProviderConfigs(
-      collabConfig,
-      'messagingProviders',
-      MESSAGING_PROVIDERS,
-    ),
-  };
+  return { ticketing, messaging };
 };

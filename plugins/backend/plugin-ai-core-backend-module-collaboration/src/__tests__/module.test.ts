@@ -13,29 +13,113 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { describe, expect, it } from 'vitest';
-import collaborationModule, { aiCoreBackendModuleCollaboration } from '../module';
+import { createBackendModule, createBackendPlugin } from '@backstage/backend-plugin-api';
+import { mockServices, startTestBackend } from '@backstage/backend-test-utils';
+import {
+  ToolExtensionPoint,
+  messagingDriversExtensionPoint,
+  ticketDriversExtensionPoint,
+  toolExtensionPoint,
+} from '@webstackbuilders/plugin-ai-core-node';
+import { describe, expect, it, vi } from 'vitest';
+import { aiCoreBackendModuleCollaboration } from '../module';
 
-const getRegistrations = () =>
-  (aiCoreBackendModuleCollaboration as unknown as {
-    getRegistrations(): {
-      type: string;
-      pluginId: string;
-      moduleId: string;
-      init?: unknown;
-    }[];
-  }).getRegistrations();
+const configData = {
+  ai: {
+    integrations: {
+      collaboration: { ticketing: 'jira', messaging: 'slack' },
+    },
+  },
+};
+
+const createHostPlugin = (tools: { addTool: ReturnType<typeof vi.fn> }) =>
+  createBackendPlugin({
+    pluginId: 'ai-core',
+    register(env) {
+      env.registerExtensionPoint(toolExtensionPoint, tools as unknown as ToolExtensionPoint);
+      env.registerInit({ deps: {}, async init() {} });
+    },
+  });
+
+const createMockDriverModule = (moduleId: string, ticketing: string, messaging: string) =>
+  createBackendModule({
+    pluginId: 'ai-core',
+    moduleId,
+    register(env) {
+      env.registerInit({
+        deps: {
+          ticketRegistry: ticketDriversExtensionPoint,
+          messagingRegistry: messagingDriversExtensionPoint,
+        },
+        async init({ ticketRegistry, messagingRegistry }) {
+          ticketRegistry.registerDriver({
+            providerId: ticketing,
+            searchTickets: vi.fn(),
+            getTicket: vi.fn(),
+            createTicket: vi.fn(),
+            commentTicket: vi.fn(),
+          });
+          messagingRegistry.registerDriver({
+            providerId: messaging,
+            lookupChannel: vi.fn(),
+            postMessage: vi.fn(),
+            getChannelHistory: vi.fn(),
+          });
+        },
+      });
+    },
+  });
 
 describe('aiCoreBackendModuleCollaboration', () => {
-  it('exports an installable backend module for the ai-core plugin', () => {
-    expect(collaborationModule).toBe(aiCoreBackendModuleCollaboration);
-    expect(getRegistrations()).toEqual([
-      expect.objectContaining({
-        type: expect.stringMatching(/^module/),
-        pluginId: 'ai-core',
-        moduleId: 'collaboration',
-        init: expect.any(Object),
-      }),
+  it('registers the collaboration tools once both drivers are registered', async () => {
+    const tools = { addTool: vi.fn() };
+
+    await startTestBackend({
+      features: [
+        createHostPlugin(tools),
+        aiCoreBackendModuleCollaboration,
+        createMockDriverModule('collaboration-mock', 'jira', 'slack'),
+        mockServices.rootConfig.factory({ data: configData }),
+        mockServices.logger.factory(),
+      ],
+    });
+
+    expect(tools.addTool.mock.calls.map(([tool]) => tool.id)).toEqual([
+      'collaboration.ticket.search',
+      'collaboration.ticket.get',
+      'collaboration.ticket.create',
+      'collaboration.ticket.comment',
+      'collaboration.channel.lookup',
+      'collaboration.channel.history',
+      'collaboration.message.post',
     ]);
+  });
+
+  it('fails when the configured ticket driver was never registered', async () => {
+    await expect(
+      startTestBackend({
+        features: [
+          createHostPlugin({ addTool: vi.fn() }),
+          aiCoreBackendModuleCollaboration,
+          createMockDriverModule('collaboration-mock', 'linear', 'slack'),
+          mockServices.rootConfig.factory({ data: configData }),
+          mockServices.logger.factory(),
+        ],
+      }),
+    ).rejects.toThrow(/No ticket driver registered for identifier 'jira'/);
+  });
+
+  it('fails when the configured messaging driver was never registered', async () => {
+    await expect(
+      startTestBackend({
+        features: [
+          createHostPlugin({ addTool: vi.fn() }),
+          aiCoreBackendModuleCollaboration,
+          createMockDriverModule('collaboration-mock', 'jira', 'teams'),
+          mockServices.rootConfig.factory({ data: configData }),
+          mockServices.logger.factory(),
+        ],
+      }),
+    ).rejects.toThrow(/No messaging driver registered for identifier 'slack'/);
   });
 });
