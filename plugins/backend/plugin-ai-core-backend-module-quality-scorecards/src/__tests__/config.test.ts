@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 // plugins/backend/plugin-ai-core-backend-module-quality-scorecards/src/__tests__/config.test.ts
+import { mockServices } from '@backstage/backend-test-utils';
 import { describe, expect, it } from 'vitest';
-import { ConfigReader } from '@backstage/config';
 import { readQualityScorecardsConfig } from '../config';
+
+const configWith = (data: object) => mockServices.rootConfig({ data });
 
 describe('readQualityScorecardsConfig', () => {
   it('reads a valid core scorecard configuration mapping descriptor', () => {
-    const config = new ConfigReader({
+    const config = configWith({
       ai: {
         integrations: {
           qualityScorecards: {
@@ -35,13 +37,13 @@ describe('readQualityScorecardsConfig', () => {
   });
 
   it('throws an informative error when the integration block is completely missing', () => {
-    expect(() => readQualityScorecardsConfig(new ConfigReader({}))).toThrow(
+    expect(() => readQualityScorecardsConfig(configWith({}))).toThrow(
       /Quality Scorecards module requires ai\.integrations\.qualityScorecards configuration to be set/
     );
   });
 
   it('throws an informative error when the default target provider string is missing', () => {
-    const config = new ConfigReader({
+    const config = configWith({
       ai: {
         integrations: {
           qualityScorecards: {}

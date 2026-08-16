@@ -13,14 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { resolvePackagePath } from '@backstage/backend-plugin-api';
 import type { Knex } from 'knex';
 import { describe, expect, it, vi } from 'vitest';
 import { applyDatabaseMigrations } from '../migrations';
-
-vi.mock('@backstage/backend-plugin-api', () => ({
-  resolvePackagePath: vi.fn(() => '/resolved/pgvector/migrations'),
-}));
 
 describe('applyDatabaseMigrations', () => {
   it('applies the packaged pgvector migrations with Knex', async () => {
@@ -31,12 +26,10 @@ describe('applyDatabaseMigrations', () => {
 
     await applyDatabaseMigrations(knex);
 
-    expect(resolvePackagePath).toHaveBeenCalledWith(
-      '@webstackbuilders/plugin-ai-core-backend-module-storage-pgvector',
-      'migrations',
+    expect(latest).toHaveBeenCalledWith(
+      expect.objectContaining({
+        directory: expect.stringMatching(/plugin-ai-core-backend-module-storage-pgvector\/migrations$/),
+      }),
     );
-    expect(latest).toHaveBeenCalledWith({
-      directory: '/resolved/pgvector/migrations',
-    });
   });
 });

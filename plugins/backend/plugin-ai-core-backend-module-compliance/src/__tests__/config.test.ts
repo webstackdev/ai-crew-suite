@@ -13,13 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { mockServices } from '@backstage/backend-test-utils';
 import { describe, expect, it } from 'vitest';
-import { ConfigReader } from '@backstage/config';
 import { readComplianceConfig } from '../config';
+
+const configWith = (data: object) => mockServices.rootConfig({ data });
 
 describe('readComplianceConfig', () => {
   it('reads a valid opa config', () => {
-    const config = new ConfigReader({
+    const config = configWith({
       ai: { integrations: { compliance: { policy: 'opa', opa: { baseUrl: 'http://localhost:8181' } } } },
     });
     const result = readComplianceConfig(config);
@@ -28,18 +30,18 @@ describe('readComplianceConfig', () => {
   });
 
   it('throws when config is missing', () => {
-    expect(() => readComplianceConfig(new ConfigReader({}))).toThrow(
+    expect(() => readComplianceConfig(configWith({}))).toThrow(
       /ai\.integrations\.compliance configuration to be set/,
     );
   });
 
   it('throws when policy is missing', () => {
-    const config = new ConfigReader({ ai: { integrations: { compliance: {} } } });
+    const config = configWith({ ai: { integrations: { compliance: {} } } });
     expect(() => readComplianceConfig(config)).toThrow(/policy to be set/);
   });
 
   it('throws when policy is unsupported', () => {
-    const config = new ConfigReader({
+    const config = configWith({
       ai: { integrations: { compliance: { policy: 'bad' } } },
     });
     expect(() => readComplianceConfig(config)).toThrow(/Unsupported policy provider/);

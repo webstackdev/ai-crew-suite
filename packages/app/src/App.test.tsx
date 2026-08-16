@@ -1,28 +1,30 @@
-import { render, waitFor } from '@testing-library/react';
-import App from './App';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
+const mocks = vi.hoisted(() => {
+  const createRoot = vi.fn(() => 'app-root');
+  const createApp = vi.fn(() => ({ createRoot }));
+  return { createApp, createRoot };
+});
+
+vi.mock('@backstage/frontend-defaults', () => ({ createApp: mocks.createApp }));
+vi.mock('@backstage/plugin-catalog/alpha', () => ({ default: 'catalog' }));
+vi.mock('@backstage/plugin-notifications/alpha', () => ({ default: 'notifications' }));
+vi.mock('@backstage/plugin-search/alpha', () => ({ default: 'search' }));
+vi.mock('@webstackbuilders/plugin-ai-crew-suite/alpha', () => ({ default: 'ai-crew' }));
+vi.mock('./modules/nav', () => ({ navModule: 'navigation' }));
 
 describe('App', () => {
-  it('should render', async () => {
-    process.env = {
-      NODE_ENV: 'test',
-      APP_CONFIG: [
-        {
-          data: {
-            app: { title: 'Test' },
-            backend: { baseUrl: 'http://localhost:7007' },
-            techdocs: {
-              storageUrl: 'http://localhost:7007/api/techdocs/static/docs',
-            },
-          },
-          context: 'test',
-        },
-      ] as any,
-    };
+  beforeEach(() => {
+    vi.resetModules();
+  });
 
-    const rendered = render(App);
+  it('creates the application root from the configured feature set', async () => {
+    const { default: App } = await import('./App');
 
-    await waitFor(() => {
-      expect(rendered.baseElement).toBeInTheDocument();
+    expect(mocks.createApp).toHaveBeenCalledWith({
+      features: ['catalog', 'notifications', 'search', 'navigation', 'ai-crew'],
     });
+    expect(mocks.createRoot).toHaveBeenCalledWith();
+    expect(App).toBe('app-root');
   });
 });

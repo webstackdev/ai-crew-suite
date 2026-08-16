@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ConfigReader } from '@backstage/config';
+import { mockServices } from '@backstage/backend-test-utils';
 import { describe, expect, it } from 'vitest';
 import {
   DEFAULT_MAX_SESSION_MESSAGES,
@@ -21,12 +21,14 @@ import {
   readRuntimeStoresConfig,
 } from '../config';
 
-type ConfigData = ConstructorParameters<typeof ConfigReader>[0];
+type JsonValue = string | number | boolean | null | JsonObject | JsonValue[];
+type JsonObject = { [key: string]: JsonValue };
+type ConfigData = JsonObject;
 
 const configWith = (stores?: ConfigData) =>
-  new ConfigReader(
-    stores === undefined ? {} : { ai: { runtime: { stores } } },
-  );
+  mockServices.rootConfig({
+    data: stores === undefined ? {} : { ai: { runtime: { stores } } },
+  });
 
 describe('readRuntimeStoresConfig', () => {
   it('defaults both configurable stores to the database backend', () => {

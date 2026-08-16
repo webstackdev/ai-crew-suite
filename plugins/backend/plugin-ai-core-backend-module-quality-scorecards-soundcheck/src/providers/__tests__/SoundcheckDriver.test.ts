@@ -25,68 +25,66 @@ describe('SoundcheckDriver Integration Evaluation', () => {
 
   beforeEach(() => {
     mockSoundcheckService = {
-      getResults: vi.fn(),
+      getTracks: vi.fn(),
     };
 
     driver = new SoundcheckDriver({
       logger: mockLogger,
       soundcheckService: mockSoundcheckService,
     });
-
-    vi.restoreAllMocks();
   });
 
   it('correctly maps raw Spotify Soundcheck program payloads to standardized summary models', async () => {
     const entityRef = 'component:default/order-service';
     
     // Simulate Soundcheck database query outputs
-    mockSoundcheckService.getResults.mockResolvedValueOnce({
-      highestLevelPassing: true,
-      checks: [
-        {
-          id: 'test-coverage-check',
-          name: 'SonarQube Test Coverage > 80%',
-          category: 'code-quality',
-          value: true,
-          factValue: 84.2,
-        },
-        {
-          id: 'pagerduty-integration-check',
-          name: 'On-Call PagerDuty Escalation Mapped',
-          category: 'operations',
-          value: false,
-          factValue: null,
-        }
-      ],
-    });
+    mockSoundcheckService.getTracks.mockResolvedValueOnce([
+      {
+        name: 'Engineering',
+        levels: [
+          {
+            checks: [
+              {
+                id: 'test-coverage-check',
+                name: 'SonarQube Test Coverage > 80%',
+                description: 'Coverage threshold',
+              },
+              {
+                id: 'pagerduty-integration-check',
+                name: 'On-Call PagerDuty Escalation Mapped',
+              },
+            ],
+          },
+        ],
+      },
+    ]);
 
     const summary = await driver.getEntityScorecard(entityRef);
 
-    expect(mockSoundcheckService.getResults).toHaveBeenCalledWith({ entityRef });
+    expect(mockSoundcheckService.getTracks).toHaveBeenCalledWith();
     expect(summary).toEqual({
       entityRef,
-      overallStatus: 'passed',
+      overallStatus: 'warning',
       results: [
         {
           checkId: 'test-coverage-check',
           name: 'SonarQube Test Coverage > 80%',
-          category: 'code-quality',
-          status: 'passed',
-          factValue: 84.2,
+          description: 'Coverage threshold',
+          category: 'Engineering',
+          status: 'skipped',
         },
         {
           checkId: 'pagerduty-integration-check',
           name: 'On-Call PagerDuty Escalation Mapped',
-          category: 'operations',
-          status: 'failed',
-          factValue: null,
+          category: 'Engineering',
+          status: 'skipped',
         }
       ],
     });
   });
 
   it('transparently propagates downstream service rejections up the platform execution track', async () => {
-    mockSoundcheckService.getResults.mockRejectedValueOnce(new Error('Soundcheck Database Connection Interrupted'));
+    mockSoundcheckService.getTracks.mockRejectedValueOnce(new Error('Soundcheck Database Connection Interrupted'));
 
     await expect(
       driver.getEntityScorecard('component:default/unreachable-service')

@@ -17,7 +17,7 @@ import type {
   DatabaseService,
   LoggerService,
 } from '@backstage/backend-plugin-api';
-import { ConfigReader } from '@backstage/config';
+import { mockServices } from '@backstage/backend-test-utils';
 import type { Knex } from 'knex';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { applyDatabaseMigrations } from '../../database/migrations';
@@ -55,12 +55,14 @@ const createDatabase = (client: Knex) =>
     getClient: vi.fn(async () => client),
   } as unknown as DatabaseService & { getClient: ReturnType<typeof vi.fn> });
 
-type ConfigData = ConstructorParameters<typeof ConfigReader>[0];
+type JsonValue = string | number | boolean | null | JsonObject | JsonValue[];
+type JsonObject = { [key: string]: JsonValue };
+type ConfigData = JsonObject;
 
 const configWith = (stores?: ConfigData) =>
-  new ConfigReader(
-    stores === undefined ? {} : { ai: { runtime: { stores } } },
-  );
+  mockServices.rootConfig({
+    data: stores === undefined ? {} : { ai: { runtime: { stores } } },
+  });
 
 describe('createAgentRuntimeStores', () => {
   beforeEach(() => {

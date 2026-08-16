@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 // plugins/backend/plugin-ai-core-backend-module-cloud-providers/src/__tests__/config.test.ts
+import { mockServices } from '@backstage/backend-test-utils';
 import { describe, it, expect } from 'vitest';
-import { ConfigReader } from '@backstage/config';
 import { readCloudProvidersConfig } from '../config';
+
+const configWith = (data: object) => mockServices.rootConfig({ data });
 
 describe('readCloudProvidersConfig', () => {
   it('should successfully parse valid configuration topologies', () => {
-    const mockConfig = new ConfigReader({
+    const mockConfig = configWith({
       ai: {
         integrations: {
           cloudProviders: {
@@ -45,14 +47,14 @@ describe('readCloudProvidersConfig', () => {
   });
 
   it('should throw an explicit error if cloudProviders block is completely absent', () => {
-    const mockConfig = new ConfigReader({});
+    const mockConfig = configWith({});
     expect(() => readCloudProvidersConfig(mockConfig)).toThrow(
       /Cloud providers module requires ai.integrations.cloudProviders configuration to be set/
     );
   });
 
   it('should throw an explicit error if defaultProvider is missing', () => {
-    const mockConfig = new ConfigReader({
+    const mockConfig = configWith({
       ai: {
         integrations: {
           cloudProviders: {

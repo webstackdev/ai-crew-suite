@@ -15,15 +15,23 @@
  */
 // plugins/backend/plugin-ai-core-backend-module-cloud-providers-kubernetes/src/providers/KubernetesDriver.test.ts
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { ConfigReader } from '@backstage/config';
+import { mockServices } from '@backstage/backend-test-utils';
 import { KubernetesDriver } from '../KubernetesDriver';
 import { CoreV1Api } from '@kubernetes/client-node';
 
 // Automatically mock the official Kubernetes client node module
+const mocks = vi.hoisted(() => ({
+  makeApiClient: vi.fn(),
+}));
+
 vi.mock('@kubernetes/client-node', async (importOriginal) => {
   const original = await importOriginal<typeof import('@kubernetes/client-node')>();
   return {
     ...original,
+    KubeConfig: class {
+      loadFromString = vi.fn();
+      makeApiClient = mocks.makeApiClient;
+    },
     CoreV1Api: vi.fn().mockImplementation(() => ({
       listNamespacedPod: vi.fn(),
     })),
@@ -34,7 +42,7 @@ describe('KubernetesDriver Configuration Mapping Suite', () => {
   const mockLogger = { debug: vi.fn(), error: vi.fn() };
 
   // Scaffold a valid root config mimicking an authentic app-config.yaml environment
-  const mockRootConfig = new ConfigReader({
+  const mockRootConfig = mockServices.rootConfig({ data: {
     kubernetes: {
       clusters: [
         {
@@ -44,17 +52,18 @@ describe('KubernetesDriver Configuration Mapping Suite', () => {
         },
       ],
     },
-  });
+  }});
 
   let driver: KubernetesDriver;
 
   beforeEach(() => {
+    vi.clearAllMocks();
+    mocks.makeApiClient.mockReset();
     driver = new KubernetesDriver({
       logger: mockLogger,
       rootConfig: mockRootConfig,
       config: { targetNamespaces: ['production-namespace'] },
     });
-    vi.restoreAllMocks();
   });
 
   it('correctly extracts clusters from global config and normalizes raw pod data into standard contracts', async () => {
@@ -81,9 +90,9 @@ describe('KubernetesDriver Configuration Mapping Suite', () => {
     });
 
     // Wire up our custom spy handle to catch the class instantiation routine
-    vi.mocked(CoreV1Api).mockImplementation(() => ({
+    mocks.makeApiClient.mockReturnValue({
       listNamespacedPod: mockListNamespacedPod,
-    } as any));
+    });
 
     const workloads = await driver.kubernetesWorkloads({ namespace: 'production-namespace' });
 
@@ -104,9 +113,7 @@ describe('KubernetesDriver Configuration Mapping Suite', () => {
 
   it('surfaces native SDK connection rejections transparently up the runtime stack', async () => {
     const mockRejectCall = vi.fn().mockRejectedValue(new Error('KubeAPI Connection Timeout'));
-    vi.mocked(CoreV1Api).mockImplementation(() => ({
-      listNamespacedPod: mockRejectCall,
-    } as any));
+    mocks.makeApiClient.mockReturnValue({ listNamespacedPod: mockRejectCall });
 
     await expect(
       driver.kubernetesWorkloads({ namespace: 'production-namespace' })
