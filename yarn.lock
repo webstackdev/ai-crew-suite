@@ -15476,7 +15476,21 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@webstackbuilders/plugin-ai-core-backend-module-compliance@workspace:^, @webstackbuilders/plugin-ai-core-backend-module-compliance@workspace:plugins/backend/plugin-ai-core-backend-module-compliance":
+"@webstackbuilders/plugin-ai-core-backend-module-compliance-opa@workspace:^, @webstackbuilders/plugin-ai-core-backend-module-compliance-opa@workspace:plugins/backend/plugin-ai-core-backend-module-compliance-opa":
+  version: 0.0.0-use.local
+  resolution: "@webstackbuilders/plugin-ai-core-backend-module-compliance-opa@workspace:plugins/backend/plugin-ai-core-backend-module-compliance-opa"
+  dependencies:
+    "@backstage/backend-plugin-api": "backstage:^"
+    "@backstage/backend-test-utils": "backstage:^"
+    "@backstage/cli": "backstage:^"
+    "@backstage/config": "backstage:^"
+    "@webstackbuilders/plugin-ai-core-backend-module-compliance": "workspace:*"
+    "@webstackbuilders/plugin-ai-core-node": "workspace:*"
+    vitest: "npm:^4.1.10"
+  languageName: unknown
+  linkType: soft
+
+"@webstackbuilders/plugin-ai-core-backend-module-compliance@workspace:*, @webstackbuilders/plugin-ai-core-backend-module-compliance@workspace:^, @webstackbuilders/plugin-ai-core-backend-module-compliance@workspace:plugins/backend/plugin-ai-core-backend-module-compliance":
   version: 0.0.0-use.local
   resolution: "@webstackbuilders/plugin-ai-core-backend-module-compliance@workspace:plugins/backend/plugin-ai-core-backend-module-compliance"
   dependencies:
@@ -17180,6 +17194,7 @@ __metadata:
     "@webstackbuilders/plugin-ai-core-backend-module-communication": "workspace:^"
     "@webstackbuilders/plugin-ai-core-backend-module-communication-slack": "workspace:^"
     "@webstackbuilders/plugin-ai-core-backend-module-compliance": "workspace:^"
+    "@webstackbuilders/plugin-ai-core-backend-module-compliance-opa": "workspace:^"
     "@webstackbuilders/plugin-ai-core-backend-module-incident-management": "workspace:^"
     "@webstackbuilders/plugin-ai-core-backend-module-incident-management-pagerduty": "workspace:^"
     "@webstackbuilders/plugin-ai-core-backend-module-llm-aws": "workspace:^"

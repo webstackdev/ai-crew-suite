@@ -13,12 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export type {
-  ArchitectureValidationResult,
-  ComplianceDriver,
-  CostEstimateResult,
-  PermissionCheckResult,
-  PolicyEvaluationResult,
-} from './types';
-export { OpaDriver } from './opa';
-export type { OpaDriverConfig } from './opa';
+export { aiCoreBackendModuleComplianceOpa as default } from './module';
+export { OpaDriver } from './providers/OpaDriver';
+export type { OpaDriverConfig, OpaDriverOptions } from './providers/OpaDriver';

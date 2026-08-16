@@ -20,13 +20,12 @@ import { readComplianceConfig } from '../config';
 const configWith = (data: object) => mockServices.rootConfig({ data });
 
 describe('readComplianceConfig', () => {
-  it('reads a valid opa config', () => {
+  it('reads a registered driver identifier', () => {
     const config = configWith({
-      ai: { integrations: { compliance: { policy: 'opa', opa: { baseUrl: 'http://localhost:8181' } } } },
+      ai: { integrations: { compliance: { provider: 'opa' } } },
     });
     const result = readComplianceConfig(config);
-    expect(result.policy).toBe('opa');
-    expect(result.opa?.baseUrl).toBe('http://localhost:8181');
+    expect(result).toEqual({ provider: 'opa' });
   });
 
   it('throws when config is missing', () => {
@@ -35,15 +34,8 @@ describe('readComplianceConfig', () => {
     );
   });
 
-  it('throws when policy is missing', () => {
+  it('throws when the provider is missing', () => {
     const config = configWith({ ai: { integrations: { compliance: {} } } });
-    expect(() => readComplianceConfig(config)).toThrow(/policy to be set/);
-  });
-
-  it('throws when policy is unsupported', () => {
-    const config = configWith({
-      ai: { integrations: { compliance: { policy: 'bad' } } },
-    });
-    expect(() => readComplianceConfig(config)).toThrow(/Unsupported policy provider/);
+    expect(() => readComplianceConfig(config)).toThrow(/provider to be set/);
   });
 });

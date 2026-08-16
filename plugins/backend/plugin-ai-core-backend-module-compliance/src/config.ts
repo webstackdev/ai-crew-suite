@@ -14,29 +14,17 @@
  * limitations under the License.
  */
 import { Config } from '@backstage/config';
+import { IntegrationProviderConfig } from '@webstackbuilders/plugin-ai-core-node';
 
-export type PolicyProviderId = 'opa' | 'static';
-
-export type OpaProviderConfig = {
-  baseUrl?: string;
-};
-
-export type StaticPoliciesConfig = {
-  path?: string;
-};
-
-export type ComplianceConfig = {
-  policy: PolicyProviderId;
-  opa?: OpaProviderConfig;
-  staticPolicies?: StaticPoliciesConfig;
-};
-
-const POLICY_PROVIDERS: readonly PolicyProviderId[] = ['opa', 'static'];
-
-const isPolicyProvider = (value: unknown): value is PolicyProviderId =>
-  typeof value === 'string' && (POLICY_PROVIDERS as readonly string[]).includes(value);
-
-export const readComplianceConfig = (config: Config): ComplianceConfig => {
+/**
+ * Reads the driver selector from `ai.integrations.compliance`.
+ *
+ * Provider connection details are owned by sibling driver modules, so this
+ * reader only resolves which registered driver should back the shared tools.
+ */
+export const readComplianceConfig = (
+  config: Config,
+): IntegrationProviderConfig => {
   const complianceConfig = config.getOptionalConfig('ai.integrations.compliance');
   if (!complianceConfig) {
     throw new Error(
@@ -44,20 +32,12 @@ export const readComplianceConfig = (config: Config): ComplianceConfig => {
     );
   }
 
-  const policy = complianceConfig.getOptionalString('policy');
-  if (!policy) {
-    throw new Error('Compliance module requires ai.integrations.compliance.policy to be set');
-  }
-  if (!isPolicyProvider(policy)) {
-    throw new Error(`Unsupported policy provider '${policy}'. Supported: ${POLICY_PROVIDERS.join(', ')}`);
+  const provider = complianceConfig.getOptionalString('provider');
+  if (!provider) {
+    throw new Error(
+      'Compliance module requires ai.integrations.compliance.provider to be set',
+    );
   }
 
-  const opaConfig = complianceConfig.getOptionalConfig('opa');
-  const staticConfig = complianceConfig.getOptionalConfig('staticPolicies');
-
-  return {
-    policy,
-    opa: opaConfig ? { baseUrl: opaConfig.getOptionalString('baseUrl') } : undefined,
-    staticPolicies: staticConfig ? { path: staticConfig.getOptionalString('path') } : undefined,
-  };
+  return { provider };
 };

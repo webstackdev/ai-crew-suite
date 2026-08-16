@@ -18,6 +18,7 @@ export * from './agent';
 export * from './cloud';
 export * from './common';
 export * from './communication';
+export * from './compliance';
 export * from './incidentManagement';
 export * from './observability';
 export * from './projectManagement';

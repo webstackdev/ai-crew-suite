@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 import { LoggerService } from '@backstage/backend-plugin-api';
-import { ToolDefinition } from '@webstackbuilders/plugin-ai-core-node';
-import { ComplianceDriver } from '../providers';
+import { ComplianceDriver, ToolDefinition } from '@webstackbuilders/plugin-ai-core-node';
 
 type EvaluatePolicyArgs = { policyId?: string; input: unknown };
 type CheckPermissionArgs = { userRef: string; action: string; resource?: string };
