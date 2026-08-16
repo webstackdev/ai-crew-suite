@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 import { describe, expect, it, vi } from 'vitest';
+import { ComplianceDriver } from '@webstackbuilders/plugin-ai-core-node';
 import { createComplianceTools } from '../registerTools';
-import { ComplianceDriver } from '../../providers';
 
 const createMockDriver = (overrides: Partial<ComplianceDriver> = {}): ComplianceDriver => ({
   providerId: 'mock',

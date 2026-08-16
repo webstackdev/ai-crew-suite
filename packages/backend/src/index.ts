@@ -90,6 +90,7 @@ backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-core-backend-
 backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-core-backend-module-incident-management')));
 backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-core-backend-module-incident-management-pagerduty')));
 backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-core-backend-module-compliance')));
+backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-core-backend-module-compliance-opa')));
 backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-core-backend-module-cloud-providers')));
 backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-core-backend-module-project-management')));
 backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-core-backend-module-project-management-jira')));

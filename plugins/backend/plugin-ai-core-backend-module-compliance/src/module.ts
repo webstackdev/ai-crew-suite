@@ -17,15 +17,26 @@ import {
   coreServices,
   createBackendModule,
 } from '@backstage/backend-plugin-api';
-import { toolExtensionPoint } from '@webstackbuilders/plugin-ai-core-node';
+import {
+  ComplianceDriver,
+  complianceDriversExtensionPoint,
+  toolExtensionPoint,
+} from '@webstackbuilders/plugin-ai-core-node';
 import { readComplianceConfig } from './config';
-import { ComplianceDriver, OpaDriver } from './providers';
 import { createComplianceTools } from './tools';
 
 export const aiCoreBackendModuleCompliance = createBackendModule({
   pluginId: 'ai-core',
   moduleId: 'compliance',
   register(env) {
+    const drivers = new Map<string, ComplianceDriver>();
+
+    env.registerExtensionPoint(complianceDriversExtensionPoint, {
+      registerDriver(driver) {
+        drivers.set(driver.providerId, driver);
+      },
+    });
+
     env.registerInit({
       deps: {
         config: coreServices.rootConfig,
@@ -33,28 +44,18 @@ export const aiCoreBackendModuleCompliance = createBackendModule({
         tools: toolExtensionPoint,
       },
       async init({ config, logger, tools }) {
-        const complianceConfig = readComplianceConfig(config);
-        logger.info(
-          `Initializing compliance module with policy provider '${complianceConfig.policy}'`,
-        );
-
-        let driver: ComplianceDriver;
-        switch (complianceConfig.policy) {
-          case 'opa':
-            driver = new OpaDriver({
-              logger: logger.child({ label: 'compliance-opa' }),
-              config: complianceConfig.opa,
-            });
-            break;
-          case 'static':
-            throw new Error(
-              `Compliance policy provider '${complianceConfig.policy}' is not implemented yet`,
-            );
-          default: {
-            const exhaustive: never = complianceConfig.policy;
-            throw new Error(`Unsupported policy provider: ${exhaustive}`);
-          }
+        const { provider } = readComplianceConfig(config);
+        const driver = drivers.get(provider);
+        if (!driver) {
+          throw new Error(
+            `No compliance driver registered for identifier '${provider}'. ` +
+              `Ensure the matching @webstackbuilders/plugin-ai-core-backend-module-compliance-${provider} package is imported in your backend index.ts file.`,
+          );
         }
+
+        logger.info(
+          `Initializing active compliance agent wrapper utilizing registered driver: '${driver.providerId}'`,
+        );
 
         for (const tool of createComplianceTools({ driver, logger })) {
           tools.addTool(tool);

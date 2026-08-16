@@ -22,6 +22,7 @@ import {
   CheckpointStore,
   CloudProviderDriver,
   CommunicationDriver,
+  ComplianceDriver,
   IncidentManagementDriver,
   ModelDefinition,
   ObservabilityDriver,
@@ -79,6 +80,30 @@ export interface CloudDriversExtensionPoint {
 export const cloudDriversExtensionPoint = createExtensionPoint<CloudDriversExtensionPoint>({
   id: 'ai-core.cloud-drivers',
 });
+
+/**
+ * Extension point for registering governance and policy engine drivers such as
+ * Open Policy Agent, enterprise policy registries, or FinOps policy services.
+ *
+ * Sibling modules use this to register themselves dynamically at boot time. The
+ * core compliance module resolves the driver named by
+ * `ai.integrations.compliance.provider` from the resulting registry.
+ */
+export interface ComplianceDriversExtensionPoint {
+  /**
+   * Registers a compliance driver.
+   * Duplicate provider IDs overwrite or reject depending on core module map rules.
+   */
+  registerDriver(driver: ComplianceDriver): void;
+}
+
+/**
+ * Backstage extension point used by modules that contribute compliance drivers.
+ */
+export const complianceDriversExtensionPoint =
+  createExtensionPoint<ComplianceDriversExtensionPoint>({
+    id: 'ai-core.compliance-drivers',
+  });
 
 /**
  * Extension point for registering transactional work tracking drivers such as

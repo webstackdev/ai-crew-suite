@@ -17,9 +17,8 @@ export interface Config {
   ai?: {
     integrations?: {
       compliance?: {
-        policy: 'opa' | 'static';
-        opa?: { baseUrl?: string };
-        staticPolicies?: { path?: string };
+        /** Identifier of the registered compliance driver to activate. */
+        provider: string;
       };
     };
   };
