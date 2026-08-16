@@ -17,25 +17,44 @@ import {
   coreServices,
   createBackendModule,
 } from '@backstage/backend-plugin-api';
-import { toolExtensionPoint } from '@webstackbuilders/plugin-ai-core-node';
+import {
+  MessagingProviderDriver,
+  TicketProviderDriver,
+  messagingDriversExtensionPoint,
+  ticketDriversExtensionPoint,
+  toolExtensionPoint,
+} from '@webstackbuilders/plugin-ai-core-node';
 import { readCollaborationConfig } from './config';
-import { CollaborationDriver, JiraDriver, SlackDriver } from './providers';
 import { createCollaborationTools } from './tools';
 
 /**
  * Collaboration backend module for the AI Core backend plugin.
  *
- * The module contributes stable, provider-neutral ticketing and messaging
- * tools to the AI tool registry. Provider-specific behavior is selected through
- * `ai.integrations.collaboration` configuration and hidden behind
- * `CollaborationDriver` implementations.
- *
- * @public
+ * The module owns the provider-neutral ticketing and messaging tool surface and
+ * resolves the active drivers from two extension point registries populated by
+ * sibling `-<provider>` modules at boot time.
  */
 export const aiCoreBackendModuleCollaboration = createBackendModule({
   pluginId: 'ai-core',
   moduleId: 'collaboration',
   register(env) {
+    // 1. Maintain module-scoped maps of registered drivers, one per capability
+    const ticketDrivers = new Map<string, TicketProviderDriver>();
+    const messagingDrivers = new Map<string, MessagingProviderDriver>();
+
+    // 2. Expose the Extension Point interfaces to the Backstage framework
+    env.registerExtensionPoint(ticketDriversExtensionPoint, {
+      registerDriver(driver) {
+        ticketDrivers.set(driver.providerId, driver);
+      },
+    });
+
+    env.registerExtensionPoint(messagingDriversExtensionPoint, {
+      registerDriver(driver) {
+        messagingDrivers.set(driver.providerId, driver);
+      },
+    });
+
     env.registerInit({
       deps: {
         config: coreServices.rootConfig,
@@ -44,48 +63,31 @@ export const aiCoreBackendModuleCollaboration = createBackendModule({
       },
       async init({ config, logger, tools }) {
         const collabConfig = readCollaborationConfig(config);
+
+        // 3. Resolve the drivers dictated by config completely from the runtime Maps
+        const ticketDriver = ticketDrivers.get(collabConfig.ticketing);
+        if (!ticketDriver) {
+          throw new Error(
+            `No ticket driver registered for identifier '${collabConfig.ticketing}'. ` +
+              `Ensure the matching @webstackbuilders/plugin-ai-core-backend-module-collaboration-${collabConfig.ticketing} package is imported in your backend index.ts file.`,
+          );
+        }
+
+        const messagingDriver = messagingDrivers.get(collabConfig.messaging);
+        if (!messagingDriver) {
+          throw new Error(
+            `No messaging driver registered for identifier '${collabConfig.messaging}'. ` +
+              `Ensure the matching @webstackbuilders/plugin-ai-core-backend-module-collaboration-${collabConfig.messaging} package is imported in your backend index.ts file.`,
+          );
+        }
+
         logger.info(
-          `Initializing collaboration module with ticketing '${collabConfig.ticketing}' and messaging '${collabConfig.messaging}'`,
+          `Initializing active collaboration agent wrapper utilizing registered drivers: ticketing '${ticketDriver.providerId}', messaging '${messagingDriver.providerId}'`,
         );
 
-        let ticketingDriver: CollaborationDriver;
-        switch (collabConfig.ticketing) {
-          case 'jira':
-            ticketingDriver = new JiraDriver({
-              logger: logger.child({ label: 'collaboration-jira' }),
-              config: collabConfig.ticketingProviders.jira,
-            });
-            break;
-          case 'linear':
-            throw new Error(
-              `Collaboration ticketing provider '${collabConfig.ticketing}' is not implemented yet`,
-            );
-          default: {
-            const exhaustive: never = collabConfig.ticketing;
-            throw new Error(`Unsupported ticketing provider: ${exhaustive}`);
-          }
-        }
-
-        let messagingDriver: CollaborationDriver;
-        switch (collabConfig.messaging) {
-          case 'slack':
-            messagingDriver = new SlackDriver({
-              logger: logger.child({ label: 'collaboration-slack' }),
-              config: collabConfig.messagingProviders.slack,
-            });
-            break;
-          case 'teams':
-            throw new Error(
-              `Collaboration messaging provider '${collabConfig.messaging}' is not implemented yet`,
-            );
-          default: {
-            const exhaustive: never = collabConfig.messaging;
-            throw new Error(`Unsupported messaging provider: ${exhaustive}`);
-          }
-        }
-
+        // 4. Mount the normalized tools inside the central execution registry
         for (const tool of createCollaborationTools({
-          ticketingDriver,
+          ticketDriver,
           messagingDriver,
           logger,
         })) {

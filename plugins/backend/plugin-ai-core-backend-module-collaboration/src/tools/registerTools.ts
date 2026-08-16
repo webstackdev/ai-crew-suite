@@ -14,86 +14,155 @@
  * limitations under the License.
  */
 import { LoggerService } from '@backstage/backend-plugin-api';
-import { ToolDefinition } from '@webstackbuilders/plugin-ai-core-node';
-import { CollaborationDriver } from '../providers';
+import {
+  CreateTicketInput,
+  MessagingHistoryQuery,
+  MessagingProviderDriver,
+  PostMessageInput,
+  TicketProviderDriver,
+  TicketSearchQuery,
+  ToolDefinition,
+} from '@webstackbuilders/plugin-ai-core-node';
 
-type SearchTicketsArgs = { query: string };
-type GetTicketArgs = { ticketId: string };
-type LookupChannelArgs = { teamOrService: string };
-type CreateTicketArgs = { title: string; description?: string; team?: string };
-type CommentTicketArgs = { ticketId: string; comment: string };
-type PostMessageArgs = { channelId: string; message: string };
+export interface CreateCollaborationToolsOptions {
+  ticketDriver: TicketProviderDriver;
+  messagingDriver: MessagingProviderDriver;
+  logger: LoggerService;
+}
 
 /**
- * Creates the stable collaboration tool definitions backed by the supplied
- * ticketing and messaging drivers.
+ * Creates the stable collaboration tool definitions backed by the resolved
+ * ticket and messaging drivers.
  */
-export const createCollaborationTools = (opts: {
-  ticketingDriver: CollaborationDriver;
-  messagingDriver: CollaborationDriver;
-  logger: LoggerService;
-}): ToolDefinition[] => {
-  const { ticketingDriver, messagingDriver, logger } = opts;
+export const createCollaborationTools = (
+  options: CreateCollaborationToolsOptions,
+): ToolDefinition[] => {
+  const { ticketDriver, messagingDriver, logger } = options;
 
   return [
     {
       id: 'collaboration.ticket.search',
-      description: 'Search tickets by query, service, team, or incident reference',
+      description:
+        'Searches tickets by free text, team, assignee, state, or label across the configured ticket management service.',
       effect: 'read',
       async invoke(args: unknown) {
-        const payload = args as SearchTicketsArgs;
-        logger.debug('collaboration.ticket.search invoked', { query: payload.query });
-        return ticketingDriver.searchTickets(payload.query);
+        const payload = (args ?? {}) as TicketSearchQuery;
+        logger.debug('collaboration.ticket.search invoked', {
+          text: payload.text,
+          team: payload.team,
+        });
+
+        return ticketDriver.searchTickets(payload);
       },
     },
     {
       id: 'collaboration.ticket.get',
-      description: 'Fetch ticket details and linked discussions',
+      description:
+        'Fetches a single ticket with its description, comment thread, and assignee history.',
       effect: 'read',
       async invoke(args: unknown) {
-        const payload = args as GetTicketArgs;
-        logger.debug('collaboration.ticket.get invoked', { ticketId: payload.ticketId });
-        return ticketingDriver.getTicket(payload.ticketId);
-      },
-    },
-    {
-      id: 'collaboration.channel.lookup',
-      description: 'Resolve a team or service to a messaging channel',
-      effect: 'read',
-      async invoke(args: unknown) {
-        const payload = args as LookupChannelArgs;
-        logger.debug('collaboration.channel.lookup invoked', { teamOrService: payload.teamOrService });
-        return messagingDriver.lookupChannel(payload.teamOrService);
+        const payload = args as { ticketId: string };
+        logger.debug('collaboration.ticket.get invoked', {
+          ticketId: payload?.ticketId,
+        });
+
+        if (!payload?.ticketId) {
+          throw new Error("Missing required argument: 'ticketId'");
+        }
+
+        return ticketDriver.getTicket(payload.ticketId);
       },
     },
     {
       id: 'collaboration.ticket.create',
-      description: 'Create a ticket from an agent artifact',
+      description:
+        'Opens a ticket from an agent artifact, optionally linked to a parent epic or story.',
       effect: 'write',
       async invoke(args: unknown) {
-        const payload = args as CreateTicketArgs;
-        logger.debug('collaboration.ticket.create invoked', { title: payload.title });
-        return ticketingDriver.createTicket(payload);
+        const payload = args as CreateTicketInput;
+        logger.debug('collaboration.ticket.create invoked', {
+          title: payload?.title,
+        });
+
+        if (!payload?.title) {
+          throw new Error("Missing required argument: 'title'");
+        }
+
+        return ticketDriver.createTicket(payload);
       },
     },
     {
       id: 'collaboration.ticket.comment',
-      description: 'Add a comment with trace/run links to a ticket',
+      description:
+        'Appends a comment carrying trace or run links to an existing ticket.',
       effect: 'write',
       async invoke(args: unknown) {
-        const payload = args as CommentTicketArgs;
-        logger.debug('collaboration.ticket.comment invoked', { ticketId: payload.ticketId });
-        return ticketingDriver.commentTicket(payload.ticketId, payload.comment);
+        const payload = args as { ticketId: string; comment: string };
+        logger.debug('collaboration.ticket.comment invoked', {
+          ticketId: payload?.ticketId,
+        });
+
+        if (!payload?.ticketId || !payload?.comment) {
+          throw new Error(
+            "Missing required arguments: 'ticketId' and 'comment'",
+          );
+        }
+
+        return ticketDriver.commentTicket(payload.ticketId, payload.comment);
+      },
+    },
+    {
+      id: 'collaboration.channel.lookup',
+      description:
+        'Resolves a team or service name to a channel in the configured team communication service.',
+      effect: 'read',
+      async invoke(args: unknown) {
+        const payload = args as { teamOrService: string };
+        logger.debug('collaboration.channel.lookup invoked', {
+          teamOrService: payload?.teamOrService,
+        });
+
+        if (!payload?.teamOrService) {
+          throw new Error("Missing required argument: 'teamOrService'");
+        }
+
+        return messagingDriver.lookupChannel(payload.teamOrService);
+      },
+    },
+    {
+      id: 'collaboration.channel.history',
+      description:
+        'Reads back a channel or thread transcript for incident context reconstruction.',
+      effect: 'read',
+      async invoke(args: unknown) {
+        const payload = args as MessagingHistoryQuery;
+        logger.debug('collaboration.channel.history invoked', {
+          channelId: payload?.channelId,
+        });
+
+        if (!payload?.channelId) {
+          throw new Error("Missing required argument: 'channelId'");
+        }
+
+        return messagingDriver.getChannelHistory(payload);
       },
     },
     {
       id: 'collaboration.message.post',
-      description: 'Post a summary message to a messaging channel',
+      description:
+        'Posts a summary or triage notification message to a channel or thread.',
       effect: 'write',
       async invoke(args: unknown) {
-        const payload = args as PostMessageArgs;
-        logger.debug('collaboration.message.post invoked', { channelId: payload.channelId });
-        return messagingDriver.postMessage(payload.channelId, payload.message);
+        const payload = args as PostMessageInput;
+        logger.debug('collaboration.message.post invoked', {
+          channelId: payload?.channelId,
+        });
+
+        if (!payload?.channelId || !payload?.text) {
+          throw new Error("Missing required arguments: 'channelId' and 'text'");
+        }
+
+        return messagingDriver.postMessage(payload);
       },
     },
   ];

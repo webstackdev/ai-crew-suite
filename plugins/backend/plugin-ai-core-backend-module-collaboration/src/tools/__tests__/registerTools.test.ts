@@ -13,88 +13,111 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { describe, expect, it, vi } from 'vitest';
+import { mockServices } from '@backstage/backend-test-utils';
+import {
+  MessagingProviderDriver,
+  TicketProviderDriver,
+  ToolContext,
+} from '@webstackbuilders/plugin-ai-core-node';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createCollaborationTools } from '../registerTools';
-import { CollaborationDriver } from '../../providers';
 
-const createMockDriver = (overrides: Partial<CollaborationDriver> = {}): CollaborationDriver => ({
-  providerId: 'mock',
-  searchTickets: vi.fn().mockResolvedValue([]),
-  getTicket: vi.fn().mockResolvedValue({ id: 'TEST-1', title: 'Test', state: 'open' }),
-  lookupChannel: vi.fn().mockResolvedValue(undefined),
-  createTicket: vi.fn().mockResolvedValue({ id: 'CREATED-1', title: 'Created', state: 'open' }),
-  commentTicket: vi.fn().mockResolvedValue({ author: 'ai', body: 'comment' }),
-  postMessage: vi.fn().mockResolvedValue({ messageId: 'msg-1' }),
-  ...overrides,
-});
-
-const createMockLogger = () => ({
-  debug: vi.fn(),
-  info: vi.fn(),
-  warn: vi.fn(),
-  error: vi.fn(),
-  child: vi.fn().mockReturnThis(),
-});
-
-const ctx = {
-  logger: createMockLogger() as never,
-  identity: 'test-user',
-  runId: 'test-run',
+const ctx: ToolContext = {
+  logger: mockServices.logger.mock(),
+  identity: 'user:default/tester',
+  runId: 'run-1',
   signal: new AbortController().signal,
 };
 
+const createTicketDriver = (): TicketProviderDriver => ({
+  providerId: 'test-tickets',
+  searchTickets: vi.fn().mockResolvedValue([]),
+  getTicket: vi.fn().mockResolvedValue({ id: 'T-1', title: 'x', state: 'open' }),
+  createTicket: vi.fn().mockResolvedValue({ id: 'T-2', title: 'y', state: 'open' }),
+  commentTicket: vi.fn().mockResolvedValue({ author: { id: 'bot' }, body: 'c' }),
+});
+
+const createMessagingDriver = (): MessagingProviderDriver => ({
+  providerId: 'test-messaging',
+  lookupChannel: vi.fn().mockResolvedValue({ id: 'C1', name: 'ops' }),
+  postMessage: vi.fn().mockResolvedValue({ messageId: 'M1' }),
+  getChannelHistory: vi.fn().mockResolvedValue([]),
+});
+
 describe('createCollaborationTools', () => {
-  it('registers the expected stable tool IDs', () => {
-    const tools = createCollaborationTools({
-      ticketingDriver: createMockDriver(),
-      messagingDriver: createMockDriver(),
-      logger: createMockLogger() as never,
-    });
-    const ids = tools.map(t => t.id);
-    expect(ids).toEqual([
-      'collaboration.ticket.search',
-      'collaboration.ticket.get',
-      'collaboration.channel.lookup',
-      'collaboration.ticket.create',
-      'collaboration.ticket.comment',
-      'collaboration.message.post',
-    ]);
-  });
+  let ticketDriver: TicketProviderDriver;
+  let messagingDriver: MessagingProviderDriver;
 
-  it('marks read tools as read and write tools as write', () => {
-    const tools = createCollaborationTools({
-      ticketingDriver: createMockDriver(),
-      messagingDriver: createMockDriver(),
-      logger: createMockLogger() as never,
-    });
-    const readTools = tools.filter(t => t.effect === 'read');
-    const writeTools = tools.filter(t => t.effect === 'write');
-    expect(readTools).toHaveLength(3);
-    expect(writeTools).toHaveLength(3);
-  });
-
-  it('collaboration.ticket.search delegates to ticketingDriver', async () => {
-    const ticketingDriver = createMockDriver();
-    const tools = createCollaborationTools({
-      ticketingDriver,
-      messagingDriver: createMockDriver(),
-      logger: createMockLogger() as never,
-    });
-    const tool = tools.find(t => t.id === 'collaboration.ticket.search')!;
-    await tool.invoke({ query: 'service:api' }, ctx);
-    expect(ticketingDriver.searchTickets).toHaveBeenCalledWith('service:api');
-  });
-
-  it('collaboration.message.post delegates to messagingDriver', async () => {
-    const messagingDriver = createMockDriver();
-    const tools = createCollaborationTools({
-      ticketingDriver: createMockDriver(),
+  const getTool = (id: string) => {
+    const tool = createCollaborationTools({
+      ticketDriver,
       messagingDriver,
-      logger: createMockLogger() as never,
+      logger: mockServices.logger.mock(),
+    }).find(candidate => candidate.id === id);
+
+    if (!tool) throw new Error(`Tool '${id}' was not registered`);
+    return tool;
+  };
+
+  beforeEach(() => {
+    ticketDriver = createTicketDriver();
+    messagingDriver = createMessagingDriver();
+  });
+
+  it('delegates ticket search to the ticket driver', async () => {
+    await getTool('collaboration.ticket.search').invoke(
+      { text: 'outage', limit: 5 },
+      ctx,
+    );
+
+    expect(ticketDriver.searchTickets).toHaveBeenCalledWith({
+      text: 'outage',
+      limit: 5,
     });
-    const tool = tools.find(t => t.id === 'collaboration.message.post')!;
-    const result = await tool.invoke({ channelId: 'C123', message: 'hello' }, ctx);
-    expect(messagingDriver.postMessage).toHaveBeenCalledWith('C123', 'hello');
-    expect(result).toEqual({ messageId: 'msg-1' });
+  });
+
+  it('delegates ticket lookup to the ticket driver', async () => {
+    await getTool('collaboration.ticket.get').invoke({ ticketId: 'OPS-1' }, ctx);
+
+    expect(ticketDriver.getTicket).toHaveBeenCalledWith('OPS-1');
+  });
+
+  it('delegates channel history to the messaging driver', async () => {
+    await getTool('collaboration.channel.history').invoke({ channelId: 'C1' }, ctx);
+
+    expect(messagingDriver.getChannelHistory).toHaveBeenCalledWith({
+      channelId: 'C1',
+    });
+  });
+
+  it('delegates message posting to the messaging driver', async () => {
+    await getTool('collaboration.message.post').invoke(
+      { channelId: 'C1', text: 'summary' },
+      ctx,
+    );
+
+    expect(messagingDriver.postMessage).toHaveBeenCalledWith({
+      channelId: 'C1',
+      text: 'summary',
+    });
+  });
+
+  it('rejects write calls that omit required arguments', async () => {
+    await expect(
+      getTool('collaboration.ticket.create').invoke({}, ctx),
+    ).rejects.toThrow(/'title'/);
+    await expect(
+      getTool('collaboration.ticket.comment').invoke({ ticketId: 'OPS-1' }, ctx),
+    ).rejects.toThrow(/'comment'/);
+    await expect(
+      getTool('collaboration.message.post').invoke({ channelId: 'C1' }, ctx),
+    ).rejects.toThrow(/'text'/);
+  });
+
+  it('marks read and write effects correctly', () => {
+    expect(getTool('collaboration.ticket.search').effect).toBe('read');
+    expect(getTool('collaboration.channel.lookup').effect).toBe('read');
+    expect(getTool('collaboration.ticket.create').effect).toBe('write');
+    expect(getTool('collaboration.message.post').effect).toBe('write');
   });
 });
