@@ -1,5 +1,5 @@
 {
-  "name": "@webstackbuilders/backstage-plugin-ai-core-backend-module-compliance",
+  "name": "@webstackbuilders/plugin-ai-core-backend-module-compliance",
   "description": "The compliance backend module for the ai-core plugin.",
   "version": "0.0.1",
   "main": "src/index.ts",
@@ -32,7 +32,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/webstackdev/ai-crew-suite",
-    "directory": "plugins/backend/ai-core-backend-module-compliance"
+    "directory": "plugins/backend/plugin-ai-core-backend-module-compliance"
   },
   "files": [
     "dist",

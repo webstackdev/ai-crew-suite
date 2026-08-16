@@ -15380,44 +15380,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@webstackbuilders/backstage-plugin-ai-core-backend-module-compliance@workspace:^, @webstackbuilders/backstage-plugin-ai-core-backend-module-compliance@workspace:plugins/backend/plugin-ai-core-backend-module-compliance":
-  version: 0.0.0-use.local
-  resolution: "@webstackbuilders/backstage-plugin-ai-core-backend-module-compliance@workspace:plugins/backend/plugin-ai-core-backend-module-compliance"
-  dependencies:
-    "@backstage/backend-plugin-api": "backstage:^"
-    "@backstage/backend-test-utils": "backstage:^"
-    "@backstage/cli": "backstage:^"
-    "@backstage/config": "backstage:^"
-    "@webstackbuilders/plugin-ai-core-node": "workspace:^"
-    vitest: "npm:^4.1.10"
-  languageName: unknown
-  linkType: soft
-
-"@webstackbuilders/backstage-plugin-ai-core-backend-module-observability@workspace:^, @webstackbuilders/backstage-plugin-ai-core-backend-module-observability@workspace:plugins/backend/plugin-ai-core-backend-module-observability":
-  version: 0.0.0-use.local
-  resolution: "@webstackbuilders/backstage-plugin-ai-core-backend-module-observability@workspace:plugins/backend/plugin-ai-core-backend-module-observability"
-  dependencies:
-    "@backstage/backend-plugin-api": "backstage:^"
-    "@backstage/backend-test-utils": "backstage:^"
-    "@backstage/cli": "backstage:^"
-    "@backstage/config": "backstage:^"
-    "@webstackbuilders/plugin-ai-core-node": "workspace:^"
-    vitest: "npm:^4.1.10"
-  languageName: unknown
-  linkType: soft
-
-"@webstackbuilders/backstage-plugin-ai-core-backend-module-quality-scorecards@workspace:^, @webstackbuilders/backstage-plugin-ai-core-backend-module-quality-scorecards@workspace:plugins/backend/plugin-ai-core-backend-module-quality-scorecards":
-  version: 0.0.0-use.local
-  resolution: "@webstackbuilders/backstage-plugin-ai-core-backend-module-quality-scorecards@workspace:plugins/backend/plugin-ai-core-backend-module-quality-scorecards"
-  dependencies:
-    "@backstage/backend-plugin-api": "backstage:^"
-    "@backstage/backend-test-utils": "backstage:^"
-    "@backstage/config": "backstage:^"
-    "@webstackbuilders/plugin-ai-core-node": "workspace:^"
-    vitest: "npm:^4.1.10"
-  languageName: unknown
-  linkType: soft
-
 "@webstackbuilders/plugin-ai-core-backend-module-cloud-providers-aws@workspace:plugins/backend/plugin-ai-core-backend-module-cloud-providers-aws":
   version: 0.0.0-use.local
   resolution: "@webstackbuilders/plugin-ai-core-backend-module-cloud-providers-aws@workspace:plugins/backend/plugin-ai-core-backend-module-cloud-providers-aws"
@@ -15528,6 +15490,19 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@webstackbuilders/plugin-ai-core-backend-module-compliance@workspace:^, @webstackbuilders/plugin-ai-core-backend-module-compliance@workspace:plugins/backend/plugin-ai-core-backend-module-compliance":
+  version: 0.0.0-use.local
+  resolution: "@webstackbuilders/plugin-ai-core-backend-module-compliance@workspace:plugins/backend/plugin-ai-core-backend-module-compliance"
+  dependencies:
+    "@backstage/backend-plugin-api": "backstage:^"
+    "@backstage/backend-test-utils": "backstage:^"
+    "@backstage/cli": "backstage:^"
+    "@backstage/config": "backstage:^"
+    "@webstackbuilders/plugin-ai-core-node": "workspace:^"
+    vitest: "npm:^4.1.10"
+  languageName: unknown
+  linkType: soft
+
 "@webstackbuilders/plugin-ai-core-backend-module-llm-aws@workspace:^, @webstackbuilders/plugin-ai-core-backend-module-llm-aws@workspace:plugins/backend/plugin-ai-core-backend-module-llm-aws":
   version: 0.0.0-use.local
   resolution: "@webstackbuilders/plugin-ai-core-backend-module-llm-aws@workspace:plugins/backend/plugin-ai-core-backend-module-llm-aws"
@@ -15584,6 +15559,19 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@webstackbuilders/plugin-ai-core-backend-module-observability@workspace:^, @webstackbuilders/plugin-ai-core-backend-module-observability@workspace:plugins/backend/plugin-ai-core-backend-module-observability":
+  version: 0.0.0-use.local
+  resolution: "@webstackbuilders/plugin-ai-core-backend-module-observability@workspace:plugins/backend/plugin-ai-core-backend-module-observability"
+  dependencies:
+    "@backstage/backend-plugin-api": "backstage:^"
+    "@backstage/backend-test-utils": "backstage:^"
+    "@backstage/cli": "backstage:^"
+    "@backstage/config": "backstage:^"
+    "@webstackbuilders/plugin-ai-core-node": "workspace:^"
+    vitest: "npm:^4.1.10"
+  languageName: unknown
+  linkType: soft
+
 "@webstackbuilders/plugin-ai-core-backend-module-quality-scorecards-scorecards@workspace:plugins/backend/plugin-ai-core-backend-module-quality-scorecards-scorecards":
   version: 0.0.0-use.local
   resolution: "@webstackbuilders/plugin-ai-core-backend-module-quality-scorecards-scorecards@workspace:plugins/backend/plugin-ai-core-backend-module-quality-scorecards-scorecards"
@@ -15619,6 +15607,18 @@ __metadata:
     "@backstage/backend-test-utils": "backstage:^"
     "@backstage/config": "backstage:^"
     "@webstackbuilders/plugin-ai-core-node": "workspace:*"
+    vitest: "npm:^4.1.10"
+  languageName: unknown
+  linkType: soft
+
+"@webstackbuilders/plugin-ai-core-backend-module-quality-scorecards@workspace:^, @webstackbuilders/plugin-ai-core-backend-module-quality-scorecards@workspace:plugins/backend/plugin-ai-core-backend-module-quality-scorecards":
+  version: 0.0.0-use.local
+  resolution: "@webstackbuilders/plugin-ai-core-backend-module-quality-scorecards@workspace:plugins/backend/plugin-ai-core-backend-module-quality-scorecards"
+  dependencies:
+    "@backstage/backend-plugin-api": "backstage:^"
+    "@backstage/backend-test-utils": "backstage:^"
+    "@backstage/config": "backstage:^"
+    "@webstackbuilders/plugin-ai-core-node": "workspace:^"
     vitest: "npm:^4.1.10"
   languageName: unknown
   linkType: soft
@@ -17121,17 +17121,17 @@ __metadata:
     "@backstage/plugin-search-backend-node": "backstage:^"
     "@backstage/plugin-signals-backend": "backstage:^"
     "@backstage/plugin-techdocs-backend": "backstage:^"
-    "@webstackbuilders/backstage-plugin-ai-core-backend-module-compliance": "workspace:^"
-    "@webstackbuilders/backstage-plugin-ai-core-backend-module-observability": "workspace:^"
-    "@webstackbuilders/backstage-plugin-ai-core-backend-module-quality-scorecards": "workspace:^"
     "@webstackbuilders/plugin-ai-core-backend": "workspace:^"
     "@webstackbuilders/plugin-ai-core-backend-module-cloud-providers": "workspace:^"
     "@webstackbuilders/plugin-ai-core-backend-module-collaboration": "workspace:^"
     "@webstackbuilders/plugin-ai-core-backend-module-collaboration-jira": "workspace:^"
     "@webstackbuilders/plugin-ai-core-backend-module-collaboration-slack": "workspace:^"
+    "@webstackbuilders/plugin-ai-core-backend-module-compliance": "workspace:^"
     "@webstackbuilders/plugin-ai-core-backend-module-llm-aws": "workspace:^"
     "@webstackbuilders/plugin-ai-core-backend-module-llm-openai": "workspace:^"
     "@webstackbuilders/plugin-ai-core-backend-module-llm-openrouter": "workspace:^"
+    "@webstackbuilders/plugin-ai-core-backend-module-observability": "workspace:^"
+    "@webstackbuilders/plugin-ai-core-backend-module-quality-scorecards": "workspace:^"
     "@webstackbuilders/plugin-ai-core-backend-module-runtime-store": "workspace:^"
     "@webstackbuilders/plugin-ai-core-backend-module-storage-pgvector": "workspace:^"
     "@webstackbuilders/plugin-ai-core-backend-module-vcs": "workspace:^"
