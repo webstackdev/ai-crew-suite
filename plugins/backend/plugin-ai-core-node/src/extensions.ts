@@ -24,6 +24,7 @@ import {
   CommunicationDriver,
   ComplianceDriver,
   IncidentManagementDriver,
+  KubernetesDiagnosticsDriver,
   ModelDefinition,
   ObservabilityDriver,
   ProjectManagementDriver,
@@ -175,6 +176,25 @@ export interface IncidentManagementDriversExtensionPoint {
 export const incidentManagementDriversExtensionPoint =
   createExtensionPoint<IncidentManagementDriversExtensionPoint>({
     id: 'ai-core.incident-management-drivers',
+  });
+
+/**
+ * Extension point for registering Kubernetes operational diagnostics drivers.
+ *
+ * The Kubernetes core module resolves the driver named by
+ * `ai.integrations.kubernetes.provider` from the resulting registry. Drivers
+ * own cluster authentication and catalog-to-workload resolution.
+ */
+export interface KubernetesDiagnosticsDriversExtensionPoint {
+  registerDriver(driver: KubernetesDiagnosticsDriver): void;
+}
+
+/**
+ * Backstage extension point used by modules that contribute Kubernetes diagnostics drivers.
+ */
+export const kubernetesDiagnosticsDriversExtensionPoint =
+  createExtensionPoint<KubernetesDiagnosticsDriversExtensionPoint>({
+    id: 'ai-core.kubernetes-diagnostics-drivers',
   });
 
 /**

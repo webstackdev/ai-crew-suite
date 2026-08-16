@@ -39,7 +39,6 @@ export const readCloudProvidersConfig = (config: Config): CloudProvidersConfig =
     if (providerConfig) {
       providers[providerId] = {
         region: providerConfig.getOptionalString('region'),
-        targetNamespaces: providerConfig.getOptionalStringArray('targetNamespaces'),
       };
     }
   }

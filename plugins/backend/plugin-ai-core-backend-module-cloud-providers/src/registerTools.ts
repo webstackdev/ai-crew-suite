@@ -60,19 +60,5 @@ export function createCloudProviderTools(options: CreateCloudProviderToolsOption
     },
   });
 
-  tools.push({
-    name: `${driver.providerId}_kubernetes_workloads`,
-    description: 'Polls real-time workspace cluster allocations, pod failure status indicators, or deployment replica levels.',
-    execute: async (args: { cluster?: string; namespace?: string; catalogEntityRef?: string }) => {
-      try {
-        const workloads = await driver.kubernetesWorkloads(args);
-        return { workloads };
-      } catch (error: any) {
-        logger.error(`Error executing kubernetes_workloads: ${error.message}`);
-        return { error: error.message };
-      }
-    },
-  });
-
   return tools;
 }

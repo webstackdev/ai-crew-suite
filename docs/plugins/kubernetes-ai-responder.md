@@ -2,7 +2,7 @@
 layout: default
 title: Incident Triage Assistant
 parent: Incident Response
-plugin_name: kubernetes-ai-responder
+plugin_name: plugin-ai-agent-backend-kubernetes-ai-responder
 subcategory: Operations
 ---
 
@@ -36,9 +36,19 @@ This assistant is inherently **event-driven and stateful**. It relies on trigger
 
 The agent treats these plugins as data sources for its investigative steps:
 
-- **`KubernetesBackend` / `KubernetesService`**: The initial trigger source. The agent pulls pod descriptors, status codes (e.g., `OOMKilled`, `ImagePullBackOff`), and raw stdout/stderr logs.
-- **`GithubBackend` / `GithubService`**: Used by the agent to fetch the git commit history and recent Pull Requests for the component to see if a recent code deployment correlates with the incident window.
-- **Observability Plugins (Datadog, OpenTelemetry, Jaeger)**: Provides API hooks to scan recent distributed trace anomalies or error-rate spikes matching the failing service's timeline.
+- **Kubernetes diagnostics module**: The first investigation source. The agent
+  resolves the affected workload and reads pod snapshots, status codes (for
+  example `OOMKilled` and `ImagePullBackOff`), bounded log excerpts, and related
+  events through `kubernetes.*` tools.
+- **VCS module**: Fetches recent commits and pull requests for the component's
+  repository to identify deployments that correlate with the incident window.
+- **Observability module**: Scans traces, logs, and error-rate signals matching
+  the failure timeline.
+
+Kubernetes is an investigation surface, not the default trigger. The workflow is
+started by an Alertmanager, Datadog, PagerDuty, or Prometheus webhook; a deployed
+Kubernetes operator/webhook; or a bounded scheduler poll. It then uses the
+Kubernetes diagnostics tools as its first evidence-gathering step.
 
 ## Testing Strategy
 
@@ -52,45 +62,79 @@ Use an **in-memory LangGraph memory saver checkpoint manager** backed by `mockSe
 
 ### 2. Mocking Inter-Plugin Data Streams
 
-Instead of a simple static string, your mocks for this agent must represent a timeline of failure indicators. You can implement this cleanly by configuring a stateful mock service factory.
+Instead of a simple static string, your mocks for this agent must represent a timeline of failure indicators. Use a fake `KubernetesDiagnosticsDriver` that returns normalized workload, pod, log, and event records through the Kubernetes diagnostics module's extension point.
 
 Here is an example setup initializing a `startTestBackend` matrix specifically designed to evaluate the LangGraph agent's investigative pathing:
 
 ```typescript
-import { createServiceFactory } from '@backstage/backend-plugin-api';
+import { createBackendModule } from '@backstage/backend-plugin-api';
 import { startTestBackend, mockServices } from '@backstage/backend-test-utils';
+import kubernetesDiagnosticsModule from '@webstackbuilders/plugin-ai-core-backend-module-kubernetes';
+import { kubernetesDiagnosticsDriversExtensionPoint } from '@webstackbuilders/plugin-ai-core-node';
 import { kubernetesAiResponderPlugin } from '../plugin';
 
-// 1. Mock a Kubernetes system showing an Out Of Memory error
-const mockK8sIncidentFactory = createServiceFactory({
-  service: createServiceRef<any>({ id: 'kubernetes.service' }),
-  deps: {},
-  async factory() {
-    return {
-      getPodDiagnosticData: async (podName: string) => ({
-        status: { phase: 'Failed', reason: 'OOMKilled' },
-        logs: 'Fatal error: JavaScript heap out of memory\nFATAL ERROR: Ineffective mark-compacts near heap limit Allocation failed...',
-        lastTransitionTime: '2026-07-14T20:00:00Z',
-      }),
-    };
-  },
-});
-
-// 2. Mock a GitHub plugin showing a recent PR that altered memory allocation
-const mockGithubCommitFactory = createServiceFactory({
-  service: createServiceRef<any>({ id: 'github.service' }),
-  deps: {},
-  async factory() {
-    return {
-      getRecentPRsAndCommits: async (repoSlug: string, sinceDate: string) => [
-        {
-          id: '#402',
-          title: 'perf: Adjust Node max-old-space-size to 512MB',
-          author: 'dev-alpha',
-          mergedAt: '2026-07-14T19:45:00Z', // Merged just 15 mins prior to incident
-        },
-      ],
-    };
+// Mock normalized Kubernetes diagnostics showing an out-of-memory failure.
+const mockKubernetesDriver = createBackendModule({
+  pluginId: 'ai-core',
+  moduleId: 'kubernetes-diagnostics-mock',
+  register(env) {
+    env.registerInit({
+      deps: { registry: kubernetesDiagnosticsDriversExtensionPoint },
+      async init({ registry }) {
+        registry.registerDriver({
+          providerId: 'backstage',
+          resolveWorkloads: async () => [
+            {
+              cluster: 'production',
+              namespace: 'payments',
+              name: 'payment-gateway',
+              kind: 'Deployment',
+            },
+          ],
+          getWorkloadSnapshot: async () => ({
+            cluster: 'production',
+            namespace: 'payments',
+            name: 'payment-gateway',
+            kind: 'Deployment',
+            pods: [
+              {
+                cluster: 'production',
+                namespace: 'payments',
+                name: 'payment-gateway-abc',
+                phase: 'Failed',
+                containers: [
+                  {
+                    name: 'app',
+                    ready: false,
+                    restartCount: 3,
+                    state: 'terminated',
+                    reason: 'OOMKilled',
+                  },
+                ],
+              },
+            ],
+            conditions: [],
+          }),
+          getPodSnapshot: async () => ({
+            cluster: 'production',
+            namespace: 'payments',
+            name: 'payment-gateway-abc',
+            phase: 'Failed',
+            containers: [],
+          }),
+          getPodLogs: async () => ({
+            cluster: 'production',
+            namespace: 'payments',
+            pod: 'payment-gateway-abc',
+            previous: false,
+            text: 'Fatal error: JavaScript heap out of memory',
+            truncated: false,
+          }),
+          listWorkloadEvents: async () => [],
+          getWorkloadTimeline: async () => ({ events: [], snapshots: [] }),
+        });
+      },
+    });
   },
 });
 
@@ -100,8 +144,8 @@ describe('Incident Triage Assistant Graph Execution', () => {
     const { server } = await startTestBackend({
       features: [
         kubernetesAiResponderPlugin(),
-        mockK8sIncidentFactory(),
-        mockGithubCommitFactory(),
+        kubernetesDiagnosticsModule,
+        mockKubernetesDriver,
         mockServices.catalog.factory({
           entities: [
             {
