@@ -13,26 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 export interface Config {
+  /**
+   * AI Crew Suite integration configuration.
+   */
   ai?: {
+    /**
+     * Third-party integration modules.
+     */
     integrations?: {
+      /**
+       * Telemetry platform integration configuration covering metrics, logs,
+       * traces, and dashboards.
+       *
+       * Provider connection details are owned by the sibling
+       * `plugin-ai-core-backend-module-observability-<provider>` packages.
+       */
       observability?: {
-        alerting: 'pagerduty' | 'opsgenie';
-        metrics: 'datadog' | 'newrelic' | 'prometheus';
-        traces: 'opentelemetry' | 'jaeger';
-        alertingProviders?: {
-          pagerduty?: { baseUrl?: string };
-          opsgenie?: { baseUrl?: string };
-        };
-        metricsProviders?: {
-          datadog?: { baseUrl?: string };
-          newrelic?: { baseUrl?: string };
-          prometheus?: { baseUrl?: string };
-        };
-        tracesProviders?: {
-          opentelemetry?: { baseUrl?: string };
-          jaeger?: { baseUrl?: string };
-        };
+        /**
+         * Identifier of the registered driver to activate, such as `datadog`.
+         * The core module resolves this from the observability driver
+         * extension point.
+         */
+        provider: string;
       };
     };
   };

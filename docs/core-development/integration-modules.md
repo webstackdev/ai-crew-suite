@@ -8,7 +8,7 @@ parent: Core Development
 
 {: .no_toc }
 
-Integration modules register stable, provider-neutral AI tools that let agents gather context from and act on external systems. Each module covers a capability boundary—source control, collaboration, observability, compliance, cloud infrastructure, or quality scorecards—and hides vendor-specific API calls behind a shared driver interface.
+Integration modules register stable, provider-neutral AI tools that let agents gather context from and act on external systems. Each module covers a capability boundary—source control, project management, communication, incident management, observability, compliance, cloud infrastructure, or quality scorecards—and hides vendor-specific API calls behind a shared driver interface.
 
 These modules are the primary way agentic workflow plugins access external systems without depending on provider SDKs directly. Agent definitions reference tools by stable ID, and the module selected through configuration decides whether a call goes to GitHub, Jira, PagerDuty, OPA, AWS, or Soundcheck.
 
@@ -17,8 +17,10 @@ These modules are the primary way agentic workflow plugins access external syste
 | Module                                             | Capability boundary                                                                         | Example providers                                                       |
 | -------------------------------------------------- | ------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
 | `plugin-ai-core-backend-module-vcs`                | Source control, repository reading, branches, commits, pull requests, code review metadata. | GitHub, GitLab, Bitbucket, Azure DevOps, Backstage `urlReader`.         |
-| `plugin-ai-core-backend-module-collaboration`      | Human communication, ticketing, work coordination, notifications.                           | Slack, Microsoft Teams, Jira, Linear.                                   |
-| `plugin-ai-core-backend-module-observability`      | Runtime signals, incidents, alerts, metrics, logs, traces.                                  | PagerDuty, Opsgenie, Datadog, New Relic, Splunk, OpenTelemetry, Jaeger. |
+| `plugin-ai-core-backend-module-project-management`  | Transactional work tracking, tickets, epics, delivery workflow.                     | Jira, Linear, Asana, GitHub Projects, GitLab Issues.        |
+| `plugin-ai-core-backend-module-communication`      | Real-time chat, notifications, human-in-the-loop approvals.                         | Slack, Microsoft Teams.                                     |
+| `plugin-ai-core-backend-module-incident-management` | On-call schedules, paging, alert routing, incident lifecycles.                      | PagerDuty, Opsgenie, incident.io.                           |
+| `plugin-ai-core-backend-module-observability`      | Metrics, logs, traces, dashboards.                                                  | Datadog, New Relic, Splunk, Prometheus, OpenTelemetry, Jaeger. |
 | `plugin-ai-core-backend-module-compliance`         | Policy, permission, governance, FinOps and security validation.                             | OPA/Rego, Backstage permission policies, static policy registries.      |
 | `plugin-ai-core-backend-module-cloud-providers`    | Cloud resource lookup, infrastructure context, account/project/subscription metadata.       | AWS, Azure, GCP, Kubernetes infrastructure inventory.                   |
 | `plugin-ai-core-backend-module-quality-scorecards` | Service health, scorecards, ownership quality, maturity signals.                            | Soundcheck, Scorecards, Tech Radar, catalog annotations.                |
@@ -67,8 +69,9 @@ export const exampleTool: Tool = {
 Tool IDs follow the shape `<domain>.<resource-or-context>.<verb>`:
 
 - `vcs.repository.read_file`
-- `collaboration.ticket.search`
-- `observability.incident.list_active`
+- `project.ticket.search`
+- `incident.oncall.get`
+- `observability.logs.search`
 - `compliance.policy.evaluate`
 - `cloud.resource.lookup`
 - `quality.scorecard.get`
@@ -112,13 +115,14 @@ ai:
       provider: github
       github:
         host: github.com
-    collaboration:
-      ticketing: jira
-      messaging: slack
+    projectManagement:
+      provider: jira
+    communication:
+      provider: slack
+    incidentManagement:
+      provider: pagerduty
     observability:
-      alerting: pagerduty
-      metrics: datadog
-      traces: opentelemetry
+      provider: datadog
     compliance:
       policy: opa
       opa:
@@ -160,7 +164,7 @@ const incidentCrew: AgentDefinition = {
   id: 'incident-responder',
   modelRef: 'openrouter-default',
   systemPrompt:
-    'Coordinate incident response across observability and collaboration systems.',
+    'Coordinate incident response across incident management, observability, and communication systems.',
   toolIds: [],
   orchestrator: 'crew',
   crew: {
@@ -169,14 +173,15 @@ const incidentCrew: AgentDefinition = {
         id: 'triager',
         systemPrompt: 'Gather incident context and active alerts.',
         toolIds: [
-          'observability.incident.list_active',
-          'observability.alert.history',
+          'incident.incident.list',
+          'incident.alert.history',
+          'observability.logs.search',
         ],
       },
       {
         id: 'communicator',
         systemPrompt: 'Post incident summaries to the on-call channel.',
-        toolIds: ['collaboration.channel.lookup', 'collaboration.message.post'],
+        toolIds: ['communication.channel.lookup', 'communication.message.post'],
       },
     ],
   },
@@ -224,75 +229,135 @@ Create `plugin-ai-core-backend-module-vcs-<provider>`, implement the `VcsDriver`
 
 ---
 
-## Collaboration Module
+## Project Management Module
 
-The collaboration module provides work coordination and human communication tools. Like the VCS and quality scorecards groups, it is split into a core module that owns the contracts and tool surface, plus one sibling module per third-party service.
+Transactional work tracking: tickets, epics, and software delivery workflow. Like the VCS and quality scorecards groups, it is split into a core module that owns the contract and tool surface, plus one sibling module per third-party service.
 
-| Package                                                    | Role                                                  |
-| ---------------------------------------------------------- | ----------------------------------------------------- |
-| `plugin-ai-core-backend-module-collaboration`               | Extension points, driver resolution, tool registration |
-| `plugin-ai-core-backend-module-collaboration-jira`          | `TicketProviderDriver` for Jira Cloud                  |
-| `plugin-ai-core-backend-module-collaboration-slack`         | `MessagingProviderDriver` for Slack                    |
+| Package                                                | Role                                                 |
+| ------------------------------------------------------ | ---------------------------------------------------- |
+| `plugin-ai-core-backend-module-project-management`      | Extension point, driver resolution, tool registration |
+| `plugin-ai-core-backend-module-project-management-jira` | `ProjectManagementDriver` for Jira Cloud             |
 
 ### Registered Tools
 
-| Tool ID                         | Effect  | Purpose                                                             |
-| ------------------------------- | ------- | ------------------------------------------------------------------- |
-| `collaboration.ticket.search`   | `read`  | Search tickets by text, team, assignee, state, or label.            |
-| `collaboration.ticket.get`      | `read`  | Fetch ticket details, comments, and assignee history.               |
-| `collaboration.channel.lookup`  | `read`  | Resolve a team or service to a messaging channel.                   |
-| `collaboration.channel.history` | `read`  | Read back a channel or thread transcript.                           |
-| `collaboration.ticket.create`   | `write` | Create a ticket from an agent artifact.                             |
-| `collaboration.ticket.comment`  | `write` | Add a comment with trace/run links to a ticket.                     |
-| `collaboration.message.post`    | `write` | Post a summary message to a messaging channel or thread.            |
+| Tool ID                   | Effect  | Purpose                                                   |
+| ------------------------- | ------- | --------------------------------------------------------- |
+| `project.ticket.search`   | `read`  | Search tickets by text, team, assignee, state, or label.  |
+| `project.ticket.get`      | `read`  | Fetch ticket details, comments, and assignee history.     |
+| `project.ticket.create`   | `write` | Create a ticket from an agent artifact.                   |
+| `project.ticket.comment`  | `write` | Add a comment with trace/run links to a ticket.           |
 
 ### Configuration
-
-The core module owns only the driver selectors. Connection details are owned by the sibling driver packages.
 
 ```yaml
 ai:
   integrations:
-    collaboration:
-      ticketing: jira
-      messaging: slack
+    projectManagement:
+      provider: jira
       jira:
         baseUrl: https://my-org.atlassian.net
         email: ${JIRA_EMAIL}
         apiToken: ${JIRA_API_TOKEN}
         defaultProjectKey: OPS
+```
+
+### Adding a Provider
+
+Create `plugin-ai-core-backend-module-project-management-<provider>`, implement `ProjectManagementDriver` from `@webstackbuilders/plugin-ai-core-node`, depend on `projectManagementDriversExtensionPoint` in `createBackendModule`, call `registerDriver` during `init`, and own `ai.integrations.projectManagement.<provider>` in the package's `config.d.ts`.
+
+---
+
+## Communication Module
+
+Real-time chat, notifications, and human-in-the-loop approvals.
+
+| Package                                              | Role                                                 |
+| ---------------------------------------------------- | ---------------------------------------------------- |
+| `plugin-ai-core-backend-module-communication`         | Extension point, driver resolution, tool registration |
+| `plugin-ai-core-backend-module-communication-slack`   | `CommunicationDriver` for Slack                      |
+
+### Registered Tools
+
+| Tool ID                          | Effect  | Purpose                                                    |
+| -------------------------------- | ------- | ---------------------------------------------------------- |
+| `communication.channel.lookup`   | `read`  | Resolve a team or service to a chat channel.               |
+| `communication.channel.history`  | `read`  | Read back a channel or thread transcript.                  |
+| `communication.message.post`     | `write` | Post a summary, handover, or approval request message.     |
+
+### Configuration
+
+```yaml
+ai:
+  integrations:
+    communication:
+      provider: slack
       slack:
         token: ${SLACK_BOT_TOKEN}
         workspaceDomain: my-org.slack.com
 ```
 
-Boot fails with an explicit error when the selected identifier has no registered driver.
+### Adding a Provider
 
-### Driver Separation
+Create `plugin-ai-core-backend-module-communication-<provider>`, implement `CommunicationDriver` from `@webstackbuilders/plugin-ai-core-node`, depend on `communicationDriversExtensionPoint` in `createBackendModule`, call `registerDriver` during `init`, and own `ai.integrations.communication.<provider>` in the package's `config.d.ts`.
 
-Ticketing and messaging live in one integration group because they share human workflow semantics, but they are separate contracts. `TicketProviderDriver` covers ticket management services (Jira, Linear, Asana, GitHub Projects, GitLab Issues) and `MessagingProviderDriver` covers team communication services (Slack, Microsoft Teams). A driver module only implements the interface for the capability it actually supports, so a ticket search call goes to Jira while a message post goes to Slack.
+---
+
+## Incident Management Module
+
+On-call schedules, alert routing, paging metadata, and incident lifecycles.
+
+| Package                                                        | Role                                                 |
+| -------------------------------------------------------------- | ---------------------------------------------------- |
+| `plugin-ai-core-backend-module-incident-management`             | Extension point, driver resolution, tool registration |
+| `plugin-ai-core-backend-module-incident-management-pagerduty`   | `IncidentManagementDriver` for PagerDuty             |
+
+### Registered Tools
+
+| Tool ID                        | Effect  | Purpose                                                             |
+| ------------------------------ | ------- | ------------------------------------------------------------------- |
+| `incident.incident.list`       | `read`  | List incidents by service, team, state, and time window.            |
+| `incident.incident.get`        | `read`  | Fetch an incident with its timeline, responders, and notes.         |
+| `incident.oncall.get`          | `read`  | Resolve who is currently on call.                                   |
+| `incident.alert.history`       | `read`  | Return alert firing history with trigger/resolution timestamps.     |
+| `incident.incident.annotate`   | `write` | Add a diagnostic note or run link to an incident.                   |
+
+### Configuration
+
+```yaml
+ai:
+  integrations:
+    incidentManagement:
+      provider: pagerduty
+      pagerduty:
+        apiToken: ${PAGERDUTY_API_TOKEN}
+        fromEmail: ai-crew-suite@my-org.com
+```
 
 ### Adding a Provider
 
-Create `plugin-ai-core-backend-module-collaboration-<provider>`, implement the relevant driver interface from `@webstackbuilders/plugin-ai-core-node`, depend on `ticketDriversExtensionPoint` or `messagingDriversExtensionPoint` in `createBackendModule`, call `registerDriver` during `init`, and own `ai.integrations.collaboration.<provider>` in the package's `config.d.ts`.
+Create `plugin-ai-core-backend-module-incident-management-<provider>`, implement `IncidentManagementDriver` from `@webstackbuilders/plugin-ai-core-node`, depend on `incidentManagementDriversExtensionPoint` in `createBackendModule`, call `registerDriver` during `init`, and own `ai.integrations.incidentManagement.<provider>` in the package's `config.d.ts`.
 
 ---
 
 ## Observability Module
 
-The observability module provides runtime signals and incident context tools. It registers stable, provider-neutral incident, alert, metrics, logs, and traces tools while hiding vendor-specific API calls behind an `ObservabilityDriver` interface.
+Metrics, logs, traces, and dashboards from telemetry platforms.
+
+| Package                                                  | Role                                                 |
+| -------------------------------------------------------- | ---------------------------------------------------- |
+| `plugin-ai-core-backend-module-observability`             | Extension point, driver resolution, tool registration |
+| `plugin-ai-core-backend-module-observability-datadog`     | `ObservabilityDriver` for Datadog                    |
 
 ### Registered Tools
 
-| Tool ID                              | Effect  | Purpose                                                          |
-| ------------------------------------ | ------- | ---------------------------------------------------------------- |
-| `observability.incident.list_active` | `read`  | List active incidents for a service, team, or escalation policy. |
-| `observability.alert.history`        | `read`  | Return alert history and noise patterns for a service.           |
-| `observability.metrics.query`        | `read`  | Query metrics over a bounded time window.                        |
-| `observability.logs.search`          | `read`  | Search logs around a time range and entity.                      |
-| `observability.traces.search`        | `read`  | Search traces by service, operation, or error signature.         |
-| `observability.incident.annotate`    | `write` | Add a diagnostic note or run link to an incident.                |
-| `observability.alert.suggest_tuning` | `read`  | Produce a provider-normalized alert tuning artifact.             |
+| Tool ID                          | Effect | Purpose                                                       |
+| -------------------------------- | ------ | ------------------------------------------------------------- |
+| `observability.metrics.query`    | `read` | Run a provider-native metric query over a bounded window.     |
+| `observability.logs.search`      | `read` | Search logs by service, severity, and time window.            |
+| `observability.traces.search`    | `read` | Search spans by service, operation, error status, or duration. |
+| `observability.dashboard.list`   | `read` | List provider-hosted dashboards for a service or team.        |
+
+Every tool in this group is `read`. Telemetry platforms are a source of evidence for agents, never a target for autonomous writes.
 
 ### Configuration
 
@@ -300,19 +365,23 @@ The observability module provides runtime signals and incident context tools. It
 ai:
   integrations:
     observability:
-      alerting: pagerduty
-      metrics: datadog
-      traces: opentelemetry
-      alertingProviders:
-        pagerduty:
-          baseUrl: https://events.pagerduty.com
+      provider: datadog
+      datadog:
+        apiKey: ${DATADOG_API_KEY}
+        applicationKey: ${DATADOG_APP_KEY}
 ```
 
-Supported alerting providers: `pagerduty`, `opsgenie`. Supported metrics providers: `datadog`, `newrelic`, `prometheus`. Supported traces providers: `opentelemetry`, `jaeger`. Only `pagerduty` is implemented in the first pass; metrics and traces use stub drivers.
+### Adding a Provider
 
-### Driver Separation
+Create `plugin-ai-core-backend-module-observability-<provider>`, implement `ObservabilityDriver` from `@webstackbuilders/plugin-ai-core-node`, depend on `observabilityDriversExtensionPoint` in `createBackendModule`, call `registerDriver` during `init`, and own `ai.integrations.observability.<provider>` in the package's `config.d.ts`. A driver that only serves part of the contract, for example a Prometheus driver with no dashboard API, should return an empty result rather than throwing, so agents degrade gracefully.
 
-The module builds separate drivers for alerting, metrics, and traces so an incident listing goes to PagerDuty while a metrics query goes to Datadog. PagerDuty and Opsgenie belong here because they are incident/on-call systems, even though they also notify humans. OpenTelemetry and Jaeger start as trace/query drivers, not model-provider concerns.
+---
+
+## Why Four Groups Instead of Two
+
+An integration group exists so a user configures and authenticates with exactly the services they use. Grouping unlike services forces a driver to implement methods it cannot support, which is how stub methods that throw or silently return empty arrays get written.
+
+Ticket management and chat share "human workflow" semantics but nothing else: a Jira driver has no channels and a Slack driver has no tickets. Paging and telemetry share "runtime signals" but nothing else: PagerDuty has no trace spans and Datadog has no escalation policies. Each of the four groups now has exactly one driver interface, and every method on that interface is implementable by every provider in the group.
 
 ---
 
@@ -416,18 +485,18 @@ Keep quality scorecards separate from compliance. Compliance answers allowed/not
 
 ## Workflow Composition
 
-The six modules cover known workflow ideas without requiring one package per vendor. When building agentic workflow plugins, combine tools from multiple modules:
+The eight modules cover known workflow ideas without requiring one package per vendor. When building agentic workflow plugins, combine tools from multiple modules:
 
-| Workflow idea             | Modules involved                                                         |
-| ------------------------- | ------------------------------------------------------------------------ |
-| PR reviewer               | VCS, quality scorecards, compliance, `knowledge.retrieve`                |
-| Incident responder        | Observability, collaboration, VCS, cloud providers, `knowledge.retrieve` |
-| Alert tuner               | Observability, compliance, VCS, collaboration                            |
-| Release notes generator   | VCS, collaboration, quality scorecards                                   |
-| Scaffolder drift detector | VCS, cloud providers, compliance, quality scorecards                     |
-| Tech debt scout           | Quality scorecards, VCS, observability, `knowledge.retrieve`             |
-| Security remediation      | Compliance, VCS, cloud providers, collaboration, HITL approvals          |
-| Cost crew                 | Cloud providers, compliance, quality scorecards, collaboration           |
+| Workflow idea             | Modules involved                                                                          |
+| ------------------------- | ----------------------------------------------------------------------------------------- |
+| PR reviewer               | VCS, quality scorecards, compliance, `knowledge.retrieve`                                 |
+| Incident responder        | Incident management, observability, communication, VCS, cloud providers, `knowledge.retrieve` |
+| Alert tuner               | Incident management, observability, compliance, VCS                                       |
+| Release notes generator   | VCS, project management, quality scorecards                                               |
+| Scaffolder drift detector | VCS, cloud providers, compliance, quality scorecards                                      |
+| Tech debt scout           | Quality scorecards, VCS, project management, `knowledge.retrieve`                         |
+| Security remediation      | Compliance, VCS, cloud providers, communication, HITL approvals                           |
+| Cost crew                 | Cloud providers, compliance, quality scorecards, project management                       |
 
 ---
 

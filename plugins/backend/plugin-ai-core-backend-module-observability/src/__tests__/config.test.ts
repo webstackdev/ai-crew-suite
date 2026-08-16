@@ -13,47 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { mockServices } from '@backstage/backend-test-utils';
 import { describe, expect, it } from 'vitest';
-import { ConfigReader } from '@backstage/config';
 import { readObservabilityConfig } from '../config';
 
+const configOf = (data: object) => mockServices.rootConfig({ data });
+
 describe('readObservabilityConfig', () => {
-  it('reads a valid config', () => {
-    const config = new ConfigReader({
-      ai: {
-        integrations: {
-          observability: {
-            alerting: 'pagerduty',
-            metrics: 'datadog',
-            traces: 'opentelemetry',
-            alertingProviders: { pagerduty: { baseUrl: 'https://events.pagerduty.com' } },
-          },
-        },
-      },
+  it('reads the driver identifier', () => {
+    const config = configOf({
+      ai: { integrations: { observability: { provider: 'datadog' } } },
     });
-    const result = readObservabilityConfig(config);
-    expect(result.alerting).toBe('pagerduty');
-    expect(result.metrics).toBe('datadog');
-    expect(result.traces).toBe('opentelemetry');
+
+    expect(readObservabilityConfig(config)).toEqual({ provider: 'datadog' });
   });
 
-  it('throws when config is missing', () => {
-    expect(() => readObservabilityConfig(new ConfigReader({}))).toThrow(
-      /ai\.integrations\.observability configuration to be set/,
+  it('throws when the observability section is missing', () => {
+    expect(() => readObservabilityConfig(configOf({}))).toThrow(
+      /requires ai.integrations.observability configuration/,
     );
   });
 
-  it('throws when alerting is missing', () => {
-    const config = new ConfigReader({
-      ai: { integrations: { observability: { metrics: 'datadog', traces: 'opentelemetry' } } },
-    });
-    expect(() => readObservabilityConfig(config)).toThrow(/alerting to be set/);
-  });
+  it('throws when the provider identifier is missing', () => {
+    const config = configOf({ ai: { integrations: { observability: {} } } });
 
-  it('throws when alerting is unsupported', () => {
-    const config = new ConfigReader({
-      ai: { integrations: { observability: { alerting: 'bad', metrics: 'datadog', traces: 'opentelemetry' } } },
-    });
-    expect(() => readObservabilityConfig(config)).toThrow(/Unsupported alerting provider/);
+    expect(() => readObservabilityConfig(config)).toThrow(
+      /ai.integrations.observability.provider/,
+    );
   });
 });
