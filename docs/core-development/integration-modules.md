@@ -8,7 +8,7 @@ parent: Core Development
 
 {: .no_toc }
 
-Integration modules register stable, provider-neutral AI tools that let agents gather context from and act on external systems. Each module covers a capability boundary—source control, project management, communication, incident management, observability, compliance, cloud infrastructure, or quality scorecards—and hides vendor-specific API calls behind a shared driver interface.
+Integration modules register stable, provider-neutral AI tools that let agents gather context from and act on external systems. Each module covers a capability boundary—source control, project management, communication, incident management, observability, compliance, Kubernetes diagnostics, cloud infrastructure, or quality scorecards—and hides vendor-specific API calls behind a shared driver interface.
 
 These modules are the primary way agentic workflow plugins access external systems without depending on provider SDKs directly. Agent definitions reference tools by stable ID, and the module selected through configuration decides whether a call goes to GitHub, Jira, PagerDuty, OPA, AWS, or Soundcheck.
 
@@ -22,7 +22,8 @@ These modules are the primary way agentic workflow plugins access external syste
 | `plugin-ai-core-backend-module-incident-management` | On-call schedules, paging, alert routing, incident lifecycles.                              | PagerDuty, Opsgenie, incident.io.                                  |
 | `plugin-ai-core-backend-module-observability`       | Metrics, logs, traces, dashboards.                                                          | Datadog, New Relic, Splunk, Prometheus, OpenTelemetry, Jaeger.     |
 | `plugin-ai-core-backend-module-compliance`          | Policy, permission, governance, FinOps and security validation.                             | OPA/Rego, Backstage permission policies, static policy registries. |
-| `plugin-ai-core-backend-module-cloud-providers`     | Cloud resource lookup, infrastructure context, account/project/subscription metadata.       | AWS, Azure, GCP, Kubernetes infrastructure inventory.              |
+| `plugin-ai-core-backend-module-kubernetes`          | Entity-aware workload, pod, log, event, and rollout diagnostics.                            | Backstage Kubernetes integration.                                  |
+| `plugin-ai-core-backend-module-cloud-providers`     | Cloud resource lookup, infrastructure context, account/project/subscription metadata.       | AWS, Azure, GCP.                                                   |
 | `plugin-ai-core-backend-module-quality-scorecards`  | Service health, scorecards, ownership quality, maturity signals.                            | Soundcheck, Scorecards, Tech Radar, catalog annotations.           |
 
 ### Architecture
@@ -73,6 +74,7 @@ Tool IDs follow the shape `<domain>.<resource-or-context>.<verb>`:
 - `incident.oncall.get`
 - `observability.logs.search`
 - `compliance.policy.evaluate`
+- `kubernetes.pod.get_logs`
 - `cloud.resource.lookup`
 - `quality.scorecard.get`
 
@@ -434,9 +436,48 @@ Keep policy evaluation separate from cloud inventory. Compliance answers whether
 
 ---
 
+## Kubernetes Module
+
+The Kubernetes module provides entity-aware operational diagnostics through the
+configured Backstage Kubernetes integration. It normalizes workload and pod
+state, bounded log excerpts, events, and rollout timelines for agent workflows.
+
+### Registered Tools
+
+| Tool ID                            | Effect | Purpose                                                                      |
+| ---------------------------------- | ------ | ---------------------------------------------------------------------------- |
+| `kubernetes.workload.resolve`      | `read` | Resolve catalog entities to Kubernetes workloads.                            |
+| `kubernetes.workload.get_snapshot` | `read` | Read workload conditions, replica state, and associated pod snapshots.       |
+| `kubernetes.pod.get_snapshot`      | `read` | Read a pod's phase, container state, termination reason, and restart counts. |
+| `kubernetes.pod.get_logs`          | `read` | Read a bounded, redacted log excerpt for a pod container.                    |
+| `kubernetes.workload.list_events`  | `read` | Read bounded Kubernetes events for a workload or pod.                        |
+| `kubernetes.workload.get_timeline` | `read` | Read bounded rollout, deployment, scaling, and event history.                |
+
+### Configuration
+
+```yaml
+ai:
+  integrations:
+    kubernetes:
+      provider: backstage
+```
+
+The selected diagnostics driver uses Backstage Kubernetes cluster location,
+authentication, and authorization. It must bound output and redact sensitive
+data before returning it to an agent.
+
+### Boundary with Cloud Providers
+
+Kubernetes diagnostics is operational state, not cloud account inventory. The
+Kubernetes module owns workload, pod, log, event, and rollout investigation;
+the cloud providers module owns AWS, Azure, and GCP account and resource
+context.
+
+---
+
 ## Cloud Providers Module
 
-The cloud providers module provides cloud inventory, ownership, and infrastructure context tools. It registers stable, provider-neutral account, resource, dependency, and Kubernetes workload tools while hiding vendor-specific API calls behind a `CloudProviderDriver` interface.
+The cloud providers module provides cloud inventory, ownership, and infrastructure context tools. It registers stable, provider-neutral account, resource, and dependency tools while hiding vendor-specific API calls behind a `CloudProviderDriver` interface.
 
 ### Registered Tools
 
@@ -445,7 +486,6 @@ The cloud providers module provides cloud inventory, ownership, and infrastructu
 | `cloud.account.lookup`        | `read` | Resolve cloud account/project/subscription metadata.                |
 | `cloud.resource.lookup`       | `read` | Find existing resources by service, tags, owner, or catalog entity. |
 | `cloud.resource.dependencies` | `read` | Return cloud dependencies around a service.                         |
-| `cloud.kubernetes.workloads`  | `read` | Inspect Kubernetes workloads for deployed infrastructure state.     |
 
 ### Configuration
 
@@ -462,7 +502,7 @@ Supported providers: `aws`, `azure`, `gcp`. Only `aws` is implemented in the fir
 
 ### Write Tools
 
-Direct cloud mutation tools are deferred until there is a specific approved agent workflow. Most first-pass cloud tools are read-only. Kubernetes starts here for workload inventory; if Kubernetes remediation grows large, split it later.
+Direct cloud mutation tools are deferred until there is a specific approved agent workflow. Most first-pass cloud tools are read-only.
 
 ---
 

@@ -35,19 +35,17 @@ describe('createCloudProviderTools', () => {
       lookupAccount: vi.fn(),
       lookupResource: vi.fn(),
       resourceDependencies: vi.fn(),
-      kubernetesWorkloads: vi.fn(),
     };
   });
 
-  it('should create exactly 4 specialized system tools mapping directly to driver capabilities', () => {
+  it('should create exactly 3 specialized system tools mapping directly to driver capabilities', () => {
     const tools = createCloudProviderTools({ driver: mockDriver, logger });
-    expect(tools).toHaveLength(4);
+    expect(tools).toHaveLength(3);
 
     const names = tools.map(t => t.name);
     expect(names).toContain('aws-test_lookup_account');
     expect(names).toContain('aws-test_lookup_resource');
     expect(names).toContain('aws-test_resource_dependencies');
-    expect(names).toContain('aws-test_kubernetes_workloads');
   });
 
   it('should invoke lookupAccount safely inside the tool execute matrix closure block', async () => {
@@ -62,13 +60,4 @@ describe('createCloudProviderTools', () => {
     expect(result).toEqual({ account: mockSummary });
   });
 
-  it('should capture driver runtime execution rejections and transform them into generic tool payload error properties', async () => {
-    vi.mocked(mockDriver.kubernetesWorkloads).mockRejectedValueOnce(new Error('Cluster connection timeout'));
-
-    const tools = createCloudProviderTools({ driver: mockDriver, logger });
-    const k8sTool = tools.find(t => t.name === 'aws-test_kubernetes_workloads');
-
-    const result = await k8sTool.execute({ namespace: 'kube-system' });
-    expect(result).toEqual({ error: 'Cluster connection timeout' });
-  });
 });

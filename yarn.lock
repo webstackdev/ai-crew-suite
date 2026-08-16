@@ -4407,7 +4407,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage/plugin-kubernetes-node@backstage:^::backstage=1.53.1&npm=0.4.6, @backstage/plugin-kubernetes-node@npm:^0.4.6":
+"@backstage/plugin-kubernetes-node@npm:^0.4.6":
   version: 0.4.6
   resolution: "@backstage/plugin-kubernetes-node@npm:0.4.6"
   dependencies:
@@ -8135,7 +8135,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@kubernetes/client-node@npm:1.4.0, @kubernetes/client-node@npm:^1.4.0":
+"@kubernetes/client-node@npm:1.4.0":
   version: 1.4.0
   resolution: "@kubernetes/client-node@npm:1.4.0"
   dependencies:
@@ -15421,21 +15421,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@webstackbuilders/plugin-ai-core-backend-module-cloud-providers-kubernetes@workspace:plugins/backend/plugin-ai-core-backend-module-cloud-providers-kubernetes":
-  version: 0.0.0-use.local
-  resolution: "@webstackbuilders/plugin-ai-core-backend-module-cloud-providers-kubernetes@workspace:plugins/backend/plugin-ai-core-backend-module-cloud-providers-kubernetes"
-  dependencies:
-    "@backstage/backend-plugin-api": "backstage:^"
-    "@backstage/backend-test-utils": "backstage:^"
-    "@backstage/config": "backstage:^"
-    "@backstage/plugin-kubernetes-backend": "backstage:^"
-    "@backstage/plugin-kubernetes-node": "backstage:^"
-    "@kubernetes/client-node": "npm:^1.4.0"
-    "@webstackbuilders/plugin-ai-core-node": "workspace:*"
-    vitest: "npm:^4.1.10"
-  languageName: unknown
-  linkType: soft
-
 "@webstackbuilders/plugin-ai-core-backend-module-cloud-providers@workspace:^, @webstackbuilders/plugin-ai-core-backend-module-cloud-providers@workspace:plugins/backend/plugin-ai-core-backend-module-cloud-providers":
   version: 0.0.0-use.local
   resolution: "@webstackbuilders/plugin-ai-core-backend-module-cloud-providers@workspace:plugins/backend/plugin-ai-core-backend-module-cloud-providers"
@@ -15520,6 +15505,19 @@ __metadata:
 "@webstackbuilders/plugin-ai-core-backend-module-incident-management@workspace:*, @webstackbuilders/plugin-ai-core-backend-module-incident-management@workspace:^, @webstackbuilders/plugin-ai-core-backend-module-incident-management@workspace:plugins/backend/plugin-ai-core-backend-module-incident-management":
   version: 0.0.0-use.local
   resolution: "@webstackbuilders/plugin-ai-core-backend-module-incident-management@workspace:plugins/backend/plugin-ai-core-backend-module-incident-management"
+  dependencies:
+    "@backstage/backend-plugin-api": "backstage:^"
+    "@backstage/backend-test-utils": "backstage:^"
+    "@backstage/cli": "backstage:^"
+    "@backstage/config": "backstage:^"
+    "@webstackbuilders/plugin-ai-core-node": "workspace:^"
+    vitest: "npm:^4.1.10"
+  languageName: unknown
+  linkType: soft
+
+"@webstackbuilders/plugin-ai-core-backend-module-kubernetes@workspace:plugins/backend/plugin-ai-core-backend-module-kubernetes":
+  version: 0.0.0-use.local
+  resolution: "@webstackbuilders/plugin-ai-core-backend-module-kubernetes@workspace:plugins/backend/plugin-ai-core-backend-module-kubernetes"
   dependencies:
     "@backstage/backend-plugin-api": "backstage:^"
     "@backstage/backend-test-utils": "backstage:^"

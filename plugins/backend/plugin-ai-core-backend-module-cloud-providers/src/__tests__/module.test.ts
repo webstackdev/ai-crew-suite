@@ -51,7 +51,6 @@ describe('aiCoreBackendModuleCloudProviders', () => {
       lookupAccount: vi.fn(),
       lookupResource: vi.fn(),
       resourceDependencies: vi.fn(),
-      kubernetesWorkloads: vi.fn(),
     };
 
     // Compile the driver hook via createBackendModule macro
@@ -90,7 +89,6 @@ describe('aiCoreBackendModuleCloudProviders', () => {
     });
 
     expect(addedTools.some(t => t.name === 'mock-cloud_lookup_account')).toBe(true);
-    expect(addedTools.some(t => t.name === 'mock-cloud_kubernetes_workloads')).toBe(true);
   });
 
   it('should throw an informative boot-time error when the required driver has not registered', async () => {

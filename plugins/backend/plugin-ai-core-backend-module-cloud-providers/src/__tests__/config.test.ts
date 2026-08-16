@@ -26,11 +26,8 @@ describe('readCloudProvidersConfig', () => {
       ai: {
         integrations: {
           cloudProviders: {
-            defaultProvider: 'kubernetes',
+            defaultProvider: 'aws',
             providers: {
-              kubernetes: {
-                targetNamespaces: ['development', 'production'],
-              },
               aws: {
                 region: 'us-west-2',
               },
@@ -41,8 +38,7 @@ describe('readCloudProvidersConfig', () => {
     });
 
     const parsed = readCloudProvidersConfig(mockConfig);
-    expect(parsed.defaultProvider).toBe('kubernetes');
-    expect(parsed.providers.kubernetes?.targetNamespaces).toEqual(['development', 'production']);
+    expect(parsed.defaultProvider).toBe('aws');
     expect(parsed.providers.aws?.region).toBe('us-west-2');
   });
 

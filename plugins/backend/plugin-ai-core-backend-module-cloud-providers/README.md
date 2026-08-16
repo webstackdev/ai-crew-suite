@@ -10,7 +10,7 @@ This package implements the cloud providers integration module for AI Crew Suite
 
 - **Backend module registration**: Registers `aiCoreBackendModuleCloudProviders` as an `ai-core` backend module.
 - **Provider driver pattern**: Exposes a `CloudProviderDriver` interface with an AWS driver stub.
-- **Stable tool registration**: Registers `cloud.account.lookup`, `cloud.resource.lookup`, `cloud.resource.dependencies`, and `cloud.kubernetes.workloads`.
+- **Stable tool registration**: Registers `cloud.account.lookup`, `cloud.resource.lookup`, and `cloud.resource.dependencies`.
 - **Config validation**: Reads and validates `ai.integrations.cloudProviders` configuration.
 
 ---

@@ -1,0 +1,1 @@
+export { createKubernetesDiagnosticsTools } from './registerTools';

@@ -19,8 +19,7 @@ import {
   CloudProviderDriver, 
   CloudAccountSummary, 
   CloudResourceSummary, 
-  CloudDependencySummary, 
-  KubernetesWorkloadSummary 
+  CloudDependencySummary
 } from '@webstackbuilders/plugin-ai-core-node';
 
 export interface GcpDriverOptions {
@@ -96,9 +95,5 @@ export class GcpDriver implements CloudProviderDriver {
 
   async resourceDependencies(input: { resourceId: string }): Promise<CloudDependencySummary> {
     return { resourceId: input.resourceId, dependsOn: [], dependedBy: [] };
-  }
-
-  async kubernetesWorkloads(): Promise<KubernetesWorkloadSummary[]> {
-    return [];
   }
 }

@@ -16,11 +16,10 @@
 // plugins/backend/plugin-ai-core-node/src/@types/cloud.ts
 import { LoggerService } from '@backstage/backend-plugin-api';
 
-export type CloudProviderId = 'aws' | 'azure' | 'gcp' | 'kubernetes';
+export type CloudProviderId = 'aws' | 'azure' | 'gcp';
 
 export type ProviderConnectionConfig = {
   region?: string;
-  targetNamespaces?: string[];
 };
 
 export type CloudProvidersConfig = {
@@ -58,15 +57,6 @@ export type CloudDependencySummary = {
   dependedBy: string[];
 };
 
-export type KubernetesWorkloadSummary = {
-  name: string;
-  kind: string;
-  namespace: string;
-  replicas?: number;
-  status?: string;
-  images?: string[];
-};
-
 export interface CloudProviderDriver {
   readonly providerId: string;
 
@@ -85,12 +75,6 @@ export interface CloudProviderDriver {
   resourceDependencies(input: {
     resourceId: string;
   }): Promise<CloudDependencySummary>;
-
-  kubernetesWorkloads(input: {
-    cluster?: string;
-    namespace?: string;
-    catalogEntityRef?: string;
-  }): Promise<KubernetesWorkloadSummary[]>;
 }
 
 export interface CreateCloudProviderToolsOptions {

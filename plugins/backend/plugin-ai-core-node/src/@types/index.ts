@@ -20,6 +20,7 @@ export * from './common';
 export * from './communication';
 export * from './compliance';
 export * from './incidentManagement';
+export * from './kubernetes';
 export * from './observability';
 export * from './projectManagement';
 export * from './qualityScorecards';

@@ -13,4 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export * from './index';
+
+export interface Config {
+  ai?: {
+    integrations?: {
+      /** Kubernetes operational diagnostics configuration. */
+      kubernetes?: {
+        /** Identifier of the registered diagnostics driver to activate. */
+        provider: string;
+      };
+    };
+  };
+}
