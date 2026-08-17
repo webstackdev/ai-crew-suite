@@ -46,9 +46,7 @@ The agent treats these plugins as data sources for its investigative steps:
   the failure timeline.
 
 Kubernetes is an investigation surface, not the default trigger. The workflow is
-started by an Alertmanager, Datadog, PagerDuty, or Prometheus webhook; a deployed
-Kubernetes operator/webhook; or a bounded scheduler poll. It then uses the
-Kubernetes diagnostics tools as its first evidence-gathering step.
+started by an Alertmanager, Datadog, PagerDuty, or Prometheus webhook; a deployed Kubernetes operator/webhook; or a bounded scheduler poll. It then uses the Kubernetes diagnostics tools as its first evidence-gathering step.
 
 ## Testing Strategy
 
