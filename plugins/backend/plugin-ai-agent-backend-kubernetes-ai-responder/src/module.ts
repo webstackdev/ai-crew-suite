@@ -23,6 +23,11 @@ import { createKubernetesAiResponderAgent } from './agent';
 import { readKubernetesAiResponderConfig } from './config';
 import { IncidentTriageGraph } from './workflow/IncidentTriageGraph';
 
+/**
+ * Backend module that registers the Kubernetes AI responder with AI Core:
+ * wires the `IncidentTriageGraph` workflow runner, the responder agent, and its
+ * incident triggers.
+ */
 export const kubernetesAiResponderModule = createBackendModule({
   pluginId: 'ai-core',
   moduleId: 'agent-kubernetes-ai-responder',

@@ -17,6 +17,7 @@ import type { AgentDefinition } from '@webstackbuilders/plugin-ai-core-node';
 import type { KubernetesAiResponderConfig } from './config';
 import { KUBERNETES_INCIDENT_TRIAGE_WORKFLOW_ID } from './workflow/IncidentTriageGraph';
 
+/** Stable identifier for the Kubernetes AI responder agent registered with AI Core. */
 export const KUBERNETES_AI_RESPONDER_AGENT_ID = 'kubernetes-ai-responder';
 
 /**
@@ -33,6 +34,12 @@ export const KUBERNETES_AI_RESPONDER_TOOL_IDS = [
   'kubernetes.workload.get_timeline',
 ] as const;
 
+/**
+ * Base system prompt enforcing the responder's read-only, evidence-cited
+ * investigation posture: state uncertainty explicitly, prefer
+ * "insufficient evidence" over speculation, cite evidence IDs for every claim,
+ * and never propose unapproved mutations.
+ */
 export const KUBERNETES_AI_RESPONDER_SYSTEM_PROMPT =
   'Investigate Kubernetes incidents using only the supplied evidence bundle. ' +
   'State uncertainty explicitly, prefer "insufficient evidence" over ' +

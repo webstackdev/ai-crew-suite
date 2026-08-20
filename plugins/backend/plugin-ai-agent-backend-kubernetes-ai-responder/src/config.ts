@@ -15,14 +15,30 @@
  */
 import { Config } from '@backstage/config';
 
+/**
+ * Resolved configuration for the Kubernetes AI responder, read from the
+ * `ai.agents.kubernetesAiResponder` config section.
+ */
 export type KubernetesAiResponderConfig = {
+  /** Model reference (e.g. `openai://gpt-4o`) used for report synthesis. */
   modelRef: string;
+  /** Maximum number of evidence items retained in the report bundle. */
   maxEvidenceItems: number;
+  /** Maximum bytes pulled per container log excerpt. */
   maxLogBytes: number;
+  /** Minutes of context gathered before the trigger time. */
   lookbackMinutes: number;
+  /** Hard cap on tool invocations per investigation run. */
   maxToolInvocations: number;
 };
 
+/**
+ * Reads and validates the responder configuration from the
+ * `ai.agents.kubernetesAiResponder` config section, applying documented
+ * defaults for any omitted optional fields.
+ *
+ * @throws when the config section is absent or the `model` field is unset.
+ */
 export const readKubernetesAiResponderConfig = (
   config: Config,
 ): KubernetesAiResponderConfig => {
