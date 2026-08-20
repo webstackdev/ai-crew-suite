@@ -33,6 +33,7 @@ import type {
   ToolDefinition,
   ToolRegistry,
   TriggerBinding,
+  WorkflowRunner,
 } from '@webstackbuilders/plugin-ai-core-node';
 import type { AgentRuntime } from '../runtime';
 import type { AiCoreController } from '../service/controller';
@@ -67,6 +68,8 @@ export type AiBackendConfig = {
       model?: string;
       /** System prompt override for this agent. */
       systemPrompt?: string;
+      /** Registered domain workflow runner ID. */
+      workflow?: string;
       /**
        * Orchestration strategy used to execute this agent.
        * - `single-shot`: One-pass retrieval and response.
@@ -128,6 +131,7 @@ export type AiBackendConfig = {
 export type AgentsMap = Map<string, AgentDefinition>;
 export type ModelRegistry = Map<string, BaseLLM | BaseChatModel>;
 export type ToolMap = Map<string, ToolDefinition>;
+export type WorkflowRunnerMap = Map<string, WorkflowRunner>;
 
 /**
  * Raw dependency bundle used to assemble AI backend runtime services.
@@ -147,6 +151,7 @@ export interface AiBackendServiceOptions {
   sessionStore?: SessionStore;
   sourceRegistry: SourceRegistry;
   tools: ToolMap;
+  workflowRunners?: WorkflowRunnerMap;
   triggers?: TriggerBinding[];
 }
 

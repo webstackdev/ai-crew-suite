@@ -687,11 +687,11 @@ Exit criteria: a local test boots the Kubernetes diagnostics module with fixture
 
 ### Milestone 1: Read-only responder backend
 
-- [ ] Scaffold package, register `kubernetes-ai-responder` agent, and implement configuration parsing.
-- [ ] Implement trigger normalization, authentication, and generic trigger binding.
-- [ ] Implement deterministic graph routing and bounded evidence collection.
-- [ ] Implement report schema validation, persistence, SSE output, and artifact references.
-- [ ] Add unit, contract, backend integration, and stateful scenario tests.
+- [x] Scaffold package, register `kubernetes-ai-responder` agent, and implement configuration parsing.
+- [x] Implement trigger normalization, authentication, and generic trigger binding.
+- [x] Implement deterministic graph routing and bounded evidence collection.
+- [x] Implement report schema validation, persistence, SSE output, and artifact references.
+- [x] Add unit, contract, backend integration, and stateful scenario tests.
 
 Exit criteria: all required scenario fixtures pass without a real LLM or third-party service.
 

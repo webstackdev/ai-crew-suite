@@ -48,6 +48,11 @@ export type AgentDefinition = {
   id: string;
   /** Model ID from the model registry that should be used by default. */
   modelRef: string;
+  /**
+   * Optional domain workflow runner ID. When omitted, AI Core selects the
+   * configured built-in orchestrator.
+   */
+  workflowRef?: string;
   /** System prompt applied to the agent's model calls. */
   systemPrompt: string;
   /** Tool IDs the agent is allowed to use. */

@@ -23,6 +23,9 @@ import {
   ApprovalDecision,
   Orchestrator,
   RunContext,
+  ToolInvocationResult,
+  WorkflowContext,
+  WorkflowRunner,
 } from '@webstackbuilders/plugin-ai-core-node';
 
 type RuntimeContext = Omit<RunContext, 'model' | 'systemPrompt'> & {
@@ -92,6 +95,7 @@ export class AgentRuntime {
   constructor(
     private readonly agents: Map<string, AgentDefinition>,
     private readonly orchestrators: Map<string, Orchestrator>,
+    private readonly workflowRunners: Map<string, WorkflowRunner> = new Map(),
   ) {}
 
   /**
@@ -118,12 +122,15 @@ export class AgentRuntime {
         return;
       }
 
+      const workflowRunner = agent.workflowRef
+        ? this.workflowRunners.get(agent.workflowRef)
+        : undefined;
       const orchestratorName = agent.orchestrator ?? 'single-shot';
       const orchestrator =
         this.orchestrators.get(orchestratorName) ??
         this.orchestrators.get('single-shot');
 
-      if (!orchestrator) {
+      if (!workflowRunner && !orchestrator) {
         ctx.logger.error(`No orchestrator registered for '${orchestratorName}'`);
         yield {
           type: 'error',
@@ -151,10 +158,15 @@ export class AgentRuntime {
         }
 
         try {
-          for await (const event of orchestrator.run(
-            input,
-            this.createOrchestratorContext(ctx, agent),
-          )) {
+          const runContext = this.createOrchestratorContext(ctx, agent);
+          const events = workflowRunner
+            ? workflowRunner.run(
+                input,
+                this.createWorkflowContext(runContext, agent, input.runId),
+              )
+            : orchestrator!.run(input, runContext);
+
+          for await (const event of events) {
             const budgetError = await this.processRunEvent(
               input,
               ctx,
@@ -226,12 +238,24 @@ export class AgentRuntime {
       return;
     }
 
+    const workflowRunner = agent.workflowRef
+      ? this.workflowRunners.get(agent.workflowRef)
+      : undefined;
     const orchestratorName = agent.orchestrator ?? 'single-shot';
     const orchestrator =
       this.orchestrators.get(orchestratorName) ??
       this.orchestrators.get('single-shot');
 
-    if (!orchestrator?.resume) {
+    if (workflowRunner && !workflowRunner.resume) {
+      ctx.logger.error(`Workflow runner '${workflowRunner.id}' does not support resume`);
+      yield {
+        type: 'error',
+        data: { runId, message: `Workflow runner '${workflowRunner.id}' does not support resume` },
+      };
+      return;
+    }
+
+    if (!workflowRunner && !orchestrator?.resume) {
       ctx.logger.error(`Orchestrator '${orchestratorName}' does not support resume`);
       yield {
         type: 'error',
@@ -258,11 +282,15 @@ export class AgentRuntime {
     }
 
     const state: ResumeProcessingState = { seq: 1000000 };
-    for await (const event of orchestrator.resume(
-      runId,
-      decision,
-      this.createOrchestratorContext(ctx, agent),
-    )) {
+    const runContext = this.createOrchestratorContext(ctx, agent);
+    const events = workflowRunner
+      ? workflowRunner.resume!(
+          runId,
+          decision,
+          this.createWorkflowContext(runContext, agent, runId),
+        )
+      : orchestrator!.resume!(runId, decision, runContext);
+    for await (const event of events) {
       await this.processResumeEvent(runId, run.agentId, decision, ctx, event, state);
       yield event;
     }
@@ -276,6 +304,62 @@ export class AgentRuntime {
       ...ctx,
       systemPrompt: ctx.systemPrompt ?? agent.systemPrompt,
       memory: ctx.memory ?? agent.memory ?? 'none',
+    };
+  }
+
+  private createWorkflowContext(
+    ctx: RunContext,
+    agent: AgentDefinition,
+    runId: string,
+  ): WorkflowContext {
+    let invocationCount = 0;
+
+    return {
+      ...ctx,
+      agent,
+      invokeTool: async <TArgs, TResult>({ toolId, args, limits }): Promise<ToolInvocationResult<TResult>> => {
+        if (!agent.toolIds.includes(toolId)) {
+          throw new Error(`Agent '${agent.id}' is not allowed to invoke tool '${toolId}'`);
+        }
+
+        const maximum = limits?.maxInvocations ?? ctx.hardening?.maxToolInvocations;
+        invocationCount += 1;
+        if (maximum !== undefined && invocationCount > maximum) {
+          throw new Error(`Run exceeded maximum tool invocations (${maximum})`);
+        }
+
+        const tool = ctx.toolRegistry.get(toolId);
+        if (!tool) {
+          throw new Error(`Tool '${toolId}' is not registered`);
+        }
+
+        const controller = new AbortController();
+        const abort = () => controller.abort();
+        ctx.signal?.addEventListener('abort', abort, { once: true });
+        const timeoutMs = limits?.timeoutMs ?? ctx.hardening?.toolTimeoutMs;
+        let timeout: ReturnType<typeof setTimeout> | undefined;
+        if (timeoutMs && timeoutMs > 0) {
+          timeout = setTimeout(() => controller.abort(), timeoutMs);
+        }
+
+        try {
+          const output = await tool.invoke(args, {
+            logger: ctx.logger,
+            identity: ctx.identity ?? 'anonymous',
+            runId,
+            signal: controller.signal,
+          }) as TResult;
+          const serialized = JSON.stringify(redact(output)) ?? 'undefined';
+          return {
+            toolId,
+            output,
+            summary: serialized.length > 1024 ? `${serialized.slice(0, 1021)}...` : serialized,
+          };
+        } finally {
+          if (timeout) clearTimeout(timeout);
+          ctx.signal?.removeEventListener('abort', abort);
+        }
+      },
     };
   }
 

@@ -15380,6 +15380,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@webstackbuilders/plugin-ai-agent-backend-kubernetes-ai-responder@workspace:plugins/backend/plugin-ai-agent-backend-kubernetes-ai-responder":
+  version: 0.0.0-use.local
+  resolution: "@webstackbuilders/plugin-ai-agent-backend-kubernetes-ai-responder@workspace:plugins/backend/plugin-ai-agent-backend-kubernetes-ai-responder"
+  dependencies:
+    "@backstage/backend-plugin-api": "backstage:^"
+    "@backstage/backend-test-utils": "backstage:^"
+    "@backstage/cli": "backstage:^"
+    "@backstage/config": "backstage:^"
+    "@webstackbuilders/plugin-ai-core-node": "workspace:*"
+    vitest: "npm:^4.1.10"
+  languageName: unknown
+  linkType: soft
+
 "@webstackbuilders/plugin-ai-core-backend-module-cloud-providers-aws@workspace:plugins/backend/plugin-ai-core-backend-module-cloud-providers-aws":
   version: 0.0.0-use.local
   resolution: "@webstackbuilders/plugin-ai-core-backend-module-cloud-providers-aws@workspace:plugins/backend/plugin-ai-core-backend-module-cloud-providers-aws"

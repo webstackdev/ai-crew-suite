@@ -40,6 +40,7 @@ import type {
   HardeningOptions,
   ModelRegistry,
   ToolMap,
+  WorkflowRunnerMap,
 } from '../@types';
 
 /**
@@ -89,6 +90,7 @@ export function resolveConfiguredAgents(
     resolvedAgents.set(id, {
       id,
       modelRef: agentConfig.model ?? fallbackModelRef,
+      workflowRef: agentConfig.workflow,
       systemPrompt: agentConfig.systemPrompt ?? fallbackSystemPrompt,
       toolIds: agentConfig.tools ?? [],
       orchestrator: agentConfig.orchestrator ?? 'single-shot',
@@ -313,6 +315,7 @@ function validateResolvedAgents(
   agents: Map<string, AgentDefinition>,
   models: ModelRegistry,
   toolRegistry: InMemoryToolRegistry,
+  workflowRunners: WorkflowRunnerMap,
 ) {
   const availableToolIds = new Set(toolRegistry.list().map(tool => tool.id));
 
@@ -320,6 +323,12 @@ function validateResolvedAgents(
     if (!models.has(agent.modelRef)) {
       throw new Error(
         `Agent '${agent.id}' references unknown model '${agent.modelRef}'`,
+      );
+    }
+
+    if (agent.workflowRef && !workflowRunners.has(agent.workflowRef)) {
+      throw new Error(
+        `Agent '${agent.id}' references unknown workflow runner '${agent.workflowRef}'`,
       );
     }
 
@@ -367,6 +376,7 @@ export function createAiBackendServices(
     sourceRegistry,
     agents,
     tools,
+    workflowRunners = new Map(),
     models,
     sessionStore,
     checkpointStore,
@@ -391,11 +401,12 @@ export function createAiBackendServices(
     configuredPrompts: aiBackendConfig?.prompts,
   });
   const toolRegistry = createToolRegistry(logger, retrievalPipeline, tools);
-  validateResolvedAgents(resolvedAgents, models, toolRegistry);
+  validateResolvedAgents(resolvedAgents, models, toolRegistry, workflowRunners);
 
   const runtime = new AgentRuntime(
     resolvedAgents,
     createOrchestrators(llmService, resolvedAgents, models),
+    workflowRunners,
   );
   const controller = new AiCoreController(
     logger,

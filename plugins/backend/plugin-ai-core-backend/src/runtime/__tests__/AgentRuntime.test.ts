@@ -22,6 +22,7 @@ import type {
   Orchestrator,
   RunContext,
   Tool,
+  WorkflowRunner,
 } from '@webstackbuilders/plugin-ai-core-node';
 import {
   collectEvents,
@@ -75,10 +76,15 @@ const createContext = (overrides: Partial<RuntimeContext> = {}): RuntimeContext 
   ...overrides,
 });
 
-const createRuntime = (orchestrator: Orchestrator, agents = [agent]) =>
+const createRuntime = (
+  orchestrator: Orchestrator,
+  agents = [agent],
+  workflowRunners = new Map<string, WorkflowRunner>(),
+) =>
   new AgentRuntime(
     new Map(agents.map(agentDefinition => [agentDefinition.id, agentDefinition])),
     new Map([['single-shot', orchestrator]]),
+    workflowRunners,
   );
 
 const createOrchestrator = (events: AgentEvent[]): Orchestrator => ({
@@ -101,6 +107,73 @@ const createResumableOrchestrator = (
 });
 
 describe('AgentRuntime', () => {
+  it('dispatches a workflow runner through the centrally allow-listed tool executor', async () => {
+    const workflowAgent: AgentDefinition = {
+      ...agent,
+      workflowRef: 'test-workflow',
+      toolIds: ['catalog.write'],
+    };
+    const tool = createWriteTool();
+    const runner: WorkflowRunner = {
+      id: 'test-workflow',
+      run: vi.fn(async function* (_input, context) {
+        yield {
+          type: 'tool_call',
+          data: { runId: 'run-1', tool: 'catalog.write', args: { entity: 'a' } },
+        };
+        const result = await context.invokeTool({
+          toolId: 'catalog.write',
+          args: { entity: 'a' },
+        });
+        yield {
+          type: 'tool_result',
+          data: { runId: 'run-1', tool: result.toolId, ok: true, summary: result.summary },
+        };
+        yield { type: 'done', data: { runId: 'run-1' } };
+      }) as WorkflowRunner['run'],
+    };
+    const runtime = createRuntime(
+      createOrchestrator([]),
+      [workflowAgent],
+      new Map([[runner.id, runner]]),
+    );
+
+    const events = await collectEvents(
+      runtime.run(runInput, createContext({ toolRegistry: createToolRegistry([tool]) })),
+    );
+
+    expect(runner.run).toHaveBeenCalledTimes(1);
+    expect(tool.invoke).toHaveBeenCalledWith(
+      { entity: 'a' },
+      expect.objectContaining({ identity: 'user:default/alice', runId: 'run-1' }),
+    );
+    expect(events.at(-1)).toEqual({ type: 'done', data: { runId: 'run-1' } });
+  });
+
+  it('rejects a workflow runner tool that is absent from the agent allow-list', async () => {
+    const workflowAgent: AgentDefinition = { ...agent, workflowRef: 'test-workflow', toolIds: [] };
+    const runner: WorkflowRunner = {
+      id: 'test-workflow',
+      run: async function* (_input, context) {
+        await context.invokeTool({ toolId: 'catalog.write', args: {} });
+      },
+    };
+    const runtime = createRuntime(
+      createOrchestrator([]),
+      [workflowAgent],
+      new Map([[runner.id, runner]]),
+    );
+
+    const events = await collectEvents(runtime.run(runInput, createContext()));
+
+    expect(events).toEqual([
+      expect.objectContaining({
+        type: 'error',
+        data: expect.objectContaining({ message: "Agent 'agent-a' is not allowed to invoke tool 'catalog.write'" }),
+      }),
+    ]);
+  });
+
   it('logs and yields an error when a run references an unknown agent', async () => {
     const logger = createLogger();
     const runStore = createRunStore();

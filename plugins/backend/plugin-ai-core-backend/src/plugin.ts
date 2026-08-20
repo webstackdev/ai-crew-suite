@@ -38,6 +38,8 @@ import {
   ToolDefinition,
   triggerExtensionPoint,
   TriggerBinding,
+  workflowRunnerExtensionPoint,
+  WorkflowRunner,
 } from '@webstackbuilders/plugin-ai-core-node';
 import { createAiBackendServices, createRouter, createSourceRegistry } from './service';
 
@@ -61,6 +63,7 @@ export const ragAiPlugin = createBackendPlugin({
     const tools = new Map<string, ToolDefinition>();
     const agents = new Map<string, AgentDefinition>();
     const triggers: TriggerBinding[] = [];
+    const workflowRunners = new Map<string, WorkflowRunner>();
     const runtimeStores: {
       sessionStore?: SessionStore;
       checkpointStore?: CheckpointStore;
@@ -102,6 +105,15 @@ export const ragAiPlugin = createBackendPlugin({
           throw new Error(`Agent '${agent.id}' may only be registered once`);
         }
         agents.set(agent.id, agent);
+      },
+    });
+
+    env.registerExtensionPoint(workflowRunnerExtensionPoint, {
+      registerRunner(runner) {
+        if (workflowRunners.has(runner.id)) {
+          throw new Error(`Workflow runner '${runner.id}' may only be registered once`);
+        }
+        workflowRunners.set(runner.id, runner);
       },
     });
 
@@ -166,6 +178,7 @@ export const ragAiPlugin = createBackendPlugin({
           artifactSink: runtimeStores.artifactSink,
           auditLogSink: runtimeStores.auditLogSink,
           triggers,
+          workflowRunners,
         });
 
         httpRouter.use(
