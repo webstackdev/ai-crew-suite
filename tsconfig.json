@@ -30,30 +30,108 @@
     { "path": "./plugins/backend/plugin-ai-core-backend" },
     { "path": "./plugins/backend/plugin-ai-core-node" },
 
-    // 4. Storage & Vector Connectors
+    // 4. Cloud Providers
+    {
+      "path": "./plugins/backend/plugin-ai-core-backend-module-cloud-providers"
+    },
+    {
+      "path": "./plugins/backend/plugin-ai-core-backend-module-cloud-providers-aws"
+    },
+    {
+      "path": "./plugins/backend/plugin-ai-core-backend-module-cloud-providers-azure"
+    },
+    {
+      "path": "./plugins/backend/plugin-ai-core-backend-module-cloud-providers-gcp"
+    },
+
+    // 5. Communication
+    { "path": "./plugins/backend/plugin-ai-core-backend-module-communication" },
+    {
+      "path": "./plugins/backend/plugin-ai-core-backend-module-communication-slack"
+    },
+
+    // 6. Compliance
+    { "path": "./plugins/backend/plugin-ai-core-backend-module-compliance" },
+    {
+      "path": "./plugins/backend/plugin-ai-core-backend-module-compliance-opa"
+    },
+
+    // 7. Incident Management
+    {
+      "path": "./plugins/backend/plugin-ai-core-backend-module-incident-management"
+    },
+    {
+      "path": "./plugins/backend/plugin-ai-core-backend-module-incident-management-pagerduty"
+    },
+
+    // 8. Kubernetes
+    { "path": "./plugins/backend/plugin-ai-core-backend-module-kubernetes" },
+    {
+      "path": "./plugins/backend/plugin-ai-agent-backend-kubernetes-ai-responder"
+    },
+
+    // 9. Observability
+    { "path": "./plugins/backend/plugin-ai-core-backend-module-observability" },
+    {
+      "path": "./plugins/backend/plugin-ai-core-backend-module-observability-datadog"
+    },
+
+    // 10. Project Management
+    {
+      "path": "./plugins/backend/plugin-ai-core-backend-module-project-management"
+    },
+    {
+      "path": "./plugins/backend/plugin-ai-core-backend-module-project-management-jira"
+    },
+
+    // 11. Quality Scorecards
+    {
+      "path": "./plugins/backend/plugin-ai-core-backend-module-quality-scorecards"
+    },
+    {
+      "path": "./plugins/backend/plugin-ai-core-backend-module-quality-scorecards-scorecards"
+    },
+    {
+      "path": "./plugins/backend/plugin-ai-core-backend-module-quality-scorecards-soundcheck"
+    },
+    {
+      "path": "./plugins/backend/plugin-ai-core-backend-module-quality-scorecards-techradar"
+    },
+
+    // 12. Storage & Vector Connectors
     {
       "path": "./plugins/backend/plugin-ai-core-backend-module-storage-pgvector"
     },
     {
       "path": "./plugins/backend/plugin-ai-core-backend-module-storage-qdrant"
     },
-    {
-      "path": "./plugins/backend/plugin-ai-core-backend-module-runtime-store"
-    },
+    { "path": "./plugins/backend/plugin-ai-core-backend-module-runtime-store" },
 
-    // 5. Embeddings Ecosystem
+    // 13. Embeddings Ecosystem
     { "path": "./plugins/backend/plugin-ai-core-backend-module-llm-aws" },
     { "path": "./plugins/backend/plugin-ai-core-backend-module-llm-openai" },
     {
       "path": "./plugins/backend/plugin-ai-core-backend-module-llm-openrouter"
     },
 
-    // 6. Engine Capabilities
+    // 14. Retrieval & Engine Capabilities
     {
       "path": "./plugins/backend/plugin-ai-core-backend-module-retrieval-augmenter"
     },
 
-    // 7. Test Harness
+    // 15. Version Control Systems
+    { "path": "./plugins/backend/plugin-ai-core-backend-module-vcs" },
+    {
+      "path": "./plugins/backend/plugin-ai-core-backend-module-vcs-aws-codecommit"
+    },
+    { "path": "./plugins/backend/plugin-ai-core-backend-module-vcs-azure" },
+    { "path": "./plugins/backend/plugin-ai-core-backend-module-vcs-bitbucket" },
+    { "path": "./plugins/backend/plugin-ai-core-backend-module-vcs-gerrit" },
+    { "path": "./plugins/backend/plugin-ai-core-backend-module-vcs-git" },
+    { "path": "./plugins/backend/plugin-ai-core-backend-module-vcs-github" },
+    { "path": "./plugins/backend/plugin-ai-core-backend-module-vcs-gitlab" },
+
+    // 16. Test Harness
     { "path": "./test" }
   ]
 }
