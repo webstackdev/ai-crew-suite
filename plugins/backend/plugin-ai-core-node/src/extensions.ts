@@ -35,6 +35,7 @@ import {
   ToolDefinition,
   TriggerBinding,
   VcsDriver,
+  WorkflowRunner,
 } from './@types';
 import { createExtensionPoint } from '@backstage/backend-plugin-api';
 
@@ -62,6 +63,25 @@ export interface AgentExtensionPoint {
 export const agentExtensionPoint = createExtensionPoint<AgentExtensionPoint>({
   id: 'plugin-ai.agent',
 });
+
+/**
+ * Extension point for registering domain-specific workflow runners.
+ *
+ * Workflow plugins own graph routing and evidence policy, while AI Core owns
+ * run lifecycle, controlled tool execution, model resolution, and auditing.
+ */
+export interface WorkflowRunnerExtensionPoint {
+  /** Registers a runner addressed by `AgentDefinition.workflowRef`. */
+  registerRunner(runner: WorkflowRunner): void;
+}
+
+/**
+ * Backstage extension point used by modules that contribute workflow graphs.
+ */
+export const workflowRunnerExtensionPoint =
+  createExtensionPoint<WorkflowRunnerExtensionPoint>({
+    id: 'plugin-ai.workflow-runner',
+  });
 
 /**
  * Extension point for registering custom Cloud Provider Drivers.

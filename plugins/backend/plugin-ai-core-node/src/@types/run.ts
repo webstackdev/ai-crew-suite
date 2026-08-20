@@ -16,6 +16,7 @@
 import { LoggerService } from '@backstage/backend-plugin-api';
 import { BaseLLM } from '@langchain/core/language_models/llms';
 import { BaseChatModel } from '@langchain/core/language_models/chat_models';
+import { AgentDefinition } from './agent';
 import { ToolRegistry } from './tool';
 import { SessionStore } from './session';
 import { SourceId, EntityFilterShape } from './source';
@@ -44,6 +45,56 @@ export type AgentRunInput = {
     entityFilter?: EntityFilterShape;
   };
 };
+
+/**
+ * Shared limits enforced for a single workflow tool invocation.
+ */
+export type ToolInvocationLimits = {
+  /** Maximum time spent waiting for one tool invocation. */
+  timeoutMs?: number;
+  /** Maximum number of tool calls a workflow may make in one run. */
+  maxInvocations?: number;
+};
+
+/**
+ * Result returned to a workflow after AI Core invokes an allow-listed tool.
+ */
+export type ToolInvocationResult<TResult = unknown> = {
+  toolId: string;
+  output: TResult;
+  /** Redacted compact summary appropriate for events and persisted run steps. */
+  summary: string;
+};
+
+/**
+ * Context supplied to a registered domain workflow runner.
+ *
+ * Workflows receive this controlled facade instead of raw tool or model maps.
+ */
+export type WorkflowContext = RunContext & {
+  agent: AgentDefinition;
+  invokeTool<TArgs = unknown, TResult = unknown>(input: {
+    toolId: string;
+    args: TArgs;
+    limits?: ToolInvocationLimits;
+  }): Promise<ToolInvocationResult<TResult>>;
+};
+
+/**
+ * A domain-specific workflow graph registered by an agent plugin.
+ */
+export interface WorkflowRunner {
+  /** Stable ID referenced by `AgentDefinition.workflowRef`. */
+  readonly id: string;
+  /** Executes the domain workflow and emits standard AI Core events. */
+  run(input: AgentRunInput, context: WorkflowContext): AsyncIterable<AgentEvent>;
+  /** Resumes a paused workflow when it supports approvals or checkpoints. */
+  resume?(
+    runId: string,
+    decision: ApprovalDecision,
+    context: WorkflowContext,
+  ): AsyncIterable<AgentEvent>;
+}
 
 /**
  * Store for resumable orchestration state.
@@ -223,6 +274,10 @@ export type RunContext = {
     retryBackoffMs?: number;
     /** Maximum total tokens allowed for a run before it is stopped. */
     maxTotalTokens?: number;
+    /** Maximum number of tools a workflow may invoke during one run. */
+    maxToolInvocations?: number;
+    /** Maximum duration of one tool invocation in milliseconds. */
+    toolTimeoutMs?: number;
   };
   /** Memory mode selected for the current agent. */
   memory?: 'none' | 'session';
