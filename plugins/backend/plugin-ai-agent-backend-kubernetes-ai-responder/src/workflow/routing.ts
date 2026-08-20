@@ -77,6 +77,11 @@ export type EvidencePlan = {
   timeline: boolean;
 };
 
+/**
+ * Selects the read-only evidence-collection plan for a failure class. Each
+ * enabled flag maps to one `kubernetes.*` tool invocation group in the triage
+ * graph; disabled flags are skipped entirely.
+ */
 export const evidencePlanFor = (failureClass: FailureClass): EvidencePlan => {
   switch (failureClass) {
     case 'oom-killed':

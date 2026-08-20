@@ -48,8 +48,14 @@ import type {
   KubernetesIncidentTrigger,
 } from './state';
 
+/** Stable workflow identifier for the Kubernetes incident triage graph. */
 export const KUBERNETES_INCIDENT_TRIAGE_WORKFLOW_ID =
   'kubernetes-incident-triage';
+
+/**
+ * Construction options for `IncidentTriageGraph`, derived from the responder
+ * config and overridable for tests.
+ */
 
 export type IncidentTriageGraphOptions = Pick<
   KubernetesAiResponderConfig,

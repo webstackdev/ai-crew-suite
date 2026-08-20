@@ -15,6 +15,9 @@
  */
 import type { KubernetesIncidentTrigger } from '../workflow/state';
 
+/**
+ * Allowed trigger source systems recognized by `normalizeIncidentTrigger`.
+ */
 export const TRIGGER_SOURCES = [
   'alertmanager',
   'datadog',
@@ -24,12 +27,16 @@ export const TRIGGER_SOURCES = [
   'scheduler',
 ] as const;
 
+/** Union of recognized trigger source systems. */
 export type TriggerSource = (typeof TRIGGER_SOURCES)[number];
 
 const MAX_LABELS = 25;
 const MAX_LABEL_VALUE_LENGTH = 256;
 const MAX_SUMMARY_LENGTH = 2_048;
 
+/**
+ * Thrown when an incident trigger payload fails validation or normalization.
+ */
 export class TriggerValidationError extends Error {
   constructor(message: string) {
     super(message);
@@ -100,6 +107,10 @@ const normalizeSource = (value: unknown, fallback: TriggerSource): TriggerSource
   return value as TriggerSource;
 };
 
+/**
+ * Options for normalizing a trigger payload, including the default source and
+ * an injectable clock for deterministic tests.
+ */
 export type NormalizeTriggerOptions = {
   /** Source applied when the payload does not declare one. */
   defaultSource: TriggerSource;

@@ -46,6 +46,10 @@ export const redactSensitiveText = (text: string): string => {
   return redacted;
 };
 
+/**
+ * Options controlling how `normalizeEvidence` redacts, deduplicates, sorts, and
+ * caps the evidence bundle.
+ */
 export type NormalizeEvidenceOptions = {
   /** Maximum number of evidence items retained for the report. */
   maxItems: number;

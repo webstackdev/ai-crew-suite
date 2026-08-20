@@ -147,13 +147,25 @@ Rules:
 - Never include secret values, tokens, or raw unbounded log content.`;
 };
 
+/**
+ * Inputs to `buildIncidentTriageReport`: the normalized trigger, classified
+ * failure signature, retained evidence, deterministic fallback causes, and
+ * optional model synthesis.
+ */
 export type BuildReportInput = {
+  /** Stable incident identifier surfaced in the report (falls back to the run ID). */
   incidentId: string;
+  /** Original normalized trigger, persisted verbatim in the report. */
   trigger: KubernetesIncidentTrigger;
+  /** Deterministic failure class that routed the investigation. */
   failureClass: IncidentTriageReport['failureClass'];
+  /** Retained evidence bundle; also used to validate synthesis citations. */
   evidence: IncidentEvidence[];
+  /** Causes used when model synthesis is missing or unsupported. */
   deterministicCauses: string[];
+  /** Successful model synthesis; omitted to use the deterministic fallback. */
   synthesis?: ModelSynthesis;
+  /** Limitations accumulated during the run (budget, failures, caps). */
   limitations: string[];
 };
 
