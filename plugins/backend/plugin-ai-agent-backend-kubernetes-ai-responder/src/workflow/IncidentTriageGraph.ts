@@ -11,7 +11,10 @@ import type {
 } from '@webstackbuilders/plugin-ai-core-node';
 import type { KubernetesAiResponderConfig } from '../config';
 import { InvestigationToolRunner } from '../services/InvestigationToolRunner';
-import { TriggerValidationError, parseTriggerQuery } from '../triggers/normalizeAlert';
+import {
+  TriggerValidationError,
+  parseTriggerQuery,
+} from '../triggers/normalizeAlert';
 import { normalizeEvidence, redactSensitiveText } from './evidence';
 import {
   buildIncidentTriageReport,
@@ -30,7 +33,8 @@ import type {
   KubernetesIncidentTrigger,
 } from './state';
 
-export const KUBERNETES_INCIDENT_TRIAGE_WORKFLOW_ID = 'kubernetes-incident-triage';
+export const KUBERNETES_INCIDENT_TRIAGE_WORKFLOW_ID =
+  'kubernetes-incident-triage';
 
 export type IncidentTriageGraphOptions = Pick<
   KubernetesAiResponderConfig,
@@ -48,7 +52,10 @@ export type IncidentTriageGraphOptions = Pick<
   now?: () => Date;
 };
 
-const incidentWindow = (trigger: KubernetesIncidentTrigger, lookbackMinutes: number) => {
+const incidentWindow = (
+  trigger: KubernetesIncidentTrigger,
+  lookbackMinutes: number,
+) => {
   const occurredAt = Date.parse(trigger.occurredAt);
   const since = new Date(occurredAt - lookbackMinutes * 60_000).toISOString();
   const until = new Date(occurredAt + 15 * 60_000).toISOString();
@@ -75,23 +82,19 @@ const workloadEvidence = (
       source: 'kubernetes' as const,
       kind: 'pod',
       observedAt: pod.startedAt,
-      summary:
-        `Pod ${pod.name}: phase=${pod.phase ?? 'Unknown'}; containers: ` +
-        pod.containers
-          .map(
-            container =>
-              `${container.name}(${container.state}${container.reason ? `, ${container.reason}` : ''}, restarts=${container.restartCount})`,
-          )
-          .join('; '),
+      summary: `Pod ${pod.name}: phase=${pod.phase ?? 'Unknown'}; containers: ${pod.containers
+        .map(
+          container =>
+            `${container.name}(${container.state}${container.reason ? `, ${container.reason}` : ''}, restarts=${container.restartCount})`,
+        )
+        .join('; ')}`,
       reference: `${pod.cluster}/${pod.namespace}/pod/${pod.name}`,
       confidence: 'high' as const,
     },
   ]),
 ];
 
-const eventEvidence = (
-  events: KubernetesEventSummary[],
-): IncidentEvidence[] =>
+const eventEvidence = (events: KubernetesEventSummary[]): IncidentEvidence[] =>
   events.map((event, index) => ({
     id: `event:${event.cluster}/${event.namespace}/${event.involvedObject?.name ?? 'workload'}:${index}`,
     source: 'kubernetes',
@@ -116,7 +119,6 @@ const logEvidence = (log: KubernetesPodLogExcerpt): IncidentEvidence => ({
   confidence: 'high',
 });
 
-
 const invokeModel = async (
   context: WorkflowContext,
   prompt: string,
@@ -131,13 +133,13 @@ const invokeModel = async (
   }
   if (Array.isArray(content)) {
     return content
-      .map(part =>
-        typeof part === 'string'
-          ? part
-          : typeof (part as { text?: unknown })?.text === 'string'
-            ? (part as { text: string }).text
-            : '',
-      )
+      .map(part => {
+        if (typeof part === 'string') {
+          return part;
+        }
+        const text = (part as { text?: unknown })?.text;
+        return typeof text === 'string' ? (part as { text: string }).text : '';
+      })
       .join('');
   }
   return String(result);
@@ -191,7 +193,11 @@ export class IncidentTriageGraph implements WorkflowRunner {
       }
       throw error;
     }
-    const state: InvestigationState = { trigger, evidence: [], limitations: [] };
+    const state: InvestigationState = {
+      trigger,
+      evidence: [],
+      limitations: [],
+    };
     yield step('trigger.validate', 'exit');
 
     // Node: workload.resolve
@@ -205,24 +211,38 @@ export class IncidentTriageGraph implements WorkflowRunner {
       yield step('workload.snapshot', 'enter');
       yield {
         type: 'tool_call',
-        data: { runId: input.runId, tool: 'kubernetes.workload.get_snapshot', args: workload },
+        data: {
+          runId: input.runId,
+          tool: 'kubernetes.workload.get_snapshot',
+          args: workload,
+        },
       };
-      const snapshotResult = await tools.invoke<typeof workload, KubernetesWorkloadSnapshot>(
-        'kubernetes.workload.get_snapshot',
-        workload,
-      );
+      const snapshotResult = await tools.invoke<
+        typeof workload,
+        KubernetesWorkloadSnapshot
+      >('kubernetes.workload.get_snapshot', workload);
       if (snapshotResult) {
         snapshot = snapshotResult.output;
         state.snapshot = snapshot;
         state.evidence.push(...workloadEvidence(snapshot));
         yield {
           type: 'tool_result',
-          data: { runId: input.runId, tool: snapshotResult.toolId, ok: true, summary: snapshotResult.summary },
+          data: {
+            runId: input.runId,
+            tool: snapshotResult.toolId,
+            ok: true,
+            summary: snapshotResult.summary,
+          },
         };
       } else {
         yield {
           type: 'tool_result',
-          data: { runId: input.runId, tool: 'kubernetes.workload.get_snapshot', ok: false, summary: 'snapshot unavailable' },
+          data: {
+            runId: input.runId,
+            tool: 'kubernetes.workload.get_snapshot',
+            ok: false,
+            summary: 'snapshot unavailable',
+          },
         };
       }
       yield step('workload.snapshot', 'exit');
@@ -238,7 +258,14 @@ export class IncidentTriageGraph implements WorkflowRunner {
     // Node: evidence.collect (routed, bounded diagnostics)
     yield step('evidence.collect', 'enter');
     if (workload) {
-      yield* this.collectRoutedEvidence(input, state, workload, snapshot, plan, tools);
+      yield* this.collectRoutedEvidence(
+        input,
+        state,
+        workload,
+        snapshot,
+        plan,
+        tools,
+      );
     }
     yield step('evidence.collect', 'exit');
 
@@ -281,7 +308,10 @@ export class IncidentTriageGraph implements WorkflowRunner {
       },
     };
     yield step('report.finalize', 'exit');
-    yield { type: 'done', data: { runId: input.runId, sessionId: input.input.sessionId } };
+    yield {
+      type: 'done',
+      data: { runId: input.runId, sessionId: input.input.sessionId },
+    };
   }
 
   /**
@@ -315,14 +345,19 @@ export class IncidentTriageGraph implements WorkflowRunner {
         args: { entityRef: trigger.entityRef },
       },
     };
-    const resolved = await tools.invoke<{ entityRef: string }, KubernetesWorkloadRef[]>(
-      'kubernetes.workload.resolve',
-      { entityRef: trigger.entityRef },
-    );
+    const resolved = await tools.invoke<
+      { entityRef: string },
+      KubernetesWorkloadRef[]
+    >('kubernetes.workload.resolve', { entityRef: trigger.entityRef });
     if (!resolved) {
       yield {
         type: 'tool_result',
-        data: { runId: input.runId, tool: 'kubernetes.workload.resolve', ok: false, summary: 'resolution failed' },
+        data: {
+          runId: input.runId,
+          tool: 'kubernetes.workload.resolve',
+          ok: false,
+          summary: 'resolution failed',
+        },
       };
       state.limitations.push(
         'No Kubernetes workload could be resolved for the catalog entity.',
@@ -331,7 +366,12 @@ export class IncidentTriageGraph implements WorkflowRunner {
     }
     yield {
       type: 'tool_result',
-      data: { runId: input.runId, tool: resolved.toolId, ok: true, summary: resolved.summary },
+      data: {
+        runId: input.runId,
+        tool: resolved.toolId,
+        ok: true,
+        summary: resolved.summary,
+      },
     };
 
     const matches = resolved.output.filter(
@@ -350,8 +390,6 @@ export class IncidentTriageGraph implements WorkflowRunner {
     state.workload = workload;
     return workload;
   }
-
-
 
   /**
    * Collects the bounded, failure-class-specific diagnostic evidence set.
@@ -373,7 +411,10 @@ export class IncidentTriageGraph implements WorkflowRunner {
       const candidates = snapshot.pods
         .flatMap(pod =>
           pod.containers
-            .filter(container => container.state !== 'running' || container.restartCount > 0)
+            .filter(
+              container =>
+                container.state !== 'running' || container.restartCount > 0,
+            )
             .map(container => ({ pod, container })),
         )
         .slice(0, this.options.maxLogContainers ?? 3);
@@ -389,16 +430,35 @@ export class IncidentTriageGraph implements WorkflowRunner {
           until,
           maxBytes: this.options.maxLogBytes,
         };
-        yield { type: 'tool_call', data: { runId: input.runId, tool: 'kubernetes.pod.get_logs', args } };
+        yield {
+          type: 'tool_call',
+          data: { runId: input.runId, tool: 'kubernetes.pod.get_logs', args },
+        };
         const result = await tools.invoke<typeof args, KubernetesPodLogExcerpt>(
           'kubernetes.pod.get_logs',
           args,
         );
         if (result) {
           state.evidence.push(logEvidence(result.output));
-          yield { type: 'tool_result', data: { runId: input.runId, tool: result.toolId, ok: true, summary: result.summary } };
+          yield {
+            type: 'tool_result',
+            data: {
+              runId: input.runId,
+              tool: result.toolId,
+              ok: true,
+              summary: result.summary,
+            },
+          };
         } else {
-          yield { type: 'tool_result', data: { runId: input.runId, tool: 'kubernetes.pod.get_logs', ok: false, summary: 'logs unavailable' } };
+          yield {
+            type: 'tool_result',
+            data: {
+              runId: input.runId,
+              tool: 'kubernetes.pod.get_logs',
+              ok: false,
+              summary: 'logs unavailable',
+            },
+          };
         }
       }
     }
@@ -413,16 +473,39 @@ export class IncidentTriageGraph implements WorkflowRunner {
         until,
         limit: 50,
       };
-      yield { type: 'tool_call', data: { runId: input.runId, tool: 'kubernetes.workload.list_events', args } };
+      yield {
+        type: 'tool_call',
+        data: {
+          runId: input.runId,
+          tool: 'kubernetes.workload.list_events',
+          args,
+        },
+      };
       const result = await tools.invoke<typeof args, KubernetesEventSummary[]>(
         'kubernetes.workload.list_events',
         args,
       );
       if (result) {
         state.evidence.push(...eventEvidence(result.output));
-        yield { type: 'tool_result', data: { runId: input.runId, tool: result.toolId, ok: true, summary: result.summary } };
+        yield {
+          type: 'tool_result',
+          data: {
+            runId: input.runId,
+            tool: result.toolId,
+            ok: true,
+            summary: result.summary,
+          },
+        };
       } else {
-        yield { type: 'tool_result', data: { runId: input.runId, tool: 'kubernetes.workload.list_events', ok: false, summary: 'events unavailable' } };
+        yield {
+          type: 'tool_result',
+          data: {
+            runId: input.runId,
+            tool: 'kubernetes.workload.list_events',
+            ok: false,
+            summary: 'events unavailable',
+          },
+        };
       }
     }
 
@@ -436,11 +519,18 @@ export class IncidentTriageGraph implements WorkflowRunner {
         until,
         limit: 50,
       };
-      yield { type: 'tool_call', data: { runId: input.runId, tool: 'kubernetes.workload.get_timeline', args } };
-      const result = await tools.invoke<typeof args, KubernetesWorkloadTimeline>(
-        'kubernetes.workload.get_timeline',
-        args,
-      );
+      yield {
+        type: 'tool_call',
+        data: {
+          runId: input.runId,
+          tool: 'kubernetes.workload.get_timeline',
+          args,
+        },
+      };
+      const result = await tools.invoke<
+        typeof args,
+        KubernetesWorkloadTimeline
+      >('kubernetes.workload.get_timeline', args);
       if (result) {
         state.evidence.push(...eventEvidence(result.output.events));
         state.evidence.push({
@@ -453,9 +543,25 @@ export class IncidentTriageGraph implements WorkflowRunner {
             `${result.output.snapshots.length} workload snapshot(s) between ${since} and ${until}.`,
           confidence: 'medium',
         });
-        yield { type: 'tool_result', data: { runId: input.runId, tool: result.toolId, ok: true, summary: result.summary } };
+        yield {
+          type: 'tool_result',
+          data: {
+            runId: input.runId,
+            tool: result.toolId,
+            ok: true,
+            summary: result.summary,
+          },
+        };
       } else {
-        yield { type: 'tool_result', data: { runId: input.runId, tool: 'kubernetes.workload.get_timeline', ok: false, summary: 'timeline unavailable' } };
+        yield {
+          type: 'tool_result',
+          data: {
+            runId: input.runId,
+            tool: 'kubernetes.workload.get_timeline',
+            ok: false,
+            summary: 'timeline unavailable',
+          },
+        };
       }
     }
   }
@@ -489,9 +595,12 @@ export class IncidentTriageGraph implements WorkflowRunner {
       raw = redactSensitiveText(await invokeModel(context, prompt));
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
-      context.logger.warn('Model synthesis failed; using deterministic causes', {
-        error: message,
-      });
+      context.logger.warn(
+        'Model synthesis failed; using deterministic causes',
+        {
+          error: message,
+        },
+      );
       state.limitations.push(`Model synthesis unavailable: ${message}`);
       return undefined;
     }
@@ -510,4 +619,3 @@ export class IncidentTriageGraph implements WorkflowRunner {
     return synthesis;
   }
 }
-

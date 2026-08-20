@@ -82,11 +82,47 @@ module.exports = {
       createConfigForRole(__dirname, 'backend-plugin-module'),
     ),
     ...scopedOverrides(
-      'plugins/backend/plugin-ai-core-backend-module-collaboration',
+      'plugins/backend/plugin-ai-core-backend-module-cloud-providers-aws',
+      createConfigForRole(__dirname, 'backend-plugin-module'),
+    ),
+    ...scopedOverrides(
+      'plugins/backend/plugin-ai-core-backend-module-cloud-providers-azure',
+      createConfigForRole(__dirname, 'backend-plugin-module'),
+    ),
+    ...scopedOverrides(
+      'plugins/backend/plugin-ai-core-backend-module-cloud-providers-gcp',
+      createConfigForRole(__dirname, 'backend-plugin-module'),
+    ),
+    ...scopedOverrides(
+      'plugins/backend/plugin-ai-core-backend-module-communication',
+      createConfigForRole(__dirname, 'backend-plugin-module'),
+    ),
+    ...scopedOverrides(
+      'plugins/backend/plugin-ai-core-backend-module-communication-slack',
       createConfigForRole(__dirname, 'backend-plugin-module'),
     ),
     ...scopedOverrides(
       'plugins/backend/plugin-ai-core-backend-module-compliance',
+      createConfigForRole(__dirname, 'backend-plugin-module'),
+    ),
+    ...scopedOverrides(
+      'plugins/backend/plugin-ai-core-backend-module-compliance-opa',
+      createConfigForRole(__dirname, 'backend-plugin-module'),
+    ),
+    ...scopedOverrides(
+      'plugins/backend/plugin-ai-core-backend-module-incident-management',
+      createConfigForRole(__dirname, 'backend-plugin-module'),
+    ),
+    ...scopedOverrides(
+      'plugins/backend/plugin-ai-core-backend-module-incident-management-pagerduty',
+      createConfigForRole(__dirname, 'backend-plugin-module'),
+    ),
+    ...scopedOverrides(
+      'plugins/backend/plugin-ai-core-backend-module-kubernetes',
+      createConfigForRole(__dirname, 'backend-plugin-module'),
+    ),
+    ...scopedOverrides(
+      'plugins/backend/plugin-ai-agent-backend-kubernetes-ai-responder',
       createConfigForRole(__dirname, 'backend-plugin-module'),
     ),
     ...scopedOverrides(
@@ -106,7 +142,31 @@ module.exports = {
       createConfigForRole(__dirname, 'backend-plugin-module'),
     ),
     ...scopedOverrides(
+      'plugins/backend/plugin-ai-core-backend-module-observability-datadog',
+      createConfigForRole(__dirname, 'backend-plugin-module'),
+    ),
+    ...scopedOverrides(
+      'plugins/backend/plugin-ai-core-backend-module-project-management',
+      createConfigForRole(__dirname, 'backend-plugin-module'),
+    ),
+    ...scopedOverrides(
+      'plugins/backend/plugin-ai-core-backend-module-project-management-jira',
+      createConfigForRole(__dirname, 'backend-plugin-module'),
+    ),
+    ...scopedOverrides(
       'plugins/backend/plugin-ai-core-backend-module-quality-scorecards',
+      createConfigForRole(__dirname, 'backend-plugin-module'),
+    ),
+    ...scopedOverrides(
+      'plugins/backend/plugin-ai-core-backend-module-quality-scorecards-scorecards',
+      createConfigForRole(__dirname, 'backend-plugin-module'),
+    ),
+    ...scopedOverrides(
+      'plugins/backend/plugin-ai-core-backend-module-quality-scorecards-soundcheck',
+      createConfigForRole(__dirname, 'backend-plugin-module'),
+    ),
+    ...scopedOverrides(
+      'plugins/backend/plugin-ai-core-backend-module-quality-scorecards-techradar',
       createConfigForRole(__dirname, 'backend-plugin-module'),
     ),
     ...scopedOverrides(
@@ -122,7 +182,39 @@ module.exports = {
       createConfigForRole(__dirname, 'backend-plugin-module'),
     ),
     ...scopedOverrides(
+      'plugins/backend/plugin-ai-core-backend-module-runtime-store',
+      createConfigForRole(__dirname, 'backend-plugin-module'),
+    ),
+    ...scopedOverrides(
       'plugins/backend/plugin-ai-core-backend-module-vcs',
+      createConfigForRole(__dirname, 'backend-plugin-module'),
+    ),
+    ...scopedOverrides(
+      'plugins/backend/plugin-ai-core-backend-module-vcs-aws-codecommit',
+      createConfigForRole(__dirname, 'backend-plugin-module'),
+    ),
+    ...scopedOverrides(
+      'plugins/backend/plugin-ai-core-backend-module-vcs-azure',
+      createConfigForRole(__dirname, 'backend-plugin-module'),
+    ),
+    ...scopedOverrides(
+      'plugins/backend/plugin-ai-core-backend-module-vcs-bitbucket',
+      createConfigForRole(__dirname, 'backend-plugin-module'),
+    ),
+    ...scopedOverrides(
+      'plugins/backend/plugin-ai-core-backend-module-vcs-gerrit',
+      createConfigForRole(__dirname, 'backend-plugin-module'),
+    ),
+    ...scopedOverrides(
+      'plugins/backend/plugin-ai-core-backend-module-vcs-git',
+      createConfigForRole(__dirname, 'backend-plugin-module'),
+    ),
+    ...scopedOverrides(
+      'plugins/backend/plugin-ai-core-backend-module-vcs-github',
+      createConfigForRole(__dirname, 'backend-plugin-module'),
+    ),
+    ...scopedOverrides(
+      'plugins/backend/plugin-ai-core-backend-module-vcs-gitlab',
       createConfigForRole(__dirname, 'backend-plugin-module'),
     ),
     ...scopedOverrides(
