@@ -4,11 +4,7 @@ import type { KubernetesWorkloadSnapshot } from '@webstackbuilders/plugin-ai-cor
  * Deterministic failure signature classes recognized by the triage graph.
  */
 export type FailureClass =
-  | 'oom-killed'
-  | 'image-pull'
-  | 'crash-loop'
-  | 'rollout-exceeded'
-  | 'unknown';
+  'oom-killed' | 'image-pull' | 'crash-loop' | 'rollout-exceeded' | 'unknown';
 
 const IMAGE_PULL_REASONS = new Set([
   'ImagePullBackOff',
@@ -77,6 +73,8 @@ export const evidencePlanFor = (failureClass: FailureClass): EvidencePlan => {
       return { previousLogs: false, events: true, timeline: true };
     case 'unknown':
       return { previousLogs: false, events: true, timeline: false };
+    default:
+      return { previousLogs: false, events: true, timeline: false };
   }
 };
 
@@ -106,6 +104,8 @@ export const deterministicCausesFor = (
         'The rollout exceeded its progress deadline; inspect unavailable replicas and recent deployment changes.',
       ];
     case 'unknown':
+      return [];
+    default:
       return [];
   }
 };
