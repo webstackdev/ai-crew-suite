@@ -39,6 +39,7 @@ export interface KubernetesAiResponderApi {
   ): AsyncGenerator<AiRunEvent>;
 }
 
+/** Backstage API ref for consuming `KubernetesAiResponderApi` via `useApi`. */
 export const kubernetesAiResponderApiRef =
   createApiRef<KubernetesAiResponderApi>({
     id: 'plugin.kubernetes-ai-responder.api',

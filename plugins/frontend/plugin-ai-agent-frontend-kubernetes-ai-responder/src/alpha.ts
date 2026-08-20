@@ -34,6 +34,10 @@ const createPlugin = createFrontendPlugin as unknown as (options: {
   extensions: readonly ExtensionDefinition[];
 }) => FrontendFeature;
 
+/**
+ * Alpha (new frontend-system) entry point for the Kubernetes AI responder,
+ * exposing the API and page extensions as a `FrontendFeature`.
+ */
 export default createPlugin({
   pluginId: 'kubernetes-ai-responder',
   extensions,

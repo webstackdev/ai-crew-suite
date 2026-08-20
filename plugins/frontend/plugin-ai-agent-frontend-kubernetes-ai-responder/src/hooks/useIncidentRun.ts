@@ -51,12 +51,14 @@ export type IncidentRunState = {
   error?: string;
 };
 
+/** Initial idle state for a fresh investigation run. */
 export const initialIncidentRunState: IncidentRunState = {
   phase: 'idle',
   steps: [],
   toolEvents: [],
 };
 
+/** Discriminated actions dispatched to `reduceIncidentRun`. */
 export type IncidentRunAction =
   | { type: 'event'; event: AiRunEvent }
   | { type: 'finished' }

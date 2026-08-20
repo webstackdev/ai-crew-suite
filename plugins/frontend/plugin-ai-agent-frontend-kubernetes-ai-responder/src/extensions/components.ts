@@ -17,6 +17,10 @@ import React from 'react';
 import { PageBlueprint } from '@backstage/frontend-plugin-api';
 import { ROOT_PATH, rootRouteRef } from '../routes';
 
+/**
+ * New-frontend-system page blueprint mounting the incident triage page at
+ * `ROOT_PATH`, lazy-loading `IncidentTriagePage` on navigation.
+ */
 export const incidentTriagePageExtension = PageBlueprint.make({
   name: 'incident-triage',
   params: {
