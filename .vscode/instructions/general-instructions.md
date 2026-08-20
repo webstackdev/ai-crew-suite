@@ -54,7 +54,7 @@ You are working in AI Crew Suite, a Backstage monorepo (Yarn Berry PnP + turbo) 
 
 ## Testing And Validation
 
-- Tests use Vitest (root config at `test/vitest.config.ts`); colocate `*.test.ts` / `*.test.tsx` files beside the code they cover.
+- Tests use Vitest (root config at `test/vitest.config.ts`); place `*.test.ts` / `*.test.tsx` files in a `__tests__/` directory in the same directory as the code file being tested (never directly beside the source file).
 - Common commands (activate nvm first — see `.clinerules` for the snippet):
   - `yarn test` / `yarn test:watch`
   - `yarn typecheck` (add `--force` after editing root configs)
