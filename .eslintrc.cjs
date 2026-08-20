@@ -24,7 +24,11 @@ const prefixPattern = (basePath, pattern) => {
 };
 
 const scopedOverrides = (basePath, config) => {
-  const { overrides = [], ignorePatterns: _ignorePatterns, ...baseConfig } = config;
+  const {
+    overrides = [],
+    ignorePatterns: _ignorePatterns,
+    ...baseConfig
+  } = config;
 
   return [
     {
@@ -71,6 +75,10 @@ module.exports = {
     ),
     ...scopedOverrides(
       'plugins/frontend/plugin-ai-crew-suite',
+      createConfigForRole(__dirname, 'frontend-plugin'),
+    ),
+    ...scopedOverrides(
+      'plugins/frontend/plugin-ai-agent-frontend-kubernetes-ai-responder',
       createConfigForRole(__dirname, 'frontend-plugin'),
     ),
     ...scopedOverrides(

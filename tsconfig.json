@@ -25,6 +25,9 @@
 
     // 2. Frontend Plugins
     { "path": "./plugins/frontend/plugin-ai-crew-suite" },
+    {
+      "path": "./plugins/frontend/plugin-ai-agent-frontend-kubernetes-ai-responder"
+    },
 
     // 3. Backend Core & Nodes
     { "path": "./plugins/backend/plugin-ai-core-backend" },
