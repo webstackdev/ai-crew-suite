@@ -732,3 +732,44 @@ The responder is complete only when:
 - The optional installation-model evaluation suite passes its structural grounding and safety graders within budget.
 - The fixture app/backend starts from a clean checkout and Playwright verifies a visible, replayable investigation run.
 - No fixture, unit, backend, browser, or evaluation output contains raw secret values, unbounded logs, or unauthorized Kubernetes data.
+
+## Frontend Implementation Completion Notes
+
+All validated and green. The two extra untracked files (`copilot-instructions.md`, `frontend-app.instructions.md`) are __empty placeholders__ — not mine, and not part of this task. My earlier `plugin-registration.md` is confirmed tracked/committed.
+
+I implemented `@webstackbuilders/plugin-ai-agent-frontend-kubernetes-ai-responder` per the Frontend Plan, fully registered and green.
+
+### New plugin: `plugins/frontend/plugin-ai-agent-frontend-kubernetes-ai-responder/` (26 files)
+
+__API layer (SSE over AI Core)__
+
+- `api/client.ts` — `KubernetesAiResponderClient`: `startInvestigation()` (POST `/agents/kubernetes-ai-responder/runs`, JSON-encodes the trigger) and `streamRunEvents()` (GET `/runs/:runId/events` with `Last-Event-ID` replay), parsing the SSE stream via `eventsource-parser`. Uses `discoveryApi.getBaseUrl('ai-core')` + Bearer token.
+- `api/apiRef.ts`, `api/index.ts`; `@types/index.ts` — self-contained wire types (the backend package isn't isomorphic, so it can't be imported into a frontend bundle).
+
+__Run state__ — `hooks/useIncidentRun.ts`: a pure exported `reduceIncidentRun` reducer folds the event stream into render-ready state (steps, tool events, report from the `incident-triage-report` artifact, error/phase), plus the `useIncidentRun` hook (`start`/`resume`/`reset`).
+
+__Components__ — `IncidentTriagePage` (orchestrates run lifecycle + deep-link via `?run=<id>` and dialog prefill via `?entityRef=<ref>`), `TriggerIncidentDialog` (entity-ref __or__ workload-coordinates form), `RunTimeline` (graph-node + tool progress), `EvidencePanel` (labeled __observed data__, bounded summaries only), `ReportPanel` (likely causes labeled __model inference__ with citations, next steps, limitations), `RunStatusBanner` (live `role="status"`/`aria-live` updates), `IncidentActionButton` (catalog-entity context action linking to the prefilled page). No remediation actions (v1).
+
+__Plugin wiring__ — classic `createPlugin` + `createRoutableExtension` (`plugin.ts`), and the new-frontend-system `/alpha` (`extensions/api.ts`, `extensions/components.ts`, `alpha.ts`) matching the `ai-crew-suite` pattern.
+
+__Tests (22, all passing)__ — `useIncidentRun.test.ts` (pure reducer: progress, report extraction, tool failure, insufficient-evidence, error, replay), `panels.test.tsx` + `RunStatusBanner.test.tsx` (labeling, states, a11y roles), `IncidentTriagePage.test.tsx` (full flow via `renderInTestApp` + mocked API: manual run, deep-link replay, error state). Plus `dev/index.tsx` dev app.
+
+### Registered in shared configs (per the plugin-registration rule)
+
+- `tsconfig.json` → added the frontend reference → __typecheck 41/41__ ✅
+- `.eslintrc.cjs` → added `scopedOverrides(..., 'frontend-plugin')` → __lint 41/41__ ✅
+
+### Wired into the app
+
+- `packages/app/package.json` dep + `App.tsx` `/alpha` feature registration; updated `App.test.tsx` (mock + expected feature list). Ran `yarn install` (lockfile updated).
+
+### Final validation (after prettier normalization)
+
+- __Typecheck: 41/41__ · __Lint: 41/41__ · __Tests: 94 files / 368 passed__ ✅
+
+### Notes / follow-ups
+
+- The plan's Playwright E2E portion (Milestone 3: `app-config.e2e.yaml`, fixture backend, Playwright scenarios) is a separate, larger effort — out of scope here; the component + accessibility tests are in place.
+- Frontend test files are excluded from the per-package `tsc --noEmit` (matching the existing `ai-crew-suite` convention) but are linted and run by the centralized vitest config.
+- Tests emit a non-fatal React `act()` warning from the async SSE generator (state updates land outside `act`); green and stable, but I can wrap the stream consumption to silence it if you'd like.
+- Two empty placeholder files (`.vscode/instructions/copilot-instructions.md`, `frontend-app.instructions.md`) exist untracked — not created by me and left untouched.
