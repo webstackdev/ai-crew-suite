@@ -2,7 +2,7 @@
 layout: default
 title: On-Call Handover Assistant
 parent: Incident Response
-plugin_name: oncall-ai-handover-assistant
+plugin_name: plugin-ai-agent-backend-oncall-ai-handover-assistant
 subcategory: Reliability & Incident Management
 ---
 

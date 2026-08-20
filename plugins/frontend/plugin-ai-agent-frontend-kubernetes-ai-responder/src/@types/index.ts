@@ -40,9 +40,13 @@ export type KubernetesIncidentTriggerSource =
 
 /** Versioned incident trigger consumed by the triage graph. */
 export type KubernetesIncidentTrigger = {
+  /** Trigger schema version. */
   version: 1;
+  /** System that produced the incident signal. */
   source: KubernetesIncidentTriggerSource;
+  /** ISO 8601 timestamp of the incident; normalized to UTC. */
   occurredAt: string;
+  /** Catalog entity reference; an alternative to explicit workload coordinates. */
   entityRef?: string;
   cluster?: string;
   namespace?: string;
@@ -51,6 +55,7 @@ export type KubernetesIncidentTrigger = {
   alertId?: string;
   severity?: string;
   summary: string;
+  /** Free-form alert labels. */
   labels?: Record<string, string>;
 };
 
@@ -76,14 +81,17 @@ export type IncidentEvidence = {
 export type IncidentTriageReport = {
   incidentId: string;
   entityRef?: string;
+  /** Outcome of the investigation: completed, inconclusive, or failed. */
   status: 'investigated' | 'insufficient_evidence' | 'failed';
   /** Deterministic failure signature that routed the investigation. */
   failureClass: FailureClass;
   trigger: KubernetesIncidentTrigger;
+  /** Likely causes, each citing retained evidence IDs; confidence is `0`–`1`. */
   likelyCauses: { summary: string; confidence: number; evidence: string[] }[];
   /** Normalized evidence bundle, sorted by observation time. */
   timeline: IncidentEvidence[];
   recommendedNextSteps: string[];
+  /** Reasons the report is incomplete (budget, failures, caps, schema issues). */
   limitations: string[];
 };
 

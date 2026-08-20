@@ -28,6 +28,11 @@ import {
 } from './api';
 import { rootRouteRef } from './routes';
 
+/**
+ * Backstage frontend plugin for the Kubernetes AI responder. Wires the typed
+ * API client to Backstage's discovery, fetch, config, and identity APIs, and
+ * binds the root route to the `IncidentTriagePage` routable extension.
+ */
 export const kubernetesAiResponderPlugin = createPlugin({
   id: 'kubernetes-ai-responder',
   apis: [

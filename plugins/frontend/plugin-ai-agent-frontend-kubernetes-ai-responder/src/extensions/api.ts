@@ -25,6 +25,10 @@ import {
   KubernetesAiResponderClient,
 } from '../api';
 
+/**
+ * New-frontend-system API blueprint that installs the `KubernetesAiResponderClient`
+ * against the discovery, fetch, config, and identity APIs.
+ */
 export const kubernetesAiResponderApiExtension = ApiBlueprint.make({
   params: defineParams =>
     defineParams(

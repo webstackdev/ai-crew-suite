@@ -2,7 +2,7 @@
 layout: default
 title: Catalog AI Insights
 parent: Catalog
-plugin_name: catalog-ai-insights
+plugin_name: plugin-ai-agent-backend-catalog-ai-insights
 subcategory: Knowledge
 ---
 
@@ -19,7 +19,7 @@ subcategory: Knowledge
 This plugin leverages large language models to analyze catalog entity relations and auto-generate structural engineering summaries.
 
 - **The Task:** Answering contextual questions about any service in the Software Catalog (_"Who is the on-call?"_, _"Where are the logs?"_, _"Why did this service fail its last deployment?"_).
-- **The Logic:** An agent "reads" a service's catalog metadata, recent deployments, and linked monitoring dashboards to synthesize answers in natural language.
+- **The Logic:** The backend plugin orchestrates a large language model (LLM) pipeline that retrieves a service's catalog metadata, deployment history, and monitoring metrics via Backstage service interfaces to compile unified natural language insights.
 - **Framework:** **RAG-based Agent** (either framework) backed by a vector store of catalog metadata and operational docs.
 
 ## Dependencies & Mock Targets
@@ -138,4 +138,4 @@ Instead, configure the vector database tool proxy to return pre-baked data chunk
 
 ### Simulating Continuous Multi-Step Runs
 
-Because your platform supports stateful orchestration and cyclic workflows, utilize `mockServices.scheduler` to test trigger-based insight collection (e.g., an agent scanning the catalog every night to proactively post Slack alerts for failing services). The `scheduler` mock allows you to fast-forward time ticks programmatically, causing your cron routines to run immediately inside the test lifecycle
+Because your platform supports stateful orchestration and cyclic workflows, utilize `mockServices.scheduler` to test trigger-based insight collection (e.g., a scheduled background task utilizing coreServices.scheduler to run nightly catalog scans and dispatch proactive Slack alerts for failing services). The `scheduler` mock allows you to fast-forward time ticks programmatically, causing your cron routines to run immediately inside the test lifecycle
