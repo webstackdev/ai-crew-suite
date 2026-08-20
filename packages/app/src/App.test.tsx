@@ -8,9 +8,19 @@ const mocks = vi.hoisted(() => {
 
 vi.mock('@backstage/frontend-defaults', () => ({ createApp: mocks.createApp }));
 vi.mock('@backstage/plugin-catalog/alpha', () => ({ default: 'catalog' }));
-vi.mock('@backstage/plugin-notifications/alpha', () => ({ default: 'notifications' }));
+vi.mock('@backstage/plugin-notifications/alpha', () => ({
+  default: 'notifications',
+}));
 vi.mock('@backstage/plugin-search/alpha', () => ({ default: 'search' }));
-vi.mock('@webstackbuilders/plugin-ai-crew-suite/alpha', () => ({ default: 'ai-crew' }));
+vi.mock('@webstackbuilders/plugin-ai-crew-suite/alpha', () => ({
+  default: 'ai-crew',
+}));
+vi.mock(
+  '@webstackbuilders/plugin-ai-agent-frontend-kubernetes-ai-responder/alpha',
+  () => ({
+    default: 'kubernetes-ai-responder',
+  }),
+);
 vi.mock('./modules/nav', () => ({ navModule: 'navigation' }));
 
 describe('App', () => {
@@ -22,7 +32,14 @@ describe('App', () => {
     const { default: App } = await import('./App');
 
     expect(mocks.createApp).toHaveBeenCalledWith({
-      features: ['catalog', 'notifications', 'search', 'navigation', 'ai-crew'],
+      features: [
+        'catalog',
+        'notifications',
+        'search',
+        'navigation',
+        'ai-crew',
+        'kubernetes-ai-responder',
+      ],
     });
     expect(mocks.createRoot).toHaveBeenCalledWith();
     expect(App).toBe('app-root');
