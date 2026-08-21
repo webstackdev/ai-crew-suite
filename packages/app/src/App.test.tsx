@@ -27,6 +27,7 @@ vi.mock(
     default: 'catalog-ai-insights',
   }),
 );
+vi.mock('@webstackbuilders/plugin-ai-agent-frontend-oncall-ai-handover-assistant/alpha', () => ({ default: 'oncall-handover-assistant' }));
 vi.mock('./modules/nav', () => ({ navModule: 'navigation' }));
 
 describe('App', () => {
@@ -45,6 +46,7 @@ describe('App', () => {
         'navigation',
         'ai-crew',
         'kubernetes-ai-responder',
+        'oncall-handover-assistant',
         'catalog-ai-insights',
       ],
     });
