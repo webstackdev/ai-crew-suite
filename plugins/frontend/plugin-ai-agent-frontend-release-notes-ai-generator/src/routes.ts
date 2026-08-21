@@ -13,16 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export interface Config {
-  ai?: {
-    agents?: {
-      kubernetesAiResponder?: {
-        model: string;
-        maxEvidenceItems?: number;
-        maxLogBytes?: number;
-        lookbackMinutes?: number;
-        maxToolInvocations?: number;
-      };
-    };
-  };
-}
+import { createRouteRef } from '@backstage/core-plugin-api';
+
+/** Mount path for the standalone release-notes page. */
+export const ROOT_PATH = '/release-notes-ai-generator';
+
+/**
+ * Root route reference for the release notes AI generator plugin.
+ * Appending `?run=<id>` to this route replays a persisted historical draft run. 
+ */
+export const rootRouteRef = createRouteRef({
+  id: 'release-notes-ai-generator',
+});

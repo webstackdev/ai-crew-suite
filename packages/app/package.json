@@ -50,6 +50,7 @@
     "@webstackbuilders/plugin-ai-agent-frontend-catalog-ai-insights": "workspace:^",
     "@webstackbuilders/plugin-ai-agent-frontend-kubernetes-ai-responder": "workspace:^",
     "@webstackbuilders/plugin-ai-agent-frontend-oncall-ai-handover-assistant": "workspace:^",
+    "@webstackbuilders/plugin-ai-agent-frontend-release-notes-ai-generator": "workspace:^",
     "@webstackbuilders/plugin-ai-crew-suite": "workspace:^",
     "i18next": "^22.5.1",
     "prop-types": "^15.8.1",

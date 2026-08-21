@@ -15587,6 +15587,19 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@webstackbuilders/plugin-ai-agent-backend-release-notes-ai-generator@workspace:^, @webstackbuilders/plugin-ai-agent-backend-release-notes-ai-generator@workspace:plugins/backend/plugin-ai-agent-backend-release-notes-ai-generator":
+  version: 0.0.0-use.local
+  resolution: "@webstackbuilders/plugin-ai-agent-backend-release-notes-ai-generator@workspace:plugins/backend/plugin-ai-agent-backend-release-notes-ai-generator"
+  dependencies:
+    "@backstage/backend-plugin-api": "backstage:^"
+    "@backstage/backend-test-utils": "backstage:^"
+    "@backstage/cli": "backstage:^"
+    "@backstage/config": "backstage:^"
+    "@webstackbuilders/plugin-ai-core-node": "workspace:*"
+    vitest: "npm:^4.1.10"
+  languageName: unknown
+  linkType: soft
+
 "@webstackbuilders/plugin-ai-agent-frontend-catalog-ai-insights@workspace:^, @webstackbuilders/plugin-ai-agent-frontend-catalog-ai-insights@workspace:plugins/frontend/plugin-ai-agent-frontend-catalog-ai-insights":
   version: 0.0.0-use.local
   resolution: "@webstackbuilders/plugin-ai-agent-frontend-catalog-ai-insights@workspace:plugins/frontend/plugin-ai-agent-frontend-catalog-ai-insights"
@@ -15659,6 +15672,33 @@ __metadata:
     "@backstage/test-utils": "backstage:^"
     "@material-ui/core": "npm:^4.12.4"
     "@material-ui/icons": "npm:^4.11.3"
+    "@testing-library/jest-dom": "npm:^6.9.1"
+    "@testing-library/react": "npm:^16.3.2"
+    "@testing-library/user-event": "npm:^14.6.1"
+    "@types/react": "npm:*"
+    "@types/react-dom": "npm:*"
+    eventsource-parser: "npm:^2.0.1"
+    react: "npm:^18.3.1"
+    react-dom: "npm:^18.3.1"
+    react-router-dom: "npm:^6.30.4"
+    vitest: "npm:^4.1.10"
+  peerDependencies:
+    react: ^18.3.1
+    react-router-dom: ^6.30.4
+  languageName: unknown
+  linkType: soft
+
+"@webstackbuilders/plugin-ai-agent-frontend-release-notes-ai-generator@workspace:^, @webstackbuilders/plugin-ai-agent-frontend-release-notes-ai-generator@workspace:plugins/frontend/plugin-ai-agent-frontend-release-notes-ai-generator":
+  version: 0.0.0-use.local
+  resolution: "@webstackbuilders/plugin-ai-agent-frontend-release-notes-ai-generator@workspace:plugins/frontend/plugin-ai-agent-frontend-release-notes-ai-generator"
+  dependencies:
+    "@backstage/cli": "backstage:^"
+    "@backstage/core-components": "backstage:^"
+    "@backstage/core-plugin-api": "backstage:^"
+    "@backstage/dev-utils": "backstage:^"
+    "@backstage/frontend-plugin-api": "backstage:^"
+    "@backstage/test-utils": "backstage:^"
+    "@material-ui/core": "npm:^4.12.4"
     "@testing-library/jest-dom": "npm:^6.9.1"
     "@testing-library/react": "npm:^16.3.2"
     "@testing-library/user-event": "npm:^14.6.1"
@@ -16787,6 +16827,7 @@ __metadata:
     "@webstackbuilders/plugin-ai-agent-frontend-catalog-ai-insights": "workspace:^"
     "@webstackbuilders/plugin-ai-agent-frontend-kubernetes-ai-responder": "workspace:^"
     "@webstackbuilders/plugin-ai-agent-frontend-oncall-ai-handover-assistant": "workspace:^"
+    "@webstackbuilders/plugin-ai-agent-frontend-release-notes-ai-generator": "workspace:^"
     "@webstackbuilders/plugin-ai-crew-suite": "workspace:^"
     cross-env: "npm:^10.1.0"
     i18next: "npm:^22.5.1"
@@ -17487,6 +17528,7 @@ __metadata:
     "@backstage/plugin-techdocs-backend": "backstage:^"
     "@webstackbuilders/plugin-ai-agent-backend-catalog-ai-insights": "workspace:^"
     "@webstackbuilders/plugin-ai-agent-backend-oncall-ai-handover-assistant": "workspace:^"
+    "@webstackbuilders/plugin-ai-agent-backend-release-notes-ai-generator": "workspace:^"
     "@webstackbuilders/plugin-ai-core-backend": "workspace:^"
     "@webstackbuilders/plugin-ai-core-backend-module-cloud-providers": "workspace:^"
     "@webstackbuilders/plugin-ai-core-backend-module-communication": "workspace:^"

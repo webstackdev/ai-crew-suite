@@ -13,16 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export interface Config {
-  ai?: {
-    agents?: {
-      kubernetesAiResponder?: {
-        model: string;
-        maxEvidenceItems?: number;
-        maxLogBytes?: number;
-        lookbackMinutes?: number;
-        maxToolInvocations?: number;
-      };
-    };
-  };
-}
+export { releaseNotesPlugin, ReleaseNotesPage } from './plugin';
+export * from './api';
+export * from './components';
+export {
+  useReleaseNotesRun,
+  reduceReleaseNotesRun,
+  initialReleaseNotesRunState,
+  RELEASE_NOTES_DRAFT_ARTIFACT,
+  RELEASE_NOTES_PUBLICATION_ARTIFACT,
+} from './hooks/useReleaseNotesRun';
+export { ROOT_PATH, rootRouteRef } from './routes';
+export type * from './@types';

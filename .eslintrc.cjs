@@ -142,11 +142,19 @@ module.exports = {
       createConfigForRole(__dirname, 'backend-plugin-module'),
     ),
     ...scopedOverrides(
+      'plugins/backend/plugin-ai-agent-backend-release-notes-ai-generator',
+      createConfigForRole(__dirname, 'backend-plugin-module'),
+    ),
+    ...scopedOverrides(
       'plugins/frontend/plugin-ai-agent-frontend-catalog-ai-insights',
       createConfigForRole(__dirname, 'frontend-plugin'),
     ),
     ...scopedOverrides(
       'plugins/frontend/plugin-ai-agent-frontend-oncall-ai-handover-assistant',
+      createConfigForRole(__dirname, 'frontend-plugin'),
+    ),
+    ...scopedOverrides(
+      'plugins/frontend/plugin-ai-agent-frontend-release-notes-ai-generator',
       createConfigForRole(__dirname, 'frontend-plugin'),
     ),
     ...scopedOverrides(

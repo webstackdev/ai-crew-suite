@@ -67,3 +67,6 @@ ai:
     oncallHandover:
       # Installation-registered model ID for bounded, cited shift briefs.
       model: oncall-handover
+    releaseNotes:
+      # Draft generation is enabled; publishing remains unavailable pending the VCS write tool.
+      model: release-notes

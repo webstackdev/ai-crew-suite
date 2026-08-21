@@ -13,16 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export interface Config {
-  ai?: {
-    agents?: {
-      kubernetesAiResponder?: {
-        model: string;
-        maxEvidenceItems?: number;
-        maxLogBytes?: number;
-        lookbackMinutes?: number;
-        maxToolInvocations?: number;
-      };
-    };
-  };
-}
+export { ReleaseNotesPage } from './ReleaseNotesPage';
+export {
+  GenerateNotesDialog,
+  type GenerateNotesForm
+} from './GenerateNotesDialog';
+export { ReleaseNotesRunView } from './ReleaseNotesRunView';
+export { DraftPreview } from './DraftPreview';
+export { FilteredChangesPanel } from './FilteredChangesPanel';
+export { ApprovalBar } from './ApprovalBar';
+export { PublicationBanner } from './PublicationBanner';

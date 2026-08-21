@@ -14,15 +14,12 @@
  * limitations under the License.
  */
 export interface Config {
-  ai?: {
-    agents?: {
-      kubernetesAiResponder?: {
-        model: string;
-        maxEvidenceItems?: number;
-        maxLogBytes?: number;
-        lookbackMinutes?: number;
-        maxToolInvocations?: number;
-      };
-    };
-  };
+  ai?: { agents?: { releaseNotes?: {
+    model: string;
+    maxPullRequests?: number;
+    maxToolInvocations?: number;
+    taxonomy?: { feature?: string[]; fix?: string[]; improvement?: string[]; breaking?: string[]; internal?: string[] };
+    schedule?: { enabled?: boolean; cron?: string; repositories?: string[] };
+    publish?: { enabled?: boolean };
+  } } };
 }

@@ -13,16 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export interface Config {
-  ai?: {
-    agents?: {
-      kubernetesAiResponder?: {
-        model: string;
-        maxEvidenceItems?: number;
-        maxLogBytes?: number;
-        lookbackMinutes?: number;
-        maxToolInvocations?: number;
-      };
-    };
-  };
-}
+export {
+  releaseNotesApiRef,
+  type ReleaseNotesApi
+} from './apiRef';
+export {
+  ReleaseNotesClient,
+  RELEASE_NOTES_AGENT_ID
+} from './client';

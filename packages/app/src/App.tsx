@@ -21,6 +21,7 @@ import searchPlugin from '@backstage/plugin-search/alpha';
 import ragAiPlugin from '@webstackbuilders/plugin-ai-crew-suite/alpha';
 import kubernetesAiResponderPlugin from '@webstackbuilders/plugin-ai-agent-frontend-kubernetes-ai-responder/alpha';
 import oncallHandoverPlugin from '@webstackbuilders/plugin-ai-agent-frontend-oncall-ai-handover-assistant/alpha';
+import releaseNotesPlugin from '@webstackbuilders/plugin-ai-agent-frontend-release-notes-ai-generator/alpha';
 import catalogAiInsightsPlugin from '@webstackbuilders/plugin-ai-agent-frontend-catalog-ai-insights/alpha';
 import { navModule } from './modules/nav';
 
@@ -32,6 +33,7 @@ const features: FrontendFeature[] = [
   ragAiPlugin,
   kubernetesAiResponderPlugin,
   oncallHandoverPlugin,
+  releaseNotesPlugin,
   catalogAiInsightsPlugin,
 ];
 
