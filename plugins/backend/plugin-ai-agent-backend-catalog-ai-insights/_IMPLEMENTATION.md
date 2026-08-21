@@ -339,3 +339,65 @@ Exit criteria: staged rollout with scans disabled by default, bounded costs, and
 - Every intent scenario and the stateful deployment-transition scenario pass deterministically; scheduler behavior is proven with fast-forwarded ticks.
 - Frontend renders cited answers from live SSE and replay; Playwright verifies the entity-card flow end to end on fixtures.
 - No output surface (SSE, artifacts, logs, tests) contains raw logs, secrets, or uncited model claims presented as fact.
+
+## Frontend Completed
+
+Implemented `@webstackbuilders/plugin-ai-agent-frontend-catalog-ai-insights`.
+
+### Delivered
+
+- Complete frontend plugin under:
+  - `/home/kevin/Repos/backstage/ai-crew-suite/plugins/frontend/plugin-ai-agent-frontend-catalog-ai-insights`
+
+- Typed AI Core SSE client for:
+
+  - starting catalog-insight runs
+  - replaying existing run events
+  - session continuity for follow-up questions
+
+- Insight run reducer/hook with progress, tool activity, report artifact extraction, error handling, and replay support.
+
+- UI surfaces:
+
+  - catalog entity insights card with canned and free-form questions
+  - standalone deep-linkable `/catalog-ai-insights` page
+  - live run progress/status
+  - cited answer panel with expandable cited context
+  - retained context panel grouped by source
+  - partial and insufficient-context states
+
+- Legacy and new frontend-system exports/extensions, including the catalog entity-card extension.
+
+- Dev harness and documentation.
+
+- Unit coverage for run-state reduction/replay/session behavior and accessible status-banner states.
+
+### Repository/app integration
+
+Registered the plugin in:
+
+- `/home/kevin/Repos/backstage/ai-crew-suite/tsconfig.json`
+- `/home/kevin/Repos/backstage/ai-crew-suite/.eslintrc.cjs`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/app/package.json`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/app/src/App.tsx`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/app/src/App.test.tsx`
+- `/home/kevin/Repos/backstage/ai-crew-suite/yarn.lock`
+
+Also removed generated test/cache artifacts from the plugin directory.
+
+### Validation completed
+
+Passed:
+
+- `yarn workspace @webstackbuilders/plugin-ai-agent-frontend-catalog-ai-insights test`
+  - __15 tests passed__
+- Plugin lint
+- Plugin TypeScript compilation using the repository Yarn PnP TypeScript SDK
+- Application feature wiring test
+- `yarn typecheck --force`
+  - __43/43 tasks successful__
+- `yarn lint --force`
+  - __43/43 tasks successful__; only existing unrelated warnings remain
+- `git diff --check`
+
+## Backend 

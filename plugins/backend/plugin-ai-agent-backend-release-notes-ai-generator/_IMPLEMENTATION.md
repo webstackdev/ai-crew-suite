@@ -384,3 +384,210 @@ Exit criteria: staged rollout with publish + schedules disabled by default, boun
 - Scheduled cadence produces draft-only runs; frontend renders categorized drafts and the approve/reject gate over live SSE and replay; Playwright verifies both approve and reject paths.
 - No output surface (SSE, artifacts, logs, audit, tests) contains secrets, raw tokens, uncited model claims, or a publish action lacking a recorded human approval.
 
+## Completed Backend
+
+Completed
+
+Implemented the release-notes backend module at:
+
+`/home/kevin/Repos/backstage/ai-crew-suite/plugins/backend/plugin-ai-agent-backend-release-notes-ai-generator`
+
+### Implemented: draft-generation milestone
+
+The module now provides a readable, JSDoc-documented, deterministic draft workflow:
+
+1. Validates a versioned `ReleaseNotesRequest` for one repository and target version.
+
+2. Collects bounded merged pull requests through `vcs.pull_request.list`.
+
+3. Deterministically categorizes PR titles using configured taxonomy:
+
+   - `feature`
+   - `fix`
+   - `improvement`
+   - `breaking`
+   - `internal`
+
+4. Filters internal chores before customer-facing draft generation.
+
+5. Builds a citation-safe `ReleaseNotesDraft` artifact:
+
+   - stable `chg-N` references
+   - categorized sections
+   - markdown preview
+   - `filteredCount`
+   - `no_changes` / `partial` / `drafted` statuses
+   - limitations
+
+6. Emits the replayable `release-notes-draft` artifact through the normal AI Core event path.
+
+### Agent and module registration
+
+Added:
+
+- `release-notes-ai-generator` AI Core agent
+
+- Read-only tool allow-list:
+
+  - `vcs.pull_request.list`
+  - `project.ticket.get`
+  - `project.ticket.search`
+  - `knowledge.retrieve`
+
+- Workflow runner: `release-notes`
+
+- Manual and scheduler trigger bindings
+
+- Required config parsing under:
+  - `ai.agents.releaseNotes`
+
+- Backend application registration in:
+
+  - `/home/kevin/Repos/backstage/ai-crew-suite/packages/backend/package.json`
+  - `/home/kevin/Repos/backstage/ai-crew-suite/packages/backend/src/index.ts`
+
+- Root TypeScript/ESLint registration and Yarn workspace lockfile update.
+
+- Active config entry in:
+  - `/home/kevin/Repos/backstage/ai-crew-suite/app-config.yaml`
+
+### Publish/approval boundary
+
+I intentionally did __not__ implement a fake publish or approval-resume path.
+
+The implementation plan correctly identifies a blocking shared prerequisite: the current codebase has no provider-neutral `VcsDriver.publishRelease()` method and no registered `vcs.release.publish` write tool. Implementing approval events without a real write contract would falsely suggest publication can occur safely.
+
+The plugin is explicitly documented and implemented as __draft-only__ until that shared VCS capability is added. If `publish.enabled` is configured, the draft records a limitation rather than attempting a write.
+
+### Tests
+
+Added deterministic coverage for:
+
+- conventional title categorization
+- breaking-change detection
+- internal chore filtering
+- no-changes draft behavior
+- backend module registration, agent shape, tool allow-list, and triggers
+
+### Validation completed
+
+Passed:
+
+- `yarn workspace @webstackbuilders/plugin-ai-agent-backend-release-notes-ai-generator test`
+  - __3 tests passed__
+- Package TypeScript compilation
+- Package lint
+- `yarn typecheck --force`
+  - __46/46 tasks successful__
+- `yarn lint --force`
+  - __46/46 tasks successful__; only existing warning-only findings remain in unrelated packages
+- `git diff --check`
+
+They were scaffolding remnants from the implementation plan, not intentional required empty directories.
+
+- `src/retrieval/`
+
+  - Planned for `PriorNotesRetriever.ts`, which would call `knowledge.retrieve` for prior-release-note style/context.
+  - The current draft workflow does not invoke retrieval yet, so it is unused.
+
+- `src/scheduler/`
+
+- `src/scheduler/__tests__/`
+
+  - Planned for optional scheduled draft generation (`cadencePlanner.ts` and cadence dispatch tests).
+  - The module currently registers manual/scheduler triggers but does not register an actual cadence task, so these are unused.
+
+They should be removed until that functionality is implemented. Empty directories are not tracked by Git, so they will not appear in the committed change unless they contain hidden/generated files. The intended source files currently tracked for the plugin do not include either directory.
+
+## Completed Frontend
+
+Implemented the paired frontend plugin at:
+
+`/home/kevin/Repos/backstage/ai-crew-suite/plugins/frontend/plugin-ai-agent-frontend-release-notes-ai-generator`
+
+### Delivered
+
+- Typed frontend wire contracts for:
+
+  - `ReleaseNotesRequest`
+  - `ReleaseNotesDraft`
+  - future `ReleaseNotesPublication`
+  - approval decisions
+  - AI Core SSE events
+
+- Typed AI Core client:
+
+  - `generate()` → `POST /agents/release-notes-ai-generator/runs`
+  - `streamRunEvents()` with `Last-Event-ID` replay
+  - `submitApproval()` → `POST /runs/:id/approvals`
+
+- Pure `useReleaseNotesRun` reducer/hook handling:
+
+  - live and replayed progress/tool events
+  - `release-notes-draft` artifact extraction
+  - future `release-notes-publication` artifacts
+  - approval requests
+  - terminal error/done states
+
+- Standalone route:
+
+  - `/release-notes-ai-generator`
+  - deep-link/replay through `?run=<id>`
+
+- UI components:
+
+  - generation dialog with repository, target version, and optional date-window fields
+  - live run-progress view
+  - categorized cited draft preview
+  - copyable markdown preview
+  - transparent internal-chore filtering panel
+  - no-changes and limitations states
+  - future approval bar and publication banner components
+
+### App and monorepo registration
+
+Registered the frontend package in:
+
+- `/home/kevin/Repos/backstage/ai-crew-suite/tsconfig.json`
+- `/home/kevin/Repos/backstage/ai-crew-suite/.eslintrc.cjs`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/app/package.json`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/app/src/App.tsx`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/app/src/App.test.tsx`
+- `/home/kevin/Repos/backstage/ai-crew-suite/yarn.lock`
+
+### Approval/publish limitation
+
+The frontend has a real typed approval client and conditional approval UI, but the current paired backend remains intentionally draft-only because the shared `vcs.release.publish` write-tool contract does not exist yet.
+
+Therefore:
+
+- normal runs render the draft, filtering, no-changes, and limitations paths;
+- approval controls render only when a future backend emits `approval_request`;
+- no UI path implies that publication is currently available.
+
+### Validation
+
+Passed:
+
+- Frontend package tests: __4 passed__
+
+  - draft/replay reducer
+  - future approval-event reducer state
+  - cited draft rendering
+  - no-changes/filtering UI states
+
+- Package TypeScript compilation
+
+- Package lint
+
+- App feature-registration test
+
+- `yarn typecheck --force`
+  - __47/47 tasks successful__
+
+- `yarn lint --force`
+  - __47/47 tasks successful__; existing unrelated warning-only lint findings remain
+
+- `git diff --check`
+
+One React/MUI v4 `findDOMNode` deprecation warning appears in the component test due to MUI’s `Link component="button"` implementation; tests still pass and no application behavior is affected.
