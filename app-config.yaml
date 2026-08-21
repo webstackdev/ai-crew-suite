@@ -70,3 +70,6 @@ ai:
     releaseNotes:
       # Draft generation is enabled; publishing remains unavailable pending the VCS write tool.
       model: release-notes
+    rfcAdrReviewer:
+      # Read-only parallel critique generation; PR commenting is not yet available.
+      model: rfc-adr-review

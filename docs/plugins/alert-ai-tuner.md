@@ -2,7 +2,7 @@
 layout: default
 title: Alert Fatigue Tuner
 parent: Incident Response
-plugin_name: alert-ai-tuner
+plugin_name: plugin-ai-agent-backend-alert-ai-tuner
 subcategory: Operations
 ---
 
