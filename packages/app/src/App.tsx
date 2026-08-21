@@ -20,6 +20,7 @@ import notificationsPlugin from '@backstage/plugin-notifications/alpha';
 import searchPlugin from '@backstage/plugin-search/alpha';
 import ragAiPlugin from '@webstackbuilders/plugin-ai-crew-suite/alpha';
 import kubernetesAiResponderPlugin from '@webstackbuilders/plugin-ai-agent-frontend-kubernetes-ai-responder/alpha';
+import catalogAiInsightsPlugin from '@webstackbuilders/plugin-ai-agent-frontend-catalog-ai-insights/alpha';
 import { navModule } from './modules/nav';
 
 const features: FrontendFeature[] = [
@@ -29,6 +30,7 @@ const features: FrontendFeature[] = [
   navModule as FrontendFeature,
   ragAiPlugin,
   kubernetesAiResponderPlugin,
+  catalogAiInsightsPlugin,
 ];
 
 const app = createApp({

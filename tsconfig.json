@@ -77,6 +77,9 @@
     {
       "path": "./plugins/backend/plugin-ai-agent-backend-catalog-ai-insights"
     },
+    {
+      "path": "./plugins/frontend/plugin-ai-agent-frontend-catalog-ai-insights"
+    },
 
     // 9. Observability
     { "path": "./plugins/backend/plugin-ai-core-backend-module-observability" },
