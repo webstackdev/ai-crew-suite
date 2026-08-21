@@ -2,7 +2,7 @@
 layout: default
 title: Automated Release Notes
 parent: Pull Request Workflows
-plugin_name: release-notes-ai-generator
+plugin_name: plugin-ai-agent-backend-release-notes-ai-generator
 subcategory: Product & Delivery
 ---
 
