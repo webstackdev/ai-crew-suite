@@ -1,0 +1,1 @@
+let's implement plugins/frontend/plugin-ai-agent-frontend-catalog-ai-insights from the implementation plan we have in plugins/backend/plugin-ai-agent-backend-catalog-ai-insights/_IMPLEMENTATION.md
