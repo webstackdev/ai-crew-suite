@@ -101,5 +101,6 @@ backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-core-backend-
 
 // agent workflow modules (AI Core agents)
 backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-agent-backend-catalog-ai-insights')));
+backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-agent-backend-oncall-ai-handover-assistant')));
 
 backend.start();

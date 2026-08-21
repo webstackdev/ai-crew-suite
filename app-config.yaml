@@ -64,3 +64,6 @@ ai:
       # Installation-registered model ID; map it to a provider through a
       # chat-model module (e.g. plugin-ai-core-backend-module-llm-openai).
       model: catalog-insights
+    oncallHandover:
+      # Installation-registered model ID for bounded, cited shift briefs.
+      model: oncall-handover

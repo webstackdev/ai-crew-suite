@@ -1,0 +1,9 @@
+/*
+ * Copyright 2026 Webstack Builders, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ */
+import { createBackendPlugin } from '@backstage/backend-plugin-api'; import { mockServices,startTestBackend } from '@backstage/backend-test-utils'; import { agentExtensionPoint,triggerExtensionPoint,workflowRunnerExtensionPoint,type AgentExtensionPoint,type TriggerExtensionPoint,type WorkflowRunnerExtensionPoint } from '@webstackbuilders/plugin-ai-core-node'; import { describe,expect,it,vi } from 'vitest'; import { oncallHandoverModule } from '../module';
+
+const points={agents:{addAgent:vi.fn()},triggers:{addTrigger:vi.fn()},workflows:{registerRunner:vi.fn()}};const host=createBackendPlugin({pluginId:'ai-core',register(env){env.registerExtensionPoint(agentExtensionPoint,points.agents as unknown as AgentExtensionPoint);env.registerExtensionPoint(triggerExtensionPoint,points.triggers as unknown as TriggerExtensionPoint);env.registerExtensionPoint(workflowRunnerExtensionPoint,points.workflows as unknown as WorkflowRunnerExtensionPoint);env.registerInit({deps:{},async init(){}})}});describe('oncallHandoverModule',()=>it('registers its runner, read-only agent, and triggers',async()=>{await startTestBackend({features:[host,oncallHandoverModule,mockServices.rootConfig.factory({data:{ai:{agents:{oncallHandover:{model:'oncall-handover'}}}}}),mockServices.logger.factory(),mockServices.scheduler.factory(),mockServices.discovery.factory(),mockServices.auth.factory()]});expect(points.workflows.registerRunner.mock.calls[0][0].id).toBe('oncall-handover');const agent=points.agents.addAgent.mock.calls[0][0];expect(agent).toMatchObject({id:'oncall-handover-assistant',memory:'none',modelRef:'oncall-handover'});expect(agent.toolIds).toHaveLength(11);expect(points.triggers.addTrigger).toHaveBeenCalledTimes(2)}));
