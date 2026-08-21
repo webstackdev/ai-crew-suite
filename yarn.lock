@@ -15600,6 +15600,19 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@webstackbuilders/plugin-ai-agent-backend-rfc-adr-ai-reviewer@workspace:^, @webstackbuilders/plugin-ai-agent-backend-rfc-adr-ai-reviewer@workspace:plugins/backend/plugin-ai-agent-backend-rfc-adr-ai-reviewer":
+  version: 0.0.0-use.local
+  resolution: "@webstackbuilders/plugin-ai-agent-backend-rfc-adr-ai-reviewer@workspace:plugins/backend/plugin-ai-agent-backend-rfc-adr-ai-reviewer"
+  dependencies:
+    "@backstage/backend-plugin-api": "backstage:^"
+    "@backstage/backend-test-utils": "backstage:^"
+    "@backstage/cli": "backstage:^"
+    "@backstage/config": "backstage:^"
+    "@webstackbuilders/plugin-ai-core-node": "workspace:*"
+    vitest: "npm:^4.1.10"
+  languageName: unknown
+  linkType: soft
+
 "@webstackbuilders/plugin-ai-agent-frontend-catalog-ai-insights@workspace:^, @webstackbuilders/plugin-ai-agent-frontend-catalog-ai-insights@workspace:plugins/frontend/plugin-ai-agent-frontend-catalog-ai-insights":
   version: 0.0.0-use.local
   resolution: "@webstackbuilders/plugin-ai-agent-frontend-catalog-ai-insights@workspace:plugins/frontend/plugin-ai-agent-frontend-catalog-ai-insights"
@@ -17529,6 +17542,7 @@ __metadata:
     "@webstackbuilders/plugin-ai-agent-backend-catalog-ai-insights": "workspace:^"
     "@webstackbuilders/plugin-ai-agent-backend-oncall-ai-handover-assistant": "workspace:^"
     "@webstackbuilders/plugin-ai-agent-backend-release-notes-ai-generator": "workspace:^"
+    "@webstackbuilders/plugin-ai-agent-backend-rfc-adr-ai-reviewer": "workspace:^"
     "@webstackbuilders/plugin-ai-core-backend": "workspace:^"
     "@webstackbuilders/plugin-ai-core-backend-module-cloud-providers": "workspace:^"
     "@webstackbuilders/plugin-ai-core-backend-module-communication": "workspace:^"
