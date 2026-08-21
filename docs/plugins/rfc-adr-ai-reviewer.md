@@ -133,3 +133,118 @@ describe('RFC & ADR Reviewer LangGraph Parallel Execution', () => {
 Because this plugin streams multi-turn agent debates over an SSE pipeline to optimize developer engagement, testing the serialization interface is essential.
 
 Write an execution test that hits the streaming path. Use a test client helper to subscribe to the event stream, then assert that the streamed blocks conform to your platform’s structured data pattern—explicitly returning separate text segments tagged for `node:senior-architect` and `node:security-lead` as the graph processes each parallel path.
+
+## Frontend
+
+
+
+## Backend Completed
+
+Implemented the RFC/ADR reviewer backend module at:
+
+`/home/kevin/Repos/backstage/ai-crew-suite/plugins/backend/plugin-ai-agent-backend-rfc-adr-ai-reviewer`
+
+## Implemented: read-only parallel-review milestone
+
+The module now provides a custom AI Core workflow runner:
+
+- Workflow ID: `rfc-adr-review`
+
+- Agent ID: `rfc-adr-ai-reviewer`
+
+- Manual trigger registration
+
+- Read-only tool allow-list:
+
+  - `vcs.repository.read_file`
+  - `vcs.repository.get_metadata`
+  - `compliance.architecture.validate`
+  - `compliance.policy.evaluate`
+  - `knowledge.retrieve`
+
+### Workflow behavior
+
+1. Validates one RFC/ADR request:
+
+   - repository URL
+   - `adr/` or `rfc/` document path
+   - optional ref / pull-request ID
+
+2. Reads and redacts the document with a configurable size cap.
+
+3. Runs two independent review channels concurrently with `Promise.all`:
+
+   - __Senior Architect__: standards retrieval and architecture/deprecation findings
+   - __Security Lead__: architecture/compliance policy findings
+
+4. Emits independently tagged workflow steps:
+
+   - `senior-architect`
+   - `security-lead`
+   - `compilation`
+
+5. Deterministically merges cited findings and derives the verdict:
+
+   - `block` for critical/high findings
+   - `comment` for lower-severity findings
+   - `approve` when no cited findings remain
+
+6. Emits a replayable `design-critique` artifact.
+
+## Safety and current contract limitations
+
+The implementation plan correctly identifies three missing shared contracts:
+
+- `vcs.pull_request.comment` write tool
+- `CatalogEntityResolver`
+- confirmed event-service subscription integration
+
+Those features were __not fabricated__.
+
+The current module is explicitly:
+
+- read-only
+- manual-triggered
+- draft-only
+- advisory
+
+If `publish.enabled` is configured, the critique records a limitation explaining that PR commenting is unavailable. It does not emit a fake approval request or attempt a PR mutation.
+
+## JSDoc and formatting
+
+New source files include:
+
+- Apache 2026 license headers
+- JSDoc for exported types, classes, functions, configuration, artifacts, and workflow contracts
+- readable named helpers for request parsing, document redaction, reference extraction, verdict derivation, and bounded tool execution
+
+## Wiring added
+
+Registered the module in:
+
+- `/home/kevin/Repos/backstage/ai-crew-suite/tsconfig.json`
+- `/home/kevin/Repos/backstage/ai-crew-suite/.eslintrc.cjs`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/backend/package.json`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/backend/src/index.ts`
+- `/home/kevin/Repos/backstage/ai-crew-suite/app-config.yaml`
+- `/home/kevin/Repos/backstage/ai-crew-suite/yarn.lock`
+
+## Tests added
+
+- Merge findings from both channels and derive a blocking verdict from high severity
+- Extract component/API references and redact secret-like document values
+- Module registration, workflow ID, agent profile, and manual trigger coverage
+
+## Validation completed
+
+Passed:
+
+- `yarn workspace @webstackbuilders/plugin-ai-agent-backend-rfc-adr-ai-reviewer test`
+  - __3 tests passed__
+- Package TypeScript compilation
+- Package lint
+- `yarn typecheck --force`
+  - __48/48 tasks successful__
+- `yarn lint --force`
+  - __48/48 tasks successful__; existing unrelated warning-only findings remain
+- `git diff --check`

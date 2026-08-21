@@ -359,3 +359,179 @@ Exit criteria: staged rollout with schedules disabled by default, bounded costs,
 - Frontend renders clustered, cited briefs from live SSE and replay; Playwright verifies the compile flow end to end on fixtures.
 - No output surface (SSE, artifacts, logs, tests) contains raw logs, secrets, or uncited model claims presented as fact.
 
+## Frontend Completed
+
+Implemented the standalone frontend plugin:
+
+`/home/kevin/Repos/backstage/ai-crew-suite/plugins/frontend/plugin-ai-agent-frontend-oncall-ai-handover-assistant`
+
+### Delivered
+
+- Typed frontend wire contracts for:
+
+  - `HandoverRequest`
+  - `HandoverBrief`
+  - incident clusters and retained signals
+  - AI Core run events
+
+- Typed AI Core SSE client:
+
+  - `compileBrief()` posts to `agents/oncall-handover-assistant/runs`
+  - `streamRunEvents()` supports `Last-Event-ID` replay
+
+- Pure run reducer/hook for:
+
+  - streaming graph progress
+  - tool status
+  - artifact extraction from `oncall-handover-brief`
+  - terminal errors and replayed runs
+
+- New frontend-system and legacy plugin entry points:
+
+  - `/alpha` feature export
+  - standalone route at `/oncall-handover-assistant`
+
+- Standalone handover page with:
+
+  - compile dialog for team, trailing window, and incoming engineer
+  - live run/SSE progress
+  - deep-linkable run IDs using `?run=<id>`
+  - status banner for compiling, partial, no-activity, success, and error states
+  - clustered active-incident panel
+  - deployments/notable-changes panel
+  - high-priority tickets panel
+  - limitations panel
+
+### App and monorepo wiring
+
+Registered the frontend package in:
+
+- `/home/kevin/Repos/backstage/ai-crew-suite/tsconfig.json`
+- `/home/kevin/Repos/backstage/ai-crew-suite/.eslintrc.cjs`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/app/package.json`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/app/src/App.tsx`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/app/src/App.test.tsx`
+- `/home/kevin/Repos/backstage/ai-crew-suite/yarn.lock`
+
+### Tests and validation
+
+Passed:
+
+- Frontend package tests: __2 passed__
+
+  - artifact/replay reducer behavior
+  - terminal error behavior
+
+- Package TypeScript compilation
+
+- Package lint
+
+- App feature-set test
+
+- `yarn typecheck --force`
+  - __45/45 tasks successful__
+
+- `yarn lint --force`
+  - __45/45 tasks successful__; existing unrelated warning-only findings remain
+
+- `git diff --check`
+
+### Limitation
+
+The implementation plan calls for a `BriefHistoryList` of scheduled briefs. AI Core currently exposes run creation and per-run event replay, but no confirmed runs-list endpoint. I did not invent a history API; scheduled briefs are supported through their persisted, deep-linkable `?run=<id>` replay path.
+
+## Backend Completed
+
+Implemented the backend module at:
+
+`/home/kevin/Repos/backstage/ai-crew-suite/plugins/backend/plugin-ai-agent-backend-oncall-ai-handover-assistant`
+
+### Implemented backend capabilities
+
+- AI Core backend module registration:
+
+  - workflow runner: `oncall-handover`
+  - agent: `oncall-handover-assistant`
+  - manual and scheduler triggers
+  - optional shift-boundary scheduler registration
+
+- Read-only tool allow-list matching the plan:
+
+  - incident alerts/incidents/on-call
+  - Kubernetes timeline
+  - merged PRs
+  - open high-priority tickets
+  - `knowledge.retrieve` runbook enrichment
+
+- Versioned, scoped `HandoverRequest` parsing:
+
+  - requires `team` or `entityRefs`
+  - validates timestamps and window inputs
+  - clamps window duration to configured max
+
+- Deterministic workflow:
+
+  1. resolve window
+  2. parallel bounded source collection
+  3. deterministic incident/noise clustering
+  4. optional runbook enrichment
+  5. deterministic cited brief assembly
+  6. `oncall-handover-brief` artifact finalization
+
+- Graceful degradation:
+
+  - failed/missing tool drivers become brief limitations
+  - no write tools
+  - invocation and per-source signal limits are enforced
+
+- Shift scheduler:
+
+  - one global task per configured cron boundary
+  - authenticated POST to the AI Core run route
+  - in-flight mutex per scheduled shift dispatch
+  - opt-in via `schedule.enabled`
+
+### Repository wiring
+
+Added:
+
+- Root TypeScript project reference in `/home/kevin/Repos/backstage/ai-crew-suite/tsconfig.json`
+
+- Backend-module ESLint role override in `/home/kevin/Repos/backstage/ai-crew-suite/.eslintrc.cjs`
+
+- Backend workspace dependency and backend feature load:
+
+  - `/home/kevin/Repos/backstage/ai-crew-suite/packages/backend/package.json`
+  - `/home/kevin/Repos/backstage/ai-crew-suite/packages/backend/src/index.ts`
+
+- Required active configuration:
+
+  - `/home/kevin/Repos/backstage/ai-crew-suite/app-config.yaml`
+  - `ai.agents.oncallHandover.model: oncall-handover`
+
+- Yarn workspace lockfile update.
+
+### Tests added
+
+- Request scoping and window clamping
+- High-volume deterministic alert clustering (`50` alerts → expected clusters)
+- No-activity brief behavior
+- Shift schedule planning
+- Backend module registration, agent tool policy, and trigger registration
+
+### Validation completed
+
+Passed:
+
+- `yarn workspace @webstackbuilders/plugin-ai-agent-backend-oncall-ai-handover-assistant test`
+  - __6 tests passed__
+- Package TypeScript compilation with the Yarn PnP TypeScript SDK
+- Package lint
+- `yarn typecheck --force`
+  - __44/44 tasks successful__
+- `yarn lint --force`
+  - __44/44 tasks successful__; existing unrelated warning-only lint findings remain
+- `git diff --check`
+
+The frontend and E2E work listed as Milestone 3 in the implementation plan was intentionally not added; this change implements the requested backend plugin and its backend wiring.
+
