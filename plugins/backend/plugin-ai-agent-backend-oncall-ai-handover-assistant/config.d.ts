@@ -1,0 +1,1 @@
+export interface Config { ai?: { agents?: { oncallHandover?: { model: string; windowHours?: number; maxWindowHours?: number; maxSignalsPerSource?: number; maxClusters?: number; maxEnrichedClusters?: number; maxToolInvocations?: number; schedule?: { enabled?: boolean; shifts?: { cron: string; team: string }[] } } } } }
