@@ -99,4 +99,7 @@ backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-core-backend-
 backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-core-backend-module-quality-scorecards')));
 backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-core-backend-module-runtime-store')));
 
+// agent workflow modules (AI Core agents)
+backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-agent-backend-catalog-ai-insights')));
+
 backend.start();
