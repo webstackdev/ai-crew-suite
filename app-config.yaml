@@ -57,3 +57,10 @@ permission:
 mcpActions:
   name: 'AI Crew Suite MCP Actions'
   description: 'Agentic workflows for Backstage IDP'
+
+ai:
+  agents:
+    catalogAiInsights:
+      # Installation-registered model ID; map it to a provider through a
+      # chat-model module (e.g. plugin-ai-core-backend-module-llm-openai).
+      model: catalog-insights

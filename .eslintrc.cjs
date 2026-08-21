@@ -134,6 +134,10 @@ module.exports = {
       createConfigForRole(__dirname, 'backend-plugin-module'),
     ),
     ...scopedOverrides(
+      'plugins/backend/plugin-ai-agent-backend-catalog-ai-insights',
+      createConfigForRole(__dirname, 'backend-plugin-module'),
+    ),
+    ...scopedOverrides(
       'plugins/backend/plugin-ai-core-backend-module-llm-aws',
       createConfigForRole(__dirname, 'backend-plugin-module'),
     ),

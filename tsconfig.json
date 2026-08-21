@@ -73,6 +73,11 @@
       "path": "./plugins/backend/plugin-ai-agent-backend-kubernetes-ai-responder"
     },
 
+    // 8b. Agent workflow modules
+    {
+      "path": "./plugins/backend/plugin-ai-agent-backend-catalog-ai-insights"
+    },
+
     // 9. Observability
     { "path": "./plugins/backend/plugin-ai-core-backend-module-observability" },
     {
