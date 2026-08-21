@@ -13,16 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export interface Config {
-  ai?: {
-    agents?: {
-      kubernetesAiResponder?: {
-        model: string;
-        maxEvidenceItems?: number;
-        maxLogBytes?: number;
-        lookbackMinutes?: number;
-        maxToolInvocations?: number;
-      };
-    };
-  };
-}
+import type { AgentEvent } from '@webstackbuilders/plugin-ai-core-node';
+import type { ReleaseNotesDraft } from '../workflow/state';
+
+/** Artifact kind emitted for a generated release-notes draft. */
+export const RELEASE_NOTES_DRAFT_ARTIFACT_KIND = 'release-notes-draft';
+
+/** Creates the replayable artifact event carrying a serialized release draft. */
+export const createReleaseNotesDraftArtifactEvent = (
+  runId: string,
+  draft: ReleaseNotesDraft,
+): AgentEvent => ({ type: 'artifact', data: { runId, kind: RELEASE_NOTES_DRAFT_ARTIFACT_KIND, ref: JSON.stringify(draft) } });

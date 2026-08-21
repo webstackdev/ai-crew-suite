@@ -13,16 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export interface Config {
-  ai?: {
-    agents?: {
-      kubernetesAiResponder?: {
-        model: string;
-        maxEvidenceItems?: number;
-        maxLogBytes?: number;
-        lookbackMinutes?: number;
-        maxToolInvocations?: number;
-      };
-    };
-  };
-}
+export { releaseNotesModule as default, releaseNotesModule } from './module';
+export * from './agent';
+export * from './config';
+export * from './workflow/state';
+export * from './workflow/request';
+export * from './workflow/categorize';
+export * from './workflow/collectors';
+export * from './workflow/draft';
+export * from './workflow/ReleaseNotesGraph';
+export * from './services/ReleaseNotesArtifactWriter';
+export * from './services/ReleaseNotesToolRunner';

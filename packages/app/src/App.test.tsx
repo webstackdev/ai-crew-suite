@@ -28,6 +28,7 @@ vi.mock(
   }),
 );
 vi.mock('@webstackbuilders/plugin-ai-agent-frontend-oncall-ai-handover-assistant/alpha', () => ({ default: 'oncall-handover-assistant' }));
+vi.mock('@webstackbuilders/plugin-ai-agent-frontend-release-notes-ai-generator/alpha', () => ({ default: 'release-notes-ai-generator' }));
 vi.mock('./modules/nav', () => ({ navModule: 'navigation' }));
 
 describe('App', () => {
@@ -47,6 +48,7 @@ describe('App', () => {
         'ai-crew',
         'kubernetes-ai-responder',
         'oncall-handover-assistant',
+        'release-notes-ai-generator',
         'catalog-ai-insights',
       ],
     });
