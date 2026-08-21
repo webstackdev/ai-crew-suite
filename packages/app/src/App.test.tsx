@@ -21,6 +21,12 @@ vi.mock(
     default: 'kubernetes-ai-responder',
   }),
 );
+vi.mock(
+  '@webstackbuilders/plugin-ai-agent-frontend-catalog-ai-insights/alpha',
+  () => ({
+    default: 'catalog-ai-insights',
+  }),
+);
 vi.mock('./modules/nav', () => ({ navModule: 'navigation' }));
 
 describe('App', () => {
@@ -39,6 +45,7 @@ describe('App', () => {
         'navigation',
         'ai-crew',
         'kubernetes-ai-responder',
+        'catalog-ai-insights',
       ],
     });
     expect(mocks.createRoot).toHaveBeenCalledWith();
