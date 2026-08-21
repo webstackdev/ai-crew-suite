@@ -82,6 +82,15 @@ plugins/backend/plugin-ai-agent-backend-catalog-ai-insights/
 - `module.ts` deps: `coreServices.rootConfig`, `logger`, `scheduler`, `discovery`, `auth`, `catalogServiceRef`, plus `agentExtensionPoint`, `triggerExtensionPoint`, `workflowRunnerExtensionPoint`.
 - Package naming, scripts, Apache header, root `tsconfig.json` references, and `.eslintrc.cjs` role overrides follow the responder package and `plugin-registration.md` verbatim (not repeated here).
 
+## Monorepo And App Wiring
+
+Steps not covered by `plugin-registration.md` or any checked-in responder example — do not skip:
+
+- **Backend module load**: add `"@webstackbuilders/plugin-ai-agent-backend-catalog-ai-insights": "workspace:^"` to `packages/backend/package.json` and `backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-agent-backend-catalog-ai-insights')))` in `packages/backend/src/index.ts`, grouped with the other `@webstackbuilders` module loads. Note: the responder backend module is intentionally **not** loaded there yet (gated on the Kubernetes diagnostics milestone) — there is no existing agent-module load line to copy. This module can load independently because absent tools degrade to report limitations.
+- **App config**: the backend module throws at boot without `ai.agents.catalogAiInsights.model`; add the config block (see Configuration) to the active `app-config*.yaml` before enabling the load, with `model` pointing at an installation-registered model ID.
+- **Frontend app registration**: add `"@webstackbuilders/plugin-ai-agent-frontend-catalog-ai-insights": "workspace:^"` to `packages/app/package.json`, import the default export from `.../plugin-ai-agent-frontend-catalog-ai-insights/alpha` in `packages/app/src/App.tsx`, and extend the plugin-ID expectations in `packages/app/src/App.test.tsx` — copy the existing `kubernetes-ai-responder` wiring in all three files.
+- **Yarn PnP refresh**: run `yarn install` after any `package.json` dependency edits, then `yarn typecheck --force` and `yarn lint --force` per `plugin-registration.md`.
+
 ## Agent Definition
 
 ```ts
@@ -270,7 +279,7 @@ Reuse the responder's test-layer table (unit/contract/backend integration/runtim
 - **`knowledge.retrieve` isolation**: pre-baked chunk fixtures selected by query substring; assert prompt construction and `entityFilter` scoping without real vector search or LLM behavior.
 - **Scheduler tests**: `mockServices.scheduler` fast-forwards ticks; assert the task POSTs bounded, authenticated run requests (spy on fetch/discovery), respects `scan.enabled: false`, and skips overlapping scans.
 - **Backend integration**: `startTestBackend` with this module + AI Core + `mockServices.rootConfig` agent config, asserting boot registration, run→SSE event order, and artifact persistence.
-- **E2E**: extend the shared fixture profile (`app-config.e2e.yaml`) with an annotated `payment-gateway` entity and fixture tool modules; Playwright scenario: open entity card → ask "why did the last deployment fail?" → assert cited answer, context panel, and deep-linkable run ID. Reuse `yarn dev:e2e-fixture` conventions; add `yarn test:e2e:catalog-ai-insights`.
+- **E2E**: the shared fixture profile (`app-config.e2e.yaml`, `packages/backend/e2e-fixtures/`, `yarn dev:e2e-fixture`) is specified in the responder plan but **does not exist yet** — create it per that spec if the responder has not landed it first, then add an annotated `payment-gateway` entity and fixture tool modules. Playwright scenario (extend `packages/app/e2e-tests/`): open entity card → ask "why did the last deployment fail?" → assert cited answer, context panel, and deep-linkable run ID. Add `yarn test:e2e:catalog-ai-insights`.
 
 ## Security and Operational Guardrails
 
@@ -294,6 +303,7 @@ Exit criteria: resolver unit tests pass; schemas validate fixture payloads.
 ### Milestone 1: Insights backend
 
 - [ ] Scaffold package, register runner/agent/triggers, implement config parsing; register in root `tsconfig.json` + `.eslintrc.cjs`.
+- [ ] Wire the module into `packages/backend` (package.json + `index.ts`) and add the `ai.agents.catalogAiInsights` config block (see Monorepo And App Wiring).
 - [ ] Implement intent classifier, per-intent gather, retrieval wrapper, normalization, synthesis + degradation, and artifact finalization.
 - [ ] Add unit, workflow-scenario (stateful mock router), and backend integration tests.
 
@@ -308,7 +318,7 @@ Exit criteria: a fast-forwarded tick produces persisted, replayable scan runs in
 
 ### Milestone 3: Frontend and E2E
 
-- [ ] Implement the frontend plugin (entity card, ask flow, SSE run view, cited answer/context panels) and register it.
+- [ ] Implement the frontend plugin (entity card, ask flow, SSE run view, cited answer/context panels) and register it in `packages/app` (package.json, `App.tsx`, `App.test.tsx`).
 - [ ] Component tests (loading, streaming, insufficient-context, reconnect/replay) plus accessibility checks.
 - [ ] Extend the E2E fixture profile and add the Playwright insights scenario with screenshot review.
 

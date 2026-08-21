@@ -2,7 +2,7 @@
 layout: default
 title: RFC & Architectural Decision Reviewer
 parent: Other
-plugin_name: rfc-adr-ai-reviewer
+plugin_name: plugin-ai-agent-backend-rfc-adr-ai-reviewer
 subcategory: Developer Productivity
 ---
 
