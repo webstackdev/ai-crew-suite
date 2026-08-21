@@ -28,7 +28,8 @@ export const incidentTriagePageExtension = PageBlueprint.make({
     title: 'Kubernetes Incident Triage',
     routeRef: rootRouteRef,
     loader: () =>
-      import('../components/IncidentTriagePage.js').then(m =>
+      // @ts-expect-error - NodeNext requires explicit .js extension, but the bundler cannot resolve .js to .ts source
+      import('../components/IncidentTriagePage').then(m =>
         React.createElement(m.IncidentTriagePage),
       ),
   },

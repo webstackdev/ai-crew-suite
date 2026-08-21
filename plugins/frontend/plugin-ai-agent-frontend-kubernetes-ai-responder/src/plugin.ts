@@ -63,7 +63,8 @@ export const IncidentTriagePage = kubernetesAiResponderPlugin.provide(
   createRoutableExtension({
     name: 'IncidentTriagePage',
     component: () =>
-      import('./components/IncidentTriagePage.js').then(
+      // @ts-expect-error - NodeNext requires explicit .js extension, but the bundler cannot resolve .js to .ts source
+      import('./components/IncidentTriagePage').then(
         m => m.IncidentTriagePage,
       ),
     mountPoint: rootRouteRef,
