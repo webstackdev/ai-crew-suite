@@ -15708,6 +15708,33 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@webstackbuilders/plugin-ai-agent-frontend-alert-ai-tuner@workspace:^, @webstackbuilders/plugin-ai-agent-frontend-alert-ai-tuner@workspace:plugins/frontend/plugin-ai-agent-frontend-alert-ai-tuner":
+  version: 0.0.0-use.local
+  resolution: "@webstackbuilders/plugin-ai-agent-frontend-alert-ai-tuner@workspace:plugins/frontend/plugin-ai-agent-frontend-alert-ai-tuner"
+  dependencies:
+    "@backstage/cli": "backstage:^"
+    "@backstage/core-components": "backstage:^"
+    "@backstage/core-plugin-api": "backstage:^"
+    "@backstage/dev-utils": "backstage:^"
+    "@backstage/frontend-plugin-api": "backstage:^"
+    "@backstage/test-utils": "backstage:^"
+    "@material-ui/core": "npm:^4.12.4"
+    "@testing-library/jest-dom": "npm:^6.9.1"
+    "@testing-library/react": "npm:^16.3.2"
+    "@testing-library/user-event": "npm:^14.6.1"
+    "@types/react": "npm:*"
+    "@types/react-dom": "npm:*"
+    eventsource-parser: "npm:^2.0.1"
+    react: "npm:^18.3.1"
+    react-dom: "npm:^18.3.1"
+    react-router-dom: "npm:^6.30.4"
+    vitest: "npm:^4.1.10"
+  peerDependencies:
+    react: ^18.3.1
+    react-router-dom: ^6.30.4
+  languageName: unknown
+  linkType: soft
+
 "@webstackbuilders/plugin-ai-agent-frontend-catalog-ai-insights@workspace:^, @webstackbuilders/plugin-ai-agent-frontend-catalog-ai-insights@workspace:plugins/frontend/plugin-ai-agent-frontend-catalog-ai-insights":
   version: 0.0.0-use.local
   resolution: "@webstackbuilders/plugin-ai-agent-frontend-catalog-ai-insights@workspace:plugins/frontend/plugin-ai-agent-frontend-catalog-ai-insights"
@@ -16961,6 +16988,7 @@ __metadata:
     "@testing-library/user-event": "npm:^14.6.1"
     "@types/react": "npm:*"
     "@types/react-dom": "npm:*"
+    "@webstackbuilders/plugin-ai-agent-frontend-alert-ai-tuner": "workspace:^"
     "@webstackbuilders/plugin-ai-agent-frontend-catalog-ai-insights": "workspace:^"
     "@webstackbuilders/plugin-ai-agent-frontend-kubernetes-ai-responder": "workspace:^"
     "@webstackbuilders/plugin-ai-agent-frontend-oncall-ai-handover-assistant": "workspace:^"

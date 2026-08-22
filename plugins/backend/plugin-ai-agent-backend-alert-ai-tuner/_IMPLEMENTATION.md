@@ -575,3 +575,59 @@ value the service already exceeds would silently disable the alert.
 Milestone 2 (approval gate and PR publish, blocked on the shared VCS write
 tool), Milestone 4 (frontend and E2E), and Milestone 5 (production dashboards
 plus the opt-in real-model evaluation suite).
+
+## Frontend Completed
+
+Implemented the alert fatigue tuner frontend plugin at:
+
+`/home/kevin/Repos/backstage/ai-crew-suite/plugins/frontend/plugin-ai-agent-frontend-alert-ai-tuner`
+
+### Implemented surface
+
+- Package: `@webstackbuilders/plugin-ai-agent-frontend-alert-ai-tuner`
+- `backstage.role: frontend-plugin`, `backstage.pluginId: alert-ai-tuner`
+- Legacy (`.`) and new frontend-system (`./alpha`) entry points
+- Standalone page at `/alert-ai-tuner`, with `?run=<id>` replay
+- Typed API client over discovery/fetch/identity APIs:
+  - `evaluateAlert()` → `POST agents/alert-ai-tuner/runs`
+  - `streamRunEvents()` → `GET runs/<id>/events` with `Last-Event-ID`
+  - `submitApproval()` → `POST runs/<id>/approvals` (future typed surface)
+- `useAlertTuningRun`: pure reducer plus live/replay/approval hook
+- `EvaluateAlertDialog`, `TuningRunView`, `NoiseEvidencePanel`,
+  `ThresholdDiffPreview`, `ApprovalBar`, and `PublicationBanner`
+
+### Contract fidelity and current limitation
+
+Wire types mirror the implemented backend's `AlertTuningRequest`,
+`AlertTuningProposal`, `NoiseScore`, anchored `FilePatch`, and
+`alert-tuning-proposal` artifact exactly. The current backend is proposal-only:
+there is no VCS write tool, approval event, publication artifact, or proposal
+list endpoint. The page therefore renders the live proposal/evidence/diff flow
+and keeps approval/publication controls hidden unless real future SSE events
+arrive; it does not fabricate a write gate, a PR link, or a dashboard list.
+
+### Wiring added
+
+- `/home/kevin/Repos/backstage/ai-crew-suite/tsconfig.json`
+- `/home/kevin/Repos/backstage/ai-crew-suite/.eslintrc.cjs`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/app/package.json`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/app/src/App.tsx`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/app/src/App.test.tsx`
+- `/home/kevin/Repos/backstage/ai-crew-suite/yarn.lock`
+
+### Tests and validation
+
+- 10 tests across 4 files cover proposal replay/artifact parsing, streamed step
+  and tool progress, future approval state, malformed artifact resilience,
+  deterministic evidence/citation display, no-score display, diff and patch-hash
+  display, no-patch state, and form validation/submission.
+- `yarn vitest run plugins/frontend/plugin-ai-agent-frontend-alert-ai-tuner/src` — __10 tests passed__
+- `yarn vitest run packages/app/src/App.test.tsx` — __1 test passed__
+- Package `tsc --noEmit` and package lint — clean
+
+### Still out of scope
+
+An entity card and recent-proposal table require an actual backend proposal-list
+endpoint; approval/reject browser tests and Playwright E2E require the shared
+VCS write tool and real approval/publication events. Neither backend capability
+was invented by this frontend plugin.
