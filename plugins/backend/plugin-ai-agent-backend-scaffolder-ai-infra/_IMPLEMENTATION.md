@@ -473,3 +473,38 @@ workspace; writes occur only within an actual sandboxed Scaffolder action.
 - `/home/kevin/Repos/backstage/ai-crew-suite/packages/backend/src/index.ts`
 - `/home/kevin/Repos/backstage/ai-crew-suite/app-config.yaml`
 - `/home/kevin/Repos/backstage/ai-crew-suite/yarn.lock`
+
+## Frontend Completed
+
+Implemented the contract-matched preview frontend at:
+
+`/home/kevin/Repos/backstage/ai-crew-suite/plugins/frontend/plugin-ai-agent-frontend-scaffolder-ai-infra`
+
+### Implemented surface
+
+- Package `@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-infra` with
+  legacy and `./alpha` entrypoints; standalone `/scaffolder-ai-infra` page with
+  `?run=<id>` replay.
+- Typed preview/replay client for `scaffolder-ai-infra` AI Core runs.
+- `useInfraRun` reducer/hook, provider/service/region preview dialog, status
+  banner, generated-file metadata manifest, validation findings, correction
+  count, limitations, and retained evidence.
+- The preview page explicitly states that it is non-writing and cannot provision
+  infrastructure or write a Scaffolder workspace.
+
+### Contract limitation (not fabricated)
+
+The implemented preview runner emits only `infra-generation-report` metadata.
+No generated file contents and no report-list endpoint are persisted, so this
+frontend intentionally does not invent syntax-highlighted content tabs or a
+history/list API. File writes remain exclusive to the real
+`ai:infra:generate` Scaffolder action.
+
+### Wiring and validation
+
+- Registered TypeScript/ESLint coverage, app package dependency, alpha feature,
+  and app feature expectation.
+- 5 focused tests cover report replay, progress/malformed artifact handling,
+  blocking/empty validation findings, and explicit non-writing preview status.
+- `yarn vitest run plugins/frontend/plugin-ai-agent-frontend-scaffolder-ai-infra/src` — __5 tests passed__
+- Package `tsc --noEmit`, package lint, and app registration test — clean.
