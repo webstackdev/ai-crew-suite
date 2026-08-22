@@ -14,7 +14,27 @@
  * limitations under the License.
  */
 import { ApiBlueprint, createApiFactory } from '@backstage/frontend-plugin-api';
-import { configApiRef, discoveryApiRef, fetchApiRef, identityApiRef } from '@backstage/core-plugin-api';
+import {
+  configApiRef,
+  discoveryApiRef,
+  fetchApiRef,
+  identityApiRef
+} from '@backstage/core-plugin-api';
 import { ScaffolderGuardrailClient, scaffolderGuardrailApiRef } from '../api';
+
 /** New-frontend-system API blueprint for guardrail SSE streams. */
-export const scaffolderGuardrailApiExtension = ApiBlueprint.make({ params: define => define(createApiFactory({ api: scaffolderGuardrailApiRef, deps: { configApi: configApiRef, discoveryApi: discoveryApiRef, fetchApi: fetchApiRef, identityApi: identityApiRef }, factory: deps => new ScaffolderGuardrailClient(deps) })) });
+export const scaffolderGuardrailApiExtension = ApiBlueprint.make({
+  params: define =>
+    define(
+      createApiFactory({
+        api: scaffolderGuardrailApiRef,
+        deps: {
+          configApi: configApiRef,
+          discoveryApi: discoveryApiRef,
+          fetchApi: fetchApiRef,
+          identityApi: identityApiRef
+        },
+        factory: deps => new ScaffolderGuardrailClient(deps)
+      })
+    )
+});

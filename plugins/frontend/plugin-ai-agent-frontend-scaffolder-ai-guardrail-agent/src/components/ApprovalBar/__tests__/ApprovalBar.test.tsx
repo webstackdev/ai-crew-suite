@@ -20,5 +20,29 @@ import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { ApprovalBar } from '../ApprovalBar';
 
-const base = { templateRef: 'template:default/db', fingerprint: 'f', violations: [], budget: { status: 'within_budget' as const, evidence: [] }, mutations: [{ id: 'mut-1', parameter: 'instanceType', from: 'large', to: 'small', resolves: [], rationale: 'policy' }], confidence: 'high' as const, limitations: [], evidence: [] };
-describe('ApprovalBar', () => { it('offers mutation acceptance for negotiable assessments', async () => { const onDecide = vi.fn(); render(<ApprovalBar assessment={{ ...base, status: 'negotiable' }} reason="Accept change" onDecide={onDecide} />); await userEvent.click(screen.getByRole('button', { name: 'Accept mutation' })); expect(onDecide).toHaveBeenCalledWith(true); }); it('does not render an accept path for blocking assessments', () => { render(<ApprovalBar assessment={{ ...base, status: 'blocked', mutations: [] }} reason="Blocked" onDecide={vi.fn()} />); expect(screen.queryByRole('button', { name: /Accept|Request/ })).not.toBeInTheDocument(); }); });
+const base = {
+  templateRef: 'template:default/db',
+  fingerprint: 'f',
+  violations: [],
+  budget: { status: 'within_budget' as const, evidence: [] },
+  mutations: [{ id: 'mut-1', parameter: 'instanceType', from: 'large', to: 'small', resolves: [], rationale: 'policy' }],
+  confidence: 'high' as const,
+  limitations: [],
+  evidence: []
+};
+
+describe('ApprovalBar', () => {
+  it('offers mutation acceptance for negotiable assessments', async () => {
+    const onDecide = vi.fn();
+    render(<ApprovalBar assessment={{ ...base, status: 'negotiable' }} reason="Accept change" onDecide={onDecide} />);
+
+    await userEvent.click(screen.getByRole('button', { name: 'Accept mutation' }));
+    expect(onDecide).toHaveBeenCalledWith(true);
+  });
+
+  it('does not render an accept path for blocking assessments', () => {
+    render(<ApprovalBar assessment={{ ...base, status: 'blocked', mutations: [] }} reason="Blocked" onDecide={vi.fn()} />);
+
+    expect(screen.queryByRole('button', { name: /Accept|Request/ })).not.toBeInTheDocument();
+  });
+});

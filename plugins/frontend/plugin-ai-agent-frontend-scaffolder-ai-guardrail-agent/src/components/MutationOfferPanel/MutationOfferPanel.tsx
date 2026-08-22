@@ -16,7 +16,35 @@
 import React from 'react';
 import { Paper, Typography } from '@material-ui/core';
 import type { MutationProposal } from '../../@types';
+
 /** Props for deterministic policy-derived parameter alternatives. */
-export type MutationOfferPanelProps = { mutations: MutationProposal[] };
+export type MutationOfferPanelProps = {
+  mutations: MutationProposal[];
+};
+
 /** Displays only alternatives supplied by backend configuration, never generated in the browser. */
-export const MutationOfferPanel = ({ mutations }: MutationOfferPanelProps) => <section aria-label="Policy-derived alternatives"><Typography variant="h6">Safe alternatives</Typography>{mutations.length ? mutations.map(mutation => <Paper key={mutation.id}><Typography>{mutation.parameter}: {String(mutation.from)} → {String(mutation.to)}</Typography>{mutation.projectedAmount !== undefined ? <Typography>Re-priced estimate: {mutation.projectedAmount}</Typography> : null}<Typography variant="caption">Resolves: {mutation.resolves.join(', ')}</Typography></Paper>) : <Typography>No safe alternative is available.</Typography>}</section>;
+export const MutationOfferPanel = ({ mutations }: MutationOfferPanelProps) => (
+  <section aria-label="Policy-derived alternatives">
+    <Typography variant="h6">Safe alternatives</Typography>
+
+    {mutations.length ? (
+      mutations.map(mutation => (
+        <Paper key={mutation.id}>
+          <Typography>
+            {mutation.parameter}: {String(mutation.from)} → {String(mutation.to)}
+          </Typography>
+
+          {mutation.projectedAmount !== undefined ? (
+            <Typography>Re-priced estimate: {mutation.projectedAmount}</Typography>
+          ) : null}
+
+          <Typography variant="caption">
+            Resolves: {mutation.resolves.join(', ')}
+          </Typography>
+        </Paper>
+      ))
+    ) : (
+      <Typography>No safe alternative is available.</Typography>
+    )}
+  </section>
+);

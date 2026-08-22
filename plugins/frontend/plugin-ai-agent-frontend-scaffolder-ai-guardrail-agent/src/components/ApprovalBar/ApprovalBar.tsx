@@ -16,7 +16,31 @@
 import React from 'react';
 import { Button, Paper, Typography } from '@material-ui/core';
 import type { GuardrailAssessment } from '../../@types';
+
 /** Props for a real backend-issued advisory negotiation decision. */
-export type ApprovalBarProps = { assessment: GuardrailAssessment; reason: string; onDecide: (approved: boolean) => void };
+export type ApprovalBarProps = {
+  assessment: GuardrailAssessment;
+  reason: string;
+  onDecide: (approved: boolean) => void;
+};
+
 /** Offers acceptance only for negotiable alternatives and exception request only for escalation. */
-export const ApprovalBar = ({ assessment, reason, onDecide }: ApprovalBarProps) => { if (assessment.status === 'blocked') return null; const primary = assessment.status === 'escalate' ? 'Request exception' : 'Accept mutation'; return <Paper role="region" aria-label="Guardrail negotiation"><Typography>{reason}</Typography><Button color="primary" variant="contained" onClick={() => onDecide(true)}>{primary}</Button><Button onClick={() => onDecide(false)}>Reject</Button></Paper>; };
+export const ApprovalBar = ({ assessment, reason, onDecide }: ApprovalBarProps) => {
+  if (assessment.status === 'blocked') return null;
+
+  const primary = assessment.status === 'escalate' ? 'Request exception' : 'Accept mutation';
+
+  return (
+    <Paper role="region" aria-label="Guardrail negotiation">
+      <Typography>{reason}</Typography>
+
+      <Button color="primary" variant="contained" onClick={() => onDecide(true)}>
+        {primary}
+      </Button>
+
+      <Button onClick={() => onDecide(false)}>
+        Reject
+      </Button>
+    </Paper>
+  );
+};
