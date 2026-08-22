@@ -60,6 +60,10 @@ mcpActions:
 
 ai:
   agents:
+    alertAiTuner:
+      # Propose-only threshold tuning; opening a pull request is unavailable
+      # until the shared VCS write tool is registered.
+      model: alert-tuner
     catalogAiInsights:
       # Installation-registered model ID; map it to a provider through a
       # chat-model module (e.g. plugin-ai-core-backend-module-llm-openai).
