@@ -72,6 +72,13 @@ ai:
       model: scaffolder-guardrail
       policies:
         - id: corp-architecture
+    scaffolderInfra:
+      model: scaffolder-infra
+      blueprints:
+        sources:
+          - id: example-terraform
+            provider: terraform
+            url: https://example.invalid/approved/main.tf
     catalogAiInsights:
       # Installation-registered model ID; map it to a provider through a
       # chat-model module (e.g. plugin-ai-core-backend-module-llm-openai).
