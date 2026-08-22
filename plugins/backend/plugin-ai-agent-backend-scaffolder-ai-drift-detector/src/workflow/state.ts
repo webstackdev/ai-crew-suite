@@ -59,7 +59,12 @@ export type InfraSnapshot = {
 /** One structural divergence with evidence for both compared values. */
 export type DriftItem = {
   id: string;
-  field: 'spec.replicas' | 'container.image' | 'resources.limits.cpu' | 'resources.limits.memory' | 'pods.ready';
+  field:
+    | 'spec.replicas'
+    | 'container.image'
+    | 'resources.limits.cpu'
+    | 'resources.limits.memory'
+    | 'pods.ready';
   expected: { value: string | number | undefined; evidence: string[] };
   actual: { value: string | number | undefined; evidence: string[] };
   severity: 'critical' | 'major' | 'minor' | 'info';

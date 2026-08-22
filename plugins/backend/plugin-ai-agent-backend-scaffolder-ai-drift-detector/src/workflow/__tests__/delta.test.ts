@@ -18,13 +18,32 @@ import { computeDrift } from '../delta';
 
 describe('computeDrift', () => {
   it('isolates replicas and memory divergence with paired citations', () => {
-    const items = computeDrift({ replicas: 2, image: 'app:v1', limits: { memory: '512Mi' } }, { replicas: 6, image: 'app:v1', limits: { memory: '1Gi' } });
+    const items = computeDrift(
+      { replicas: 2, image: 'app:v1', limits: { memory: '512Mi' } },
+      { replicas: 6, image: 'app:v1', limits: { memory: '1Gi' } }
+    );
+
     expect(items).toMatchObject([
-      { field: 'spec.replicas', expected: { value: 2, evidence: ['bp-1'] }, actual: { value: 6, evidence: ['live-1'] }, severity: 'major' },
-      { field: 'resources.limits.memory', expected: { value: '512Mi' }, actual: { value: '1Gi' } },
+      {
+        field: 'spec.replicas',
+        expected: { value: 2, evidence: ['bp-1'] },
+        actual: { value: 6, evidence: ['live-1'] },
+        severity: 'major'
+      },
+      {
+        field: 'resources.limits.memory',
+        expected: { value: '512Mi' },
+        actual: { value: '1Gi' }
+      },
     ]);
   });
+
   it('returns no items when expected and live state match', () => {
-    expect(computeDrift({ replicas: 2, image: 'app:v1' }, { replicas: 2, image: 'app:v1' })).toEqual([]);
+    expect(
+      computeDrift(
+        { replicas: 2, image: 'app:v1' },
+        { replicas: 2, image: 'app:v1' }
+      )
+    ).toEqual([]);
   });
 });

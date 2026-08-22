@@ -15,19 +15,49 @@
  */
 import type { BlueprintSpec, DriftItem, InfraSnapshot } from './state';
 
+interface ComparisonField {
+  field: DriftItem['field'];
+  expected: string | number | undefined;
+  actual: string | number | undefined;
+  severity: DriftItem['severity'];
+}
+
 /** Compares golden-path expectations and live Kubernetes state without model inference. */
 export const computeDrift = (blueprint: BlueprintSpec, live: InfraSnapshot): DriftItem[] => {
-  const fields: { field: DriftItem['field']; expected: string | number | undefined; actual: string | number | undefined; severity: DriftItem['severity'] }[] = [
-    { field: 'spec.replicas', expected: blueprint.replicas, actual: live.replicas, severity: 'major' },
-    { field: 'container.image', expected: blueprint.image, actual: live.image, severity: 'major' },
-    { field: 'resources.limits.cpu', expected: blueprint.limits?.cpu, actual: live.limits?.cpu, severity: 'minor' },
-    { field: 'resources.limits.memory', expected: blueprint.limits?.memory, actual: live.limits?.memory, severity: 'major' },
+  const fields: ComparisonField[] = [
+    {
+      field: 'spec.replicas',
+      expected: blueprint.replicas,
+      actual: live.replicas,
+      severity: 'major'
+    },
+    {
+      field: 'container.image',
+      expected: blueprint.image,
+      actual: live.image,
+      severity: 'major'
+    },
+    {
+      field: 'resources.limits.cpu',
+      expected: blueprint.limits?.cpu,
+      actual: live.limits?.cpu,
+      severity: 'minor'
+    },
+    {
+      field: 'resources.limits.memory',
+      expected: blueprint.limits?.memory,
+      actual: live.limits?.memory,
+      severity: 'major'
+    },
   ];
-  return fields.filter(item => item.expected !== undefined && item.expected !== item.actual).map((item, index) => ({
-    id: `drift-${index + 1}`,
-    field: item.field,
-    expected: { value: item.expected, evidence: ['bp-1'] },
-    actual: { value: item.actual, evidence: ['live-1'] },
-    severity: item.severity,
-  }));
+
+  return fields
+    .filter(item => item.expected !== undefined && item.expected !== item.actual)
+    .map((item, index) => ({
+      id: `drift-${index + 1}`,
+      field: item.field,
+      expected: { value: item.expected, evidence: ['bp-1'] },
+      actual: { value: item.actual, evidence: ['live-1'] },
+      severity: item.severity,
+    }));
 };

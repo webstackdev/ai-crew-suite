@@ -14,26 +14,44 @@
  * limitations under the License.
  */
 import { coreServices, createBackendModule } from '@backstage/backend-plugin-api';
-import { agentExtensionPoint, triggerExtensionPoint, workflowRunnerExtensionPoint } from '@webstackbuilders/plugin-ai-core-node';
+import {
+  agentExtensionPoint,
+  triggerExtensionPoint,
+  workflowRunnerExtensionPoint
+} from '@webstackbuilders/plugin-ai-core-node';
 import { createDriftDetectorAgent } from './agent';
 import { readDriftDetectorConfig } from './config';
 import { DriftGraph } from './workflow/DriftGraph';
 
 /** Registers the read-only Scaffolder drift detector with AI Core. */
 export const driftDetectorModule = createBackendModule({
-  pluginId: 'ai-core', moduleId: 'agent-scaffolder-ai-drift-detector',
+  pluginId: 'ai-core',
+  moduleId: 'agent-scaffolder-ai-drift-detector',
   register(env) {
     env.registerInit({
-      deps: { config: coreServices.rootConfig, logger: coreServices.logger, agents: agentExtensionPoint, triggers: triggerExtensionPoint, workflows: workflowRunnerExtensionPoint },
+      deps: {
+        config: coreServices.rootConfig,
+        logger: coreServices.logger,
+        agents: agentExtensionPoint,
+        triggers: triggerExtensionPoint,
+        workflows: workflowRunnerExtensionPoint
+      },
       async init({ config, logger, agents, triggers, workflows }) {
         const resolved = readDriftDetectorConfig(config);
+
         workflows.registerRunner(new DriftGraph(resolved));
+
         const agent = createDriftDetectorAgent(resolved);
         agents.addAgent(agent);
-        for (const trigger of agent.triggers ?? []) triggers.addTrigger(trigger);
+
+        for (const trigger of agent.triggers ?? []) {
+          triggers.addTrigger(trigger);
+        }
+
         logger.info('Registered read-only Scaffolder drift detector workflow');
       },
     });
   },
 });
+
 export default driftDetectorModule;

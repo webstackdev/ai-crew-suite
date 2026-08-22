@@ -21,13 +21,23 @@ import { SCAFFOLDER_DRIFT_WORKFLOW_ID } from './workflow/DriftGraph';
 export const DRIFT_DETECTOR_AGENT_ID = 'scaffolder-ai-drift-detector';
 
 /** Read-only tools currently available for Kubernetes-backed drift detection. */
-export const DRIFT_DETECTOR_TOOL_IDS = ['kubernetes.workload.resolve', 'kubernetes.workload.get_snapshot', 'vcs.repository.read_file'] as const;
+export const DRIFT_DETECTOR_TOOL_IDS = [
+  'kubernetes.workload.resolve',
+  'kubernetes.workload.get_snapshot',
+  'vcs.repository.read_file'
+] as const;
 
 /** Evidence-only prompt posture; no model output can decide drift or mutate infrastructure. */
-export const DRIFT_DETECTOR_SYSTEM_PROMPT = 'Compare only supplied golden-path and live snapshot evidence. Every narrative claim must cite bp-N or live-N evidence. Never invent resources, costs, template values, file paths, or a remediation patch. This workflow is read-only and advisory.';
+export const DRIFT_DETECTOR_SYSTEM_PROMPT =
+  'Compare only supplied golden-path and live snapshot evidence. ' +
+  'Every narrative claim must cite bp-N or live-N evidence. ' +
+  'Never invent resources, costs, template values, file paths, or a remediation patch. ' +
+  'This workflow is read-only and advisory.';
 
 /** Creates the read-only drift detector agent definition. */
-export const createDriftDetectorAgent = (config: DriftDetectorConfig): AgentDefinition => ({
+export const createDriftDetectorAgent = (
+  config: DriftDetectorConfig
+): AgentDefinition => ({
   id: DRIFT_DETECTOR_AGENT_ID,
   modelRef: config.modelRef,
   workflowRef: SCAFFOLDER_DRIFT_WORKFLOW_ID,
