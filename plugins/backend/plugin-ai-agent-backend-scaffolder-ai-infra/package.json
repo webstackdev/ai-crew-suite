@@ -1,0 +1,50 @@
+{
+  "name": "@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-infra",
+  "description": "AI Core preview runner and Scaffolder action for deterministic hardened IaC generation.",
+  "version": "0.0.1",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "license": "Apache-2.0",
+  "publishConfig": {
+    "access": "public",
+    "main": "dist/index.cjs.js",
+    "types": "dist/index.d.ts"
+  },
+  "backstage": {
+    "role": "backend-plugin-module",
+    "pluginId": "ai-core",
+    "pluginPackage": [
+      "@webstackbuilders/plugin-ai-core-backend"
+    ]
+  },
+  "files": [
+    "dist",
+    "config.d.ts"
+  ],
+  "exports": {
+    ".": "./src/index.ts",
+    "./scaffolderModule": "./src/scaffolderModule.ts"
+  },
+  "configSchema": "config.d.ts",
+  "scripts": {
+    "start": "backstage-cli package start",
+    "build": "yarn --cwd ../../.. tsc -b plugins/backend/plugin-ai-agent-backend-scaffolder-ai-infra/tsconfig.json --emitDeclarationOnly && backstage-cli package build",
+    "clean": "backstage-cli package clean",
+    "prepack": "backstage-cli package prepack",
+    "postpack": "backstage-cli package postpack",
+    "typecheck": "tsc --noEmit",
+    "lint": "backstage-cli package lint --format stylish",
+    "test": "yarn --cwd ../../.. vitest run plugins/backend/plugin-ai-agent-backend-scaffolder-ai-infra/src --config test/vitest.config.ts"
+  },
+  "dependencies": {
+    "@backstage/backend-plugin-api": "backstage:^",
+    "@backstage/config": "backstage:^",
+    "@backstage/plugin-scaffolder-node": "^0.13.6",
+    "@webstackbuilders/plugin-ai-core-node": "workspace:*"
+  },
+  "devDependencies": {
+    "@backstage/backend-test-utils": "backstage:^",
+    "@backstage/cli": "backstage:^",
+    "vitest": "^4.1.11"
+  }
+}

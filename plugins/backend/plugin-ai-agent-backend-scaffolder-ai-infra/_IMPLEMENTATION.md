@@ -423,3 +423,53 @@ Exit criteria: staged rollout with a small curated blueprint set, bounded costs,
 - The action writes only inside `ctx.workspacePath`, all-or-nothing, honoring `isDryRun` and refusing traversal/overwrite; nothing in the plugin can provision infrastructure, open a PR, or emit a credential.
 - Frontend renders files, findings, and the correction timeline over live SSE and replay via `ApiBlueprint`/`PageBlueprint`, and labels preview as non-writing; Playwright verifies preview and rejection paths on fixtures.
 - No output surface (SSE, artifacts, logs, tests) contains secrets, credentialed blueprint URLs, uncited values, or IaC generated outside an approved blueprint.
+
+## Backend Completed
+
+Implemented the deterministic approved-blueprint backend at:
+
+`/home/kevin/Repos/backstage/ai-crew-suite/plugins/backend/plugin-ai-agent-backend-scaffolder-ai-infra`
+
+### Implemented
+
+- Two real backend modules:
+  - AI Core `scaffolder-ai-infra` preview runner (`scaffolder-infra` workflow)
+  - Scaffolder `ai:infra:generate` action module registered through the verified
+    `scaffolderActionsExtensionPoint`
+- Shared versioned request schema, capacity/region/service-name validation,
+  config-declared approved blueprint source selection, deterministic provider
+  route (`main.tf` for Terraform; `template.yaml` for CloudFormation), and
+  placeholder-only rendering.
+- Deterministic validation blocks unresolved holes, secret material, public
+  ingress, and wildcard IAM before any workspace write.
+- Sandboxed workspace writer: resolved path containment, traversal rejection,
+  all-or-nothing validation-before-write, dry-run manifest output, overwrite
+  refusal by default, and the installed Scaffolder SDK's actual
+  `ctx.checkpoint({ key, fn })` contract.
+- Persisted non-writing preview reports as `infra-generation-report` artifacts.
+
+### Contract limitations (not fabricated)
+
+This delivery uses deterministic approved-blueprint hole rendering; it does not
+fabricate a model generation/correction loop. Catalog ownership/duplicate
+adapters, policy-driver validation over generated files, repository-blueprint
+reads, RAG, and a dedicated Scaffolder action test helper require additional
+confirmed integrations and remain deferred. The preview runner never writes a
+workspace; writes occur only within an actual sandboxed Scaffolder action.
+
+### Tests and validation
+
+- 7 focused tests across 3 files: Terraform route/file name, deterministic
+  placeholder render, blocking holes/secrets, workspace write, dry-run,
+  traversal rejection, preview artifact, and blueprint-unavailable outcome.
+- `yarn vitest run plugins/backend/plugin-ai-agent-backend-scaffolder-ai-infra/src` — __7 tests passed__
+- Package `tsc --noEmit` and package lint — clean
+
+### Wiring added
+
+- `/home/kevin/Repos/backstage/ai-crew-suite/tsconfig.json`
+- `/home/kevin/Repos/backstage/ai-crew-suite/.eslintrc.cjs`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/backend/package.json`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/backend/src/index.ts`
+- `/home/kevin/Repos/backstage/ai-crew-suite/app-config.yaml`
+- `/home/kevin/Repos/backstage/ai-crew-suite/yarn.lock`
