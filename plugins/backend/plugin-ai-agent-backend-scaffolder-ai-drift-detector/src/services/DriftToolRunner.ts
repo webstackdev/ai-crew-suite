@@ -19,14 +19,46 @@ import type { ToolInvocationResult, WorkflowContext } from '@webstackbuilders/pl
 export class DriftToolRunner {
   private calls = 0;
   private readonly failures: string[] = [];
-  constructor(private readonly context: WorkflowContext, private readonly maxCalls: number) {}
+
+  constructor(
+    private readonly context: WorkflowContext,
+    private readonly maxCalls: number
+  ) {}
+
   /** Limitations accumulated from unavailable optional data sources. */
-  get limitations(): string[] { return [...this.failures]; }
+  get limitations(): string[] {
+    return [...this.failures];
+  }
+
   /** Invokes one allow-listed tool or records its failure as a limitation. */
-  async invoke<TArgs, TResult>(toolId: string, args: TArgs): Promise<ToolInvocationResult<TResult> | undefined> {
-    if (this.calls >= this.maxCalls) { this.failures.push(`Tool '${toolId}' was skipped: drift detector tool budget exhausted.`); return undefined; }
+  async invoke<TArgs, TResult>(
+    toolId: string,
+    args: TArgs
+  ): Promise<ToolInvocationResult<TResult> | undefined> {
+    if (this.calls >= this.maxCalls) {
+      this.failures.push(
+        `Tool '${toolId}' was skipped: drift detector tool budget exhausted.`
+      );
+      return undefined;
+    }
+
     this.calls += 1;
-    try { return await this.context.invokeTool<TArgs, TResult>({ toolId, args, limits: { timeoutMs: 10_000 } }); }
-    catch (error) { const message = error instanceof Error ? error.message : String(error); this.failures.push(`Tool '${toolId}' is unavailable: ${message}`); this.context.logger.warn(`Drift detector tool '${toolId}' failed`, { error: message }); return undefined; }
+
+    try {
+      return await this.context.invokeTool<TArgs, TResult>({
+        toolId,
+        args,
+        limits: { timeoutMs: 10_000 }
+      });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      this.failures.push(`Tool '${toolId}' is unavailable: ${message}`);
+
+      this.context.logger.warn(
+        `Drift detector tool '${toolId}' failed`,
+        { error: message }
+      );
+      return undefined;
+    }
   }
 }

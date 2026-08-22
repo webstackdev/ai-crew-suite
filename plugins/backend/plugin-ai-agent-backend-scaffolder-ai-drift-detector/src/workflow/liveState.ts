@@ -17,7 +17,9 @@ import type { KubernetesWorkloadSnapshot } from '@webstackbuilders/plugin-ai-cor
 import type { EvidenceRef, InfraSnapshot } from './state';
 
 /** Extracts bounded comparable values from the normalized Kubernetes snapshot. */
-export const normalizeLiveSnapshot = (snapshot: KubernetesWorkloadSnapshot): InfraSnapshot => ({
+export const normalizeLiveSnapshot = (
+  snapshot: KubernetesWorkloadSnapshot
+): InfraSnapshot => ({
   replicas: snapshot.replicas?.desired,
   readyPods: snapshot.replicas?.ready,
   expectedPods: snapshot.replicas?.desired,
@@ -29,6 +31,8 @@ export const normalizeLiveSnapshot = (snapshot: KubernetesWorkloadSnapshot): Inf
 export const liveEvidence = (snapshot: KubernetesWorkloadSnapshot): EvidenceRef => ({
   id: 'live-1',
   source: 'live',
-  summary: `Workload ${snapshot.namespace}/${snapshot.name}: desired replicas ${snapshot.replicas?.desired ?? 'unknown'}, ready ${snapshot.replicas?.ready ?? 'unknown'}`,
+  summary: `Workload ${snapshot.namespace}/${snapshot.name}: desired replicas ${
+    snapshot.replicas?.desired ?? 'unknown'
+  }, ready ${snapshot.replicas?.ready ?? 'unknown'}`,
   reference: snapshot.entityRef,
 });

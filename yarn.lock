@@ -15717,7 +15717,7 @@ __metadata:
     "@backstage/cli": "backstage:^"
     "@backstage/config": "backstage:^"
     "@webstackbuilders/plugin-ai-core-node": "workspace:*"
-    vitest: "npm:^4.1.10"
+    vitest: "npm:^4.1.11"
   languageName: unknown
   linkType: soft
 
@@ -17734,7 +17734,7 @@ __metadata:
     app: "link:../app"
     better-sqlite3: "npm:^13.0.3"
     pg: "npm:^8.23.0"
-    vitest: "npm:^4.1.10"
+    vitest: "npm:^4.1.11"
   languageName: unknown
   linkType: soft
 

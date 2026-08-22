@@ -15,17 +15,59 @@
  */
 import { createBackendPlugin } from '@backstage/backend-plugin-api';
 import { mockServices, startTestBackend } from '@backstage/backend-test-utils';
-import { agentExtensionPoint, triggerExtensionPoint, workflowRunnerExtensionPoint, type AgentExtensionPoint, type TriggerExtensionPoint, type WorkflowRunnerExtensionPoint } from '@webstackbuilders/plugin-ai-core-node';
+import {
+  agentExtensionPoint,
+  triggerExtensionPoint,
+  workflowRunnerExtensionPoint,
+  type AgentExtensionPoint,
+  type TriggerExtensionPoint,
+  type WorkflowRunnerExtensionPoint
+} from '@webstackbuilders/plugin-ai-core-node';
 import { describe, expect, it, vi } from 'vitest';
 import { driftDetectorModule } from '../module';
 
 describe('driftDetectorModule', () => {
   it('registers the read-only drift runner and triggers', async () => {
-    const points = { agents: { addAgent: vi.fn() }, triggers: { addTrigger: vi.fn() }, workflows: { registerRunner: vi.fn() } };
-    const host = createBackendPlugin({ pluginId: 'ai-core', register(env) { env.registerExtensionPoint(agentExtensionPoint, points.agents as unknown as AgentExtensionPoint); env.registerExtensionPoint(triggerExtensionPoint, points.triggers as unknown as TriggerExtensionPoint); env.registerExtensionPoint(workflowRunnerExtensionPoint, points.workflows as unknown as WorkflowRunnerExtensionPoint); env.registerInit({ deps: {}, async init() {} }); } });
-    await startTestBackend({ features: [host, driftDetectorModule, mockServices.rootConfig.factory({ data: { ai: { agents: { driftDetector: { model: 'drift' } } } } }), mockServices.logger.factory()] });
+    const points = {
+      agents: { addAgent: vi.fn() },
+      triggers: { addTrigger: vi.fn() },
+      workflows: { registerRunner: vi.fn() }
+    };
+
+    const host = createBackendPlugin({
+      pluginId: 'ai-core',
+      register(env) {
+        env.registerExtensionPoint(
+          agentExtensionPoint,
+          points.agents as unknown as AgentExtensionPoint
+        );
+        env.registerExtensionPoint(
+          triggerExtensionPoint,
+          points.triggers as unknown as TriggerExtensionPoint
+        );
+        env.registerExtensionPoint(
+          workflowRunnerExtensionPoint,
+          points.workflows as unknown as WorkflowRunnerExtensionPoint
+        );
+        env.registerInit({ deps: {}, async init() {} });
+      }
+    });
+
+    await startTestBackend({
+      features: [
+        host,
+        driftDetectorModule,
+        mockServices.rootConfig.factory({
+          data: { ai: { agents: { driftDetector: { model: 'drift' } } } }
+        }),
+        mockServices.logger.factory()
+      ]
+    });
+
     expect(points.workflows.registerRunner.mock.calls[0][0].id).toBe('scaffolder-drift');
-    expect(points.agents.addAgent.mock.calls[0][0].toolIds).not.toContain('vcs.pull_request.create');
+    expect(points.agents.addAgent.mock.calls[0][0].toolIds).not.toContain(
+      'vcs.pull_request.create'
+    );
     expect(points.triggers.addTrigger).toHaveBeenCalledTimes(2);
   });
 });

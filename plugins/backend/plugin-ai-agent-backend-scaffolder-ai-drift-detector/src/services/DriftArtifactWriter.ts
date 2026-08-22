@@ -20,4 +20,14 @@ import type { DriftReport } from '../workflow/state';
 export const DRIFT_REPORT_ARTIFACT_KIND = 'drift-report';
 
 /** Creates the replayable event carrying a serialized drift report. */
-export const createDriftReportArtifactEvent = (runId: string, report: DriftReport): AgentEvent => ({ type: 'artifact', data: { runId, kind: DRIFT_REPORT_ARTIFACT_KIND, ref: JSON.stringify(report) } });
+export const createDriftReportArtifactEvent = (
+  runId: string,
+  report: DriftReport
+): AgentEvent => ({
+  type: 'artifact',
+  data: {
+    runId,
+    kind: DRIFT_REPORT_ARTIFACT_KIND,
+    ref: JSON.stringify(report)
+  }
+});

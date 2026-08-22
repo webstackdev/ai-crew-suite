@@ -22,23 +22,43 @@ export type DriftDetectorConfig = {
   maxDriftItems: number;
   maxToolInvocations: number;
   infraPaths: string[];
-  sweep: { enabled: boolean; cron: string; maxSweepComponents: number; entityRefs: string[] };
+  sweep: {
+    enabled: boolean;
+    cron: string;
+    maxSweepComponents: number;
+    entityRefs: string[]
+  };
   remediate: { enabled: boolean };
 };
 
 /** Reads drift detector configuration, failing at boot if the model is absent. */
 export const readDriftDetectorConfig = (config: Config): DriftDetectorConfig => {
   const section = config.getOptionalConfig('ai.agents.driftDetector');
-  if (!section) throw new Error('Drift detector requires ai.agents.driftDetector configuration to be set');
+  if (!section) {
+    throw new Error('Drift detector requires ai.agents.driftDetector configuration to be set');
+  }
+
   const sweep = section.getOptionalConfig('sweep');
   const remediate = section.getOptionalConfig('remediate');
+
   return {
     modelRef: section.getString('model'),
     maxInfraFiles: section.getOptionalNumber('maxInfraFiles') ?? 8,
     maxDriftItems: section.getOptionalNumber('maxDriftItems') ?? 40,
     maxToolInvocations: section.getOptionalNumber('maxToolInvocations') ?? 18,
-    infraPaths: section.getOptionalStringArray('infraPaths') ?? ['main.tf', 'deployment.yaml', 'k8s/**'],
-    sweep: { enabled: sweep?.getOptionalBoolean('enabled') ?? false, cron: sweep?.getOptionalString('cron') ?? '0 */24 * * *', maxSweepComponents: sweep?.getOptionalNumber('maxSweepComponents') ?? 50, entityRefs: sweep?.getOptionalStringArray('entityRefs') ?? [] },
-    remediate: { enabled: remediate?.getOptionalBoolean('enabled') ?? false },
+    infraPaths: section.getOptionalStringArray('infraPaths') ?? [
+      'main.tf',
+      'deployment.yaml',
+      'k8s/**'
+    ],
+    sweep: {
+      enabled: sweep?.getOptionalBoolean('enabled') ?? false,
+      cron: sweep?.getOptionalString('cron') ?? '0 */24 * * *',
+      maxSweepComponents: sweep?.getOptionalNumber('maxSweepComponents') ?? 50,
+      entityRefs: sweep?.getOptionalStringArray('entityRefs') ?? []
+    },
+    remediate: {
+      enabled: remediate?.getOptionalBoolean('enabled') ?? false
+    },
   };
 };

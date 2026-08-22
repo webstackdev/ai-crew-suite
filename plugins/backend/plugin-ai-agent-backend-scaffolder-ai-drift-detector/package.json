@@ -40,6 +40,6 @@
   "devDependencies": {
     "@backstage/backend-test-utils": "backstage:^",
     "@backstage/cli": "backstage:^",
-    "vitest": "^4.1.10"
+    "vitest": "^4.1.11"
   }
 }

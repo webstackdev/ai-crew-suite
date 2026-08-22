@@ -13,4 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export interface Config { ai?: { agents?: { driftDetector?: { model: string; maxInfraFiles?: number; maxDriftItems?: number; maxToolInvocations?: number; infraPaths?: string[]; sweep?: { enabled?: boolean; cron?: string; maxSweepComponents?: number; entityRefs?: string[] }; remediate?: { enabled?: boolean } } } } }
+export interface Config {
+  ai?: {
+    agents?: {
+      driftDetector?: {
+        model: string;
+        maxInfraFiles?: number;
+        maxDriftItems?: number;
+        maxToolInvocations?: number;
+        infraPaths?: string[];
+        sweep?: {
+          enabled?: boolean;
+          cron?: string;
+          maxSweepComponents?: number;
+          entityRefs?: string[];
+        };
+        remediate?: {
+          enabled?: boolean;
+        };
+      };
+    };
+  };
+}
