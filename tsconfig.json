@@ -86,6 +86,7 @@
     { "path": "./plugins/backend/plugin-ai-agent-backend-oncall-ai-handover-assistant" },
     { "path": "./plugins/backend/plugin-ai-agent-backend-release-notes-ai-generator" },
     { "path": "./plugins/backend/plugin-ai-agent-backend-rfc-adr-ai-reviewer" },
+    { "path": "./plugins/frontend/plugin-ai-agent-frontend-rfc-adr-ai-reviewer" },
 
     // 9. Observability
     { "path": "./plugins/backend/plugin-ai-core-backend-module-observability" },

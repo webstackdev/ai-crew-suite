@@ -367,7 +367,92 @@ Exit criteria: staged rollout with publish + events disabled by default, bounded
 
 ## Frontend Completed
 
+Implemented the RFC/ADR reviewer frontend plugin at:
 
+`/home/kevin/Repos/backstage/ai-crew-suite/plugins/frontend/plugin-ai-agent-frontend-rfc-adr-ai-reviewer`
+
+### Package shape
+
+- Package: `@webstackbuilders/plugin-ai-agent-frontend-rfc-adr-ai-reviewer`
+- `backstage.role: frontend-plugin`, `backstage.pluginId: rfc-adr-ai-reviewer`
+- Exports `.` (legacy plugin) and `./alpha` (new frontend system)
+- One folder per component under `src/components/`, each with its own barrel and
+  sibling `__tests__/` directory
+
+### Implemented surfaces
+
+- `ReviewPage` — standalone page at `/rfc-adr-ai-reviewer`, with `?run=<id>`
+  deep-link replay and URL reflection of the active run
+- `StartReviewDialog` — repository URL, document path (client-side `adr/` or
+  `rfc/` validation matching backend request validation), optional ref, optional
+  pull-request ID
+- `DebateView` — two-column live debate (Senior Architect | Security Lead),
+  demultiplexed by the run event's optional `token.node` tag, collapsing to a
+  single transcript when the stream is untagged
+- `CritiquePanel` / `FindingCard` — merged findings sorted by severity with
+  channel attribution, expanded citation evidence, and rendered limitations
+- `ApprovalBar` / `PublicationBanner` — approval gate plus published and
+  rejected outcomes
+- `useReviewRun` — pure exported reducer plus hook managing start, replay, and
+  approval submission
+
+### Typed API client
+
+`RfcAdrReviewerClient` speaks to the shared AI Core endpoint
+(`ai.endpointPath`, default `ai-core`) with `eventsource-parser`:
+
+- `startReview()` → `POST agents/rfc-adr-ai-reviewer/runs` with a versioned
+  `ReviewRequest` in `input.query`
+- `streamRunEvents()` → `GET runs/<id>/events` with `Last-Event-ID` replay
+- `submitApproval()` → `POST runs/<id>/approvals`
+
+### Contract fidelity
+
+Wire types in `src/@types/` mirror the **implemented** backend contract exactly
+(`ReviewRequest` with `path`/`ref`/`pullRequestId`, `ReviewFinding` channels
+`senior-architect`/`security-lead`, severities `critical|high|medium|low`,
+verdicts `block|comment|approve`, `design-critique` artifact kind). No
+speculative backend fields were invented; the approval and
+`critique-publication` surfaces exist as typed, currently-unexercised paths for
+the write milestone and stay hidden during draft-only runs.
+
+### Wiring added
+
+- `/home/kevin/Repos/backstage/ai-crew-suite/tsconfig.json`
+- `/home/kevin/Repos/backstage/ai-crew-suite/.eslintrc.cjs`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/app/package.json`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/app/src/App.tsx`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/app/src/App.test.tsx`
+- `/home/kevin/Repos/backstage/ai-crew-suite/yarn.lock`
+
+### Tests added
+
+19 tests across 6 files:
+
+- `useReviewRun`: per-node demultiplexing, untagged fallback, merged critique
+  from both channels, approval suspend/clear, rejection, terminal error and
+  malformed-artifact resilience
+- `DebateView`: two live columns, empty-perspective state, untagged collapse
+- `CritiquePanel`: verdict badge, severity ordering, citation expansion,
+  missing-evidence labelling, limitations
+- `StartReviewDialog`: trimmed submission, `adr/`/`rfc/` rejection
+- `ApprovalBar`: approve with note, reject without note
+- `PublicationBanner`: hidden, published link, rejected-unposted
+
+### Validation completed
+
+- `yarn vitest run plugins/frontend/plugin-ai-agent-frontend-rfc-adr-ai-reviewer/src` — __19 tests passed__
+- `yarn vitest run packages/app/src/App.test.tsx` — __1 test passed__
+- Package `tsc --noEmit` and package lint — clean
+- `yarn typecheck --force` — __49/49 tasks successful__
+- `yarn lint --force` — __49/49 tasks successful__ (only pre-existing unrelated
+  warnings remain)
+
+### Still out of scope here
+
+Milestone 3's Playwright E2E scenarios and the shared fixture profile were not
+added; the backend still has no write tool or event trigger, so an approve/reject
+browser path cannot be exercised end to end yet.
 
 ## Backend Completed
 
