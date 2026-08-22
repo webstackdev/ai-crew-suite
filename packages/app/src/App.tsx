@@ -23,6 +23,7 @@ import kubernetesAiResponderPlugin from '@webstackbuilders/plugin-ai-agent-front
 import oncallHandoverPlugin from '@webstackbuilders/plugin-ai-agent-frontend-oncall-ai-handover-assistant/alpha';
 import releaseNotesPlugin from '@webstackbuilders/plugin-ai-agent-frontend-release-notes-ai-generator/alpha';
 import alertAiTunerPlugin from '@webstackbuilders/plugin-ai-agent-frontend-alert-ai-tuner/alpha';
+import driftDetectorPlugin from '@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-drift-detector/alpha';
 import catalogAiInsightsPlugin from '@webstackbuilders/plugin-ai-agent-frontend-catalog-ai-insights/alpha';
 import rfcAdrReviewerPlugin from '@webstackbuilders/plugin-ai-agent-frontend-rfc-adr-ai-reviewer/alpha';
 import { navModule } from './modules/nav';
@@ -38,6 +39,7 @@ const features: FrontendFeature[] = [
   releaseNotesPlugin,
   catalogAiInsightsPlugin,
   alertAiTunerPlugin,
+  driftDetectorPlugin,
   rfcAdrReviewerPlugin,
 ];
 
