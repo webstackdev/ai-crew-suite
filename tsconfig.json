@@ -96,6 +96,7 @@
     { "path": "./plugins/backend/plugin-ai-agent-backend-scaffolder-ai-infra" },
     { "path": "./plugins/frontend/plugin-ai-agent-frontend-scaffolder-ai-infra" },
     { "path": "./plugins/backend/plugin-ai-agent-backend-search-ai-archeology" },
+    { "path": "./plugins/frontend/plugin-ai-agent-frontend-search-ai-archeology" },
 
     // 9. Observability
     { "path": "./plugins/backend/plugin-ai-core-backend-module-observability" },

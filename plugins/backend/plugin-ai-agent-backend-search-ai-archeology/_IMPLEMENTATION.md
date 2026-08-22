@@ -32,6 +32,18 @@ Coverage includes deterministic ranking, unresolved/offboarded identity
 preservation, ticket-only graph behavior with a cited artifact, and backend
 module registration proving only read-only ticket tools are exposed.
 
+### Frontend Completed
+
+`@webstackbuilders/plugin-ai-agent-frontend-search-ai-archeology` provides the
+standalone `/search-ai-archeology` page. It starts and replays authenticated AI
+Core runs, safely decodes only `expertise-matrix` artifacts, and visibly renders
+cited ticket evidence, research progress, explicit unresolved/offboarded actors,
+and named backend limitations. The form requires a scoped question and a
+repository URL or entity reference. It deliberately does not represent scores as
+performance, productivity, seniority, or merit, and it does not claim the
+contract-dependent VCS/reviewer/catalog-resolution features. The plugin is wired
+into root TypeScript/ESLint coverage and the application alpha feature list.
+
 ---
 
 

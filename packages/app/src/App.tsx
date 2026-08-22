@@ -28,6 +28,7 @@ import scaffolderGuardrailPlugin from '@webstackbuilders/plugin-ai-agent-fronten
 import scaffolderInfraPlugin from '@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-infra/alpha';
 import catalogAiInsightsPlugin from '@webstackbuilders/plugin-ai-agent-frontend-catalog-ai-insights/alpha';
 import rfcAdrReviewerPlugin from '@webstackbuilders/plugin-ai-agent-frontend-rfc-adr-ai-reviewer/alpha';
+import searchArcheologyPlugin from '@webstackbuilders/plugin-ai-agent-frontend-search-ai-archeology/alpha';
 import { navModule } from './modules/nav';
 
 const features: FrontendFeature[] = [
@@ -45,6 +46,7 @@ const features: FrontendFeature[] = [
   scaffolderGuardrailPlugin,
   scaffolderInfraPlugin,
   rfcAdrReviewerPlugin,
+  searchArcheologyPlugin,
 ];
 
 const app = createApp({
