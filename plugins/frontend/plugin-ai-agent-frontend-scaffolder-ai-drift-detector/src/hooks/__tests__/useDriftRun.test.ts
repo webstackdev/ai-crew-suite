@@ -16,9 +16,50 @@
 import { describe, expect, it } from 'vitest';
 import { initialDriftRunState, reduceDriftRun } from '../useDriftRun';
 
-const report = { entityRef: 'component:default/app', status: 'drifted' as const, items: [], limitations: [], evidence: [] };
+const report = {
+  entityRef: 'component:default/app',
+  status: 'drifted' as const,
+  items: [],
+  limitations: [],
+  evidence: []
+};
+
 describe('reduceDriftRun', () => {
-  it('replays a drift report artifact and completes', () => { let state = reduceDriftRun(initialDriftRunState, { type: 'artifact', data: { runId: 'run-1', kind: 'drift-report', ref: JSON.stringify(report) } }); state = reduceDriftRun(state, { type: 'done', data: { runId: 'run-1' } }); expect(state).toMatchObject({ phase: 'finished', runId: 'run-1', report }); });
-  it('tracks progress and a future approval request', () => { let state = reduceDriftRun(initialDriftRunState, { type: 'step', data: { runId: 'run-1', seq: 1, node: 'delta.compute', phase: 'enter' } }); state = reduceDriftRun(state, { type: 'approval_request', data: { runId: 'run-1', approvalId: 'a-1', reason: 'Open PR', effect: 'write' } }); expect(state).toMatchObject({ phase: 'waiting_approval', steps: [{ node: 'delta.compute', phase: 'enter' }], approval: { approvalId: 'a-1' } }); });
-  it('does not crash on a malformed artifact', () => { expect(reduceDriftRun(initialDriftRunState, { type: 'artifact', data: { runId: 'run-1', kind: 'drift-report', ref: 'bad' } }).report).toBeUndefined(); });
+  it('replays a drift report artifact and completes', () => {
+    let state = reduceDriftRun(initialDriftRunState, {
+      type: 'artifact',
+      data: { runId: 'run-1', kind: 'drift-report', ref: JSON.stringify(report) }
+    });
+
+    state = reduceDriftRun(state, { type: 'done', data: { runId: 'run-1' } });
+
+    expect(state).toMatchObject({ phase: 'finished', runId: 'run-1', report });
+  });
+
+  it('tracks progress and a future approval request', () => {
+    let state = reduceDriftRun(initialDriftRunState, {
+      type: 'step',
+      data: { runId: 'run-1', seq: 1, node: 'delta.compute', phase: 'enter' }
+    });
+
+    state = reduceDriftRun(state, {
+      type: 'approval_request',
+      data: { runId: 'run-1', approvalId: 'a-1', reason: 'Open PR', effect: 'write' }
+    });
+
+    expect(state).toMatchObject({
+      phase: 'waiting_approval',
+      steps: [{ node: 'delta.compute', phase: 'enter' }],
+      approval: { approvalId: 'a-1' }
+    });
+  });
+
+  it('does not crash on a malformed artifact', () => {
+    expect(
+      reduceDriftRun(initialDriftRunState, {
+        type: 'artifact',
+        data: { runId: 'run-1', kind: 'drift-report', ref: 'bad' }
+      }).report
+    ).toBeUndefined();
+  });
 });

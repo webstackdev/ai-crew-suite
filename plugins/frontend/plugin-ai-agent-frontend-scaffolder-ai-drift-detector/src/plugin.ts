@@ -13,12 +13,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { configApiRef, createApiFactory, createPlugin, createRoutableExtension, discoveryApiRef, fetchApiRef, identityApiRef } from '@backstage/core-plugin-api';
+import {
+  configApiRef,
+  createApiFactory,
+  createPlugin,
+  createRoutableExtension,
+  discoveryApiRef,
+  fetchApiRef,
+  identityApiRef
+} from '@backstage/core-plugin-api';
 import { DriftDetectorClient, driftDetectorApiRef } from './api';
 import { rootRouteRef } from './routes';
+
 /** Legacy frontend plugin entrypoint for read-only Scaffolder drift checks. */
-export const driftDetectorPlugin = createPlugin({ id: 'scaffolder-ai-drift-detector', apis: [createApiFactory({ api: driftDetectorApiRef, deps: { configApi: configApiRef, discoveryApi: discoveryApiRef, fetchApi: fetchApiRef, identityApi: identityApiRef }, factory: deps => new DriftDetectorClient(deps) })], routes: { root: rootRouteRef } });
+export const driftDetectorPlugin = createPlugin({
+  id: 'scaffolder-ai-drift-detector',
+  apis: [
+    createApiFactory({
+      api: driftDetectorApiRef,
+      deps: {
+        configApi: configApiRef,
+        discoveryApi: discoveryApiRef,
+        fetchApi: fetchApiRef,
+        identityApi: identityApiRef
+      },
+      factory: deps => new DriftDetectorClient(deps)
+    })
+  ],
+  routes: { root: rootRouteRef }
+});
+
 /** Routable standalone drift detector page. */
-export const DriftDashboardPage = driftDetectorPlugin.provide(createRoutableExtension({ name: 'DriftDashboardPage', component: () =>
-  // @ts-expect-error - NodeNext requires .js while the bundler resolves TypeScript source
-  import('./components/DriftDashboardPage/DriftDashboardPage').then(module => module.DriftDashboardPage), mountPoint: rootRouteRef }));
+export const DriftDashboardPage = driftDetectorPlugin.provide(
+  createRoutableExtension({
+    name: 'DriftDashboardPage',
+    component: () =>
+      // @ts-expect-error - NodeNext requires .js while the bundler resolves TypeScript source
+      import('./components/DriftDashboardPage/DriftDashboardPage').then(
+        module => module.DriftDashboardPage
+      ),
+    mountPoint: rootRouteRef
+  })
+);

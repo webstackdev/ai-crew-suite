@@ -14,8 +14,19 @@
  * limitations under the License.
  */
 export { driftDetectorPlugin, DriftDashboardPage } from './plugin';
-export { DriftDetectorClient, DRIFT_DETECTOR_AGENT_ID, driftDetectorApiRef, type DriftDetectorApi } from './api';
-export { useDriftRun, reduceDriftRun, initialDriftRunState, DRIFT_REPORT_ARTIFACT, type DriftRunState } from './hooks/useDriftRun';
+export {
+  DriftDetectorClient,
+  DRIFT_DETECTOR_AGENT_ID,
+  driftDetectorApiRef,
+  type DriftDetectorApi
+} from './api';
+export {
+  useDriftRun,
+  reduceDriftRun,
+  initialDriftRunState,
+  DRIFT_REPORT_ARTIFACT,
+  type DriftRunState
+} from './hooks/useDriftRun';
 export * from './components';
 export { ROOT_PATH, rootRouteRef } from './routes';
 export type * from './@types';

@@ -20,10 +20,82 @@ import { Button, Grid, Paper, Typography } from '@material-ui/core';
 import { useDriftRun } from '../../hooks/useDriftRun';
 import { DriftItemList } from '../DriftItemList/DriftItemList';
 import { RunDriftCheckDialog } from '../RunDriftCheckDialog/RunDriftCheckDialog';
+
 /** Standalone drift report page for the implemented Kubernetes-backed detector. */
 export const DriftDashboardPage = () => {
-  const { state, check, replay } = useDriftRun(); const [params, setParams] = useSearchParams(); const [open, setOpen] = useState(false); const initial = useRef(params.get('run')); const initialized = useRef(false);
-  useEffect(() => { if (initialized.current) return; initialized.current = true; if (initial.current) void replay(initial.current); }, [replay]);
-  useEffect(() => { if (!state.runId) return; setParams(previous => { const next = new URLSearchParams(previous); next.set('run', state.runId!); return next; }, { replace: true }); }, [state.runId, setParams]);
-  return <Page themeId="tool"><Header title="Scaffolder drift detector" subtitle="Kubernetes live state compared with a bounded golden-path blueprint" /><Content>{state.phase === 'error' ? <Paper role="alert"><Typography>{state.error}</Typography></Paper> : null}<Button color="primary" variant="contained" onClick={() => setOpen(true)}>Run drift check</Button>{state.phase === 'running' ? <Progress /> : null}{state.report ? <Grid container spacing={3}><Grid item xs={12} md={8}><Typography variant="h5">{state.report.entityRef}</Typography><Typography>Status: {state.report.status}</Typography><DriftItemList report={state.report} /></Grid><Grid item xs={12} md={4}><Typography variant="h6">Limitations</Typography>{state.report.limitations.map(limitation => <Typography key={limitation}>{limitation}</Typography>)}<Typography variant="h6">Evidence</Typography>{state.report.evidence.map(evidence => <Typography key={evidence.id}>[{evidence.id}] {evidence.summary}</Typography>)}</Grid></Grid> : null}<RunDriftCheckDialog open={open} onClose={() => setOpen(false)} onCheck={input => void check(input)} /></Content></Page>;
+  const { state, check, replay } = useDriftRun();
+  const [params, setParams] = useSearchParams();
+  const [open, setOpen] = useState(false);
+  const initial = useRef(params.get('run'));
+  const initialized = useRef(false);
+
+  useEffect(() => {
+    if (initialized.current) return;
+    initialized.current = true;
+    if (initial.current) void replay(initial.current);
+  }, [replay]);
+
+  useEffect(() => {
+    if (!state.runId) return;
+    setParams(
+      previous => {
+        const next = new URLSearchParams(previous);
+        next.set('run', state.runId!);
+        return next;
+      },
+      { replace: true }
+    );
+  }, [state.runId, setParams]);
+
+  return (
+    <Page themeId="tool">
+      <Header
+        title="Scaffolder drift detector"
+        subtitle="Kubernetes live state compared with a bounded golden-path blueprint"
+      />
+      <Content>
+        {state.phase === 'error' ? (
+          <Paper role="alert">
+            <Typography>{state.error}</Typography>
+          </Paper>
+        ) : null}
+
+        <Button color="primary" variant="contained" onClick={() => setOpen(true)}>
+          Run drift check
+        </Button>
+
+        {state.phase === 'running' ? <Progress /> : null}
+
+        {state.report ? (
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={8}>
+              <Typography variant="h5">{state.report.entityRef}</Typography>
+              <Typography>Status: {state.report.status}</Typography>
+              <DriftItemList report={state.report} />
+            </Grid>
+
+            <Grid item xs={12} md={4}>
+              <Typography variant="h6">Limitations</Typography>
+              {state.report.limitations.map(limitation => (
+                <Typography key={limitation}>{limitation}</Typography>
+              ))}
+
+              <Typography variant="h6">Evidence</Typography>
+              {state.report.evidence.map(evidence => (
+                <Typography key={evidence.id}>
+                  [{evidence.id}] {evidence.summary}
+                </Typography>
+              ))}
+            </Grid>
+          </Grid>
+        ) : null}
+
+        <RunDriftCheckDialog
+          open={open}
+          onClose={() => setOpen(false)}
+          onCheck={input => void check(input)}
+        />
+      </Content>
+    </Page>
+  );
 };

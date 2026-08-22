@@ -16,7 +16,29 @@
 import React from 'react';
 import { Paper, Typography } from '@material-ui/core';
 import type { DriftReport } from '../../@types';
+
 /** Props for per-field expected-versus-actual drift display. */
 export type DriftItemListProps = { report: DriftReport };
+
 /** Renders every deterministic drift item with its paired blueprint and live citations. */
-export const DriftItemList = ({ report }: DriftItemListProps) => <section aria-label="Drift items"><Typography variant="h6">Drift items</Typography>{report.items.length ? report.items.map(item => <Paper key={item.id}><Typography>{item.field} · {item.severity}</Typography><Typography>Expected: {String(item.expected.value)} [{item.expected.evidence.join(', ')}]</Typography><Typography>Actual: {String(item.actual.value)} [{item.actual.evidence.join(', ')}]</Typography></Paper>) : <Typography>No structural drift was detected.</Typography>}</section>;
+export const DriftItemList = ({ report }: DriftItemListProps) => (
+  <section aria-label="Drift items">
+    <Typography variant="h6">Drift items</Typography>
+
+    {report.items.length ? (
+      report.items.map(item => (
+        <Paper key={item.id}>
+          <Typography>{item.field} · {item.severity}</Typography>
+          <Typography>
+            Expected: {String(item.expected.value)} [{item.expected.evidence.join(', ')}]
+          </Typography>
+          <Typography>
+            Actual: {String(item.actual.value)} [{item.actual.evidence.join(', ')}]
+          </Typography>
+        </Paper>
+      ))
+    ) : (
+      <Typography>No structural drift was detected.</Typography>
+    )}
+  </section>
+);

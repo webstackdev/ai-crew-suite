@@ -16,7 +16,18 @@
 import React from 'react';
 import { PageBlueprint } from '@backstage/frontend-plugin-api';
 import { ROOT_PATH, rootRouteRef } from '../routes';
+
 /** New-frontend-system page extension for the drift detector. */
-export const driftDetectorPageExtension = PageBlueprint.make({ name: 'scaffolder-ai-drift-detector', params: { path: ROOT_PATH, title: 'Scaffolder drift detector', routeRef: rootRouteRef, loader: () =>
-  // @ts-expect-error - NodeNext requires .js while the bundler resolves TypeScript source
-  import('../components/DriftDashboardPage/DriftDashboardPage').then(module => React.createElement(module.DriftDashboardPage)) } });
+export const driftDetectorPageExtension = PageBlueprint.make({
+  name: 'scaffolder-ai-drift-detector',
+  params: {
+    path: ROOT_PATH,
+    title: 'Scaffolder drift detector',
+    routeRef: rootRouteRef,
+    loader: () =>
+      // @ts-expect-error - NodeNext requires .js while the bundler resolves TypeScript source
+      import('../components/DriftDashboardPage/DriftDashboardPage').then(
+        module => React.createElement(module.DriftDashboardPage)
+      )
+  }
+});

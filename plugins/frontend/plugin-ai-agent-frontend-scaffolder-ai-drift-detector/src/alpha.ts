@@ -13,10 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { createFrontendPlugin, type ExtensionDefinition, type FrontendFeature } from '@backstage/frontend-plugin-api';
+import {
+  createFrontendPlugin,
+  type ExtensionDefinition,
+  type FrontendFeature
+} from '@backstage/frontend-plugin-api';
 import { driftDetectorApiExtension } from './extensions/api';
 import { driftDetectorPageExtension } from './extensions/components';
 
-const createPlugin = createFrontendPlugin as unknown as (options: { pluginId: string; extensions: readonly ExtensionDefinition[] }) => FrontendFeature;
+const createPlugin = createFrontendPlugin as unknown as (options: {
+  pluginId: string;
+  extensions: readonly ExtensionDefinition[];
+}) => FrontendFeature;
+
 /** Alpha entrypoint exposing the drift detector API and page. */
-export default createPlugin({ pluginId: 'scaffolder-ai-drift-detector', extensions: [driftDetectorApiExtension as unknown as ExtensionDefinition, driftDetectorPageExtension as unknown as ExtensionDefinition] });
+export default createPlugin({
+  pluginId: 'scaffolder-ai-drift-detector',
+  extensions: [
+    driftDetectorApiExtension as unknown as ExtensionDefinition,
+    driftDetectorPageExtension as unknown as ExtensionDefinition
+  ]
+});

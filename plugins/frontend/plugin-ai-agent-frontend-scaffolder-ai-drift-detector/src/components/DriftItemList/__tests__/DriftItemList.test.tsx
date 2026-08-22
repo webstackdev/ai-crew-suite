@@ -19,5 +19,32 @@ import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { DriftItemList } from '../DriftItemList';
 
-const report = { entityRef: 'component:default/app', status: 'drifted' as const, items: [{ id: 'drift-1', field: 'spec.replicas' as const, severity: 'major' as const, expected: { value: 2, evidence: ['bp-1'] }, actual: { value: 6, evidence: ['live-1'] } }], limitations: [], evidence: [] };
-describe('DriftItemList', () => { it('renders expected, actual, severity, and paired citations', () => { render(<DriftItemList report={report} />); expect(screen.getByText(/spec.replicas · major/)).toBeInTheDocument(); expect(screen.getByText('Expected: 2 [bp-1]')).toBeInTheDocument(); expect(screen.getByText('Actual: 6 [live-1]')).toBeInTheDocument(); }); it('renders compliant empty state', () => { render(<DriftItemList report={{ ...report, status: 'in_sync', items: [] }} />); expect(screen.getByText('No structural drift was detected.')).toBeInTheDocument(); }); });
+const report = {
+  entityRef: 'component:default/app',
+  status: 'drifted' as const,
+  items: [{
+    id: 'drift-1',
+    field: 'spec.replicas' as const,
+    severity: 'major' as const,
+    expected: { value: 2, evidence: ['bp-1'] },
+    actual: { value: 6, evidence: ['live-1'] }
+  }],
+  limitations: [],
+  evidence: []
+};
+
+describe('DriftItemList', () => {
+  it('renders expected, actual, severity, and paired citations', () => {
+    render(<DriftItemList report={report} />);
+
+    expect(screen.getByText(/spec.replicas · major/)).toBeInTheDocument();
+    expect(screen.getByText('Expected: 2 [bp-1]')).toBeInTheDocument();
+    expect(screen.getByText('Actual: 6 [live-1]')).toBeInTheDocument();
+  });
+
+  it('renders compliant empty state', () => {
+    render(<DriftItemList report={{ ...report, status: 'in_sync', items: [] }} />);
+
+    expect(screen.getByText('No structural drift was detected.')).toBeInTheDocument();
+  });
+});
