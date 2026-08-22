@@ -13,12 +13,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { configApiRef, createApiFactory, createPlugin, createRoutableExtension, discoveryApiRef, fetchApiRef, identityApiRef } from '@backstage/core-plugin-api';
+import {
+  configApiRef,
+  createApiFactory,
+  createPlugin,
+  createRoutableExtension,
+  discoveryApiRef,
+  fetchApiRef,
+  identityApiRef,
+} from '@backstage/core-plugin-api';
 import { SearchArcheologyClient, searchArcheologyApiRef } from './api';
 import { rootRouteRef } from './routes';
+
 /** Legacy frontend-plugin entry point for ticket-backed expertise research. */
-export const searchArcheologyPlugin = createPlugin({ id: 'search-ai-archeology', apis: [createApiFactory({ api: searchArcheologyApiRef, deps: { configApi: configApiRef, discoveryApi: discoveryApiRef, fetchApi: fetchApiRef, identityApi: identityApiRef }, factory: deps => new SearchArcheologyClient(deps) })], routes: { root: rootRouteRef } });
+export const searchArcheologyPlugin = createPlugin({
+  id: 'search-ai-archeology',
+  apis: [
+    createApiFactory({
+      api: searchArcheologyApiRef,
+      deps: {
+        configApi: configApiRef,
+        discoveryApi: discoveryApiRef,
+        fetchApi: fetchApiRef,
+        identityApi: identityApiRef,
+      },
+      factory: deps => new SearchArcheologyClient(deps),
+    }),
+  ],
+  routes: { root: rootRouteRef },
+});
+
 /** Routable standalone archeology research page. */
-export const ArcheologyPage = searchArcheologyPlugin.provide(createRoutableExtension({ name: 'ArcheologyPage', component: () =>
-  // @ts-expect-error - NodeNext requires .js while the bundler resolves TypeScript source
-  import('./components/ArcheologyPage/ArcheologyPage').then(module => module.ArcheologyPage), mountPoint: rootRouteRef }));
+export const ArcheologyPage = searchArcheologyPlugin.provide(
+  createRoutableExtension({
+    name: 'ArcheologyPage',
+    component: () =>
+      // @ts-expect-error - NodeNext requires .js while the bundler resolves TypeScript source
+      import('./components/ArcheologyPage/ArcheologyPage').then(
+        module => module.ArcheologyPage,
+      ),
+    mountPoint: rootRouteRef,
+  }),
+);

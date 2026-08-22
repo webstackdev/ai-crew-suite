@@ -13,8 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { configApiRef, discoveryApiRef, fetchApiRef, identityApiRef } from '@backstage/core-plugin-api';
+import {
+  configApiRef,
+  discoveryApiRef,
+  fetchApiRef,
+  identityApiRef,
+} from '@backstage/core-plugin-api';
 import { ApiBlueprint, createApiFactory } from '@backstage/frontend-plugin-api';
 import { SearchArcheologyClient, searchArcheologyApiRef } from '../api';
+
 /** New-frontend-system API blueprint for authenticated archeology run streams. */
-export const searchArcheologyApiExtension = ApiBlueprint.make({ params: define => define(createApiFactory({ api: searchArcheologyApiRef, deps: { configApi: configApiRef, discoveryApi: discoveryApiRef, fetchApi: fetchApiRef, identityApi: identityApiRef }, factory: deps => new SearchArcheologyClient(deps) })) });
+export const searchArcheologyApiExtension = ApiBlueprint.make({
+  params: define =>
+    define(
+      createApiFactory({
+        api: searchArcheologyApiRef,
+        deps: {
+          configApi: configApiRef,
+          discoveryApi: discoveryApiRef,
+          fetchApi: fetchApiRef,
+          identityApi: identityApiRef,
+        },
+        factory: deps => new SearchArcheologyClient(deps),
+      }),
+    ),
+});

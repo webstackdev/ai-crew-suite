@@ -21,4 +21,81 @@ import { useArcheologyRun } from '../../hooks/useArcheologyRun';
 import { ExpertiseMatrixPanel } from '../ExpertiseMatrixPanel/ExpertiseMatrixPanel';
 import { StartResearchDialog } from '../StartResearchDialog/StartResearchDialog';
 /** Standalone page for read-only, ticket-backed legacy-system familiarity research. */
-export const ArcheologyPage = () => { const { state, research, replay } = useArcheologyRun(); const [params, setParams] = useSearchParams(); const [open, setOpen] = useState(false); const initialRun = useRef(params.get('run')); const initialized = useRef(false); useEffect(() => { if (initialized.current) return; initialized.current = true; if (initialRun.current) void replay(initialRun.current); }, [replay]); useEffect(() => { if (!state.runId) return; setParams(previous => { const next = new URLSearchParams(previous); next.set('run', state.runId!); return next; }, { replace: true }); }, [state.runId, setParams]); return <Page themeId="tool"><Header title="Legacy-system familiarity research" subtitle="Cited ticket-triage evidence only — not a performance or productivity assessment" /><Content>{state.phase === 'error' ? <Paper role="alert"><Typography>{state.error}</Typography></Paper> : null}<Button color="primary" variant="contained" onClick={() => setOpen(true)}>Start research</Button>{state.phase === 'running' ? <Progress /> : null}<Grid container spacing={3}><Grid item xs={12} md={4}><Typography variant="h6">Research progress</Typography>{state.steps.length ? state.steps.map((step, index) => <Typography key={`${step.node}-${index}`}>{step.phase}: {step.node}</Typography>) : <Typography>No run selected.</Typography>}</Grid><Grid item xs={12} md={8}>{state.matrix ? <ExpertiseMatrixPanel matrix={state.matrix} /> : <Typography>Start a scoped question or open a saved run to view its cited expertise matrix.</Typography>}</Grid></Grid><StartResearchDialog open={open} onClose={() => setOpen(false)} onResearch={input => { setOpen(false); void research(input); }} /></Content></Page>; };
+export const ArcheologyPage = () => {
+  const { state, research, replay } = useArcheologyRun();
+  const [params, setParams] = useSearchParams();
+  const [open, setOpen] = useState(false);
+  const initialRun = useRef(params.get('run'));
+  const initialized = useRef(false);
+  useEffect(() => {
+    if (initialized.current) return;
+    initialized.current = true;
+    if (initialRun.current) void replay(initialRun.current);
+  }, [replay]);
+  useEffect(() => {
+    if (!state.runId) return;
+    setParams(
+      previous => {
+        const next = new URLSearchParams(previous);
+        next.set('run', state.runId!);
+        return next;
+      },
+      { replace: true },
+    );
+  }, [state.runId, setParams]);
+  return (
+    <Page themeId="tool">
+      <Header
+        title="Legacy-system familiarity research"
+        subtitle="Cited ticket-triage evidence only — not a performance or productivity assessment"
+      />
+      <Content>
+        {state.phase === 'error' ? (
+          <Paper role="alert">
+            <Typography>{state.error}</Typography>
+          </Paper>
+        ) : null}
+        <Button
+          color="primary"
+          variant="contained"
+          onClick={() => setOpen(true)}
+        >
+          Start research
+        </Button>
+        {state.phase === 'running' ? <Progress /> : null}
+        <Grid container spacing={3}>
+          <Grid item xs={12} md={4}>
+            <Typography variant="h6">Research progress</Typography>
+            {state.steps.length ? (
+              state.steps.map((step, index) => (
+                <Typography key={`${step.node}-${index}`}>
+                  {step.phase}: {step.node}
+                </Typography>
+              ))
+            ) : (
+              <Typography>No run selected.</Typography>
+            )}
+          </Grid>
+          <Grid item xs={12} md={8}>
+            {state.matrix ? (
+              <ExpertiseMatrixPanel matrix={state.matrix} />
+            ) : (
+              <Typography>
+                Start a scoped question or open a saved run to view its cited
+                expertise matrix.
+              </Typography>
+            )}
+          </Grid>
+        </Grid>
+        <StartResearchDialog
+          open={open}
+          onClose={() => setOpen(false)}
+          onResearch={input => {
+            setOpen(false);
+            void research(input);
+          }}
+        />
+      </Content>
+    </Page>
+  );
+};

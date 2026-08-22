@@ -13,10 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { createFrontendPlugin, type ExtensionDefinition, type FrontendFeature } from '@backstage/frontend-plugin-api';
+import {
+  createFrontendPlugin,
+  type ExtensionDefinition,
+  type FrontendFeature,
+} from '@backstage/frontend-plugin-api';
 import { searchArcheologyApiExtension } from './extensions/api';
 import { searchArcheologyPageExtension } from './extensions/components';
 
-const createPlugin = createFrontendPlugin as unknown as (options: { pluginId: string; extensions: readonly ExtensionDefinition[] }) => FrontendFeature;
+// Explicit type cast for compatibility across varying api versions
+const createPlugin = createFrontendPlugin as unknown as (options: {
+  pluginId: string;
+  extensions: readonly ExtensionDefinition[];
+}) => FrontendFeature;
+
 /** Alpha entry point exposing ticket-triage research API and standalone page. */
-export default createPlugin({ pluginId: 'search-ai-archeology', extensions: [searchArcheologyApiExtension as unknown as ExtensionDefinition, searchArcheologyPageExtension as unknown as ExtensionDefinition] });
+export default createPlugin({
+  pluginId: 'search-ai-archeology',
+  extensions: [
+    searchArcheologyApiExtension as unknown as ExtensionDefinition,
+    searchArcheologyPageExtension as unknown as ExtensionDefinition,
+  ],
+});

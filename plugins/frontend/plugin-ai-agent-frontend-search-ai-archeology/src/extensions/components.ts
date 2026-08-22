@@ -16,7 +16,18 @@
 import React from 'react';
 import { PageBlueprint } from '@backstage/frontend-plugin-api';
 import { ROOT_PATH, rootRouteRef } from '../routes';
+
 /** New-frontend-system page extension for the archeology research surface. */
-export const searchArcheologyPageExtension = PageBlueprint.make({ name: 'search-ai-archeology', params: { path: ROOT_PATH, title: 'Legacy-system familiarity research', routeRef: rootRouteRef, loader: () =>
-  // @ts-expect-error - NodeNext requires .js while the bundler resolves TypeScript source
-  import('../components/ArcheologyPage/ArcheologyPage').then(module => React.createElement(module.ArcheologyPage)) } });
+export const searchArcheologyPageExtension = PageBlueprint.make({
+  name: 'search-ai-archeology',
+  params: {
+    path: ROOT_PATH,
+    title: 'Legacy-system familiarity research',
+    routeRef: rootRouteRef,
+    loader: () =>
+      // @ts-expect-error - NodeNext requires .js while the bundler resolves TypeScript source
+      import('../components/ArcheologyPage/ArcheologyPage').then(module =>
+        React.createElement(module.ArcheologyPage),
+      ),
+  },
+});

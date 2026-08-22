@@ -14,6 +14,52 @@
  * limitations under the License.
  */
 import { describe, expect, it } from 'vitest';
-import { EXPERTISE_MATRIX_ARTIFACT, initialArcheologyRunState, reduceArcheologyRun } from '../useArcheologyRun';
+import {
+  EXPERTISE_MATRIX_ARTIFACT,
+  initialArcheologyRunState,
+  reduceArcheologyRun,
+} from '../useArcheologyRun';
 
-describe('reduceArcheologyRun', () => { it('extracts only the cited expertise matrix artifact', () => { const matrix = { question: 'Who knows payments?', scope: { question: 'Who knows payments?', paths: [], era: { since: '2024-01-01T00:00:00.000Z', until: '2025-01-01T00:00:00.000Z' } }, status: 'partial', experts: [], offboardedContributors: [], narrative: 'Ticket evidence only.', confidence: 'low', limitations: ['Commit history unavailable.'], evidence: [] } as const; const next = reduceArcheologyRun(initialArcheologyRunState, { type: 'artifact', data: { runId: 'run-1', kind: EXPERTISE_MATRIX_ARTIFACT, ref: JSON.stringify(matrix) } }); expect(next).toMatchObject({ runId: 'run-1', matrix }); }); it('keeps state stable when an artifact payload is malformed', () => { const next = reduceArcheologyRun(initialArcheologyRunState, { type: 'artifact', data: { runId: 'run-1', kind: EXPERTISE_MATRIX_ARTIFACT, ref: '{' } }); expect(next.matrix).toBeUndefined(); expect(next.runId).toBe('run-1'); }); });
+describe('reduceArcheologyRun', () => {
+  it('extracts only the cited expertise matrix artifact', () => {
+    const matrix = {
+      question: 'Who knows payments?',
+      scope: {
+        question: 'Who knows payments?',
+        paths: [],
+        era: {
+          since: '2024-01-01T00:00:00.000Z',
+          until: '2025-01-01T00:00:00.000Z',
+        },
+      },
+      status: 'partial',
+      experts: [],
+      offboardedContributors: [],
+      narrative: 'Ticket evidence only.',
+      confidence: 'low',
+      limitations: ['Commit history unavailable.'],
+      evidence: [],
+    } as const;
+
+    const next = reduceArcheologyRun(initialArcheologyRunState, {
+      type: 'artifact',
+      data: {
+        runId: 'run-1',
+        kind: EXPERTISE_MATRIX_ARTIFACT,
+        ref: JSON.stringify(matrix),
+      },
+    });
+
+    expect(next).toMatchObject({ runId: 'run-1', matrix });
+  });
+
+  it('keeps state stable when an artifact payload is malformed', () => {
+    const next = reduceArcheologyRun(initialArcheologyRunState, {
+      type: 'artifact',
+      data: { runId: 'run-1', kind: EXPERTISE_MATRIX_ARTIFACT, ref: '{' },
+    });
+
+    expect(next.matrix).toBeUndefined();
+    expect(next.runId).toBe('run-1');
+  });
+});

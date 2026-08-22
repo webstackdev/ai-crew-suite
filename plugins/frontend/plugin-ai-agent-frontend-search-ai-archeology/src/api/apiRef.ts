@@ -15,7 +15,14 @@
  */
 import { createApiRef } from '@backstage/core-plugin-api';
 import type { AiRunEvent, StartArcheologyInput } from '../@types';
+
 /** Typed browser API for starting and replaying read-only archeology research. */
-export interface SearchArcheologyApi { startResearch(input: StartArcheologyInput): AsyncGenerator<AiRunEvent>; streamRunEvents(runId: string): AsyncGenerator<AiRunEvent>; }
+export interface SearchArcheologyApi {
+  startResearch(input: StartArcheologyInput): AsyncGenerator<AiRunEvent>;
+  streamRunEvents(runId: string): AsyncGenerator<AiRunEvent>;
+}
+
 /** Backstage API ref used by the archeology research hook. */
-export const searchArcheologyApiRef = createApiRef<SearchArcheologyApi>({ id: 'plugin.search-ai-archeology.api' });
+export const searchArcheologyApiRef = createApiRef<SearchArcheologyApi>({
+  id: 'plugin.search-ai-archeology.api',
+});

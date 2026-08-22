@@ -18,4 +18,59 @@ import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { ExpertiseMatrixPanel } from '../ExpertiseMatrixPanel';
 
-describe('ExpertiseMatrixPanel', () => { it('shows citations, limitations, and an explicit offboarded identity', () => { render(<ExpertiseMatrixPanel matrix={{ question: 'Who knows payments?', scope: { question: 'Who knows payments?', paths: [], era: { since: '2024-01-01T00:00:00.000Z', until: '2025-01-01T00:00:00.000Z' } }, status: 'partial', experts: [], offboardedContributors: [{ identity: { actor: { id: 'retired-dev', displayName: 'Retired Dev' }, status: 'offboarded', groupRefs: [], evidence: [] }, score: 1, signals: { authored: 0, reviewed: 0, triaged: 1 }, rationale: 'Ranked from ticket triage evidence only.', evidence: ['ticket-1'] }], narrative: 'Ticket evidence only.', confidence: 'low', limitations: ['Commit history unavailable.'], evidence: [{ id: 'ticket-1', source: 'ticket', summary: 'triaged OPS-1', reference: 'https://example.test/OPS-1' }] }} />); expect(screen.getByRole('region', { name: 'Offboarded contributors' }).textContent).toContain('Retired Dev'); expect(screen.getByRole('region', { name: 'Research limitations' }).textContent).toContain('Commit history unavailable.'); expect(screen.getByRole('link', { name: 'triaged OPS-1' }).getAttribute('href')).toBe('https://example.test/OPS-1'); }); });
+describe('ExpertiseMatrixPanel', () => {
+  it('shows citations, limitations, and an explicit offboarded identity', () => {
+    render(
+      <ExpertiseMatrixPanel
+        matrix={{
+          question: 'Who knows payments?',
+          scope: {
+            question: 'Who knows payments?',
+            paths: [],
+            era: {
+              since: '2024-01-01T00:00:00.000Z',
+              until: '2025-01-01T00:00:00.000Z',
+            },
+          },
+          status: 'partial',
+          experts: [],
+          offboardedContributors: [
+            {
+              identity: {
+                actor: { id: 'retired-dev', displayName: 'Retired Dev' },
+                status: 'offboarded',
+                groupRefs: [],
+                evidence: [],
+              },
+              score: 1,
+              signals: { authored: 0, reviewed: 0, triaged: 1 },
+              rationale: 'Ranked from ticket triage evidence only.',
+              evidence: ['ticket-1'],
+            },
+          ],
+          narrative: 'Ticket evidence only.',
+          confidence: 'low',
+          limitations: ['Commit history unavailable.'],
+          evidence: [
+            {
+              id: 'ticket-1',
+              source: 'ticket',
+              summary: 'triaged OPS-1',
+              reference: 'https://example.test/OPS-1',
+            },
+          ],
+        }}
+      />,
+    );
+    expect(
+      screen.getByRole('region', { name: 'Offboarded contributors' })
+        .textContent,
+    ).toContain('Retired Dev');
+    expect(
+      screen.getByRole('region', { name: 'Research limitations' }).textContent,
+    ).toContain('Commit history unavailable.');
+    expect(
+      screen.getByRole('link', { name: 'triaged OPS-1' }).getAttribute('href'),
+    ).toBe('https://example.test/OPS-1');
+  });
+});

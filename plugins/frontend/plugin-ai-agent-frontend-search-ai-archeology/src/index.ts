@@ -13,9 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+// Component & Plugin Registration
 export { searchArcheologyPlugin, ArcheologyPage } from './plugin';
-export { SearchArcheologyClient, searchArcheologyApiRef, SEARCH_ARCHEOLOGY_AGENT_ID, type SearchArcheologyApi } from './api';
-export { useArcheologyRun, reduceArcheologyRun, initialArcheologyRunState, EXPERTISE_MATRIX_ARTIFACT, type ArcheologyRunState } from './hooks/useArcheologyRun';
-export * from './components';
 export { ROOT_PATH, rootRouteRef } from './routes';
+export * from './components';
+
+// API Client & Constants
+export {
+  SearchArcheologyClient,
+  searchArcheologyApiRef,
+  SEARCH_ARCHEOLOGY_AGENT_ID,
+  type SearchArcheologyApi,
+} from './api';
+
+// State Management & Hooks
+export {
+  useArcheologyRun,
+  reduceArcheologyRun,
+  initialArcheologyRunState,
+  EXPERTISE_MATRIX_ARTIFACT,
+  type ArcheologyRunState,
+} from './hooks/useArcheologyRun';
+
+// Type Definitions
 export type * from './@types';

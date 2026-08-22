@@ -14,7 +14,91 @@
  * limitations under the License.
  */
 import React, { useState } from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Typography } from '@material-ui/core';
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField,
+  Typography,
+} from '@material-ui/core';
 import type { StartArcheologyInput } from '../../@types';
+
 /** Modal form for one bounded, manually initiated legacy-system research question. */
-export const StartResearchDialog = (props: { open: boolean; onClose(): void; onResearch(input: StartArcheologyInput): void }) => { const [question, setQuestion] = useState(''); const [repoUrl, setRepoUrl] = useState(''); const [entityRef, setEntityRef] = useState(''); const submit = () => { const input: StartArcheologyInput = { question: question.trim() }; if (repoUrl.trim()) input.repoUrl = repoUrl.trim(); if (entityRef.trim()) input.entityRef = entityRef.trim(); props.onResearch(input); }; const valid = Boolean(question.trim() && (repoUrl.trim() || entityRef.trim())); return <Dialog open={props.open} onClose={props.onClose} aria-labelledby="archeology-research-title" fullWidth maxWidth="sm"><DialogTitle id="archeology-research-title">Research legacy-system familiarity</DialogTitle><DialogContent><Typography paragraph>Searches bounded ticket triage evidence only. It does not assess performance or contact people.</Typography><TextField fullWidth required label="Research question" value={question} onChange={event => setQuestion(event.target.value)} margin="normal" inputProps={{ maxLength: 500 }} helperText="For example: Who has triaged payment-reconciliation incidents?" /><TextField fullWidth label="Repository URL" value={repoUrl} onChange={event => setRepoUrl(event.target.value)} margin="normal" /><TextField fullWidth label="Catalog entity reference" value={entityRef} onChange={event => setEntityRef(event.target.value)} margin="normal" helperText="Provide a repository URL or catalog entity reference." /></DialogContent><DialogActions><Button onClick={props.onClose}>Cancel</Button><Button color="primary" variant="contained" disabled={!valid} onClick={submit}>Start research</Button></DialogActions></Dialog>; };
+export const StartResearchDialog = (props: {
+  open: boolean;
+  onClose(): void;
+  onResearch(input: StartArcheologyInput): void;
+}) => {
+  const [question, setQuestion] = useState('');
+  const [repoUrl, setRepoUrl] = useState('');
+  const [entityRef, setEntityRef] = useState('');
+
+  const submit = () => {
+    const input: StartArcheologyInput = { question: question.trim() };
+    if (repoUrl.trim()) input.repoUrl = repoUrl.trim();
+    if (entityRef.trim()) input.entityRef = entityRef.trim();
+    props.onResearch(input);
+  };
+
+  const valid = Boolean(
+    question.trim() && (repoUrl.trim() || entityRef.trim()),
+  );
+
+  return (
+    <Dialog
+      open={props.open}
+      onClose={props.onClose}
+      aria-labelledby="archeology-research-title"
+      fullWidth
+      maxWidth="sm"
+    >
+      <DialogTitle id="archeology-research-title">
+        Research legacy-system familiarity
+      </DialogTitle>
+      <DialogContent>
+        <Typography paragraph>
+          Searches bounded ticket triage evidence only. It does not assess
+          performance or contact people.
+        </Typography>
+        <TextField
+          fullWidth
+          required
+          label="Research question"
+          value={question}
+          onChange={event => setQuestion(event.target.value)}
+          margin="normal"
+          inputProps={{ maxLength: 500 }}
+          helperText="For example: Who has triaged payment-reconciliation incidents?"
+        />
+        <TextField
+          fullWidth
+          label="Repository URL"
+          value={repoUrl}
+          onChange={event => setRepoUrl(event.target.value)}
+          margin="normal"
+        />
+        <TextField
+          fullWidth
+          label="Catalog entity reference"
+          value={entityRef}
+          onChange={event => setEntityRef(event.target.value)}
+          margin="normal"
+          helperText="Provide a repository URL or catalog entity reference."
+        />
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={props.onClose}>Cancel</Button>
+        <Button
+          color="primary"
+          variant="contained"
+          disabled={!valid}
+          onClick={submit}
+        >
+          Start research
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+};
