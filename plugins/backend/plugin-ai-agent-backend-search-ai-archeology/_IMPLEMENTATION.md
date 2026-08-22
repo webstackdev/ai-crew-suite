@@ -1,52 +1,3 @@
-## Backend Completed
-
-The package now delivers the contract-verified, read-only ticket-triage research
-milestone as `@webstackbuilders/plugin-ai-agent-backend-search-ai-archeology`.
-It is registered with AI Core, the root TypeScript/ESLint project configuration,
-and `packages/backend`; its manual agent configuration is under
-`ai.agents.searchArcheology`.
-
-Delivered behavior:
-
-- A stateless manual `search-ai-archeology` agent and `knowledge-archeology`
-  workflow allow-list only `project.ticket.search` and `project.ticket.get`.
-- Versioned, scoped, bounded request parsing validates question size, a repo or
-  entity scope, safe paths, and a bounded era.
-- Ticket summaries and details yield cited assignee-history/comment evidence.
-  Tool failures and tool-budget exhaustion become artifact limitations rather
-  than failing or expanding the research scope.
-- Identity handling preserves raw actors as explicit `unresolved` or configured
-  `offboarded` records; no catalog user/team is inferred.
-- Deterministic ranking uses ticket-triage count only. It is explicitly
-  familiarity evidence, never a skill, merit, productivity, or seniority score.
-- The workflow emits an `expertise-matrix` artifact with evidence, limitations,
-  confidence, and separate offboarded contributors.
-
-Deferred because the shared contracts are absent: commit and blame history,
-PR reviewer metadata, time-bounded ticket search and author filters,
-email-to-catalog-user/org-graph resolution, knowledge retrieval, and
-checkpoint/resume across rate limits. These sources are named in every report
-rather than being simulated.
-
-Coverage includes deterministic ranking, unresolved/offboarded identity
-preservation, ticket-only graph behavior with a cited artifact, and backend
-module registration proving only read-only ticket tools are exposed.
-
-### Frontend Completed
-
-`@webstackbuilders/plugin-ai-agent-frontend-search-ai-archeology` provides the
-standalone `/search-ai-archeology` page. It starts and replays authenticated AI
-Core runs, safely decodes only `expertise-matrix` artifacts, and visibly renders
-cited ticket evidence, research progress, explicit unresolved/offboarded actors,
-and named backend limitations. The form requires a scoped question and a
-repository URL or entity reference. It deliberately does not represent scores as
-performance, productivity, seniority, or merit, and it does not claim the
-contract-dependent VCS/reviewer/catalog-resolution features. The plugin is wired
-into root TypeScript/ESLint coverage and the application alpha feature list.
-
----
-
-
 # Search AI Archeology Implementation Plan
 
 ## Goal
@@ -507,3 +458,134 @@ Exit criteria: staged rollout with bounded third-party API usage, verified citat
 - The plugin registers **no write tool**, contacts nobody, and never writes identities or the matrix into vector storage.
 - Frontend renders the timeline, ranked matrix, identity statuses, signal breakdown, and evidence links over live SSE and replay via `ApiBlueprint`/`PageBlueprint`; Playwright verifies the offboarded-labeling and resume paths on fixtures.
 - No output surface (SSE, artifacts, logs, tests) contains secrets, unbounded history payloads, uncited experts, fabricated identities, or any characterization of a person's skill or performance.
+
+## Frontend Completed
+
+Completed
+
+Implemented the frontend plugin at:
+
+`/home/kevin/Repos/backstage/ai-crew-suite/plugins/frontend/plugin-ai-agent-frontend-search-ai-archeology`
+
+### Delivered
+
+- Standalone route: `/search-ai-archeology`
+
+- Alpha and legacy frontend plugin registrations.
+
+- Authenticated AI Core SSE client for:
+
+  - Starting `search-ai-archeology` manual runs.
+  - Replaying persisted runs through `?run=<id>`.
+
+- Typed browser contracts for the actual deployed `expertise-matrix` artifact.
+
+- Reducer-backed run hook with safe malformed-artifact handling.
+
+- Research dialog requiring:
+
+  - A scoped research question.
+  - Either repository URL or catalog entity reference.
+
+- UI rendering for:
+
+  - Research progress.
+  - Familiarity candidates.
+  - Explicit unresolved/offboarded contributors.
+  - Ticket citations.
+  - Backend limitations.
+  - Status and confidence.
+
+- Clear UI wording that scores are ticket-triage familiarity evidence only, __not__ skill, merit, productivity, performance, or seniority measures.
+
+- README and backend implementation-plan frontend completion section.
+
+- Focused tests for artifact reduction/malformed payloads and matrix rendering.
+
+### App and monorepo wiring
+
+Registered the frontend package in:
+
+- `/home/kevin/Repos/backstage/ai-crew-suite/tsconfig.json`
+- `/home/kevin/Repos/backstage/ai-crew-suite/.eslintrc.cjs`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/app/package.json`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/app/src/App.tsx`
+- `/home/kevin/Repos/backstage/ai-crew-suite/yarn.lock`
+
+### Validation
+
+Passed:
+
+- `yarn install --no-immutable`
+- Frontend package TypeScript check.
+- App TypeScript check.
+- Focused Vitest suite: __2 files, 3 tests passed__.
+- Frontend package lint.
+- `yarn typecheck --force`: __59/59 tasks successful__.
+- `yarn lint --force`: __59/59 tasks successful__.
+  - Only unrelated existing warnings from legacy backend test files.
+- `git diff --check`.
+
+The only test output warning is Material-UI v4’s existing `findDOMNode` deprecation warning during the component test; it does not fail tests or lint.
+
+## Backend Completed
+
+Implemented the `search-ai-archeology` backend plugin as the contract-verified, read-only ticket-triage research milestone.
+
+### Delivered
+
+- New backend module at:
+  - `/home/kevin/Repos/backstage/ai-crew-suite/plugins/backend/plugin-ai-agent-backend-search-ai-archeology`
+
+- Stateless manual agent: `search-ai-archeology`
+
+- Workflow: `knowledge-archeology`
+
+- Read-only tool allowlist:
+
+  - `project.ticket.search`
+  - `project.ticket.get`
+
+- Bounded/versioned request parsing with required repo/entity scope.
+
+- Ticket-detail evidence extraction from assignee history and comment authors.
+
+- Failure-tolerant, budgeted tool runner that records limitations instead of expanding scope or failing the run.
+
+- Explicit identity outcomes:
+
+  - `unresolved`
+  - configured `offboarded`
+  - preserves raw provider actor identities; does not invent catalog users or teams.
+
+- Deterministic familiarity ranking based on ticket-triage evidence only.
+
+- Cited `expertise-matrix` artifact output.
+
+- Explicit artifact limitations for unavailable commit/blame history, PR reviewer metadata, catalog identity mapping, and time-bounded ticket search.
+
+- Package README, config schema, implementation completion documentation, tests, and module exports.
+
+### Wiring
+
+Registered the module in:
+
+- `/home/kevin/Repos/backstage/ai-crew-suite/tsconfig.json`
+- `/home/kevin/Repos/backstage/ai-crew-suite/.eslintrc.cjs`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/backend/package.json`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/backend/src/index.ts`
+- `/home/kevin/Repos/backstage/ai-crew-suite/app-config.yaml`
+
+### Validation completed
+
+- `yarn install --no-immutable`
+- Package TypeScript compilation via SDK `tsc --noEmit`
+- Focused Vitest suite: __3 files, 4 tests passed__
+- Package lint passed
+- `yarn typecheck --force`: __58/58 tasks successful__
+- `yarn lint --force`: __58/58 tasks successful__
+  - Only pre-existing warnings in unrelated cloud/runtime test files.
+- `git diff --check` passed.
+
+Note: The workspace already contained an unrelated modified file: `/home/kevin/Repos/backstage/ai-crew-suite/plugins/backend/plugin-ai-agent-backend-scaffolder-ai-infra/_IMPLEMENTATION.md`; it was not altered by this implementation.
+

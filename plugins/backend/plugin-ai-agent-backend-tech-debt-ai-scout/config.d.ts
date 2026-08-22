@@ -1,0 +1,1 @@
+export interface Config { ai?: { agents?: { techDebtScout?: { model: string; maxQuestionChars?: number; maxSignals?: number; maxToolInvocations?: number; triage?: { escalationThreshold?: number } } } } }
