@@ -92,6 +92,7 @@
     { "path": "./plugins/backend/plugin-ai-agent-backend-scaffolder-ai-drift-detector" },
     { "path": "./plugins/frontend/plugin-ai-agent-frontend-scaffolder-ai-drift-detector" },
     { "path": "./plugins/backend/plugin-ai-agent-backend-scaffolder-ai-guardrail-agent" },
+    { "path": "./plugins/frontend/plugin-ai-agent-frontend-scaffolder-ai-guardrail-agent" },
 
     // 9. Observability
     { "path": "./plugins/backend/plugin-ai-core-backend-module-observability" },
