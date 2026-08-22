@@ -27,7 +27,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { alertAiTunerModule } from '../module';
 
 /** Boots the module against stub extension points and the supplied config. */
-const bootModule = async (alertAiTuner: Record<string, unknown>) => {
+const bootModule = async (alertAiTuner: { model?: string }) => {
   const points = {
     agents: { addAgent: vi.fn() },
     triggers: { addTrigger: vi.fn() },
