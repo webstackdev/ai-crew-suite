@@ -1,3 +1,40 @@
+## Backend Completed
+
+The package now delivers the contract-verified, read-only ticket-triage research
+milestone as `@webstackbuilders/plugin-ai-agent-backend-search-ai-archeology`.
+It is registered with AI Core, the root TypeScript/ESLint project configuration,
+and `packages/backend`; its manual agent configuration is under
+`ai.agents.searchArcheology`.
+
+Delivered behavior:
+
+- A stateless manual `search-ai-archeology` agent and `knowledge-archeology`
+  workflow allow-list only `project.ticket.search` and `project.ticket.get`.
+- Versioned, scoped, bounded request parsing validates question size, a repo or
+  entity scope, safe paths, and a bounded era.
+- Ticket summaries and details yield cited assignee-history/comment evidence.
+  Tool failures and tool-budget exhaustion become artifact limitations rather
+  than failing or expanding the research scope.
+- Identity handling preserves raw actors as explicit `unresolved` or configured
+  `offboarded` records; no catalog user/team is inferred.
+- Deterministic ranking uses ticket-triage count only. It is explicitly
+  familiarity evidence, never a skill, merit, productivity, or seniority score.
+- The workflow emits an `expertise-matrix` artifact with evidence, limitations,
+  confidence, and separate offboarded contributors.
+
+Deferred because the shared contracts are absent: commit and blame history,
+PR reviewer metadata, time-bounded ticket search and author filters,
+email-to-catalog-user/org-graph resolution, knowledge retrieval, and
+checkpoint/resume across rate limits. These sources are named in every report
+rather than being simulated.
+
+Coverage includes deterministic ranking, unresolved/offboarded identity
+preservation, ticket-only graph behavior with a cited artifact, and backend
+module registration proving only read-only ticket tools are exposed.
+
+---
+
+
 # Search AI Archeology Implementation Plan
 
 ## Goal
