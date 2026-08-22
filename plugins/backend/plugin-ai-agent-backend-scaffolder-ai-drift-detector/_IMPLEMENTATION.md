@@ -371,3 +371,57 @@ Exit criteria: staged rollout with sweep + remediate disabled by default, bounde
 - Deterministic diff provably isolates divergence (blueprint vs live) and never mutates live infrastructure; cross-sweep drift state persists without duplicate evaluation threads.
 - Sweeps are detect-only/draft; the approval gate provably blocks the sync PR until an `approved` decision and never double-opens; frontend renders the dashboard, diff/cost, and approve/reject over live SSE and replay; Playwright verifies both paths.
 - No output surface (SSE, artifacts, logs, audit, tests) contains secrets, uncited model claims, fabricated costs, or a PR write lacking a recorded human approval.
+
+## Backend Completed
+
+Implemented the viable read-only detection milestone at:
+
+`/home/kevin/Repos/backstage/ai-crew-suite/plugins/backend/plugin-ai-agent-backend-scaffolder-ai-drift-detector`
+
+### Implemented
+
+- Package, config schema, AI Core module, agent, manual/scheduler trigger
+  registration, root/app backend wiring, and `driftDetector` app config.
+- Custom `scaffolder-drift` workflow and `scaffolder-ai-drift-detector` agent.
+- Deterministic `drift-report` artifact for a caller-supplied bounded golden-path
+  blueprint compared with a Kubernetes workload snapshot.
+- Deterministic structural diffs for replicas, image, CPU limit, and memory
+  limit, with paired `bp-1` and `live-1` citations.
+- Bounded `kubernetes.workload.resolve` / `kubernetes.workload.get_snapshot`
+  execution with explained `insufficient_evidence` outcomes when a blueprint,
+  workload, or snapshot is unavailable.
+- `partial` only when a runtime read tool fails; known unavailable future
+  capabilities remain prominent limitations without invalidating a complete
+  Kubernetes comparison.
+
+### Contract limitations (not fabricated)
+
+The plan requires three shared contracts that do not exist in this repository:
+
+- normalized `cloud.resource.lookup` / `cloud.resource.dependencies` tools
+- a shared Scaffolder blueprint/provenance reader
+- `vcs.pull_request.create` (`effect: 'write'`)
+
+Accordingly, cloud reconciliation, catalog-derived blueprint loading, remediation
+patches, approval requests, checkpoints, `resume()`, PR writes, persistent
+cross-sweep fingerprint state, and fleet scheduler dispatch were not fabricated.
+The module is explicitly Kubernetes-backed, detect-only, and advisory. The
+configuration retains future sweep/remediation fields but they are not activated
+until the shared contracts land.
+
+### Tests and validation
+
+- 5 tests across 3 files: deterministic replica/memory delta with citations,
+  in-sync state, reconciliation via dynamic tool router without a write call,
+  missing-blueprint degradation, and backend module/allow-list registration.
+- `yarn vitest run plugins/backend/plugin-ai-agent-backend-scaffolder-ai-drift-detector/src` — __5 tests passed__
+- Package `tsc --noEmit` and package lint — clean
+
+### Wiring added
+
+- `/home/kevin/Repos/backstage/ai-crew-suite/tsconfig.json`
+- `/home/kevin/Repos/backstage/ai-crew-suite/.eslintrc.cjs`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/backend/package.json`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/backend/src/index.ts`
+- `/home/kevin/Repos/backstage/ai-crew-suite/app-config.yaml`
+- `/home/kevin/Repos/backstage/ai-crew-suite/yarn.lock`

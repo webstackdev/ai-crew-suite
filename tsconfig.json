@@ -89,6 +89,7 @@
     { "path": "./plugins/frontend/plugin-ai-agent-frontend-rfc-adr-ai-reviewer" },
     { "path": "./plugins/backend/plugin-ai-agent-backend-alert-ai-tuner" },
     { "path": "./plugins/frontend/plugin-ai-agent-frontend-alert-ai-tuner" },
+    { "path": "./plugins/backend/plugin-ai-agent-backend-scaffolder-ai-drift-detector" },
 
     // 9. Observability
     { "path": "./plugins/backend/plugin-ai-core-backend-module-observability" },
