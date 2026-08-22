@@ -15,11 +15,53 @@
  */
 import type { CostEstimateResult } from '@webstackbuilders/plugin-ai-core-node';
 import type { BudgetVerdict, EvidenceRef } from './state';
+
+interface PriceOutput {
+  budget: BudgetVerdict;
+  evidence: EvidenceRef[];
+  limitation?: string;
+}
+
 /** Compares a driver-provided cost estimate with a deterministic budget threshold. */
-export const price = (result: CostEstimateResult | undefined, thresholdUsd: number): { budget: BudgetVerdict; evidence: EvidenceRef[]; limitation?: string } => {
-  if (!result || !result.estimated) return { budget: { status: 'undetermined', thresholdUsd, evidence: [] }, evidence: [], limitation: 'Cost could not be estimated; governance remains undetermined.' };
+export const price = (
+  result: CostEstimateResult | undefined,
+  thresholdUsd: number
+): PriceOutput => {
+  if (!result || !result.estimated) {
+    return {
+      budget: { status: 'undetermined', thresholdUsd, evidence: [] },
+      evidence: [],
+      limitation: 'Cost could not be estimated; governance remains undetermined.'
+    };
+  }
+
   const amount = result.amount ?? result.range?.high;
-  if (amount === undefined) return { budget: { status: 'undetermined', thresholdUsd, evidence: [] }, evidence: [], limitation: 'Cost estimate omitted an amount and upper range.' };
-  const evidence: EvidenceRef[] = [{ id: 'cost-1', source: 'cost', summary: `Estimated ${result.currency ?? 'USD'} ${amount}`, reference: result.notes }];
-  return { budget: { status: amount > thresholdUsd ? 'over_budget' : 'within_budget', currency: result.currency, amount: result.amount, ceiling: result.range?.high, thresholdUsd, evidence: ['cost-1'] }, evidence };
+  if (amount === undefined) {
+    return {
+      budget: { status: 'undetermined', thresholdUsd, evidence: [] },
+      evidence: [],
+      limitation: 'Cost estimate omitted an amount and upper range.'
+    };
+  }
+
+  const evidence: EvidenceRef[] = [
+    {
+      id: 'cost-1',
+      source: 'cost',
+      summary: `Estimated ${result.currency ?? 'USD'} ${amount}`,
+      reference: result.notes
+    }
+  ];
+
+  return {
+    budget: {
+      status: amount > thresholdUsd ? 'over_budget' : 'within_budget',
+      currency: result.currency,
+      amount: result.amount,
+      ceiling: result.range?.high,
+      thresholdUsd,
+      evidence: ['cost-1']
+    },
+    evidence
+  };
 };

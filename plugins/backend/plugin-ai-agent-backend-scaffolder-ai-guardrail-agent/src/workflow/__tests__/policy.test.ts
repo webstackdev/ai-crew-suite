@@ -21,8 +21,57 @@ import { proposeMutation } from '../mutate';
 import { price } from '../price';
 
 describe('guardrail deterministic helpers', () => {
-  it('canonicalizes key order and enum-like string case for a stable fingerprint', () => { const first = { version: 1 as const, source: 'manual' as const, templateRef: 'template:default/db', parameters: canonicalizeParameters({ b: ' TEST ', a: 'db.m5.large' }) as Record<string, unknown> }; const second = { ...first, parameters: canonicalizeParameters({ a: 'DB.M5.LARGE', b: 'test' }) as Record<string, unknown> }; expect(fingerprintRequest(first)).toBe(fingerprintRequest(second)); });
-  it('defaults unmapped policy violations to blocking', () => { const result = adjudicate({ policies: [{ policyId: 'corp', passed: false, violations: [{ rule: 'new-rule', message: 'denied' }] }], severity: {} }); expect(result.violations[0]).toMatchObject({ severity: 'blocking', rule: 'new-rule' }); });
-  it('uses a range upper bound and fails closed for an unestimated cost', () => { expect(price({ estimated: true, range: { low: 100, high: 1200 } }, 1000).budget.status).toBe('over_budget'); expect(price({ estimated: false }, 1000).budget.status).toBe('undetermined'); });
-  it('offers only the configured lowest instance-type rung for a negotiable violation', () => { const mutations = proposeMutation({ parameters: { instanceType: 'db.m5.16xlarge' }, violations: [{ id: 'pol-1', rule: 'instance-type-not-approved', message: 'no', parameter: 'instanceType', severity: 'negotiable', evidence: ['pol-1'] }], ladder: ['db.m5.16xlarge', 'db.m5.large'] }); expect(mutations[0]).toMatchObject({ from: 'db.m5.16xlarge', to: 'db.m5.large' }); });
+  it('canonicalizes key order and enum-like string case for a stable fingerprint', () => {
+    const first = {
+      version: 1 as const,
+      source: 'manual' as const,
+      templateRef: 'template:default/db',
+      parameters: canonicalizeParameters({ b: ' TEST ', a: 'db.m5.large' }) as Record<string, unknown>
+    };
+
+    const second = {
+      ...first,
+      parameters: canonicalizeParameters({ a: 'DB.M5.LARGE', b: 'test' }) as Record<string, unknown>
+    };
+
+    expect(fingerprintRequest(first)).toBe(fingerprintRequest(second));
+  });
+
+  it('defaults unmapped policy violations to blocking', () => {
+    const result = adjudicate({
+      policies: [{
+        policyId: 'corp',
+        passed: false,
+        violations: [{ rule: 'new-rule', message: 'denied' }]
+      }],
+      severity: {}
+    });
+
+    expect(result.violations[0]).toMatchObject({ severity: 'blocking', rule: 'new-rule' });
+  });
+
+  it('uses a range upper bound and fails closed for an unestimated cost', () => {
+    expect(
+      price({ estimated: true, range: { low: 100, high: 1200 } }, 1000).budget.status
+    ).toBe('over_budget');
+
+    expect(price({ estimated: false }, 1000).budget.status).toBe('undetermined');
+  });
+
+  it('offers only the configured lowest instance-type rung for a negotiable violation', () => {
+    const mutations = proposeMutation({
+      parameters: { instanceType: 'db.m5.16xlarge' },
+      violations: [{
+        id: 'pol-1',
+        rule: 'instance-type-not-approved',
+        message: 'no',
+        parameter: 'instanceType',
+        severity: 'negotiable',
+        evidence: ['pol-1']
+      }],
+      ladder: ['db.m5.16xlarge', 'db.m5.large']
+    });
+
+    expect(mutations[0]).toMatchObject({ from: 'db.m5.16xlarge', to: 'db.m5.large' });
+  });
 });

@@ -13,4 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export interface Config { ai?: { agents?: { scaffolderGuardrail?: { model: string; maxParameterBytes?: number; maxToolInvocations?: number; maxNegotiationRounds?: number; policies?: { id: string }[]; severity?: Record<string, 'blocking' | 'negotiable' | 'advisory'>; budget?: { thresholdUsd?: number; perEnvironment?: Record<string, number> }; alternatives?: { instanceType?: { ladder?: string[]; perEnvironment?: Record<string, string[]> } } } } } }
+export interface Config {
+  ai?: {
+    agents?: {
+      scaffolderGuardrail?: {
+        model: string;
+        maxParameterBytes?: number;
+        maxToolInvocations?: number;
+        maxNegotiationRounds?: number;
+        policies?: { id: string }[];
+        severity?: Record<string, 'blocking' | 'negotiable' | 'advisory'>;
+        budget?: {
+          thresholdUsd?: number;
+          perEnvironment?: Record<string, number>;
+        };
+        alternatives?: {
+          instanceType?: {
+            ladder?: string[];
+            perEnvironment?: Record<string, string[]>;
+          };
+        };
+      };
+    };
+  };
+}

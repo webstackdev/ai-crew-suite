@@ -16,11 +16,36 @@
 import type { AgentDefinition } from '@webstackbuilders/plugin-ai-core-node';
 import type { ScaffolderGuardrailConfig } from './config';
 import { SCAFFOLDER_GUARDRAIL_WORKFLOW_ID } from './workflow/GuardrailGraph';
+
 /** Stable AI Core route identifier for advisory Scaffolder guardrails. */
 export const SCAFFOLDER_GUARDRAIL_AGENT_ID = 'scaffolder-ai-guardrail-agent';
+
 /** Every registered tool is read-only; the approval gate resolves parameters, never performs a write. */
-export const SCAFFOLDER_GUARDRAIL_TOOL_IDS = ['compliance.policy.evaluate', 'compliance.architecture.validate', 'compliance.cost.estimate', 'compliance.permission.check'] as const;
+export const SCAFFOLDER_GUARDRAIL_TOOL_IDS = [
+  'compliance.policy.evaluate',
+  'compliance.architecture.validate',
+  'compliance.cost.estimate',
+  'compliance.permission.check'
+] as const;
+
 /** Prompt posture forbidding model-derived verdicts, costs, and mutation values. */
-export const SCAFFOLDER_GUARDRAIL_SYSTEM_PROMPT = 'Use only the supplied deterministic policy verdicts, violations, costs, and alternatives. Cite pol-N, arch-N, or cost-N evidence for every claim. Never invent policies, parameter values, costs, or an exemption. This is advisory-only and never executes a Scaffolder task.';
+export const SCAFFOLDER_GUARDRAIL_SYSTEM_PROMPT =
+  'Use only the supplied deterministic policy verdicts, violations, costs, and alternatives. ' +
+  'Cite pol-N, arch-N, or cost-N evidence for every claim. ' +
+  'Never invent policies, parameter values, costs, or an exemption. ' +
+  'This is advisory-only and never executes a Scaffolder task.';
+
 /** Creates the session-memory advisory guardrail agent definition. */
-export const createScaffolderGuardrailAgent = (config: ScaffolderGuardrailConfig): AgentDefinition => ({ id: SCAFFOLDER_GUARDRAIL_AGENT_ID, modelRef: config.modelRef, workflowRef: SCAFFOLDER_GUARDRAIL_WORKFLOW_ID, memory: 'session', systemPrompt: SCAFFOLDER_GUARDRAIL_SYSTEM_PROMPT, toolIds: [...SCAFFOLDER_GUARDRAIL_TOOL_IDS], triggers: [{ id: 'guardrail-preflight-on-demand', source: 'manual', agentId: SCAFFOLDER_GUARDRAIL_AGENT_ID }] });
+export const createScaffolderGuardrailAgent = (
+  config: ScaffolderGuardrailConfig
+): AgentDefinition => ({
+  id: SCAFFOLDER_GUARDRAIL_AGENT_ID,
+  modelRef: config.modelRef,
+  workflowRef: SCAFFOLDER_GUARDRAIL_WORKFLOW_ID,
+  memory: 'session',
+  systemPrompt: SCAFFOLDER_GUARDRAIL_SYSTEM_PROMPT,
+  toolIds: [...SCAFFOLDER_GUARDRAIL_TOOL_IDS],
+  triggers: [
+    { id: 'guardrail-preflight-on-demand', source: 'manual', agentId: SCAFFOLDER_GUARDRAIL_AGENT_ID }
+  ]
+});

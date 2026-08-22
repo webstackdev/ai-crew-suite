@@ -15,9 +15,33 @@
  */
 import type { AgentEvent } from '@webstackbuilders/plugin-ai-core-node';
 import type { GuardrailAssessment, GuardrailResolution } from '../workflow/state';
+
 /** Artifact kinds for deterministic assessments and negotiated resolutions. */
-export const GUARDRAIL_ASSESSMENT_ARTIFACT = 'guardrail-assessment'; export const GUARDRAIL_RESOLUTION_ARTIFACT = 'guardrail-resolution';
+export const GUARDRAIL_ASSESSMENT_ARTIFACT = 'guardrail-assessment';
+export const GUARDRAIL_RESOLUTION_ARTIFACT = 'guardrail-resolution';
+
 /** Creates a replayable assessment artifact event. */
-export const assessmentArtifact = (runId: string, assessment: GuardrailAssessment): AgentEvent => ({ type: 'artifact', data: { runId, kind: GUARDRAIL_ASSESSMENT_ARTIFACT, ref: JSON.stringify(assessment) } });
+export const assessmentArtifact = (
+  runId: string,
+  assessment: GuardrailAssessment
+): AgentEvent => ({
+  type: 'artifact',
+  data: {
+    runId,
+    kind: GUARDRAIL_ASSESSMENT_ARTIFACT,
+    ref: JSON.stringify(assessment)
+  }
+});
+
 /** Creates a replayable resolution artifact event. */
-export const resolutionArtifact = (runId: string, resolution: GuardrailResolution): AgentEvent => ({ type: 'artifact', data: { runId, kind: GUARDRAIL_RESOLUTION_ARTIFACT, ref: JSON.stringify(resolution) } });
+export const resolutionArtifact = (
+  runId: string,
+  resolution: GuardrailResolution
+): AgentEvent => ({
+  type: 'artifact',
+  data: {
+    runId,
+    kind: GUARDRAIL_RESOLUTION_ARTIFACT,
+    ref: JSON.stringify(resolution)
+  }
+});

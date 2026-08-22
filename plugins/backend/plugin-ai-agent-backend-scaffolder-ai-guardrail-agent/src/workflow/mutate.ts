@@ -14,13 +14,32 @@
  * limitations under the License.
  */
 import type { MutationProposal, PolicyViolation } from './state';
+
+interface ProposeMutationInput {
+  parameters: Record<string, unknown>;
+  violations: PolicyViolation[];
+  ladder: string[];
+}
+
 /** Chooses a safe instance type only from the configured environment ladder. */
-export const proposeMutation = (input: { parameters: Record<string, unknown>; violations: PolicyViolation[]; ladder: string[] }): MutationProposal[] => {
-  const violation = input.violations.find(item => item.severity === 'negotiable' && /instance/i.test(item.parameter ?? item.rule));
+export const proposeMutation = (input: ProposeMutationInput): MutationProposal[] => {
+  const violation = input.violations.find(
+    item => item.severity === 'negotiable' && /instance/i.test(item.parameter ?? item.rule)
+  );
+
   const current = input.parameters.instanceType;
   if (!violation || typeof current !== 'string' || input.ladder.length === 0) return [];
+
   const position = input.ladder.indexOf(current);
   const target = input.ladder[input.ladder.length - 1];
   if (position === -1 || target === current) return [];
-  return [{ id: 'mut-1', parameter: 'instanceType', from: current, to: target, resolves: [violation.id], rationale: `Policy-derived alternative for ${violation.id}` }];
+
+  return [{
+    id: 'mut-1',
+    parameter: 'instanceType',
+    from: current,
+    to: target,
+    resolves: [violation.id],
+    rationale: `Policy-derived alternative for ${violation.id}`
+  }];
 };

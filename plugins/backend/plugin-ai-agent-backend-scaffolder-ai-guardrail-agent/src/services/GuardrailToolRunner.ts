@@ -14,17 +14,49 @@
  * limitations under the License.
  */
 import type { ToolInvocationResult, WorkflowContext } from '@webstackbuilders/plugin-ai-core-node';
+
 /** Bounded read-only compliance tool facade that degrades failures into limitations. */
 export class GuardrailToolRunner {
-  private calls = 0; private readonly failures: string[] = [];
-  constructor(private readonly context: WorkflowContext, private readonly maxCalls: number) {}
+  private calls = 0;
+  private readonly failures: string[] = [];
+
+  constructor(
+    private readonly context: WorkflowContext,
+    private readonly maxCalls: number
+  ) {}
+
   /** Recorded tool unavailability limitations. */
-  get limitations(): string[] { return [...this.failures]; }
+  get limitations(): string[] {
+    return [...this.failures];
+  }
+
   /** Invokes a registered compliance read tool within the run budget. */
-  async invoke<TArgs, TResult>(toolId: string, args: TArgs): Promise<ToolInvocationResult<TResult> | undefined> {
-    if (this.calls >= this.maxCalls) { this.failures.push(`Tool '${toolId}' was skipped: guardrail tool budget exhausted.`); return undefined; }
+  async invoke<TArgs, TResult>(
+    toolId: string,
+    args: TArgs
+  ): Promise<ToolInvocationResult<TResult> | undefined> {
+    if (this.calls >= this.maxCalls) {
+      this.failures.push(`Tool '${toolId}' was skipped: guardrail tool budget exhausted.`);
+      return undefined;
+    }
+
     this.calls += 1;
-    try { return await this.context.invokeTool<TArgs, TResult>({ toolId, args, limits: { timeoutMs: 10_000 } }); }
-    catch (error) { const message = error instanceof Error ? error.message : String(error); this.failures.push(`Tool '${toolId}' is unavailable: ${message}`); this.context.logger.warn(`Guardrail tool '${toolId}' failed`, { error: message }); return undefined; }
+
+    try {
+      return await this.context.invokeTool<TArgs, TResult>({
+        toolId,
+        args,
+        limits: { timeoutMs: 10_000 }
+      });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      this.failures.push(`Tool '${toolId}' is unavailable: ${message}`);
+
+      this.context.logger.warn(
+        `Guardrail tool '${toolId}' failed`,
+        { error: message }
+      );
+      return undefined;
+    }
   }
 }

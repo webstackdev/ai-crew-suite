@@ -14,10 +14,44 @@
  * limitations under the License.
  */
 import { coreServices, createBackendModule } from '@backstage/backend-plugin-api';
-import { agentExtensionPoint, triggerExtensionPoint, workflowRunnerExtensionPoint } from '@webstackbuilders/plugin-ai-core-node';
+import {
+  agentExtensionPoint,
+  triggerExtensionPoint,
+  workflowRunnerExtensionPoint
+} from '@webstackbuilders/plugin-ai-core-node';
 import { createScaffolderGuardrailAgent } from './agent';
 import { readScaffolderGuardrailConfig } from './config';
 import { GuardrailGraph } from './workflow/GuardrailGraph';
+
 /** Registers the advisory session-based Scaffolder guardrail agent with AI Core. */
-export const scaffolderGuardrailModule = createBackendModule({ pluginId: 'ai-core', moduleId: 'agent-scaffolder-ai-guardrail-agent', register(env) { env.registerInit({ deps: { config: coreServices.rootConfig, logger: coreServices.logger, agents: agentExtensionPoint, triggers: triggerExtensionPoint, workflows: workflowRunnerExtensionPoint }, async init({ config, logger, agents, triggers, workflows }) { const resolved = readScaffolderGuardrailConfig(config); workflows.registerRunner(new GuardrailGraph(resolved)); const agent = createScaffolderGuardrailAgent(resolved); agents.addAgent(agent); for (const trigger of agent.triggers ?? []) triggers.addTrigger(trigger); logger.info('Registered advisory Scaffolder guardrail workflow'); } }); } });
+export const scaffolderGuardrailModule = createBackendModule({
+  pluginId: 'ai-core',
+  moduleId: 'agent-scaffolder-ai-guardrail-agent',
+  register(env) {
+    env.registerInit({
+      deps: {
+        config: coreServices.rootConfig,
+        logger: coreServices.logger,
+        agents: agentExtensionPoint,
+        triggers: triggerExtensionPoint,
+        workflows: workflowRunnerExtensionPoint
+      },
+      async init({ config, logger, agents, triggers, workflows }) {
+        const resolved = readScaffolderGuardrailConfig(config);
+
+        workflows.registerRunner(new GuardrailGraph(resolved));
+
+        const agent = createScaffolderGuardrailAgent(resolved);
+        agents.addAgent(agent);
+
+        for (const trigger of agent.triggers ?? []) {
+          triggers.addTrigger(trigger);
+        }
+
+        logger.info('Registered advisory Scaffolder guardrail workflow');
+      }
+    });
+  }
+});
+
 export default scaffolderGuardrailModule;

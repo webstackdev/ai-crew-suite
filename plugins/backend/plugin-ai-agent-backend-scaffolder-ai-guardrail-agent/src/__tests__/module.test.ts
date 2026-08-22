@@ -34,6 +34,7 @@ describe('scaffolderGuardrailModule', () => {
       triggers: { addTrigger: vi.fn() },
       workflows: { registerRunner: vi.fn() },
     };
+
     const host = createBackendPlugin({
       pluginId: 'ai-core',
       register(env) {
