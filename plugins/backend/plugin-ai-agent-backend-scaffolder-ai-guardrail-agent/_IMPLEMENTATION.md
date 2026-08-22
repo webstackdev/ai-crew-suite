@@ -452,3 +452,60 @@ Exit criteria: staged rollout with the report disabled by default, bounded costs
 - Identical resubmissions provably reuse the existing negotiation session with zero additional model spend; the negotiation loop provably terminates within `maxNegotiationRounds`.
 - Frontend renders violations, cost, and offers over live SSE and replay via `ApiBlueprint`/`PageBlueprint`; Playwright verifies accept, reject, and blocked paths on fixtures.
 - No output surface (SSE, artifacts, logs, audit, tests) contains secrets, raw parameter values that should be redacted, uncited numbers, fabricated costs, or a `compliant`/`resolved` status lacking a deterministic basis.
+
+## Backend Completed
+
+Implemented the advisory guardrail backend module at:
+
+`/home/kevin/Repos/backstage/ai-crew-suite/plugins/backend/plugin-ai-agent-backend-scaffolder-ai-guardrail-agent`
+
+### Implemented
+
+- Package, config schema, AI Core module, session-memory agent, manual trigger,
+  root/backend wiring, and required `scaffolderGuardrail` configuration.
+- Custom `scaffolder-guardrail` workflow with bounded intake, parameter
+  canonicalization/redaction, pure fingerprinting, policy/architecture
+  adjudication, cost classification, config-bounded mutation selection, and
+  replayable `guardrail-assessment` artifacts.
+- Fail-closed outcomes: unavailable policy/architecture evaluation or an
+  unestimated cost yields `undetermined`, never `compliant`; unmapped rules are
+  `blocking`.
+- Checkpointed `approval_request` for negotiable/escalate outcomes; `resume()`
+  validates the approver through `compliance.permission.check`, records audit
+  events, and emits `guardrail-resolution` with the exact approved parameters.
+- No Scaffolder execution, write tool, cloud/repository/catalog mutation, or
+  model-derived policy/cost/mutation decision.
+
+### Advisory boundary
+
+The verified Scaffolder pre-flight interception point is absent. This v1 module
+is therefore advisory and every assessment records
+`advisory-only: not enforced server-side`; direct Scaffolder API calls can bypass
+it until a shared pre-flight contract lands. No fictional Scaffolder service or
+interception hook was introduced.
+
+### Tests and validation
+
+- 7 focused tests: canonical fingerprint behavior, secret-safe canonical input,
+  fail-closed unmapped-policy severity, cost range/unknown handling,
+  config-ladder mutation, negotiated checkpoint/approval event with no
+  Scaffolder call, unavailable driver `undetermined`, and module registration.
+- `yarn vitest run plugins/backend/plugin-ai-agent-backend-scaffolder-ai-guardrail-agent/src` — __7 tests passed__
+- Package `tsc --noEmit` and package lint — clean
+
+### Wiring added
+
+- `/home/kevin/Repos/backstage/ai-crew-suite/tsconfig.json`
+- `/home/kevin/Repos/backstage/ai-crew-suite/.eslintrc.cjs`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/backend/package.json`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/backend/src/index.ts`
+- `/home/kevin/Repos/backstage/ai-crew-suite/app-config.yaml`
+- `/home/kevin/Repos/backstage/ai-crew-suite/yarn.lock`
+
+### Deferred
+
+Runtime-store fingerprint session reuse/TTL, re-pricing/re-adjudicating the
+mutation before an offer, optional policy reporting, the frontend/E2E package,
+and server-side Scaffolder enforcement remain future milestones. They require
+additional confirmed runtime-store query and/or Scaffolder contracts and were not
+fabricated here.

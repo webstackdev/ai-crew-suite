@@ -106,5 +106,6 @@ backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-agent-backend
 backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-agent-backend-rfc-adr-ai-reviewer')));
 backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-agent-backend-alert-ai-tuner')));
 backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-drift-detector')));
+backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-guardrail-agent')));
 
 backend.start();

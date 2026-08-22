@@ -67,6 +67,11 @@ ai:
     driftDetector:
       # Read-only Kubernetes-backed detection until shared blueprint/cloud/VCS contracts land.
       model: drift-detector
+    scaffolderGuardrail:
+      # Advisory only until the shared Scaffolder pre-flight contract is available.
+      model: scaffolder-guardrail
+      policies:
+        - id: corp-architecture
     catalogAiInsights:
       # Installation-registered model ID; map it to a provider through a
       # chat-model module (e.g. plugin-ai-core-backend-module-llm-openai).
