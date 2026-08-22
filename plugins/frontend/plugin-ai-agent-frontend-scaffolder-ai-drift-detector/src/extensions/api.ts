@@ -14,7 +14,27 @@
  * limitations under the License.
  */
 import { ApiBlueprint, createApiFactory } from '@backstage/frontend-plugin-api';
-import { configApiRef, discoveryApiRef, fetchApiRef, identityApiRef } from '@backstage/core-plugin-api';
+import {
+  configApiRef,
+  discoveryApiRef,
+  fetchApiRef,
+  identityApiRef
+} from '@backstage/core-plugin-api';
 import { DriftDetectorClient, driftDetectorApiRef } from '../api';
+
 /** New-frontend-system API blueprint for the drift SSE client. */
-export const driftDetectorApiExtension = ApiBlueprint.make({ params: define => define(createApiFactory({ api: driftDetectorApiRef, deps: { configApi: configApiRef, discoveryApi: discoveryApiRef, fetchApi: fetchApiRef, identityApi: identityApiRef }, factory: deps => new DriftDetectorClient(deps) })) });
+export const driftDetectorApiExtension = ApiBlueprint.make({
+  params: define =>
+    define(
+      createApiFactory({
+        api: driftDetectorApiRef,
+        deps: {
+          configApi: configApiRef,
+          discoveryApi: discoveryApiRef,
+          fetchApi: fetchApiRef,
+          identityApi: identityApiRef
+        },
+        factory: deps => new DriftDetectorClient(deps)
+      })
+    )
+});

@@ -1,3 +1,18 @@
+/*
+ * Copyright 2026 Webstack Builders, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 const mocks = vi.hoisted(() => {
@@ -27,11 +42,26 @@ vi.mock(
     default: 'catalog-ai-insights',
   }),
 );
-vi.mock('@webstackbuilders/plugin-ai-agent-frontend-oncall-ai-handover-assistant/alpha', () => ({ default: 'oncall-handover-assistant' }));
-vi.mock('@webstackbuilders/plugin-ai-agent-frontend-release-notes-ai-generator/alpha', () => ({ default: 'release-notes-ai-generator' }));
-vi.mock('@webstackbuilders/plugin-ai-agent-frontend-rfc-adr-ai-reviewer/alpha', () => ({ default: 'rfc-adr-ai-reviewer' }));
-vi.mock('@webstackbuilders/plugin-ai-agent-frontend-alert-ai-tuner/alpha', () => ({ default: 'alert-ai-tuner' }));
-vi.mock('@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-drift-detector/alpha', () => ({ default: 'scaffolder-ai-drift-detector' }));
+vi.mock(
+  '@webstackbuilders/plugin-ai-agent-frontend-oncall-ai-handover-assistant/alpha',
+  () => ({ default: 'oncall-handover-assistant' })
+);
+vi.mock(
+  '@webstackbuilders/plugin-ai-agent-frontend-release-notes-ai-generator/alpha',
+  () => ({ default: 'release-notes-ai-generator' })
+);
+vi.mock(
+  '@webstackbuilders/plugin-ai-agent-frontend-rfc-adr-ai-reviewer/alpha',
+  () => ({ default: 'rfc-adr-ai-reviewer' })
+);
+vi.mock(
+  '@webstackbuilders/plugin-ai-agent-frontend-alert-ai-tuner/alpha',
+  () => ({ default: 'alert-ai-tuner' })
+);
+vi.mock(
+  '@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-drift-detector/alpha',
+  () => ({ default: 'scaffolder-ai-drift-detector' })
+);
 vi.mock('./modules/nav', () => ({ navModule: 'navigation' }));
 
 describe('App', () => {

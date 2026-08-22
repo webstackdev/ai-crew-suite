@@ -14,13 +14,93 @@
  * limitations under the License.
  */
 import React, { useState } from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@material-ui/core';
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField
+} from '@material-ui/core';
 import type { CheckDriftInput } from '../../@types';
+
 /** Props for the bounded on-demand drift-check dialog. */
-export type RunDriftCheckDialogProps = { open: boolean; onClose: () => void; onCheck: (input: CheckDriftInput) => void };
+export type RunDriftCheckDialogProps = {
+  open: boolean;
+  onClose: () => void;
+  onCheck: (input: CheckDriftInput) => void;
+};
+
 /** Collects entity and temporary bounded blueprint values required by the current backend milestone. */
 export const RunDriftCheckDialog = ({ open, onClose, onCheck }: RunDriftCheckDialogProps) => {
-  const [entityRef, setEntityRef] = useState(''); const [replicas, setReplicas] = useState(''); const [image, setImage] = useState('');
-  const submit = (event: React.FormEvent) => { event.preventDefault(); if (!entityRef.trim()) return; onCheck({ entityRef: entityRef.trim(), blueprint: { replicas: replicas ? Number(replicas) : undefined, image: image.trim() || undefined } }); onClose(); };
-  return <Dialog open={open} onClose={onClose} aria-labelledby="drift-check-title"><form onSubmit={submit}><DialogTitle id="drift-check-title">Run drift check</DialogTitle><DialogContent><TextField label="Catalog entity reference" value={entityRef} onChange={e => setEntityRef(e.target.value)} required fullWidth inputProps={{ 'aria-label': 'Catalog entity reference' }} /><TextField label="Expected replicas (temporary blueprint)" value={replicas} onChange={e => setReplicas(e.target.value)} type="number" fullWidth inputProps={{ 'aria-label': 'Expected replicas (temporary blueprint)' }} /><TextField label="Expected image (temporary blueprint)" value={image} onChange={e => setImage(e.target.value)} fullWidth inputProps={{ 'aria-label': 'Expected image (temporary blueprint)' }} helperText="Until the shared Scaffolder blueprint reader is registered." /></DialogContent><DialogActions><Button onClick={onClose}>Cancel</Button><Button type="submit" color="primary" variant="contained" disabled={!entityRef.trim()}>Check drift</Button></DialogActions></form></Dialog>;
+  const [entityRef, setEntityRef] = useState('');
+  const [replicas, setReplicas] = useState('');
+  const [image, setImage] = useState('');
+
+  const submit = (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!entityRef.trim()) return;
+
+    onCheck({
+      entityRef: entityRef.trim(),
+      blueprint: {
+        replicas: replicas ? Number(replicas) : undefined,
+        image: image.trim() || undefined
+      }
+    });
+    onClose();
+  };
+
+  return (
+    <Dialog
+      open={open}
+      onClose={onClose}
+      aria-labelledby="drift-check-title"
+    >
+      <form onSubmit={submit}>
+        <DialogTitle id="drift-check-title">Run drift check</DialogTitle>
+
+        <DialogContent>
+          <TextField
+            label="Catalog entity reference"
+            value={entityRef}
+            onChange={event => setEntityRef(event.target.value)}
+            required
+            fullWidth
+            inputProps={{ 'aria-label': 'Catalog entity reference' }}
+          />
+
+          <TextField
+            label="Expected replicas (temporary blueprint)"
+            value={replicas}
+            onChange={event => setReplicas(event.target.value)}
+            type="number"
+            fullWidth
+            inputProps={{ 'aria-label': 'Expected replicas (temporary blueprint)' }}
+          />
+
+          <TextField
+            label="Expected image (temporary blueprint)"
+            value={image}
+            onChange={event => setImage(event.target.value)}
+            fullWidth
+            inputProps={{ 'aria-label': 'Expected image' }}
+            helperText="Until the shared Scaffolder blueprint reader is registered."
+          />
+        </DialogContent>
+
+        <DialogActions>
+          <Button onClick={onClose}>Cancel</Button>
+          <Button
+            type="submit"
+            color="primary"
+            variant="contained"
+            disabled={!entityRef.trim()}
+          >
+            Check drift
+          </Button>
+        </DialogActions>
+      </form>
+    </Dialog>
+  );
 };
