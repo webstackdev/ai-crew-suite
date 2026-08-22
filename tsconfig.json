@@ -87,6 +87,7 @@
     { "path": "./plugins/backend/plugin-ai-agent-backend-release-notes-ai-generator" },
     { "path": "./plugins/backend/plugin-ai-agent-backend-rfc-adr-ai-reviewer" },
     { "path": "./plugins/frontend/plugin-ai-agent-frontend-rfc-adr-ai-reviewer" },
+    { "path": "./plugins/backend/plugin-ai-agent-backend-alert-ai-tuner" },
 
     // 9. Observability
     { "path": "./plugins/backend/plugin-ai-core-backend-module-observability" },

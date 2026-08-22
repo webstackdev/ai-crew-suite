@@ -15547,6 +15547,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@webstackbuilders/plugin-ai-agent-backend-alert-ai-tuner@workspace:^, @webstackbuilders/plugin-ai-agent-backend-alert-ai-tuner@workspace:plugins/backend/plugin-ai-agent-backend-alert-ai-tuner":
+  version: 0.0.0-use.local
+  resolution: "@webstackbuilders/plugin-ai-agent-backend-alert-ai-tuner@workspace:plugins/backend/plugin-ai-agent-backend-alert-ai-tuner"
+  dependencies:
+    "@backstage/backend-plugin-api": "backstage:^"
+    "@backstage/backend-test-utils": "backstage:^"
+    "@backstage/cli": "backstage:^"
+    "@backstage/config": "backstage:^"
+    "@webstackbuilders/plugin-ai-core-node": "workspace:*"
+    vitest: "npm:^4.1.10"
+  languageName: unknown
+  linkType: soft
+
 "@webstackbuilders/plugin-ai-agent-backend-catalog-ai-insights@workspace:^, @webstackbuilders/plugin-ai-agent-backend-catalog-ai-insights@workspace:plugins/backend/plugin-ai-agent-backend-catalog-ai-insights":
   version: 0.0.0-use.local
   resolution: "@webstackbuilders/plugin-ai-agent-backend-catalog-ai-insights@workspace:plugins/backend/plugin-ai-agent-backend-catalog-ai-insights"
@@ -17569,6 +17582,7 @@ __metadata:
     "@backstage/plugin-search-backend-node": "backstage:^"
     "@backstage/plugin-signals-backend": "backstage:^"
     "@backstage/plugin-techdocs-backend": "backstage:^"
+    "@webstackbuilders/plugin-ai-agent-backend-alert-ai-tuner": "workspace:^"
     "@webstackbuilders/plugin-ai-agent-backend-catalog-ai-insights": "workspace:^"
     "@webstackbuilders/plugin-ai-agent-backend-oncall-ai-handover-assistant": "workspace:^"
     "@webstackbuilders/plugin-ai-agent-backend-release-notes-ai-generator": "workspace:^"

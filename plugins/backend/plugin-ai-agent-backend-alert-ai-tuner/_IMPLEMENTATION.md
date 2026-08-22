@@ -449,3 +449,129 @@ Exit criteria: staged rollout with sweep and publish disabled by default, bounde
 - The patch is anchored to the located assignment lines, validated to apply before the gate and re-validated on resume; the approval gate provably blocks the PR until an `approved` decision and never double-opens.
 - Frontend renders evidence, diff, and approve/reject over live SSE and replay; Playwright verifies both paths on fixtures.
 - No output surface (SSE, artifacts, logs, audit, tests) contains secrets, alert PII beyond the run artifact, uncited numbers, or a PR write lacking a recorded human approval.
+
+## Frontend Completed
+
+## Backend Completed
+
+Implemented the alert fatigue tuner backend module at:
+
+`/home/kevin/Repos/backstage/ai-crew-suite/plugins/backend/plugin-ai-agent-backend-alert-ai-tuner`
+
+Delivered **Milestone 0** (shared pure engines), **Milestone 1** (propose-only
+backend), and **Milestone 3** (weekly sweep). Milestone 2's publish path was
+deliberately not built — see "Contract limitations" below.
+
+### Registered surface
+
+- Workflow ID: `alert-tuning` (custom `WorkflowRunner`)
+- Agent ID: `alert-ai-tuner`, `memory: 'none'`
+- Artifact kind: `alert-tuning-proposal`
+- Triggers: `alert-tuning-on-demand` (manual) and `alert-tuning-weekly-sweep`
+- Read-only tool allow-list:
+  - `incident.alert.history`
+  - `incident.incident.list`
+  - `observability.metrics.query`
+  - `vcs.repository.get_metadata`
+  - `vcs.repository.search`
+  - `vcs.repository.read_file`
+
+### Deterministic engines (pure, no LLM)
+
+- `workflow/noise.ts` — nearest-rank percentiles, auto-resolve ratio, paged
+  ratio, and the fixed verdict ladder. Unresolved firings count toward volume
+  but never toward auto-resolve or duration statistics.
+- `workflow/correlate.ts` — padded interval-overlap predicates; any real
+  incident overlap flips the verdict to `real_signal` and removes the patch path.
+- `workflow/locate.ts` — HCL `resource "..." "..."` blocks (brace-depth bounded)
+  and Prometheus `- alert:` rule entries (indentation bounded), capturing
+  threshold/duration assignments **with line numbers**. Zero and multiple
+  matches are both terminal.
+- `workflow/patch.ts` — capped arithmetic plus an anchored unified diff that
+  preserves indentation, operator spacing, quoting, and trailing comments
+  byte-for-byte, validated against the exact file it was cut from.
+- `scheduler/sweepPlanner.ts` — bounded, deduplicated, cooldown-aware plan.
+
+### Workflow behavior
+
+`observe → analyze → correlate → locate → patch → alert-tuning-proposal`, with
+first-class explained outcomes rather than errors: `noisy`, `partial`,
+`not_noisy`, `insufficient_evidence`, `anchor_not_found`.
+
+### Contract limitations (not fabricated)
+
+The plan correctly identifies three missing shared contracts, and none were
+invented:
+
+- `vcs.pull_request.create` / `vcs.branch.create` (`effect: 'write'`) — no
+  write-capable operation exists anywhere in `VcsDriver`, so the write tool is
+  absent from the allow-list and the workflow terminates at the proposal
+  artifact. Per the plan's own instruction ("Omit `vcs.pull_request.create` from
+  the allow-list until it lands"), `publish.enabled: true` records a limitation
+  rather than emitting a fake `approval_request`. `AlertTunerGraph.resume()` was
+  therefore **not** implemented: a resume path with nothing to publish would be
+  dead code advertising a gate that cannot exist.
+- `kubernetes.workload.get_timeline` — gated on shared responder work; absence
+  is a recorded limitation that caps `confidence` at `low`.
+- `CatalogEntityResolver` — until it lands, an explicit `repoUrl` is required and
+  annotation-based resolution reports `anchor_not_found`.
+
+`patchApplies()` and the checkpointable `patchHash` are implemented and tested
+now, so Milestone 2 can add the gate without reworking the patch engine.
+
+### Wiring added
+
+- `/home/kevin/Repos/backstage/ai-crew-suite/tsconfig.json`
+- `/home/kevin/Repos/backstage/ai-crew-suite/.eslintrc.cjs`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/backend/package.json`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/backend/src/index.ts`
+- `/home/kevin/Repos/backstage/ai-crew-suite/app-config.yaml`
+- `/home/kevin/Repos/backstage/ai-crew-suite/yarn.lock`
+
+### Tests added
+
+40 tests across 7 files:
+
+- `noise`: the 15-firing / 90-second fingerprint → `noisy`; a 4-hour outage
+  appended leaves both percentiles at 90s (a mean would land near 990s and hide
+  the noise); high paged ratio → `inconclusive`; 3 samples → below floor;
+  unresolved firings excluded from statistics.
+- `correlate`: incident overlap → `real_signal` with `suppressedBy`;
+  non-overlapping incident leaves the verdict intact; pad boundary behaviour.
+- `patch`: `85 → 97` within the 15% cap and never to 300; peak-veto in both
+  directions; `2m → 4m` and multiplier-bounded `6m`; diff touches only located
+  lines and preserves the trailing comment; drifted file invalidates the patch.
+- `locate`: HCL and Prometheus anchors with exact line numbers; no-match,
+  ambiguous-match, and no-tunable-field terminals.
+- `history` / `request`: derived durations, window filtering, newest-first cap,
+  evidence free of alert titles, window clamping, traversal-path rejection,
+  unsupported-version rejection.
+- `AlertTunerGraph` (dynamic mock tool router keyed by tool ID): the headline
+  scenario produces an anchored capped diff and invokes **no** write tool;
+  degradation to `partial`/`low`; real-signal suppression; termination before any
+  repository read below the floor; `anchor_not_found`; invalid-request rejection.
+- `module`: runner/agent/trigger registration, allow-list contains no write
+  tool, and boot fails without configuration.
+
+### Bug found and fixed during validation
+
+`cappedThreshold` originally returned `max(cap, peak + headroom)`, which could
+exceed its own percentage cap when the observed peak was high. The observed peak
+is now a **veto** rather than a raise: when the peak plus headroom will not fit
+under the cap, no change is proposed at all, because loosening a threshold past a
+value the service already exceeds would silently disable the alert.
+
+### Validation completed
+
+- `yarn vitest run plugins/backend/plugin-ai-agent-backend-alert-ai-tuner/src` — __40 tests passed__
+- Package `tsc --noEmit` and package lint — clean
+- `yarn typecheck --force` — __50/50 tasks successful__
+- `yarn lint --force` — __50/50 tasks successful__ (only pre-existing unrelated
+  warnings remain)
+- `git diff --check` — clean
+
+### Not implemented here
+
+Milestone 2 (approval gate and PR publish, blocked on the shared VCS write
+tool), Milestone 4 (frontend and E2E), and Milestone 5 (production dashboards
+plus the opt-in real-model evaluation suite).

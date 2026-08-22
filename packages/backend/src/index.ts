@@ -104,5 +104,6 @@ backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-agent-backend
 backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-agent-backend-oncall-ai-handover-assistant')));
 backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-agent-backend-release-notes-ai-generator')));
 backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-agent-backend-rfc-adr-ai-reviewer')));
+backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-agent-backend-alert-ai-tuner')));
 
 backend.start();
