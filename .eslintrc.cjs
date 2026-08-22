@@ -162,6 +162,10 @@ module.exports = {
       createConfigForRole(__dirname, 'frontend-plugin'),
     ),
     ...scopedOverrides(
+      'plugins/frontend/plugin-ai-agent-frontend-rfc-adr-ai-reviewer',
+      createConfigForRole(__dirname, 'frontend-plugin'),
+    ),
+    ...scopedOverrides(
       'plugins/backend/plugin-ai-core-backend-module-llm-aws',
       createConfigForRole(__dirname, 'backend-plugin-module'),
     ),
