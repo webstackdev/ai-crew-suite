@@ -31,6 +31,7 @@ vi.mock('@webstackbuilders/plugin-ai-agent-frontend-oncall-ai-handover-assistant
 vi.mock('@webstackbuilders/plugin-ai-agent-frontend-release-notes-ai-generator/alpha', () => ({ default: 'release-notes-ai-generator' }));
 vi.mock('@webstackbuilders/plugin-ai-agent-frontend-rfc-adr-ai-reviewer/alpha', () => ({ default: 'rfc-adr-ai-reviewer' }));
 vi.mock('@webstackbuilders/plugin-ai-agent-frontend-alert-ai-tuner/alpha', () => ({ default: 'alert-ai-tuner' }));
+vi.mock('@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-drift-detector/alpha', () => ({ default: 'scaffolder-ai-drift-detector' }));
 vi.mock('./modules/nav', () => ({ navModule: 'navigation' }));
 
 describe('App', () => {
@@ -53,6 +54,7 @@ describe('App', () => {
         'release-notes-ai-generator',
         'catalog-ai-insights',
         'alert-ai-tuner',
+        'scaffolder-ai-drift-detector',
         'rfc-adr-ai-reviewer',
       ],
     });

@@ -372,6 +372,41 @@ Exit criteria: staged rollout with sweep + remediate disabled by default, bounde
 - Sweeps are detect-only/draft; the approval gate provably blocks the sync PR until an `approved` decision and never double-opens; frontend renders the dashboard, diff/cost, and approve/reject over live SSE and replay; Playwright verifies both paths.
 - No output surface (SSE, artifacts, logs, audit, tests) contains secrets, uncited model claims, fabricated costs, or a PR write lacking a recorded human approval.
 
+## Frontend Completed
+
+Implemented the contract-matched frontend at:
+
+`/home/kevin/Repos/backstage/ai-crew-suite/plugins/frontend/plugin-ai-agent-frontend-scaffolder-ai-drift-detector`
+
+### Implemented surface
+
+- Package `@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-drift-detector`
+  with `frontend-plugin` role, legacy entrypoint, and `./alpha` entrypoint.
+- Standalone `/scaffolder-ai-drift-detector` page with `?run=<id>` replay.
+- Typed AI Core client: start drift check, replay run events with
+  `Last-Event-ID`, typed future approval submission.
+- Temporary bounded blueprint form (entity reference, replicas, image), required
+  because the shared Scaffolder blueprint reader is not implemented yet.
+- `useDriftRun` reducer/hook, progress/replay handling, expected-versus-actual
+  drift items with paired `bp`/`live` evidence, status, limitations, and report
+  evidence.
+
+### Contract limitation (not fabricated)
+
+The implemented backend emits **only** `drift-report`; it exposes no fleet-list
+endpoint, remediation patch artifact, approval event, publication artifact, or
+VCS write tool. Consequently this frontend intentionally does not invent the
+plan's fleet dashboard API, patch preview, approval/reject button, or PR link.
+Those UI paths can be added when their real backend contracts land.
+
+### Wiring and validation
+
+- Registered root TypeScript/ESLint coverage and package/app alpha feature load.
+- 7 focused tests across reducer, cited drift-item rendering, empty in-sync
+  state, and temporary blueprint form validation/submission.
+- `yarn vitest run plugins/frontend/plugin-ai-agent-frontend-scaffolder-ai-drift-detector/src` — __7 tests passed__
+- Package `tsc --noEmit`, package lint, and `packages/app/src/App.test.tsx` — clean
+
 ## Backend Completed
 
 Implemented the viable read-only detection milestone at:

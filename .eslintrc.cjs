@@ -177,6 +177,10 @@ module.exports = {
       createConfigForRole(__dirname, 'backend-plugin-module'),
     ),
     ...scopedOverrides(
+      'plugins/frontend/plugin-ai-agent-frontend-scaffolder-ai-drift-detector',
+      createConfigForRole(__dirname, 'frontend-plugin'),
+    ),
+    ...scopedOverrides(
       'plugins/frontend/plugin-ai-agent-frontend-catalog-ai-insights',
       createConfigForRole(__dirname, 'frontend-plugin'),
     ),
