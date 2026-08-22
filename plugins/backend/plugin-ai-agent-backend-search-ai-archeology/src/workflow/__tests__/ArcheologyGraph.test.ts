@@ -17,7 +17,67 @@ import type { AgentEvent, AgentRunInput, WorkflowContext } from '@webstackbuilde
 import { describe, expect, it, vi } from 'vitest';
 import { ArcheologyGraph } from '../ArcheologyGraph';
 
-const config = { modelRef: 'arch', maxQuestionChars: 500, maxLookbackYears: 5, maxTickets: 40, maxToolInvocations: 24, weightTriaged: 1, maxExperts: 10, treatUnresolvedAsOffboarded: true };
-const input: AgentRunInput = { runId: 'run-1', agentId: 'search-ai-archeology', input: { query: JSON.stringify({ version: 1, question: 'Who knows payments?', repoUrl: 'https://github.com/acme/payments' }), source: 'catalog' } } as AgentRunInput;
-const collect = async (events: AsyncIterable<AgentEvent>) => { const output: AgentEvent[] = []; for await (const event of events) output.push(event); return output; };
-describe('ArcheologyGraph', () => { it('builds a cited ticket-triage-only partial matrix without VCS history calls', async () => { const invokeTool = vi.fn(async ({ toolId }: { toolId: string }) => ({ toolId, summary: 'ok', output: toolId === 'project.ticket.search' ? [{ id: 'OPS-1', title: 'Payments outage', state: 'done' }] : { id: 'OPS-1', title: 'Payments outage', state: 'done', assigneeHistory: [{ changedAt: '2025-01-01T00:00:00.000Z', to: { id: 'retired-dev', displayName: 'Retired Dev' } }], comments: [] } })); const events = await collect(new ArcheologyGraph(config).run(input, { logger: { warn: vi.fn() }, invokeTool } as unknown as WorkflowContext)); const artifact = events.find(event => event.type === 'artifact') as Extract<AgentEvent, { type: 'artifact' }>; const matrix = JSON.parse(artifact.data.ref!); expect(matrix).toMatchObject({ status: 'partial', experts: [], offboardedContributors: [{ identity: { status: 'offboarded' } }] }); expect(invokeTool.mock.calls.map(([call]) => call.toolId)).not.toContain('vcs.repository.list_commits'); }); });
+const config = {
+  modelRef: 'arch',
+  maxQuestionChars: 500,
+  maxLookbackYears: 5,
+  maxTickets: 40,
+  maxToolInvocations: 24,
+  weightTriaged: 1,
+  maxExperts: 10,
+  treatUnresolvedAsOffboarded: true
+};
+
+const input: AgentRunInput = {
+  runId: 'run-1',
+  agentId: 'search-ai-archeology',
+  input: {
+    query: JSON.stringify({
+      version: 1,
+      question: 'Who knows payments?',
+      repoUrl: 'https://github.com/acme/payments'
+    }),
+    source: 'catalog'
+  }
+} as AgentRunInput;
+
+const collect = async (events: AsyncIterable<AgentEvent>) => {
+  const output: AgentEvent[] = [];
+  for await (const event of events) output.push(event);
+  return output;
+};
+
+describe('ArcheologyGraph', () => {
+  it('builds a cited ticket-triage-only partial matrix without VCS history calls', async () => {
+    const invokeTool = vi.fn(async ({ toolId }: { toolId: string }) => ({
+      toolId,
+      summary: 'ok',
+      output: toolId === 'project.ticket.search'
+        ? [{ id: 'OPS-1', title: 'Payments outage', state: 'done' }]
+        : {
+            id: 'OPS-1',
+            title: 'Payments outage',
+            state: 'done',
+            assigneeHistory: [{ changedAt: '2025-01-01T00:00:00.000Z', to: { id: 'retired-dev', displayName: 'Retired Dev' } }],
+            comments: []
+          }
+    }));
+
+    const events = await collect(
+      new ArcheologyGraph(config).run(
+        input,
+        { logger: { warn: vi.fn() }, invokeTool } as unknown as WorkflowContext
+      )
+    );
+
+    const artifact = events.find(event => event.type === 'artifact') as Extract<AgentEvent, { type: 'artifact' }>;
+    const matrix = JSON.parse(artifact.data.ref!);
+
+    expect(matrix).toMatchObject({
+      status: 'partial',
+      experts: [],
+      offboardedContributors: [{ identity: { status: 'offboarded' } }]
+    });
+    expect(invokeTool.mock.calls.map(([call]) => call.toolId)).not.toContain('vcs.repository.list_commits');
+  });
+});

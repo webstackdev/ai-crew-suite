@@ -13,4 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export interface Config { ai?: { agents?: { searchArcheology?: { model: string; maxQuestionChars?: number; maxLookbackYears?: number; maxTickets?: number; maxToolInvocations?: number; identity?: { treatUnresolvedAsOffboarded?: boolean }; ranking?: { weightTriaged?: number; maxExperts?: number } } } } }
+export interface Config {
+  ai?: {
+    agents?: {
+      searchArcheology?: {
+        model: string;
+        maxQuestionChars?: number;
+        maxLookbackYears?: number;
+        maxTickets?: number;
+        maxToolInvocations?: number;
+        identity?: {
+          treatUnresolvedAsOffboarded?: boolean;
+        };
+        ranking?: {
+          weightTriaged?: number;
+          maxExperts?: number;
+        };
+      };
+    };
+  };
+}

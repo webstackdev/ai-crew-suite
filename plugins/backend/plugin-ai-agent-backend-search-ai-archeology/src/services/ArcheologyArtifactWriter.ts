@@ -15,7 +15,19 @@
  */
 import type { AgentEvent } from '@webstackbuilders/plugin-ai-core-node';
 import type { ExpertiseMatrix } from '../workflow/state';
+
 /** Artifact kind emitted for cited legacy-system expertise research. */
 export const EXPERTISE_MATRIX_ARTIFACT = 'expertise-matrix';
+
 /** Creates a replayable expertise matrix artifact event. */
-export const expertiseMatrixArtifact = (runId: string, matrix: ExpertiseMatrix): AgentEvent => ({ type: 'artifact', data: { runId, kind: EXPERTISE_MATRIX_ARTIFACT, ref: JSON.stringify(matrix) } });
+export const expertiseMatrixArtifact = (
+  runId: string,
+  matrix: ExpertiseMatrix
+): AgentEvent => ({
+  type: 'artifact',
+  data: {
+    runId,
+    kind: EXPERTISE_MATRIX_ARTIFACT,
+    ref: JSON.stringify(matrix)
+  }
+});

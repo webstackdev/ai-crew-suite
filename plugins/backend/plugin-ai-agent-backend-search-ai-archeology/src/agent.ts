@@ -16,11 +16,27 @@
 import type { AgentDefinition } from '@webstackbuilders/plugin-ai-core-node';
 import type { SearchArcheologyConfig } from './config';
 import { KNOWLEDGE_ARCHEOLOGY_WORKFLOW_ID } from './workflow/ArcheologyGraph';
+
 /** Stable AI Core route ID for legacy-system expertise research. */
 export const SEARCH_ARCHEOLOGY_AGENT_ID = 'search-ai-archeology';
+
 /** Available read-only evidence tools; commit/blame tooling is intentionally absent. */
 export const SEARCH_ARCHEOLOGY_TOOL_IDS = ['project.ticket.search', 'project.ticket.get'] as const;
+
 /** Prompt posture that forbids skill/performance claims and invented identities. */
-export const SEARCH_ARCHEOLOGY_SYSTEM_PROMPT = 'Rank only supplied cited familiarity evidence. Never characterize skill, performance, merit, or productivity. Never invent people, teams, commits, PRs, or tickets. Preserve unresolved and offboarded contributors explicitly.';
+export const SEARCH_ARCHEOLOGY_SYSTEM_PROMPT =
+  'Rank only supplied cited familiarity evidence. ' +
+  'Never characterize skill, performance, merit, or productivity. ' +
+  'Never invent people, teams, commits, PRs, or tickets. ' +
+  'Preserve unresolved and offboarded contributors explicitly.';
+
 /** Creates the read-only session-memory archeology research agent. */
-export const createSearchArcheologyAgent = (config: SearchArcheologyConfig): AgentDefinition => ({ id: SEARCH_ARCHEOLOGY_AGENT_ID, modelRef: config.modelRef, workflowRef: KNOWLEDGE_ARCHEOLOGY_WORKFLOW_ID, memory: 'none', systemPrompt: SEARCH_ARCHEOLOGY_SYSTEM_PROMPT, toolIds: [...SEARCH_ARCHEOLOGY_TOOL_IDS], triggers: [{ id: 'archeology-research-on-demand', source: 'manual', agentId: SEARCH_ARCHEOLOGY_AGENT_ID }] });
+export const createSearchArcheologyAgent = (config: SearchArcheologyConfig): AgentDefinition => ({
+  id: SEARCH_ARCHEOLOGY_AGENT_ID,
+  modelRef: config.modelRef,
+  workflowRef: KNOWLEDGE_ARCHEOLOGY_WORKFLOW_ID,
+  memory: 'none',
+  systemPrompt: SEARCH_ARCHEOLOGY_SYSTEM_PROMPT,
+  toolIds: [...SEARCH_ARCHEOLOGY_TOOL_IDS],
+  triggers: [{ id: 'archeology-research-on-demand', source: 'manual', agentId: SEARCH_ARCHEOLOGY_AGENT_ID }]
+});
