@@ -53,6 +53,7 @@
     "@webstackbuilders/plugin-ai-agent-backend-release-notes-ai-generator": "workspace:^",
     "@webstackbuilders/plugin-ai-agent-backend-rfc-adr-ai-reviewer": "workspace:^",
     "@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-drift-detector": "workspace:^",
+    "@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-guardrail-agent": "workspace:^",
     "@webstackbuilders/plugin-ai-core-backend": "workspace:^",
     "@webstackbuilders/plugin-ai-core-backend-module-cloud-providers": "workspace:^",
     "@webstackbuilders/plugin-ai-core-backend-module-communication": "workspace:^",

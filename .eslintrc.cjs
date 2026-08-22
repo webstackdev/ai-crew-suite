@@ -181,6 +181,10 @@ module.exports = {
       createConfigForRole(__dirname, 'frontend-plugin'),
     ),
     ...scopedOverrides(
+      'plugins/backend/plugin-ai-agent-backend-scaffolder-ai-guardrail-agent',
+      createConfigForRole(__dirname, 'backend-plugin-module'),
+    ),
+    ...scopedOverrides(
       'plugins/frontend/plugin-ai-agent-frontend-catalog-ai-insights',
       createConfigForRole(__dirname, 'frontend-plugin'),
     ),

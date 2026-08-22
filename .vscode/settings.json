@@ -27,12 +27,15 @@
     "unbuilt",
     "uncited",
     "unconfigured",
+    "unestimated",
     "ungated",
+    "unparseable",
     "unposted",
     "Unrouted",
     "unsourced",
     "untimed",
     "upserts",
+    "xlarge",
     "zipfs"
   ],
   "search.exclude": {
