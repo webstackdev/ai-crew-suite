@@ -70,6 +70,10 @@ vi.mock(
   '@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-infra/alpha',
   () => ({ default: 'scaffolder-ai-infra' })
 );
+vi.mock(
+  '@webstackbuilders/plugin-ai-agent-frontend-search-ai-archeology/alpha',
+  () => ({ default: 'search-ai-archeology' })
+);
 vi.mock('./modules/nav', () => ({ navModule: 'navigation' }));
 
 describe('App', () => {
@@ -96,6 +100,7 @@ describe('App', () => {
         'scaffolder-ai-guardrail-agent',
         'scaffolder-ai-infra',
         'rfc-adr-ai-reviewer',
+        'search-ai-archeology',
       ],
     });
     expect(mocks.createRoot).toHaveBeenCalledWith();
