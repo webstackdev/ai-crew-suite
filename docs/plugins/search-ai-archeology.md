@@ -2,7 +2,7 @@
 layout: default
 title: Institutional Knowledge Finder
 parent: Other
-plugin_name: search-ai-archeology
+plugin_name: plugin-ai-agent-backend-search-ai-archeology
 subcategory: Developer Productivity
 ---
 

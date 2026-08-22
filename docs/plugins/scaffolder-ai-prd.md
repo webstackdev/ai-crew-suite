@@ -2,7 +2,7 @@
 layout: default
 title: Product Requirements Translator
 parent: Scaffolder
-plugin_name: scaffolder-ai-prd
+plugin_name: plugin-ai-agent-backend-scaffolder-ai-prd
 subcategory: Product & Delivery
 ---
 

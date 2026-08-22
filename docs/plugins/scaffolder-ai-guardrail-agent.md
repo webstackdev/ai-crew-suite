@@ -2,7 +2,7 @@
 layout: default
 title: Policy Guardrail Agent
 parent: Scaffolder
-plugin_name: scaffolder-ai-guardrail-agent
+plugin_name: plugin-ai-agent-backend-scaffolder-ai-guardrail-agent
 subcategory: Golden Path Provisioning
 ---
 

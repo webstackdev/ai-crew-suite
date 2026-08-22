@@ -2,7 +2,7 @@
 layout: default
 title: Intent-Driven Scaffolder
 parent: Scaffolder
-plugin_name: scaffolder-ai-intent
+plugin_name: plugin-ai-agent-backend-scaffolder-ai-intent
 subcategory: Golden Path Provisioning
 ---
 

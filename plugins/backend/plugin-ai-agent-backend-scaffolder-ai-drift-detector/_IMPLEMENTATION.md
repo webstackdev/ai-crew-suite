@@ -371,4 +371,3 @@ Exit criteria: staged rollout with sweep + remediate disabled by default, bounde
 - Deterministic diff provably isolates divergence (blueprint vs live) and never mutates live infrastructure; cross-sweep drift state persists without duplicate evaluation threads.
 - Sweeps are detect-only/draft; the approval gate provably blocks the sync PR until an `approved` decision and never double-opens; frontend renders the dashboard, diff/cost, and approve/reject over live SSE and replay; Playwright verifies both paths.
 - No output surface (SSE, artifacts, logs, audit, tests) contains secrets, uncited model claims, fabricated costs, or a PR write lacking a recorded human approval.
-

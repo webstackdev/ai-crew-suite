@@ -2,7 +2,7 @@
 layout: default
 title: IaC Generator
 parent: Scaffolder
-plugin_name: scaffolder-ai-infra
+plugin_name: plugin-ai-agent-backend-scaffolder-ai-infra
 subcategory: Golden Path Provisioning
 ---
 

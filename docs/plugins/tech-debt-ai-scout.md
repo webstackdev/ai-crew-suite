@@ -2,7 +2,7 @@
 layout: default
 title: Tech Debt Scout
 parent: Other
-plugin_name: tech-debt-ai-scout
+plugin_name: plugin-ai-agent-backend-tech-debt-ai-scout
 subcategory: Code Quality
 ---
 

@@ -2,7 +2,7 @@
 layout: default
 title: Automated Tech Radar Management
 parent: Other
-plugin_name: tech-radar-ai-manager
+plugin_name: plugin-ai-agent-backend-tech-radar-ai-manager
 subcategory: Strategic Planning
 ---
 

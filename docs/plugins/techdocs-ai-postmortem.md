@@ -2,7 +2,7 @@
 layout: default
 title: Post-Mortem Timeline Author
 parent: Incident Response
-plugin_name: techdocs-ai-postmortem
+plugin_name: plugin-ai-agent-backend-techdocs-ai-postmortem
 subcategory: Reliability & Incident Management
 ---
 
