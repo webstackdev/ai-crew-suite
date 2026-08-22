@@ -19,4 +19,28 @@ import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { ViolationList } from '../ViolationList';
 
-describe('ViolationList', () => { it('renders driver message, severity, and citations', () => { render(<ViolationList violations={[{ id: 'pol-1', rule: 'instance-type-not-approved', message: 'Instance is too large', severity: 'negotiable', evidence: ['pol-1'] }]} />); expect(screen.getByText(/instance-type-not-approved · negotiable/)).toBeInTheDocument(); expect(screen.getByText('Instance is too large')).toBeInTheDocument(); expect(screen.getByText('Cites: pol-1')).toBeInTheDocument(); }); it('renders compliant empty state', () => { render(<ViolationList violations={[]} />); expect(screen.getByText('No policy violations were reported.')).toBeInTheDocument(); }); });
+describe('ViolationList', () => {
+  it('renders driver message, severity, and citations', () => {
+    render(
+      <ViolationList
+        violations={[{
+          id: 'pol-1',
+          rule: 'instance-type-not-approved',
+          message: 'Instance is too large',
+          severity: 'negotiable',
+          evidence: ['pol-1']
+        }]}
+      />
+    );
+
+    expect(screen.getByText(/instance-type-not-approved · negotiable/)).toBeInTheDocument();
+    expect(screen.getByText('Instance is too large')).toBeInTheDocument();
+    expect(screen.getByText('Cites: pol-1')).toBeInTheDocument();
+  });
+
+  it('renders compliant empty state', () => {
+    render(<ViolationList violations={[]} />);
+
+    expect(screen.getByText('No policy violations were reported.')).toBeInTheDocument();
+  });
+});

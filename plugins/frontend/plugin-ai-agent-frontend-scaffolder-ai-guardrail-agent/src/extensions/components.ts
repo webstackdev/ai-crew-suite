@@ -16,7 +16,18 @@
 import React from 'react';
 import { PageBlueprint } from '@backstage/frontend-plugin-api';
 import { ROOT_PATH, rootRouteRef } from '../routes';
+
 /** New-frontend-system page extension for advisory guardrail review. */
-export const scaffolderGuardrailPageExtension = PageBlueprint.make({ name: 'scaffolder-ai-guardrail-agent', params: { path: ROOT_PATH, title: 'Scaffolder guardrail review', routeRef: rootRouteRef, loader: () =>
-  // @ts-expect-error - NodeNext requires .js while the bundler resolves TypeScript source
-  import('../components/GuardrailReviewPage/GuardrailReviewPage').then(module => React.createElement(module.GuardrailReviewPage)) } });
+export const scaffolderGuardrailPageExtension = PageBlueprint.make({
+  name: 'scaffolder-ai-guardrail-agent',
+  params: {
+    path: ROOT_PATH,
+    title: 'Scaffolder guardrail review',
+    routeRef: rootRouteRef,
+    loader: () =>
+      // @ts-expect-error - NodeNext requires .js while the bundler resolves TypeScript source
+      import('../components/GuardrailReviewPage/GuardrailReviewPage').then(
+        module => React.createElement(module.GuardrailReviewPage)
+      )
+  }
+});

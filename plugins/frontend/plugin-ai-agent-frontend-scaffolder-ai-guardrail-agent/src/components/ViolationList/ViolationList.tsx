@@ -16,7 +16,31 @@
 import React from 'react';
 import { Paper, Typography } from '@material-ui/core';
 import type { PolicyViolation } from '../../@types';
+
 /** Props for factual policy violation display. */
-export type ViolationListProps = { violations: PolicyViolation[] };
+export type ViolationListProps = {
+  violations: PolicyViolation[];
+};
+
 /** Renders driver-originated policy messages and their citation identifiers. */
-export const ViolationList = ({ violations }: ViolationListProps) => <section aria-label="Policy violations"><Typography variant="h6">Violations</Typography>{violations.length ? violations.map(violation => <Paper key={violation.id}><Typography>{violation.rule} · {violation.severity}</Typography><Typography>{violation.message}</Typography><Typography variant="caption">Cites: {violation.evidence.join(', ')}</Typography></Paper>) : <Typography>No policy violations were reported.</Typography>}</section>;
+export const ViolationList = ({ violations }: ViolationListProps) => (
+  <section aria-label="Policy violations">
+    <Typography variant="h6">Violations</Typography>
+
+    {violations.length ? (
+      violations.map(violation => (
+        <Paper key={violation.id}>
+          <Typography>
+            {violation.rule} · {violation.severity}
+          </Typography>
+          <Typography>{violation.message}</Typography>
+          <Typography variant="caption">
+            Cites: {violation.evidence.join(', ')}
+          </Typography>
+        </Paper>
+      ))
+    ) : (
+      <Typography>No policy violations were reported.</Typography>
+    )}
+  </section>
+);

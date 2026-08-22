@@ -13,10 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { createFrontendPlugin, type ExtensionDefinition, type FrontendFeature } from '@backstage/frontend-plugin-api';
+import {
+  createFrontendPlugin,
+  type ExtensionDefinition,
+  type FrontendFeature
+} from '@backstage/frontend-plugin-api';
 import { scaffolderGuardrailApiExtension } from './extensions/api';
 import { scaffolderGuardrailPageExtension } from './extensions/components';
 
-const createPlugin = createFrontendPlugin as unknown as (options: { pluginId: string; extensions: readonly ExtensionDefinition[] }) => FrontendFeature;
+const createPlugin = createFrontendPlugin as unknown as (options: {
+  pluginId: string;
+  extensions: readonly ExtensionDefinition[];
+}) => FrontendFeature;
+
 /** Alpha entrypoint exposing advisory guardrail review extensions. */
-export default createPlugin({ pluginId: 'scaffolder-ai-guardrail-agent', extensions: [scaffolderGuardrailApiExtension as unknown as ExtensionDefinition, scaffolderGuardrailPageExtension as unknown as ExtensionDefinition] });
+export default createPlugin({
+  pluginId: 'scaffolder-ai-guardrail-agent',
+  extensions: [
+    scaffolderGuardrailApiExtension as unknown as ExtensionDefinition,
+    scaffolderGuardrailPageExtension as unknown as ExtensionDefinition
+  ]
+});

@@ -24,5 +24,91 @@ import { EvaluateRequestDialog } from '../EvaluateRequestDialog/EvaluateRequestD
 import { MutationOfferPanel } from '../MutationOfferPanel/MutationOfferPanel';
 import { ResolutionBanner } from '../ResolutionBanner/ResolutionBanner';
 import { ViolationList } from '../ViolationList/ViolationList';
+
 /** Standalone advisory review page for one Scaffolder template request. */
-export const GuardrailReviewPage = () => { const { state, evaluate, replay, decide } = useGuardrailRun(); const [params, setParams] = useSearchParams(); const [open, setOpen] = useState(false); const initial = useRef(params.get('run')); const initialized = useRef(false); useEffect(() => { if (initialized.current) return; initialized.current = true; if (initial.current) void replay(initial.current); }, [replay]); useEffect(() => { if (!state.runId) return; setParams(previous => { const next = new URLSearchParams(previous); next.set('run', state.runId!); return next; }, { replace: true }); }, [state.runId, setParams]); const assessment = state.assessment; return <Page themeId="tool"><Header title="Scaffolder guardrail review" subtitle="Advisory policy negotiation before template submission" /><Content>{state.phase === 'error' ? <Paper role="alert"><Typography>{state.error}</Typography></Paper> : null}<ResolutionBanner resolution={state.resolution} /><Button color="primary" variant="contained" onClick={() => setOpen(true)}>Evaluate request</Button>{state.phase === 'running' ? <Progress /> : null}{assessment ? <Grid container spacing={3}><Grid item xs={12} md={8}><Typography variant="h5">{assessment.templateRef}</Typography><Typography>Status: {assessment.status} · Confidence: {assessment.confidence}</Typography><ViolationList violations={assessment.violations} /><MutationOfferPanel mutations={assessment.mutations} /></Grid><Grid item xs={12} md={4}><CostPanel budget={assessment.budget} /><Typography variant="h6">Limitations</Typography>{assessment.limitations.map(limitation => <Typography key={limitation}>{limitation}</Typography>)}</Grid></Grid> : null}{state.approval && state.runId && assessment ? <ApprovalBar assessment={assessment} reason={state.approval.reason} onDecide={approved => void decide(state.runId!, { status: approved ? 'approved' : 'rejected' })} /> : null}<EvaluateRequestDialog open={open} onClose={() => setOpen(false)} onEvaluate={input => void evaluate(input)} /></Content></Page>; };
+export const GuardrailReviewPage = () => {
+  const { state, evaluate, replay, decide } = useGuardrailRun();
+  const [params, setParams] = useSearchParams();
+  const [open, setOpen] = useState(false);
+  const initial = useRef(params.get('run'));
+  const initialized = useRef(false);
+
+  useEffect(() => {
+    if (initialized.current) return;
+    initialized.current = true;
+    if (initial.current) void replay(initial.current);
+  }, [replay]);
+
+  useEffect(() => {
+    if (!state.runId) return;
+    setParams(
+      previous => {
+        const next = new URLSearchParams(previous);
+        next.set('run', state.runId!);
+        return next;
+      },
+      { replace: true }
+    );
+  }, [state.runId, setParams]);
+
+  const assessment = state.assessment;
+
+  return (
+    <Page themeId="tool">
+      <Header
+        title="Scaffolder guardrail review"
+        subtitle="Advisory policy negotiation before template submission"
+      />
+      <Content>
+        {state.phase === 'error' ? (
+          <Paper role="alert">
+            <Typography>{state.error}</Typography>
+          </Paper>
+        ) : null}
+
+        <ResolutionBanner resolution={state.resolution} />
+
+        <Button color="primary" variant="contained" onClick={() => setOpen(true)}>
+          Evaluate request
+        </Button>
+
+        {state.phase === 'running' ? <Progress /> : null}
+
+        {assessment ? (
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={8}>
+              <Typography variant="h5">{assessment.templateRef}</Typography>
+              <Typography>
+                Status: {assessment.status} · Confidence: {assessment.confidence}
+              </Typography>
+              <ViolationList violations={assessment.violations} />
+              <MutationOfferPanel mutations={assessment.mutations} />
+            </Grid>
+
+            <Grid item xs={12} md={4}>
+              <CostPanel budget={assessment.budget} />
+              <Typography variant="h6">Limitations</Typography>
+              {assessment.limitations.map(limitation => (
+                <Typography key={limitation}>{limitation}</Typography>
+              ))}
+            </Grid>
+          </Grid>
+        ) : null}
+
+        {state.approval && state.runId && assessment ? (
+          <ApprovalBar
+            assessment={assessment}
+            reason={state.approval.reason}
+            onDecide={approved => void decide(state.runId!, { status: approved ? 'approved' : 'rejected' })}
+          />
+        ) : null}
+
+        <EvaluateRequestDialog
+          open={open}
+          onClose={() => setOpen(false)}
+          onEvaluate={input => void evaluate(input)}
+        />
+      </Content>
+    </Page>
+  );
+};

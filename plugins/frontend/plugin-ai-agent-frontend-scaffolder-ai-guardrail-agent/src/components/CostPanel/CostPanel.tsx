@@ -16,7 +16,30 @@
 import React from 'react';
 import { Typography } from '@material-ui/core';
 import type { BudgetVerdict } from '../../@types';
+
 /** Props for the deterministic budget verdict panel. */
-export type CostPanelProps = { budget?: BudgetVerdict };
+export type CostPanelProps = {
+  budget?: BudgetVerdict;
+};
+
 /** Displays only the compliance driver estimate and configured budget threshold. */
-export const CostPanel = ({ budget }: CostPanelProps) => <section aria-label="Budget verdict"><Typography variant="h6">Budget</Typography>{budget ? <><Typography>Status: {budget.status}</Typography><Typography>Estimate: {budget.currency ?? 'USD'} {budget.amount ?? budget.ceiling ?? 'undetermined'} · Threshold: {budget.thresholdUsd ?? 'undetermined'}</Typography><Typography variant="caption">Cites: {budget.evidence.join(', ') || 'none'}</Typography></> : <Typography>Cost was not evaluated.</Typography>}</section>;
+export const CostPanel = ({ budget }: CostPanelProps) => (
+  <section aria-label="Budget verdict">
+    <Typography variant="h6">Budget</Typography>
+
+    {budget ? (
+      <>
+        <Typography>Status: {budget.status}</Typography>
+        <Typography>
+          Estimate: {budget.currency ?? 'USD'} {budget.amount ?? budget.ceiling ?? 'undetermined'} ·
+          Threshold: {budget.thresholdUsd ?? 'undetermined'}
+        </Typography>
+        <Typography variant="caption">
+          Cites: {budget.evidence.join(', ') || 'none'}
+        </Typography>
+      </>
+    ) : (
+      <Typography>Cost was not evaluated.</Typography>
+    )}
+  </section>
+);

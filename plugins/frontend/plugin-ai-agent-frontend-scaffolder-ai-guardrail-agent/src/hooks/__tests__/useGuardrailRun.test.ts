@@ -16,5 +16,44 @@
 import { describe, expect, it } from 'vitest';
 import { initialGuardrailRunState, reduceGuardrailRun } from '../useGuardrailRun';
 
-const assessment = { templateRef: 'template:default/db', fingerprint: 'abcd', status: 'negotiable' as const, violations: [], mutations: [], confidence: 'high' as const, limitations: ['advisory-only: not enforced server-side'], evidence: [] };
-describe('reduceGuardrailRun', () => { it('replays an assessment artifact and completes', () => { let state = reduceGuardrailRun(initialGuardrailRunState, { type: 'artifact', data: { runId: 'run-1', kind: 'guardrail-assessment', ref: JSON.stringify(assessment) } }); state = reduceGuardrailRun(state, { type: 'done', data: { runId: 'run-1' } }); expect(state).toMatchObject({ phase: 'finished', runId: 'run-1', assessment }); }); it('tracks the real negotiation approval request', () => { const state = reduceGuardrailRun(initialGuardrailRunState, { type: 'approval_request', data: { runId: 'run-1', approvalId: 'a-1', reason: 'Accept mutation', effect: 'read' } }); expect(state).toMatchObject({ phase: 'waiting_approval', approval: { approvalId: 'a-1' } }); }); it('does not crash on malformed guardrail artifacts', () => { expect(reduceGuardrailRun(initialGuardrailRunState, { type: 'artifact', data: { runId: 'run-1', kind: 'guardrail-assessment', ref: 'bad' } }).assessment).toBeUndefined(); }); });
+const assessment = {
+  templateRef: 'template:default/db',
+  fingerprint: 'abcd',
+  status: 'negotiable' as const,
+  violations: [],
+  mutations: [],
+  confidence: 'high' as const,
+  limitations: ['advisory-only: not enforced server-side'],
+  evidence: []
+};
+
+describe('reduceGuardrailRun', () => {
+  it('replays an assessment artifact and completes', () => {
+    let state = reduceGuardrailRun(initialGuardrailRunState, {
+      type: 'artifact',
+      data: { runId: 'run-1', kind: 'guardrail-assessment', ref: JSON.stringify(assessment) }
+    });
+
+    state = reduceGuardrailRun(state, { type: 'done', data: { runId: 'run-1' } });
+
+    expect(state).toMatchObject({ phase: 'finished', runId: 'run-1', assessment });
+  });
+
+  it('tracks the real negotiation approval request', () => {
+    const state = reduceGuardrailRun(initialGuardrailRunState, {
+      type: 'approval_request',
+      data: { runId: 'run-1', approvalId: 'a-1', reason: 'Accept mutation', effect: 'read' }
+    });
+
+    expect(state).toMatchObject({ phase: 'waiting_approval', approval: { approvalId: 'a-1' } });
+  });
+
+  it('does not crash on malformed guardrail artifacts', () => {
+    expect(
+      reduceGuardrailRun(initialGuardrailRunState, {
+        type: 'artifact',
+        data: { runId: 'run-1', kind: 'guardrail-assessment', ref: 'bad' }
+      }).assessment
+    ).toBeUndefined();
+  });
+});

@@ -16,7 +16,27 @@
 import React from 'react';
 import { Paper, Typography } from '@material-ui/core';
 import type { GuardrailResolution } from '../../@types';
+
 /** Props for a resolved advisory guardrail decision. */
-export type ResolutionBannerProps = { resolution?: GuardrailResolution };
+export type ResolutionBannerProps = {
+  resolution?: GuardrailResolution;
+};
+
 /** Shows the released parameter set while retaining the server-side enforcement warning. */
-export const ResolutionBanner = ({ resolution }: ResolutionBannerProps) => resolution ? <Paper role="status"><Typography>Negotiation outcome: {resolution.outcome}</Typography>{resolution.approvedParameters ? <pre>{JSON.stringify(resolution.approvedParameters, null, 2)}</pre> : null}<Typography variant="caption">Advisory only: the Scaffolder backend does not enforce this result yet.</Typography></Paper> : null;
+export const ResolutionBanner = ({ resolution }: ResolutionBannerProps) => {
+  if (!resolution) return null;
+
+  return (
+    <Paper role="status">
+      <Typography>Negotiation outcome: {resolution.outcome}</Typography>
+
+      {resolution.approvedParameters ? (
+        <pre>{JSON.stringify(resolution.approvedParameters, null, 2)}</pre>
+      ) : null}
+
+      <Typography variant="caption">
+        Advisory only: the Scaffolder backend does not enforce this result yet.
+      </Typography>
+    </Paper>
+  );
+};
