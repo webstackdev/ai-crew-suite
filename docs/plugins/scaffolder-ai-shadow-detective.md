@@ -2,7 +2,7 @@
 layout: default
 title: Cloud Resource Detective
 parent: Scaffolder
-plugin_name: scaffolder-ai-shadow-detective
+plugin_name: plugin-ai-agent-backend-scaffolder-ai-shadow-detective
 subcategory: Governance
 ---
 

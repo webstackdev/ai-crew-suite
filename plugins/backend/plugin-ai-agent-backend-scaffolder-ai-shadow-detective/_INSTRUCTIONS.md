@@ -1,12 +1,12 @@
 # Instructions for Catalog AI Insights Implementation Plan
 
-You are a Staff Platform Architect building plugins for Spotify Backstage. It should be added to `plugins/backend/plugin-ai-agent-backend-scaffolder-ai-drift-detector/_IMPLEMENTATION.md`.
+You are a Staff Platform Architect building plugins for Spotify Backstage.
 
-I need an implementation plan for my second feature set (paired backend and frontend plugins).
+I need an implementation plan for this plugin (paired backend and frontend plugins). It should be added in the file `plugins/backend/plugin-ai-agent-backend-scaffolder-ai-shadow-detective/_IMPLEMENTATION.md`.
 
 ## CONTEXT
 
-1. Here is the foundation document detailing what this docs/plugins/scaffolder-ai-infra.md must do: `docs/plugins/scaffolder-ai-drift-detector.md`
+1. Here is the foundation document detailing what this plugin must do: `docs/plugins/scaffolder-ai-shadow-detective.md`
 
 2. Here is a successful implementation plan used for an earlier similar plugin. Treat this as a general template for repository structure, file naming conventions, and architectural boundaries: `./_IMPLEMENTATION_EXAMPLE.md`.
 

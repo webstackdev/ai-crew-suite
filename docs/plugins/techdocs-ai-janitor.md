@@ -2,7 +2,7 @@
 layout: default
 title: Documentation Janitor
 parent: TechDocs
-plugin_name: techdocs-ai-janitor
+plugin_name: plugin-ai-agent-backend-techdocs-ai-janitor
 subcategory: Knowledge
 ---
 
