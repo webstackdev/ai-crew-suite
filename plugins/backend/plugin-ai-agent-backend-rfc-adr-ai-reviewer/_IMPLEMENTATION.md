@@ -365,13 +365,17 @@ Exit criteria: staged rollout with publish + events disabled by default, bounded
 - Event-triggered runs are draft-only; frontend renders the two-column debate and approve/reject gate over live SSE and replay; Playwright verifies both approve and reject paths.
 - No output surface (SSE, artifacts, logs, audit, tests) contains secrets, uncited model claims, or a PR write lacking a recorded human approval.
 
-## Completed
+## Frontend Completed
+
+
+
+## Backend Completed
 
 Implemented the RFC/ADR reviewer backend module at:
 
 `/home/kevin/Repos/backstage/ai-crew-suite/plugins/backend/plugin-ai-agent-backend-rfc-adr-ai-reviewer`
 
-## Implemented: read-only parallel-review milestone
+### Implemented: read-only parallel-review milestone
 
 The module now provides a custom AI Core workflow runner:
 
@@ -418,7 +422,7 @@ The module now provides a custom AI Core workflow runner:
 
 6. Emits a replayable `design-critique` artifact.
 
-## Safety and current contract limitations
+### Safety and current contract limitations
 
 The implementation plan correctly identifies three missing shared contracts:
 
@@ -437,7 +441,7 @@ The current module is explicitly:
 
 If `publish.enabled` is configured, the critique records a limitation explaining that PR commenting is unavailable. It does not emit a fake approval request or attempt a PR mutation.
 
-## JSDoc and formatting
+### JSDoc and formatting
 
 New source files include:
 
@@ -445,7 +449,7 @@ New source files include:
 - JSDoc for exported types, classes, functions, configuration, artifacts, and workflow contracts
 - readable named helpers for request parsing, document redaction, reference extraction, verdict derivation, and bounded tool execution
 
-## Wiring added
+### Wiring added
 
 Registered the module in:
 
@@ -456,13 +460,13 @@ Registered the module in:
 - `/home/kevin/Repos/backstage/ai-crew-suite/app-config.yaml`
 - `/home/kevin/Repos/backstage/ai-crew-suite/yarn.lock`
 
-## Tests added
+### Tests added
 
 - Merge findings from both channels and derive a blocking verdict from high severity
 - Extract component/API references and redact secret-like document values
 - Module registration, workflow ID, agent profile, and manual trigger coverage
 
-## Validation completed
+### Validation completed
 
 Passed:
 
