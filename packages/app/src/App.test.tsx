@@ -66,6 +66,10 @@ vi.mock(
   '@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-guardrail-agent/alpha',
   () => ({ default: 'scaffolder-ai-guardrail-agent' })
 );
+vi.mock(
+  '@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-infra/alpha',
+  () => ({ default: 'scaffolder-ai-infra' })
+);
 vi.mock('./modules/nav', () => ({ navModule: 'navigation' }));
 
 describe('App', () => {
@@ -90,6 +94,7 @@ describe('App', () => {
         'alert-ai-tuner',
         'scaffolder-ai-drift-detector',
         'scaffolder-ai-guardrail-agent',
+        'scaffolder-ai-infra',
         'rfc-adr-ai-reviewer',
       ],
     });

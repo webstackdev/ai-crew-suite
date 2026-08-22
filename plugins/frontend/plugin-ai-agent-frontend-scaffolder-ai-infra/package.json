@@ -1,0 +1,60 @@
+{
+  "name": "@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-infra",
+  "version": "0.0.1",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "license": "Apache-2.0",
+  "description": "Standalone Backstage UI for non-writing approved-blueprint IaC previews.",
+  "publishConfig": {
+    "access": "public",
+    "main": "dist/index.esm.js",
+    "types": "dist/index.d.ts"
+  },
+  "backstage": {
+    "role": "frontend-plugin",
+    "pluginId": "scaffolder-ai-infra"
+  },
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": "./src/index.ts",
+    "./alpha": "./src/alpha.ts"
+  },
+  "sideEffects": false,
+  "scripts": {
+    "start": "backstage-cli package start",
+    "build": "yarn --cwd ../../.. tsc -b plugins/frontend/plugin-ai-agent-frontend-scaffolder-ai-infra/tsconfig.json --emitDeclarationOnly && backstage-cli package build",
+    "clean": "backstage-cli package clean",
+    "prepack": "backstage-cli package prepack",
+    "postpack": "backstage-cli package postpack",
+    "typecheck": "tsc --noEmit",
+    "lint": "backstage-cli package lint --format stylish",
+    "test": "yarn --cwd ../../.. vitest run plugins/frontend/plugin-ai-agent-frontend-scaffolder-ai-infra/src --config test/vitest.config.ts"
+  },
+  "dependencies": {
+    "@backstage/core-components": "backstage:^",
+    "@backstage/core-plugin-api": "backstage:^",
+    "@backstage/frontend-plugin-api": "backstage:^",
+    "@material-ui/core": "^4.12.4",
+    "eventsource-parser": "^2.0.1",
+    "vitest": "^4.1.11"
+  },
+  "peerDependencies": {
+    "react": "^18.3.1",
+    "react-router-dom": "^6.30.4"
+  },
+  "devDependencies": {
+    "@backstage/cli": "backstage:^",
+    "@backstage/dev-utils": "backstage:^",
+    "@backstage/test-utils": "backstage:^",
+    "@testing-library/jest-dom": "^6.10.0",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.6",
+    "@types/react": "*",
+    "@types/react-dom": "*",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.30.4"
+  }
+}

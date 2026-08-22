@@ -25,6 +25,7 @@ import releaseNotesPlugin from '@webstackbuilders/plugin-ai-agent-frontend-relea
 import alertAiTunerPlugin from '@webstackbuilders/plugin-ai-agent-frontend-alert-ai-tuner/alpha';
 import driftDetectorPlugin from '@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-drift-detector/alpha';
 import scaffolderGuardrailPlugin from '@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-guardrail-agent/alpha';
+import scaffolderInfraPlugin from '@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-infra/alpha';
 import catalogAiInsightsPlugin from '@webstackbuilders/plugin-ai-agent-frontend-catalog-ai-insights/alpha';
 import rfcAdrReviewerPlugin from '@webstackbuilders/plugin-ai-agent-frontend-rfc-adr-ai-reviewer/alpha';
 import { navModule } from './modules/nav';
@@ -42,6 +43,7 @@ const features: FrontendFeature[] = [
   alertAiTunerPlugin,
   driftDetectorPlugin,
   scaffolderGuardrailPlugin,
+  scaffolderInfraPlugin,
   rfcAdrReviewerPlugin,
 ];
 
