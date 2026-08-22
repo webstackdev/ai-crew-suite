@@ -509,3 +509,41 @@ mutation before an offer, optional policy reporting, the frontend/E2E package,
 and server-side Scaffolder enforcement remain future milestones. They require
 additional confirmed runtime-store query and/or Scaffolder contracts and were not
 fabricated here.
+
+## Frontend Completed
+
+Implemented the contract-matched advisory frontend at:
+
+`/home/kevin/Repos/backstage/ai-crew-suite/plugins/frontend/plugin-ai-agent-frontend-scaffolder-ai-guardrail-agent`
+
+### Implemented surface
+
+- Package `@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-guardrail-agent`
+  with legacy and `./alpha` entrypoints; standalone page at
+  `/scaffolder-ai-guardrail-agent` with `?run=<id>` replay.
+- Typed API client for request evaluation, SSE replay with `Last-Event-ID`, and
+  approval submission.
+- Pure `useGuardrailRun` reducer/hook for `guardrail-assessment`,
+  `guardrail-resolution`, progress, approval, and malformed-artifact handling.
+- Bounded template request dialog (template reference, environment, JSON
+  parameters), violation citations, budget panel, mutation diff offers,
+  status/limitations, real negotiation approval UI, and resolution banner.
+- Blocking assessments structurally render no acceptance path; escalation shows
+  an exception request; every resolution keeps the advisory-only warning.
+
+### Contract limitation (not fabricated)
+
+There is no assessment-list endpoint and no server-side Scaffolder pre-flight
+interception hook. The frontend intentionally does not invent a dashboard list
+API or claim that a direct Scaffolder API submission has been gated; it renders
+the backend's persistent `advisory-only: not enforced server-side` limitation.
+
+### Wiring and validation
+
+- Registered the TypeScript reference, frontend ESLint role, package dependency,
+  alpha feature import, and app feature expectation.
+- 7 focused tests cover assessment replay, approval state, malformed artifacts,
+  driver violation citations, empty compliant state, mutation acceptance, and
+  absence of a blocking accept control.
+- `yarn vitest run plugins/frontend/plugin-ai-agent-frontend-scaffolder-ai-guardrail-agent/src` — __7 tests passed__
+- Package `tsc --noEmit`, package lint, and app registration test — clean.
