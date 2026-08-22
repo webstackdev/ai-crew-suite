@@ -14,5 +14,41 @@
  * limitations under the License.
  */
 import type { ContributionEvidence, ExpertRecord, ResolvedIdentity } from './state';
+
+interface RankExpertsInput {
+  identities: ResolvedIdentity[];
+  evidence: ContributionEvidence[];
+  weightTriaged: number;
+  maxExperts: number;
+  now?: () => Date;
+}
+
 /** Deterministically ranks ticket-triage evidence; score is familiarity evidence, never merit. */
-export const rankExperts = (input: { identities: ResolvedIdentity[]; evidence: ContributionEvidence[]; weightTriaged: number; maxExperts: number; now?: () => Date }): ExpertRecord[] => { const now = (input.now ?? (() => new Date()))().getTime(); return input.identities.map(identity => { const signals = input.evidence.filter(item => item.actor.id === identity.actor.id); const triaged = signals.filter(item => item.kind === 'triaged').length; const recent = signals.map(item => Date.parse(item.at)).filter(value => !Number.isNaN(value)); const recencyMonths = recent.length ? (now - Math.max(...recent)) / (30 * 24 * 60 * 60 * 1000) : undefined; return { identity, score: triaged * input.weightTriaged, signals: { authored: 0, reviewed: 0, triaged, recencyMonths }, rationale: 'Ranked from ticket triage evidence only.', evidence: signals.map(item => item.id) }; }).sort((left, right) => right.score - left.score || (left.signals.recencyMonths ?? Infinity) - (right.signals.recencyMonths ?? Infinity) || left.identity.actor.id.localeCompare(right.identity.actor.id)).slice(0, input.maxExperts); };
+export const rankExperts = (input: RankExpertsInput): ExpertRecord[] => {
+  const now = (input.now ?? (() => new Date()))().getTime();
+
+  return input.identities
+    .map(identity => {
+      const signals = input.evidence.filter(item => item.actor.id === identity.actor.id);
+      const triaged = signals.filter(item => item.kind === 'triaged').length;
+      const recent = signals.map(item => Date.parse(item.at)).filter(value => !Number.isNaN(value));
+
+      const recencyMonths = recent.length
+        ? (now - Math.max(...recent)) / (30 * 24 * 60 * 60 * 1000)
+        : undefined;
+
+      return {
+        identity,
+        score: triaged * input.weightTriaged,
+        signals: { authored: 0, reviewed: 0, triaged, recencyMonths },
+        rationale: 'Ranked from ticket triage evidence only.',
+        evidence: signals.map(item => item.id)
+      };
+    })
+    .sort((left, right) =>
+      right.score - left.score ||
+      (left.signals.recencyMonths ?? Infinity) - (right.signals.recencyMonths ?? Infinity) ||
+      left.identity.actor.id.localeCompare(right.identity.actor.id)
+    )
+    .slice(0, input.maxExperts);
+};

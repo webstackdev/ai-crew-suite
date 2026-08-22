@@ -14,5 +14,19 @@
  * limitations under the License.
  */
 import type { ContributionEvidence, ResolvedIdentity } from './state';
+
 /** Produces explicit unresolved/offboarded identities without inventing catalog users or teams. */
-export const resolveTicketIdentities = (evidence: ContributionEvidence[], treatUnresolvedAsOffboarded: boolean): ResolvedIdentity[] => { const actors = new Map(evidence.map(item => [item.actor.id, item.actor])); return [...actors.values()].map(actor => ({ actor, status: treatUnresolvedAsOffboarded ? 'offboarded' : 'unresolved', displayName: actor.displayName, groupRefs: [], evidence: [] })); };
+export const resolveTicketIdentities = (
+  evidence: ContributionEvidence[],
+  treatUnresolvedAsOffboarded: boolean
+): ResolvedIdentity[] => {
+  const actors = new Map(evidence.map(item => [item.actor.id, item.actor]));
+
+  return [...actors.values()].map(actor => ({
+    actor,
+    status: treatUnresolvedAsOffboarded ? 'offboarded' : 'unresolved',
+    displayName: actor.displayName,
+    groupRefs: [],
+    evidence: []
+  }));
+};

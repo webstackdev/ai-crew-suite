@@ -15,8 +15,53 @@
  */
 import { createBackendPlugin } from '@backstage/backend-plugin-api';
 import { mockServices, startTestBackend } from '@backstage/backend-test-utils';
-import { agentExtensionPoint, triggerExtensionPoint, workflowRunnerExtensionPoint, type AgentExtensionPoint, type TriggerExtensionPoint, type WorkflowRunnerExtensionPoint } from '@webstackbuilders/plugin-ai-core-node';
+import {
+  agentExtensionPoint,
+  triggerExtensionPoint,
+  workflowRunnerExtensionPoint,
+  type AgentExtensionPoint,
+  type TriggerExtensionPoint,
+  type WorkflowRunnerExtensionPoint
+} from '@webstackbuilders/plugin-ai-core-node';
 import { describe, expect, it, vi } from 'vitest';
 import { searchArcheologyModule } from '../module';
 
-describe('searchArcheologyModule', () => { it('registers the ticket-triage research runner and read-only agent', async () => { const points = { agents: { addAgent: vi.fn() }, triggers: { addTrigger: vi.fn() }, workflows: { registerRunner: vi.fn() } }; const host = createBackendPlugin({ pluginId: 'ai-core', register(env) { env.registerExtensionPoint(agentExtensionPoint, points.agents as unknown as AgentExtensionPoint); env.registerExtensionPoint(triggerExtensionPoint, points.triggers as unknown as TriggerExtensionPoint); env.registerExtensionPoint(workflowRunnerExtensionPoint, points.workflows as unknown as WorkflowRunnerExtensionPoint); env.registerInit({ deps: {}, async init() {} }); } }); await startTestBackend({ features: [host, searchArcheologyModule, mockServices.rootConfig.factory({ data: { ai: { agents: { searchArcheology: { model: 'arch' } } } } }), mockServices.logger.factory()] }); expect(points.workflows.registerRunner.mock.calls[0][0].id).toBe('knowledge-archeology'); expect(points.agents.addAgent.mock.calls[0][0].toolIds).toEqual(['project.ticket.search', 'project.ticket.get']); }); });
+describe('searchArcheologyModule', () => {
+  it('registers the ticket-triage research runner and read-only agent', async () => {
+    const points = {
+      agents: { addAgent: vi.fn() },
+      triggers: { addTrigger: vi.fn() },
+      workflows: { registerRunner: vi.fn() }
+    };
+
+    const host = createBackendPlugin({
+      pluginId: 'ai-core',
+      register(env) {
+        env.registerExtensionPoint(agentExtensionPoint, points.agents as unknown as AgentExtensionPoint);
+        env.registerExtensionPoint(triggerExtensionPoint, points.triggers as unknown as TriggerExtensionPoint);
+        env.registerExtensionPoint(workflowRunnerExtensionPoint, points.workflows as unknown as WorkflowRunnerExtensionPoint);
+        env.registerInit({ deps: {}, async init() {} });
+      }
+    });
+
+    await startTestBackend({
+      features: [
+        host,
+        searchArcheologyModule,
+        mockServices.rootConfig.factory({
+          data: {
+            ai: {
+              agents: {
+                searchArcheology: { model: 'arch' }
+              }
+            }
+          }
+        }),
+        mockServices.logger.factory()
+      ]
+    });
+
+    expect(points.workflows.registerRunner.mock.calls[0][0].id).toBe('knowledge-archeology');
+    expect(points.agents.addAgent.mock.calls[0][0].toolIds).toEqual(['project.ticket.search', 'project.ticket.get']);
+  });
+});

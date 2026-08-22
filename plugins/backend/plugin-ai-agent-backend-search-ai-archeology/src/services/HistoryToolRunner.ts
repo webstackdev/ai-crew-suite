@@ -14,5 +14,49 @@
  * limitations under the License.
  */
 import type { ToolInvocationResult, WorkflowContext } from '@webstackbuilders/plugin-ai-core-node';
+
 /** Bounded ticket-research tool facade that turns unavailable sources into limitations. */
-export class HistoryToolRunner { private calls = 0; private readonly failures: string[] = []; constructor(private readonly context: WorkflowContext, private readonly maxCalls: number) {} /** Named limitations accumulated during bounded research. */ get limitations(): string[] { return [...this.failures]; } /** Invokes one read-only evidence source within the investigation budget. */ async invoke<TArgs, TResult>(toolId: string, args: TArgs): Promise<ToolInvocationResult<TResult> | undefined> { if (this.calls >= this.maxCalls) { this.failures.push(`Tool '${toolId}' was skipped: research tool budget exhausted.`); return undefined; } this.calls += 1; try { return await this.context.invokeTool<TArgs, TResult>({ toolId, args, limits: { timeoutMs: 10_000 } }); } catch (error) { const message = error instanceof Error ? error.message : String(error); this.failures.push(`Tool '${toolId}' is unavailable: ${message}`); this.context.logger.warn(`Archeology tool '${toolId}' failed`, { error: message }); return undefined; } } }
+export class HistoryToolRunner {
+  private calls = 0;
+  private readonly failures: string[] = [];
+
+  constructor(
+    private readonly context: WorkflowContext,
+    private readonly maxCalls: number
+  ) {}
+
+  /** Named limitations accumulated during bounded research. */
+  get limitations(): string[] {
+    return [...this.failures];
+  }
+
+  /** Invokes one read-only evidence source within the investigation budget. */
+  async invoke<TArgs, TResult>(
+    toolId: string,
+    args: TArgs
+  ): Promise<ToolInvocationResult<TResult> | undefined> {
+    if (this.calls >= this.maxCalls) {
+      this.failures.push(`Tool '${toolId}' was skipped: research tool budget exhausted.`);
+      return undefined;
+    }
+
+    this.calls += 1;
+
+    try {
+      return await this.context.invokeTool<TArgs, TResult>({
+        toolId,
+        args,
+        limits: { timeoutMs: 10_000 }
+      });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      this.failures.push(`Tool '${toolId}' is unavailable: ${message}`);
+
+      this.context.logger.warn(
+        `Archeology tool '${toolId}' failed`,
+        { error: message }
+      );
+      return undefined;
+    }
+  }
+}

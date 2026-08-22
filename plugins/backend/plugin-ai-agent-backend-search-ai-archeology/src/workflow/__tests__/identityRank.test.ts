@@ -17,4 +17,43 @@ import { describe, expect, it } from 'vitest';
 import { resolveTicketIdentities } from '../identity';
 import { rankExperts } from '../rank';
 
-describe('ticket archeology identity and ranking', () => { const evidence = [{ id: 'ticket-1', kind: 'triaged' as const, actor: { id: 'retired-dev', displayName: 'Retired Dev', email: 'retired@oldco.com' }, at: '2025-01-01T00:00:00.000Z', reference: 'OPS-1' }, { id: 'ticket-2', kind: 'triaged' as const, actor: { id: 'active-lead', displayName: 'Active Lead' }, at: '2025-02-01T00:00:00.000Z', reference: 'OPS-2' }]; it('preserves unavailable actors as offboarded rather than fabricating a user', () => { const identities = resolveTicketIdentities(evidence, true); expect(identities[0]).toMatchObject({ status: 'offboarded', groupRefs: [] }); expect(identities[0].userRef).toBeUndefined(); }); it('ranks more ticket-triage evidence deterministically', () => { const identities = resolveTicketIdentities([...evidence, { ...evidence[1], id: 'ticket-3' }], false); const ranked = rankExperts({ identities, evidence: [...evidence, { ...evidence[1], id: 'ticket-3' }], weightTriaged: 1, maxExperts: 10, now: () => new Date('2025-03-01T00:00:00.000Z') }); expect(ranked[0].identity.actor.id).toBe('active-lead'); expect(ranked[0].signals.triaged).toBe(2); }); });
+describe('ticket archeology identity and ranking', () => {
+  const evidence = [
+    {
+      id: 'ticket-1',
+      kind: 'triaged' as const,
+      actor: { id: 'retired-dev', displayName: 'Retired Dev', email: 'retired@oldco.com' },
+      at: '2025-01-01T00:00:00.000Z',
+      reference: 'OPS-1'
+    },
+    {
+      id: 'ticket-2',
+      kind: 'triaged' as const,
+      actor: { id: 'active-lead', displayName: 'Active Lead' },
+      at: '2025-02-01T00:00:00.000Z',
+      reference: 'OPS-2'
+    }
+  ];
+
+  it('preserves unavailable actors as offboarded rather than fabricating a user', () => {
+    const identities = resolveTicketIdentities(evidence, true);
+
+    expect(identities[0]).toMatchObject({ status: 'offboarded', groupRefs: [] });
+    expect(identities[0].userRef).toBeUndefined();
+  });
+
+  it('ranks more ticket-triage evidence deterministically', () => {
+    const identities = resolveTicketIdentities([...evidence, { ...evidence[1], id: 'ticket-3' }], false);
+
+    const ranked = rankExperts({
+      identities,
+      evidence: [...evidence, { ...evidence[1], id: 'ticket-3' }],
+      weightTriaged: 1,
+      maxExperts: 10,
+      now: () => new Date('2025-03-01T00:00:00.000Z')
+    });
+
+    expect(ranked[0].identity.actor.id).toBe('active-lead');
+    expect(ranked[0].signals.triaged).toBe(2);
+  });
+});

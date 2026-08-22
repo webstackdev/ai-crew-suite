@@ -14,10 +14,44 @@
  * limitations under the License.
  */
 import { coreServices, createBackendModule } from '@backstage/backend-plugin-api';
-import { agentExtensionPoint, triggerExtensionPoint, workflowRunnerExtensionPoint } from '@webstackbuilders/plugin-ai-core-node';
+import {
+  agentExtensionPoint,
+  triggerExtensionPoint,
+  workflowRunnerExtensionPoint
+} from '@webstackbuilders/plugin-ai-core-node';
 import { createSearchArcheologyAgent } from './agent';
 import { readSearchArcheologyConfig } from './config';
 import { ArcheologyGraph } from './workflow/ArcheologyGraph';
+
 /** Registers read-only ticket-triage expertise research with AI Core. */
-export const searchArcheologyModule = createBackendModule({ pluginId: 'ai-core', moduleId: 'agent-search-ai-archeology', register(env) { env.registerInit({ deps: { config: coreServices.rootConfig, logger: coreServices.logger, agents: agentExtensionPoint, triggers: triggerExtensionPoint, workflows: workflowRunnerExtensionPoint }, async init({ config, logger, agents, triggers, workflows }) { const resolved = readSearchArcheologyConfig(config); workflows.registerRunner(new ArcheologyGraph(resolved)); const agent = createSearchArcheologyAgent(resolved); agents.addAgent(agent); for (const trigger of agent.triggers ?? []) triggers.addTrigger(trigger); logger.info('Registered read-only search archeology workflow'); } }); } });
+export const searchArcheologyModule = createBackendModule({
+  pluginId: 'ai-core',
+  moduleId: 'agent-search-ai-archeology',
+  register(env) {
+    env.registerInit({
+      deps: {
+        config: coreServices.rootConfig,
+        logger: coreServices.logger,
+        agents: agentExtensionPoint,
+        triggers: triggerExtensionPoint,
+        workflows: workflowRunnerExtensionPoint
+      },
+      async init({ config, logger, agents, triggers, workflows }) {
+        const resolved = readSearchArcheologyConfig(config);
+
+        workflows.registerRunner(new ArcheologyGraph(resolved));
+
+        const agent = createSearchArcheologyAgent(resolved);
+        agents.addAgent(agent);
+
+        for (const trigger of agent.triggers ?? []) {
+          triggers.addTrigger(trigger);
+        }
+
+        logger.info('Registered read-only search archeology workflow');
+      }
+    });
+  }
+});
+
 export default searchArcheologyModule;

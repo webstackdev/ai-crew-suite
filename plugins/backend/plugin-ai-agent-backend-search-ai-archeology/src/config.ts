@@ -14,7 +14,44 @@
  * limitations under the License.
  */
 import { Config } from '@backstage/config';
+
 /** Resolved bounded configuration for ticket-triage expertise research. */
-export type SearchArcheologyConfig = { modelRef: string; maxQuestionChars: number; maxLookbackYears: number; maxTickets: number; maxToolInvocations: number; weightTriaged: number; maxExperts: number; treatUnresolvedAsOffboarded: boolean };
+export type SearchArcheologyConfig = {
+  modelRef: string;
+  maxQuestionChars: number;
+  maxLookbackYears: number;
+  maxTickets: number;
+  maxToolInvocations: number;
+  weightTriaged: number;
+  maxExperts: number;
+  treatUnresolvedAsOffboarded: boolean;
+};
+
 /** Reads archeology configuration and validates non-negative research weights. */
-export const readSearchArcheologyConfig = (config: Config): SearchArcheologyConfig => { const section = config.getOptionalConfig('ai.agents.searchArcheology'); if (!section) throw new Error('Search archeology requires ai.agents.searchArcheology configuration to be set'); const ranking = section.getOptionalConfig('ranking'); const identity = section.getOptionalConfig('identity'); const weightTriaged = ranking?.getOptionalNumber('weightTriaged') ?? 1; const maxExperts = ranking?.getOptionalNumber('maxExperts') ?? 10; if (weightTriaged < 0 || maxExperts < 1) throw new Error('Search archeology ranking configuration is invalid'); return { modelRef: section.getString('model'), maxQuestionChars: section.getOptionalNumber('maxQuestionChars') ?? 500, maxLookbackYears: section.getOptionalNumber('maxLookbackYears') ?? 5, maxTickets: section.getOptionalNumber('maxTickets') ?? 40, maxToolInvocations: section.getOptionalNumber('maxToolInvocations') ?? 24, weightTriaged, maxExperts, treatUnresolvedAsOffboarded: identity?.getOptionalBoolean('treatUnresolvedAsOffboarded') ?? false }; };
+export const readSearchArcheologyConfig = (config: Config): SearchArcheologyConfig => {
+  const section = config.getOptionalConfig('ai.agents.searchArcheology');
+  if (!section) {
+    throw new Error('Search archeology requires ai.agents.searchArcheology configuration to be set');
+  }
+
+  const ranking = section.getOptionalConfig('ranking');
+  const identity = section.getOptionalConfig('identity');
+
+  const weightTriaged = ranking?.getOptionalNumber('weightTriaged') ?? 1;
+  const maxExperts = ranking?.getOptionalNumber('maxExperts') ?? 10;
+
+  if (weightTriaged < 0 || maxExperts < 1) {
+    throw new Error('Search archeology ranking configuration is invalid');
+  }
+
+  return {
+    modelRef: section.getString('model'),
+    maxQuestionChars: section.getOptionalNumber('maxQuestionChars') ?? 500,
+    maxLookbackYears: section.getOptionalNumber('maxLookbackYears') ?? 5,
+    maxTickets: section.getOptionalNumber('maxTickets') ?? 40,
+    maxToolInvocations: section.getOptionalNumber('maxToolInvocations') ?? 24,
+    weightTriaged,
+    maxExperts,
+    treatUnresolvedAsOffboarded: identity?.getOptionalBoolean('treatUnresolvedAsOffboarded') ?? false
+  };
+};
