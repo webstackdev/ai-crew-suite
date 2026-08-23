@@ -59,6 +59,7 @@
     "@webstackbuilders/plugin-ai-agent-backend-tech-debt-ai-scout": "workspace:^",
     "@webstackbuilders/plugin-ai-agent-backend-tech-radar-ai-manager": "workspace:^",
     "@webstackbuilders/plugin-ai-agent-backend-techdocs-ai-janitor": "workspace:^",
+    "@webstackbuilders/plugin-ai-agent-backend-techdocs-ai-postmortem": "workspace:^",
     "@webstackbuilders/plugin-ai-core-backend": "workspace:^",
     "@webstackbuilders/plugin-ai-core-backend-module-cloud-providers": "workspace:^",
     "@webstackbuilders/plugin-ai-core-backend-module-communication": "workspace:^",

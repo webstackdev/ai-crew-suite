@@ -501,7 +501,80 @@ Exit criteria: staged rollout with `deliver.mode: 'none'` by default, verified a
 
 ## Frontend Completed
 
+## Delivered
 
+### Standalone TechDocs audit UI
+
+- Route: `/techdocs-ai-janitor`
+
+- Agent: `techdocs-ai-janitor`
+
+- Artifact: `janitor-report`
+
+- Supports authenticated AI Core SSE for:
+
+  - Starting an explicit-path documentation audit.
+  - Replaying persisted audit runs through `?run=<id>`.
+
+### Audit submission form
+
+Requires:
+
+- Catalog entity reference.
+- HTTP(S) repository URL.
+- Explicit markdown paths, one per line.
+
+The UI intentionally requires explicit paths because document discovery is not active in the deployed backend.
+
+### Report rendering
+
+Displays:
+
+- Audit progress.
+
+- Report status and entity.
+
+- Source-ranged discrepancies:
+
+  - Severity.
+  - Discrepancy type.
+  - Source file and line range.
+  - Original excerpt.
+  - Catalog-backed replacement where one exists.
+
+- Backend limitations.
+
+- Catalog and markdown evidence citations.
+
+### Honesty boundaries
+
+The UI has no patch, ticket, PR, delivery, or approval controls. It explicitly represents the current backend’s read-only behavior:
+
+- No patch generation.
+- No repair loop.
+- No API drift analysis.
+- No ticket creation.
+- No documentation PRs.
+- External links are reported as unverified where the backend cannot safely probe them.
+
+## Registration
+
+Wired into:
+
+- `/home/kevin/Repos/backstage/ai-crew-suite/tsconfig.json`
+- `/home/kevin/Repos/backstage/ai-crew-suite/.eslintrc.cjs`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/app/package.json`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/app/src/App.tsx`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/app/src/App.test.tsx`
+- `/home/kevin/Repos/backstage/ai-crew-suite/yarn.lock`
+
+## Tests
+
+Added:
+
+- Janitor report reducer extraction and malformed JSON handling.
+- Source-ranged discrepancy, limitation, and evidence citation rendering.
+- App feature-list expectation for `techdocs-ai-janitor`.
 
 ## Backend Completed
 

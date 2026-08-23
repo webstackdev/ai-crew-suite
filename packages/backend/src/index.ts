@@ -113,5 +113,6 @@ backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-agent-backend
 backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-agent-backend-tech-debt-ai-scout')));
 backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-agent-backend-tech-radar-ai-manager')));
 backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-agent-backend-techdocs-ai-janitor')));
+backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-agent-backend-techdocs-ai-postmortem')));
 
 backend.start();
