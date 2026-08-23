@@ -450,6 +450,89 @@ Exit criteria: `yarn test:e2e:scaffolder-ai-shadow-detective` demonstrates scan 
 
 Exit criteria: staged rollout with scans and outreach disabled by default, bounded cloud API usage, and verified ownership grounding.
 
+## Frontend Completed
+
+
+
+## Backend Completed
+
+### Shared prerequisite fixed
+
+The plan’s blocking cloud-tool contract mismatch was resolved in:
+
+`/home/kevin/Repos/backstage/ai-crew-suite/plugins/backend/plugin-ai-core-backend-module-cloud-providers/src/registerTools.ts`
+
+Cloud tools now register as real AI Core `ToolDefinition`s:
+
+- `cloud.account.lookup`
+- `cloud.resource.lookup`
+- `cloud.resource.dependencies`
+
+Each is:
+
+- Read-only (`effect: 'read'`)
+- Addressable by agent tool allow-lists
+- Invokable through the AI Core runtime via `invoke(...)`
+
+Updated cloud module tests now verify the typed IDs, read-only effects, and invocation behavior.
+
+### Shadow Detective backend delivered
+
+- Agent: `scaffolder-ai-shadow-detective`
+- Workflow: `shadow-reconciliation`
+- Artifact: `shadow-resource-report`
+- Manual read-only runs via `cloud.resource.lookup`
+
+Implemented deterministic flow:
+
+1. Invokes normalized cloud inventory.
+2. Loads catalog `Resource` bindings using the configured infrastructure annotation.
+3. Filters exact catalog-bound resources from inventory.
+4. Retains genuine orphans.
+5. Resolves owner-tag evidence only when the owner maps to an existing catalog `Group`.
+6. Retains unknown ownership explicitly when no verified group exists.
+7. Generates an encoded, pre-populated human-click Scaffolder claim URL for each orphan.
+8. Emits a replayable report artifact.
+
+### Scenario coverage
+
+Added a workflow test covering the plan’s core case:
+
+- Registered resource `db-registered-01` is filtered out via exact catalog binding.
+
+- Shadow resource `db-shadow-99` remains in the report.
+
+- Its `owner: team-checkout` tag resolves to:
+
+  - `group:default/team-checkout`
+  - high confidence
+
+- No live cloud account, LLM, or message transport is required.
+
+### Registration updated
+
+- `/home/kevin/Repos/backstage/ai-crew-suite/tsconfig.json`
+- `/home/kevin/Repos/backstage/ai-crew-suite/.eslintrc.cjs`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/backend/package.json`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/backend/src/index.ts`
+- `/home/kevin/Repos/backstage/ai-crew-suite/app-config.yaml`
+- `/home/kevin/Repos/backstage/ai-crew-suite/yarn.lock`
+
+### Explicitly deferred
+
+The implementation does not claim later plan milestones:
+
+- Scheduled scans
+- Pagination/cursors or resumable scans
+- Dedupe ledger
+- Creator-email, billing-code, or VCS ownership inference
+- Approval checkpoint/resume
+- Outreach messaging
+- Any cloud/catalog mutation
+- Frontend implementation
+
+These limitations are emitted in the report artifact and documented in the package README.
+
 ## Definition of Done
 
 - Normalized `cloud.*` `ToolDefinition`s land in `plugin-ai-core-backend-module-cloud-providers` and resolve through the AI Core runtime; this plugin's package, agent, runner (`run` + `resume`), triggers, config schema, and allow-list are registered (root + backend/app wiring included) with a barrel `index.ts` in every directory.

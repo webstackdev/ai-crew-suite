@@ -75,6 +75,10 @@ vi.mock(
   () => ({ default: 'scaffolder-ai-intent' })
 );
 vi.mock(
+  '@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-shadow-detective/alpha',
+  () => ({ default: 'scaffolder-ai-shadow-detective' })
+);
+vi.mock(
   '@webstackbuilders/plugin-ai-agent-frontend-search-ai-archeology/alpha',
   () => ({ default: 'search-ai-archeology' })
 );
@@ -124,6 +128,7 @@ describe('App', () => {
         'scaffolder-ai-guardrail-agent',
         'scaffolder-ai-infra',
         'scaffolder-ai-intent',
+        'scaffolder-ai-shadow-detective',
         'rfc-adr-ai-reviewer',
         'search-ai-archeology',
         'search-ai-context',
