@@ -70,6 +70,7 @@ const scopedOverrides = (basePath, config) => {
 
 module.exports = {
   root: true,
+
   ignorePatterns: [
     '.yarn/**',
     '.pnp.*',
@@ -78,6 +79,7 @@ module.exports = {
     '**/dist-types/**',
     '**/coverage/**',
   ],
+
   overrides: [
     ...scopedOverrides('.', createConfig(__dirname, { ignorePatterns: [] })),
     ...scopedOverrides(
@@ -387,4 +389,6 @@ module.exports = {
       },
     },
   ],
+
+  extends: ['plugin:storybook/recommended']
 };

@@ -83,7 +83,7 @@ export const AlertTunerPage = () => {
           <Grid item xs={12} md={4}>
             <TuningRunView state={state} />
           </Grid>
-         
+
           <Grid item xs={12} md={8}>
             {state.proposal ? (
               <>

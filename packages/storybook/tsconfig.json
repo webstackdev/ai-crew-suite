@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,               // Required for monorepo project linking
+    "declaration": true,             // Emits the .d.ts files your plugins look for
+    "declarationMap": true,          // Links editor source navigation back to your .ts files
+    "outDir": "../../dist-types/packages/storybook"
+  },
+  "include": ["src/**/*"]
+}

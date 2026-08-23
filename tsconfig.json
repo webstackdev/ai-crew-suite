@@ -22,6 +22,7 @@
     // 1. Core Platform Packages
     { "path": "./packages/app" },
     { "path": "./packages/backend" },
+    { "path": "./packages/storybook" },
 
     // 2. Frontend Plugins
     { "path": "./plugins/frontend/plugin-ai-crew-suite" },

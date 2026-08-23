@@ -13,6 +13,7 @@
     "Ilshidur",
     "jsdom",
     "llms",
+    "msgpackr",
     "Ollama",
     "oriflame",
     "ossp",

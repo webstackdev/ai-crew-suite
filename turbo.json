@@ -48,6 +48,13 @@
       "dependsOn": ["^typecheck"],
       "inputs": ["src/**/*.ts", "src/**/*.tsx", "tsconfig.json"],
       "outputs": []
+    },
+    "storybook": {
+      "cache": false,
+      "persistent": true
+    },
+    "storybook:build": {
+      "outputs": ["storybook-static/**"]
     }
   }
 }
