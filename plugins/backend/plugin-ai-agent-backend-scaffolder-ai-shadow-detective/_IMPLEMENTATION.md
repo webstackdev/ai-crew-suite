@@ -452,7 +452,68 @@ Exit criteria: staged rollout with scans and outreach disabled by default, bound
 
 ## Frontend Completed
 
+- Backstage frontend plugin with:
 
+  - Plugin ID: `scaffolder-ai-shadow-detective`
+  - Standalone route: `/scaffolder-ai-shadow-detective`
+  - Legacy plugin entry point
+  - New frontend-system `/alpha` entry point
+  - `ApiBlueprint` and `PageBlueprint`
+
+- Typed authenticated AI Core SSE client:
+
+  - Starts scans via `agents/scaffolder-ai-shadow-detective/runs`
+  - Replays saved scans through `?run=<runId>`
+  - Uses configured `ai.endpointPath`, defaulting to `ai-core`
+
+- Typed reducer/hook with malformed artifact protection.
+
+- Report-only scan page:
+
+  - Run scan action
+  - Live step progress
+  - Report replay
+  - Orphan resource inventory
+  - Verified owner-tag group evidence
+  - Explicit unknown-owner presentation
+  - Human-click claim links
+  - First-class `no_orphans`, `report_only`, `truncated`, and `partial` report states
+  - Report limitations and non-mutation posture
+
+### Scope alignment
+
+The current backend is report-only, so the frontend deliberately does __not__ expose controls for:
+
+- Scheduled scans
+- Pagination/cursor continuation
+- Dedupe suppression
+- Approval/rejection
+- Outreach messaging
+- Cloud or catalog mutation
+
+The README and report panel explicitly explain these constraints.
+
+### Registration updated
+
+- `/home/kevin/Repos/backstage/ai-crew-suite/tsconfig.json`
+- `/home/kevin/Repos/backstage/ai-crew-suite/.eslintrc.cjs`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/app/package.json`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/app/src/App.tsx`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/app/src/App.test.tsx`
+- `/home/kevin/Repos/backstage/ai-crew-suite/yarn.lock`
+
+### Tests added
+
+- Reducer test for valid and malformed `shadow-resource-report` artifacts.
+
+- Report panel test covering:
+
+  - verified `group:default/team-checkout` ownership evidence
+  - unknown ownership
+  - claim links
+  - report-only outreach limitation
+
+- App feature registration test passed.
 
 ## Backend Completed
 

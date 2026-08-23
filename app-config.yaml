@@ -85,6 +85,11 @@ ai:
         annotation: example.com/resource-id
       claim:
         templateRef: template:default/register-existing-resource
+    scaffolderPrd:
+      model: scaffolder-prd
+      templates:
+        allowed:
+          - template:default/react-service-template
       blueprints:
         sources:
           - id: example-terraform

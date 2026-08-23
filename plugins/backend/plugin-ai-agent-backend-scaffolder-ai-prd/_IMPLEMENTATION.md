@@ -433,6 +433,84 @@ Exit criteria: `yarn test:e2e:scaffolder-ai-prd` demonstrates PRD → three chan
 
 Exit criteria: staged rollout with execution disabled by default, bounded per-PRD cost, and verified citation grounding.
 
+## Frontend Completed
+
+
+
+## Backend Completed
+
+- AI Core backend module:
+
+  - Agent: `scaffolder-ai-prd`
+  - Workflow: `scaffolder-prd`
+  - Manual trigger
+  - Sessionless execution
+  - Read-only enrichment tool allow-list reserved for future milestones
+
+- Required configuration:
+
+  - `ai.agents.scaffolderPrd.model`
+  - non-empty `templates.allowed`
+  - PRD character and story caps
+  - execution flag retained, but no commit behavior is enabled
+
+- Deterministic blueprint-only flow:
+
+  1. Validates an inline, versioned PRD request.
+
+  2. Splits bounded PRD text into cited `prd-N` spans.
+
+  3. Emits PM, Engineer, and Writer step lanes.
+
+  4. Runs deterministic channel construction through `Promise.all`.
+
+  5. Produces:
+
+     - cited epic
+     - cited stories
+     - allow-listed template selection
+     - cited documentation outline
+
+  6. Merges channels into a stable `DeliveryBlueprint`.
+
+  7. Computes a deterministic SHA-256 `blueprintHash`.
+
+  8. Emits a replayable `delivery-blueprint` artifact.
+
+### Safety and scope behavior
+
+Every generated blueprint item retains PRD evidence. The current implementation does not claim unsupported behavior:
+
+- No external ticket reads or duplicate-epic probing.
+- No live template-schema lookup or catalog validation.
+- No documentation repository reads.
+- No approval/checkpoint/resume flow.
+- No ticket creation.
+- No Scaffolder task creation.
+- No documentation publishing.
+
+The generated artifact carries explicit limitations for all deferred functionality.
+
+### Test coverage
+
+Added a workflow scenario that verifies a multi-factor-auth PRD yields:
+
+- complete three-channel blueprint
+- configured template selection
+- two cited stories
+- cited documentation outline
+- `blueprint_only` status
+- no external writes
+
+### Registration updated
+
+- `/home/kevin/Repos/backstage/ai-crew-suite/tsconfig.json`
+- `/home/kevin/Repos/backstage/ai-crew-suite/.eslintrc.cjs`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/backend/package.json`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/backend/src/index.ts`
+- `/home/kevin/Repos/backstage/ai-crew-suite/app-config.yaml`
+- `/home/kevin/Repos/backstage/ai-crew-suite/yarn.lock`
+
 ## Definition of Done
 
 - Package, agent, runner (`run` + `resume`), manual trigger, config schema, and the tool allow-list implemented and registered (root + backend/app wiring included), with a barrel `index.ts` in every directory.

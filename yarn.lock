@@ -15944,6 +15944,19 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-prd@workspace:^, @webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-prd@workspace:plugins/backend/plugin-ai-agent-backend-scaffolder-ai-prd":
+  version: 0.0.0-use.local
+  resolution: "@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-prd@workspace:plugins/backend/plugin-ai-agent-backend-scaffolder-ai-prd"
+  dependencies:
+    "@backstage/backend-plugin-api": "backstage:^"
+    "@backstage/backend-test-utils": "backstage:^"
+    "@backstage/cli": "backstage:^"
+    "@backstage/config": "backstage:^"
+    "@webstackbuilders/plugin-ai-core-node": "workspace:*"
+    vitest: "npm:^4.1.11"
+  languageName: unknown
+  linkType: soft
+
 "@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-shadow-detective@workspace:^, @webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-shadow-detective@workspace:plugins/backend/plugin-ai-agent-backend-scaffolder-ai-shadow-detective":
   version: 0.0.0-use.local
   resolution: "@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-shadow-detective@workspace:plugins/backend/plugin-ai-agent-backend-scaffolder-ai-shadow-detective"
@@ -18326,6 +18339,7 @@ __metadata:
     "@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-guardrail-agent": "workspace:^"
     "@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-infra": "workspace:^"
     "@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-intent": "workspace:^"
+    "@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-prd": "workspace:^"
     "@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-shadow-detective": "workspace:^"
     "@webstackbuilders/plugin-ai-agent-backend-search-ai-archeology": "workspace:^"
     "@webstackbuilders/plugin-ai-agent-backend-search-ai-context": "workspace:^"
