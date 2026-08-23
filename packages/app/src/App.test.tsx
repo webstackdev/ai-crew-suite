@@ -79,6 +79,10 @@ vi.mock(
   () => ({ default: 'scaffolder-ai-shadow-detective' })
 );
 vi.mock(
+  '@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-prd/alpha',
+  () => ({ default: 'scaffolder-ai-prd' })
+);
+vi.mock(
   '@webstackbuilders/plugin-ai-agent-frontend-search-ai-archeology/alpha',
   () => ({ default: 'search-ai-archeology' })
 );
@@ -129,6 +133,7 @@ describe('App', () => {
         'scaffolder-ai-infra',
         'scaffolder-ai-intent',
         'scaffolder-ai-shadow-detective',
+        'scaffolder-ai-prd',
         'rfc-adr-ai-reviewer',
         'search-ai-archeology',
         'search-ai-context',

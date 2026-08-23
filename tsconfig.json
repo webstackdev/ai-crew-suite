@@ -100,6 +100,7 @@
     { "path": "./plugins/frontend/plugin-ai-agent-frontend-scaffolder-ai-infra" },
     { "path": "./plugins/frontend/plugin-ai-agent-frontend-scaffolder-ai-intent" },
     { "path": "./plugins/frontend/plugin-ai-agent-frontend-scaffolder-ai-shadow-detective" },
+    { "path": "./plugins/frontend/plugin-ai-agent-frontend-scaffolder-ai-prd" },
     { "path": "./plugins/backend/plugin-ai-agent-backend-search-ai-archeology" },
     { "path": "./plugins/backend/plugin-ai-agent-backend-search-ai-context" },
     { "path": "./plugins/backend/plugin-ai-agent-backend-tech-debt-ai-scout" },

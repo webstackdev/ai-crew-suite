@@ -28,6 +28,7 @@ import scaffolderGuardrailPlugin from '@webstackbuilders/plugin-ai-agent-fronten
 import scaffolderInfraPlugin from '@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-infra/alpha';
 import scaffolderIntentPlugin from '@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-intent/alpha';
 import shadowDetectivePlugin from '@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-shadow-detective/alpha';
+import scaffolderPrdPlugin from '@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-prd/alpha';
 import catalogAiInsightsPlugin from '@webstackbuilders/plugin-ai-agent-frontend-catalog-ai-insights/alpha';
 import rfcAdrReviewerPlugin from '@webstackbuilders/plugin-ai-agent-frontend-rfc-adr-ai-reviewer/alpha';
 import searchArcheologyPlugin from '@webstackbuilders/plugin-ai-agent-frontend-search-ai-archeology/alpha';
@@ -54,6 +55,7 @@ const features: FrontendFeature[] = [
   scaffolderInfraPlugin,
   scaffolderIntentPlugin,
   shadowDetectivePlugin,
+  scaffolderPrdPlugin,
   rfcAdrReviewerPlugin,
   searchArcheologyPlugin,
   searchContextPlugin,
