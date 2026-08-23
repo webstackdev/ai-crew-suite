@@ -499,6 +499,90 @@ Exit criteria: `yarn test:e2e:techdocs-ai-janitor` demonstrates scan → anchore
 
 Exit criteria: staged rollout with `deliver.mode: 'none'` by default, verified anchoring, and the external-link policy documented.
 
+## Frontend Completed
+
+
+
+## Backend Completed
+
+## Delivered
+
+### AI Core module
+
+- Agent ID: `techdocs-ai-janitor`
+- Workflow ID: `techdocs-janitor`
+- Artifact kind: `janitor-report`
+- Read-only tool allow-list:
+  - `vcs.repository.read_file`
+
+### Current deterministic audit behavior
+
+- Requires an explicit, scoped request:
+
+  - `entityRef`
+  - repository URL
+  - explicit markdown paths
+  - optional pinned ref
+
+- Resolves the live catalog entity ownership through a package-local catalog resolver.
+
+- Reads bounded markdown documents through `vcs.repository.read_file`.
+
+- Detects:
+
+  - Documented owner/team values that differ from the live catalog owner.
+  - Relative links requiring internal target verification.
+  - External links marked as `unverified_external` without probing arbitrary hosts.
+
+- Produces cited discrepancies with exact source line ranges and excerpts.
+
+- Emits replayable `janitor-report` artifacts.
+
+- Separates partial file-read failure from clean documentation.
+
+### Explicitly inactive
+
+The implementation correctly does not advertise or invoke:
+
+- Patch generation or anchored diff artifacts.
+- Repair/validation loops.
+- API-drift analysis.
+- Catalog entity-link resolution.
+- Ticket delivery.
+- Documentation PR creation or any VCS write.
+
+The README describes these limits clearly.
+
+## Registration
+
+Wired into:
+
+- `/home/kevin/Repos/backstage/ai-crew-suite/tsconfig.json`
+- `/home/kevin/Repos/backstage/ai-crew-suite/.eslintrc.cjs`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/backend/package.json`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/backend/src/index.ts`
+- `/home/kevin/Repos/backstage/ai-crew-suite/app-config.yaml`
+- `/home/kevin/Repos/backstage/ai-crew-suite/yarn.lock`
+
+Configuration added:
+
+```yaml
+ai:
+  agents:
+    techdocsJanitor:
+      model: techdocs-janitor
+```
+
+## Tests
+
+Added focused coverage for:
+
+- Owner drift detection.
+- Relative and external link classification.
+- Exact source-range retention.
+- Graph artifact output for owner/link discrepancies.
+- Confirmation that only `vcs.repository.read_file` is called.
+
 ## Definition of Done
 
 - Package, agent, runner (`run` + `resume`), triggers (manual + sweep), config schema, and the allow-list implemented and registered (root + backend/app wiring included), with a barrel `index.ts` in every directory.

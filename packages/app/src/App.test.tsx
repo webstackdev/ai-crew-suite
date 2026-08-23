@@ -82,6 +82,10 @@ vi.mock(
   '@webstackbuilders/plugin-ai-agent-frontend-tech-radar-ai-manager/alpha',
   () => ({ default: 'tech-radar-ai-manager' })
 );
+vi.mock(
+  '@webstackbuilders/plugin-ai-agent-frontend-techdocs-ai-janitor/alpha',
+  () => ({ default: 'techdocs-ai-janitor' })
+);
 vi.mock('./modules/nav', () => ({ navModule: 'navigation' }));
 
 describe('App', () => {
@@ -111,6 +115,7 @@ describe('App', () => {
         'search-ai-archeology',
         'tech-debt-ai-scout',
         'tech-radar-ai-manager',
+        'techdocs-ai-janitor',
       ],
     });
     expect(mocks.createRoot).toHaveBeenCalledWith();
