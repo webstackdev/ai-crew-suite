@@ -26,6 +26,7 @@ import alertAiTunerPlugin from '@webstackbuilders/plugin-ai-agent-frontend-alert
 import driftDetectorPlugin from '@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-drift-detector/alpha';
 import scaffolderGuardrailPlugin from '@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-guardrail-agent/alpha';
 import scaffolderInfraPlugin from '@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-infra/alpha';
+import scaffolderIntentPlugin from '@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-intent/alpha';
 import catalogAiInsightsPlugin from '@webstackbuilders/plugin-ai-agent-frontend-catalog-ai-insights/alpha';
 import rfcAdrReviewerPlugin from '@webstackbuilders/plugin-ai-agent-frontend-rfc-adr-ai-reviewer/alpha';
 import searchArcheologyPlugin from '@webstackbuilders/plugin-ai-agent-frontend-search-ai-archeology/alpha';
@@ -50,6 +51,7 @@ const features: FrontendFeature[] = [
   driftDetectorPlugin,
   scaffolderGuardrailPlugin,
   scaffolderInfraPlugin,
+  scaffolderIntentPlugin,
   rfcAdrReviewerPlugin,
   searchArcheologyPlugin,
   searchContextPlugin,

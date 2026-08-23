@@ -435,7 +435,65 @@ Exit criteria: staged rollout with execution disabled by default, bounded costs,
 
 ## Frontend Completed
 
+- Backstage frontend plugin with:
 
+  - Plugin ID: `scaffolder-ai-intent`
+  - Standalone route: `/scaffolder-ai-intent`
+  - Legacy `plugin.ts` entry point
+  - New frontend-system `/alpha` entry point
+  - `ApiBlueprint` and `PageBlueprint`
+
+- Typed authenticated AI Core SSE client:
+
+  - Starts proposals through `agents/scaffolder-ai-intent/runs`
+  - Replays runs through `?run=<runId>`
+  - Uses `ai.endpointPath`, defaulting to `ai-core`
+
+- Typed reducer/hook with malformed artifact protection.
+
+- Proposal-only UI:
+
+  - Natural-language provisioning request form
+  - Live run-step progress
+  - Allow-listed template candidates with scores and matches
+  - Schema-declared resolved parameters and origins
+  - Validation issues with blocking/advisory state, evidence IDs, and targeted correction text
+  - First-class `proposed`, `awaiting_correction`, `no_template_match`, and `unparseable` rendering
+  - Proposal limitations clearly state that no Scaffolder task is created
+
+### Important scope alignment
+
+The current backend only supports the proposal milestone. Therefore the frontend deliberately does __not__ render controls for:
+
+- Sending correction turns
+- Editing/re-submitting parameters
+- Confirming/rejecting a proposal
+- Creating or linking a Scaffolder task
+
+When `awaiting_correction` is returned, the UI renders the backend’s targeted question as informational and explains that continuation is not yet available.
+
+### Registration updated
+
+- `/home/kevin/Repos/backstage/ai-crew-suite/tsconfig.json`
+- `/home/kevin/Repos/backstage/ai-crew-suite/.eslintrc.cjs`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/app/package.json`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/app/src/App.tsx`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/app/src/App.test.tsx`
+- `/home/kevin/Repos/backstage/ai-crew-suite/yarn.lock`
+
+### Tests added
+
+- Reducer test for valid and malformed `template-intent-proposal` artifacts.
+
+- Proposal panel test covering:
+
+  - template candidate display
+  - resolved parameter display
+  - blocking name-collision issue
+  - targeted correction question
+  - proposal-only limitation
+
+- App feature registration test passed.
 
 ## Backend Completed
 

@@ -56,6 +56,7 @@
     "@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-drift-detector": "workspace:^",
     "@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-guardrail-agent": "workspace:^",
     "@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-infra": "workspace:^",
+    "@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-intent": "workspace:^",
     "@webstackbuilders/plugin-ai-agent-frontend-search-ai-archeology": "workspace:^",
     "@webstackbuilders/plugin-ai-agent-frontend-search-ai-context": "workspace:^",
     "@webstackbuilders/plugin-ai-agent-frontend-tech-debt-ai-scout": "workspace:^",
