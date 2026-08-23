@@ -38,14 +38,16 @@ describe('readCloudProvidersConfig', () => {
     });
 
     const parsed = readCloudProvidersConfig(mockConfig);
+
     expect(parsed.defaultProvider).toBe('aws');
     expect(parsed.providers.aws?.region).toBe('us-west-2');
   });
 
   it('should throw an explicit error if cloudProviders block is completely absent', () => {
     const mockConfig = configWith({});
+
     expect(() => readCloudProvidersConfig(mockConfig)).toThrow(
-      /Cloud providers module requires ai.integrations.cloudProviders configuration to be set/
+      /Cloud providers module requires ai.integrations.cloudProviders configuration to be set/,
     );
   });
 
@@ -61,8 +63,9 @@ describe('readCloudProvidersConfig', () => {
         },
       },
     });
+
     expect(() => readCloudProvidersConfig(mockConfig)).toThrow(
-      /Cloud providers module requires ai.integrations.cloudProviders.defaultProvider to be set/
+      /Cloud providers module requires ai.integrations.cloudProviders.defaultProvider to be set/,
     );
   });
 });

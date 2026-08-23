@@ -13,12 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// plugins/backend/plugin-ai-core-backend-module-cloud-providers/src/module.ts
-import { coreServices, createBackendModule } from '@backstage/backend-plugin-api';
-import { 
+import {
+  coreServices,
+  createBackendModule,
+} from '@backstage/backend-plugin-api';
+import {
   toolExtensionPoint,
   cloudDriversExtensionPoint,
-  CloudProviderDriver
+  CloudProviderDriver,
 } from '@webstackbuilders/plugin-ai-core-node';
 import { readCloudProvidersConfig } from './config';
 import { createCloudProviderTools } from './registerTools';
@@ -56,8 +58,8 @@ export const aiCoreBackendModuleCloudProviders = createBackendModule({
         if (!driver) {
           throw new Error(
             `No cloud driver registered for identifier '${cloudConfig.defaultProvider}'. ` +
-            `Ensure the matching plugin package '@webstackbuilders/plugin-ai-core-backend-module-cloud-providers-${cloudConfig.defaultProvider}' ` +
-            `is fully imported in your backend index.ts bootstrap initialization file.`
+              `Ensure the matching plugin package '@webstackbuilders/plugin-ai-core-backend-module-cloud-providers-${cloudConfig.defaultProvider}' ` +
+              `is fully imported in your backend index.ts bootstrap initialization file.`,
           );
         }
 

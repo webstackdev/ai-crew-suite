@@ -19,10 +19,33 @@ import { CROSS_SERVICE_IMPACT_WORKFLOW_ID } from './workflow/ImpactGraph';
 
 /** Stable AI Core route identifier for source-change impact assessment. */
 export const SEARCH_CONTEXT_AGENT_ID = 'search-ai-context';
+
 /** Read-only tool allow-list; catalog access is injected through a resolver. */
-export const SEARCH_CONTEXT_TOOL_IDS = ['vcs.repository.search', 'vcs.repository.read_file', 'knowledge.retrieve'] as const;
+export const SEARCH_CONTEXT_TOOL_IDS = [
+  'vcs.repository.search',
+  'vcs.repository.read_file',
+  'knowledge.retrieve',
+] as const;
+
 /** Evidence posture for any optional narrative generation. */
-export const SEARCH_CONTEXT_SYSTEM_PROMPT = 'Quote supplied classifications and citations verbatim. Never invent a consumer, owner, repository, path, or line. A code search match is a textual reference, not proven breakage; documentation cannot upgrade an impact classification.';
+export const SEARCH_CONTEXT_SYSTEM_PROMPT =
+  'Quote supplied classifications and citations verbatim. Never invent a consumer, owner, repository, path, or line. A code search match is a textual reference, not proven breakage; documentation cannot upgrade an impact classification.';
 
 /** Creates the fresh-snapshot, read-only impact assessment agent. */
-export const createSearchContextAgent = (config: SearchContextConfig): AgentDefinition => ({ id: SEARCH_CONTEXT_AGENT_ID, modelRef: config.modelRef, workflowRef: CROSS_SERVICE_IMPACT_WORKFLOW_ID, memory: 'none', systemPrompt: SEARCH_CONTEXT_SYSTEM_PROMPT, toolIds: [...SEARCH_CONTEXT_TOOL_IDS], triggers: [{ id: 'impact-analysis-on-demand', source: 'manual', agentId: SEARCH_CONTEXT_AGENT_ID }] });
+export const createSearchContextAgent = (
+  config: SearchContextConfig,
+): AgentDefinition => ({
+  id: SEARCH_CONTEXT_AGENT_ID,
+  modelRef: config.modelRef,
+  workflowRef: CROSS_SERVICE_IMPACT_WORKFLOW_ID,
+  memory: 'none',
+  systemPrompt: SEARCH_CONTEXT_SYSTEM_PROMPT,
+  toolIds: [...SEARCH_CONTEXT_TOOL_IDS],
+  triggers: [
+    {
+      id: 'impact-analysis-on-demand',
+      source: 'manual',
+      agentId: SEARCH_CONTEXT_AGENT_ID,
+    },
+  ],
+});

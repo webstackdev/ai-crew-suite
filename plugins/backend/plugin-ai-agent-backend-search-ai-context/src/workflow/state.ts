@@ -13,15 +13,76 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 /** Versioned manual request for one source entity and concrete change signature. */
-export type ImpactRequest = { version: 1; source: 'manual'; entityRef: string; change: { kind: 'endpoint_removed' | 'endpoint_deprecated' | 'field_renamed' | 'field_removed' | 'signature_changed'; symbol: string; replacement?: string; aliases?: string[] }; maxDepth?: number; relationTypes?: string[] };
+export type ImpactRequest = {
+  version: 1;
+  source: 'manual';
+  entityRef: string;
+  change: {
+    kind:
+      | 'endpoint_removed'
+      | 'endpoint_deprecated'
+      | 'field_renamed'
+      | 'field_removed'
+      | 'signature_changed';
+    symbol: string;
+    replacement?: string;
+    aliases?: string[];
+  };
+  maxDepth?: number;
+  relationTypes?: string[];
+};
+
 /** A cited catalog edge connecting the source entity to a candidate consumer. */
-export type DependencyNode = { ref: string; owner?: string; hop: number; viaRelation: string; relationId: string };
+export type DependencyNode = {
+  ref: string;
+  owner?: string;
+  hop: number;
+  viaRelation: string;
+  relationId: string;
+};
+
 /** Redacted code-search evidence; it proves a textual reference only. */
-export type CodeMatch = { id: string; repoUrl: string; path: string; line?: number; snippet?: string; ref?: string; query: string };
+export type CodeMatch = {
+  id: string;
+  repoUrl: string;
+  path: string;
+  line?: number;
+  snippet?: string;
+  ref?: string;
+  query: string;
+};
+
 /** Deterministic per-consumer verification result. */
-export type ConsumerImpact = { entityRef: string; owner: string; hop: number; relationId: string; repoUrl?: string; classification: 'impacted' | 'unaffected' | 'unknown'; reason?: 'no_repository' | 'search_unsupported' | 'search_failed'; severity?: 'critical' | 'high' | 'medium' | 'low'; matches: CodeMatch[] };
+export type ConsumerImpact = {
+  entityRef: string;
+  owner: string;
+  hop: number;
+  relationId: string;
+  repoUrl?: string;
+  classification: 'impacted' | 'unaffected' | 'unknown';
+  reason?: 'no_repository' | 'search_unsupported' | 'search_failed';
+  severity?: 'critical' | 'high' | 'medium' | 'low';
+  matches: CodeMatch[];
+};
+
 /** Impacted-only work routing summary grouped by catalog owner. */
-export type OwnerRollup = { owner: string; impactedCount: number; highestSeverity: 'critical' | 'high' | 'medium' | 'low'; consumers: string[] };
+export type OwnerRollup = {
+  owner: string;
+  impactedCount: number;
+  highestSeverity: 'critical' | 'high' | 'medium' | 'low';
+  consumers: string[];
+};
+
 /** Replayable artifact emitted by a bounded impact assessment run. */
-export type ImpactAssessment = { entityRef: string; change: ImpactRequest['change']; status: 'complete' | 'partial' | 'no_consumers' | 'out_of_scope'; graphTruncated: boolean; consumers: ConsumerImpact[]; counts: { impacted: number; unaffected: number; unknown: number }; ownerRollups: OwnerRollup[]; limitations: string[] };
+export type ImpactAssessment = {
+  entityRef: string;
+  change: ImpactRequest['change'];
+  status: 'complete' | 'partial' | 'no_consumers' | 'out_of_scope';
+  graphTruncated: boolean;
+  consumers: ConsumerImpact[];
+  counts: { impacted: number; unaffected: number; unknown: number };
+  ownerRollups: OwnerRollup[];
+  limitations: string[];
+};

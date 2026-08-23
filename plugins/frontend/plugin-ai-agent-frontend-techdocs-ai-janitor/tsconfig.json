@@ -1,1 +1,8 @@
-{"extends":"../../../tsconfig.base.json","compilerOptions":{"outDir":"../../../dist-types/plugins/frontend/plugin-ai-agent-frontend-techdocs-ai-janitor"},"include":["src/**/*"],"exclude":["src/**/*.test.*","src/**/*.spec.*"]}
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "../../../dist-types/plugins/frontend/plugin-ai-agent-frontend-techdocs-ai-janitor"
+  },
+  "include": ["src/**/*"],
+  "exclude": ["src/**/*.test.*", "src/**/*.spec.*"]
+}

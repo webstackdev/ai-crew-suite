@@ -519,7 +519,7 @@ The README and report panel explicitly explain these constraints.
 
 ### Shared prerequisite fixed
 
-The plan’s blocking cloud-tool contract mismatch was resolved in:
+The plan's blocking cloud-tool contract mismatch was resolved in:
 
 `/home/kevin/Repos/backstage/ai-crew-suite/plugins/backend/plugin-ai-core-backend-module-cloud-providers/src/registerTools.ts`
 
@@ -557,7 +557,7 @@ Implemented deterministic flow:
 
 ### Scenario coverage
 
-Added a workflow test covering the plan’s core case:
+Added a workflow test covering the plan's core case:
 
 - Registered resource `db-registered-01` is filtered out via exact catalog binding.
 

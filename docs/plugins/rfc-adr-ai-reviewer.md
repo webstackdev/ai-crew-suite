@@ -132,7 +132,7 @@ describe('RFC & ADR Reviewer LangGraph Parallel Execution', () => {
 
 Because this plugin streams multi-turn agent debates over an SSE pipeline to optimize developer engagement, testing the serialization interface is essential.
 
-Write an execution test that hits the streaming path. Use a test client helper to subscribe to the event stream, then assert that the streamed blocks conform to your platform’s structured data pattern—explicitly returning separate text segments tagged for `node:senior-architect` and `node:security-lead` as the graph processes each parallel path.
+Write an execution test that hits the streaming path. Use a test client helper to subscribe to the event stream, then assert that the streamed blocks conform to your platform's structured data pattern—explicitly returning separate text segments tagged for `node:senior-architect` and `node:security-lead` as the graph processes each parallel path.
 
 ## Frontend
 

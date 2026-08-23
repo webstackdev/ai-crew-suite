@@ -595,7 +595,7 @@ Added:
 - Validates one versioned, HTTP(S)-scoped repository request.
 - Reads the configured authoritative JSON radar source through `coreServices.urlReader`.
 - Parses current radar entries and uses their rings/quadrants as the only authoritative radar state.
-- Reads the repository’s `package.json` through `vcs.repository.read_file`.
+- Reads the repository's `package.json` through `vcs.repository.read_file`.
 - Extracts direct declared dependencies only.
 - Calculates direct-dependency adoption metrics.
 - Deterministically proposes only `assess → trial` transitions when the configured threshold is met.

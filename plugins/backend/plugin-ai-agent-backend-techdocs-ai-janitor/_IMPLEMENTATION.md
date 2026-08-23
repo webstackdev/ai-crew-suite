@@ -548,7 +548,7 @@ Displays:
 
 ### Honesty boundaries
 
-The UI has no patch, ticket, PR, delivery, or approval controls. It explicitly represents the current backend’s read-only behavior:
+The UI has no patch, ticket, PR, delivery, or approval controls. It explicitly represents the current backend's read-only behavior:
 
 - No patch generation.
 - No repair loop.

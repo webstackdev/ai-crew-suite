@@ -40,6 +40,7 @@ describe('createCloudProviderTools', () => {
 
   it('should create exactly 3 specialized system tools mapping directly to driver capabilities', () => {
     const tools = createCloudProviderTools({ driver: mockDriver, logger });
+
     expect(tools).toHaveLength(3);
 
     expect(tools.map(tool => tool.id)).toEqual([
@@ -47,19 +48,30 @@ describe('createCloudProviderTools', () => {
       'cloud.resource.lookup',
       'cloud.resource.dependencies',
     ]);
+
     expect(tools.every(tool => tool.effect === 'read')).toBe(true);
   });
 
   it('should invoke lookupAccount safely inside the tool execute matrix closure block', async () => {
-    const mockSummary = { id: '12345', provider: 'aws-test', name: 'dev-environment' };
+    const mockSummary = {
+      id: '12345',
+      provider: 'aws-test',
+      name: 'dev-environment',
+    };
+
     vi.mocked(mockDriver.lookupAccount).mockResolvedValueOnce(mockSummary);
 
     const tools = createCloudProviderTools({ driver: mockDriver, logger });
     const accountTool = tools.find(tool => tool.id === 'cloud.account.lookup');
 
-    const result = await accountTool!.invoke({ accountId: '12345' }, {} as never);
-    expect(mockDriver.lookupAccount).toHaveBeenCalledWith({ accountId: '12345' });
+    const result = await accountTool!.invoke(
+      { accountId: '12345' },
+      {} as never,
+    );
+
+    expect(mockDriver.lookupAccount).toHaveBeenCalledWith({
+      accountId: '12345',
+    });
     expect(result).toEqual(mockSummary);
   });
-
 });

@@ -16,5 +16,36 @@
 import type { ConsumerImpact, OwnerRollup } from '../workflow/state';
 
 const rank = { critical: 4, high: 3, medium: 2, low: 1 };
+
 /** Produces a stable impacted-only owner rollup, retaining an explicit unowned bucket. */
-export const rollupOwners = (impacts: ConsumerImpact[]): OwnerRollup[] => Object.values(impacts.filter(item => item.classification === 'impacted').reduce<Record<string, OwnerRollup>>((result, item) => { const owner = item.owner; const current = result[owner] ?? { owner, impactedCount: 0, highestSeverity: item.severity!, consumers: [] }; current.impactedCount += 1; current.consumers.push(item.entityRef); if (rank[item.severity!] > rank[current.highestSeverity]) current.highestSeverity = item.severity!; result[owner] = current; return result; }, {})).map(item => ({ ...item, consumers: item.consumers.sort() })).sort((left, right) => rank[right.highestSeverity] - rank[left.highestSeverity] || right.impactedCount - left.impactedCount || left.owner.localeCompare(right.owner));
+export const rollupOwners = (impacts: ConsumerImpact[]): OwnerRollup[] =>
+  Object.values(
+    impacts
+      .filter(item => item.classification === 'impacted')
+      .reduce<Record<string, OwnerRollup>>((result, item) => {
+        const owner = item.owner;
+        const current = result[owner] ?? {
+          owner,
+          impactedCount: 0,
+          highestSeverity: item.severity!,
+          consumers: [],
+        };
+
+        current.impactedCount += 1;
+        current.consumers.push(item.entityRef);
+
+        if (rank[item.severity!] > rank[current.highestSeverity])
+          current.highestSeverity = item.severity!;
+
+        result[owner] = current;
+
+        return result;
+      }, {}),
+  )
+    .map(item => ({ ...item, consumers: item.consumers.sort() }))
+    .sort(
+      (left, right) =>
+        rank[right.highestSeverity] - rank[left.highestSeverity] ||
+        right.impactedCount - left.impactedCount ||
+        left.owner.localeCompare(right.owner),
+    );

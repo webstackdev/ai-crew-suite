@@ -20,7 +20,7 @@ import { createBackendModule } from '@backstage/backend-plugin-api';
 import {
   toolExtensionPoint,
   cloudDriversExtensionPoint,
-  CloudProviderDriver
+  CloudProviderDriver,
 } from '@webstackbuilders/plugin-ai-core-node';
 import { aiCoreBackendModuleCloudProviders } from '../module';
 
@@ -40,6 +40,7 @@ describe('aiCoreBackendModuleCloudProviders', () => {
 
   it('should boot cleanly and register tools when a matching extension driver is supplied', async () => {
     const addedTools: any[] = [];
+
     const mockToolExtensionPoint = {
       addTool: (tool: any) => {
         addedTools.push(tool);
@@ -88,7 +89,9 @@ describe('aiCoreBackendModuleCloudProviders', () => {
       ],
     });
 
-    expect(addedTools.some(tool => tool.id === 'cloud.account.lookup')).toBe(true);
+    expect(addedTools.some(tool => tool.id === 'cloud.account.lookup')).toBe(
+      true,
+    );
   });
 
   it('should throw an informative boot-time error when the required driver has not registered', async () => {
@@ -115,7 +118,7 @@ describe('aiCoreBackendModuleCloudProviders', () => {
     });
 
     await expect(testExecution).rejects.toThrow(
-      /No cloud driver registered for identifier 'mock-cloud'/
+      /No cloud driver registered for identifier 'mock-cloud'/,
     );
   });
 });

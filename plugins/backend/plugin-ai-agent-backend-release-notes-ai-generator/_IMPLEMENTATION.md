@@ -590,4 +590,4 @@ Passed:
 
 - `git diff --check`
 
-One React/MUI v4 `findDOMNode` deprecation warning appears in the component test due to MUI’s `Link component="button"` implementation; tests still pass and no application behavior is affected.
+One React/MUI v4 `findDOMNode` deprecation warning appears in the component test due to MUI's `Link component="button"` implementation; tests still pass and no application behavior is affected.

@@ -25,16 +25,34 @@ export type SearchContextConfig = {
 };
 
 /** Reads configuration and rejects unsafe non-positive analysis limits. */
-export const readSearchContextConfig = (config: Config): SearchContextConfig => {
+export const readSearchContextConfig = (
+  config: Config,
+): SearchContextConfig => {
   const section = config.getOptionalConfig('ai.agents.searchContext');
+
   if (!section) {
-    throw new Error('Search context requires ai.agents.searchContext configuration to be set');
+    throw new Error(
+      'Search context requires ai.agents.searchContext configuration to be set',
+    );
   }
+
   const maxDepth = section.getOptionalNumber('maxDepth') ?? 3;
   const maxConsumers = section.getOptionalNumber('maxConsumers') ?? 50;
   const maxToolInvocations = section.getOptionalNumber('maxToolInvocations') ?? 100;
+
   if (maxDepth < 1 || maxConsumers < 1 || maxToolInvocations < 1) {
     throw new Error('Search context limits must be positive');
   }
-  return { modelRef: section.getString('model'), maxDepth, maxConsumers, maxToolInvocations, capableProviders: section.getOptionalStringArray('capableProviders') ?? ['github', 'gitlab', 'azuredevops'] };
+
+  return {
+    modelRef: section.getString('model'),
+    maxDepth,
+    maxConsumers,
+    maxToolInvocations,
+    capableProviders: section.getOptionalStringArray('capableProviders') ?? [
+      'github',
+      'gitlab',
+      'azuredevops',
+    ],
+  };
 };

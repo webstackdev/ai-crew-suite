@@ -526,7 +526,7 @@ Passed:
   - Only unrelated existing warnings from legacy backend test files.
 - `git diff --check`.
 
-The only test output warning is Material-UI v4’s existing `findDOMNode` deprecation warning during the component test; it does not fail tests or lint.
+The only test output warning is Material-UI v4's existing `findDOMNode` deprecation warning during the component test; it does not fail tests or lint.
 
 ## Backend Completed
 

@@ -470,7 +470,7 @@ The current backend only supports the proposal milestone. Therefore the frontend
 - Confirming/rejecting a proposal
 - Creating or linking a Scaffolder task
 
-When `awaiting_correction` is returned, the UI renders the backend’s targeted question as informational and explains that continuation is not yet available.
+When `awaiting_correction` is returned, the UI renders the backend's targeted question as informational and explains that continuation is not yet available.
 
 ### Registration updated
 

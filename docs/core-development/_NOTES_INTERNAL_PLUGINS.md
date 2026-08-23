@@ -56,7 +56,7 @@ Your notes identify four distinct cases, and they should not all be treated alik
 | Catalog entity and relation lookup                               | Start with the catalog service directly, but define shared AI-facing query helpers in `plugin-ai-core-node` once workflows share nontrivial semantics | The Catalog API is stable and canonical. The AI-specific concern is not access, but safe entity selection, relation traversal, annotation extraction, pagination, and permission-aware filtering. |
 | `knowledge.retrieve`                                             | Keep it as the existing AI Core tool/retrieval contract                                                                                               | This is already an AI-native abstraction. It should aggregate indexed sources rather than proxy a single Backstage service.                                                                       |
 | Scaffolder actions and task execution                            | Use Scaffolder extension points and actions directly                                                                                                  | These workflows are native Scaffolder extensions, not generic external-service integrations. A universal “scaffolder adapter” would flatten important action, workspace, and task semantics.      |
-| TechDocs source discovery and reads                              | Use `UrlReader` directly for source retrieval; use VCS adapters for writes                                                                            | `UrlReader` is already Backstage’s normalized, integration-aware read abstraction. Writing docs is a repository mutation and belongs behind the VCS tool contract.                                |
+| TechDocs source discovery and reads                              | Use `UrlReader` directly for source retrieval; use VCS adapters for writes                                                                            | `UrlReader` is already Backstage's normalized, integration-aware read abstraction. Writing docs is a repository mutation and belongs behind the VCS tool contract.                                |
 
 ## My recommendation
 
@@ -64,7 +64,7 @@ Treat the boundaries as three tiers.
 
 **Tier 1: Direct Backstage platform dependencies**
 
-Use `coreServices` directly in the workflow module’s `registerInit` dependencies:
+Use `coreServices` directly in the workflow module's `registerInit` dependencies:
 
 ```typescript
 deps: {
@@ -118,7 +118,7 @@ The important distinction: create a shared semantic helper when you have repeate
 
 **Tier 3: AI-native capabilities**
 
-`knowledge.retrieve` already belongs here. It is neither a raw Backstage Search wrapper nor a TechDocs wrapper; it is your AI runtime’s retrieval contract, potentially backed by catalog, TechDocs, repositories, and vector stores.
+`knowledge.retrieve` already belongs here. It is neither a raw Backstage Search wrapper nor a TechDocs wrapper; it is your AI runtime's retrieval contract, potentially backed by catalog, TechDocs, repositories, and vector stores.
 
 I would model catalog and TechDocs indexing similarly:
 

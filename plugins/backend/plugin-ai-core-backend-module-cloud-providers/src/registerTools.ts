@@ -13,14 +13,59 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { CreateCloudProviderToolsOptions, ToolDefinition } from '@webstackbuilders/plugin-ai-core-node';
+import {
+  CreateCloudProviderToolsOptions,
+  ToolDefinition,
+} from '@webstackbuilders/plugin-ai-core-node';
 
 /** Creates typed, read-only AI Core tools that delegate to the active cloud driver. */
-export const createCloudProviderTools = (options: CreateCloudProviderToolsOptions): ToolDefinition[] => {
+export const createCloudProviderTools = (
+  options: CreateCloudProviderToolsOptions,
+): ToolDefinition[] => {
   const { driver, logger } = options;
+
   return [
-    { id: 'cloud.account.lookup', description: 'Returns a cloud account summary for the active provider.', effect: 'read', async invoke(args: unknown) { const payload = args as { accountId?: string; name?: string }; logger.debug('cloud.account.lookup invoked', payload); return driver.lookupAccount(payload); } },
-    { id: 'cloud.resource.lookup', description: 'Returns bounded live cloud resource inventory from the active provider.', effect: 'read', async invoke(args: unknown) { const payload = args as { service?: string; tags?: Record<string, string>; owner?: string; catalogEntityRef?: string }; logger.debug('cloud.resource.lookup invoked', payload); return driver.lookupResource(payload); } },
-    { id: 'cloud.resource.dependencies', description: 'Returns dependency summaries for one cloud resource.', effect: 'read', async invoke(args: unknown) { const payload = args as { resourceId: string }; logger.debug('cloud.resource.dependencies invoked', payload); return driver.resourceDependencies(payload); } },
+    {
+      id: 'cloud.account.lookup',
+      description: 'Returns a cloud account summary for the active provider.',
+      effect: 'read',
+      async invoke(args: unknown) {
+        const payload = args as { accountId?: string; name?: string };
+
+        logger.debug('cloud.account.lookup invoked', payload);
+
+        return driver.lookupAccount(payload);
+      },
+    },
+    {
+      id: 'cloud.resource.lookup',
+      description:
+        'Returns bounded live cloud resource inventory from the active provider.',
+      effect: 'read',
+      async invoke(args: unknown) {
+        const payload = args as {
+          service?: string;
+          tags?: Record<string, string>;
+          owner?: string;
+          catalogEntityRef?: string;
+        };
+
+        logger.debug('cloud.resource.lookup invoked', payload);
+
+        return driver.lookupResource(payload);
+      },
+    },
+    {
+      id: 'cloud.resource.dependencies',
+      description: 'Returns dependency summaries for one cloud resource.',
+      effect: 'read',
+      async invoke(args: unknown) {
+        const payload = args as { resourceId: string };
+
+        logger.debug('cloud.resource.dependencies invoked', payload);
+
+        return driver.resourceDependencies(payload);
+      },
+    },
   ];
 };

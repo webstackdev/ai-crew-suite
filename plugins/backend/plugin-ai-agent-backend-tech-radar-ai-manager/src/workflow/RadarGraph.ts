@@ -1,10 +1,17 @@
 /*
  * Copyright 2026 Webstack Builders, Inc.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and limitations under the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 import type { UrlReaderService } from '@backstage/backend-plugin-api';
 import type {
@@ -29,10 +36,12 @@ export const TECH_RADAR_WORKFLOW_ID = 'tech-radar-analysis';
 /** Reads an authoritative radar source and one repository manifest for deterministic analysis. */
 export class RadarGraph implements WorkflowRunner {
   readonly id = TECH_RADAR_WORKFLOW_ID;
+
   constructor(
     private readonly config: TechRadarConfig,
     private readonly reader: UrlReaderService,
   ) {}
+
   async *run(
     input: AgentRunInput,
     context: WorkflowContext,
@@ -104,8 +113,10 @@ export class RadarGraph implements WorkflowRunner {
         ],
         evidence: [],
       };
+
       yield radarAnalysisArtifact(input.runId, analysis);
       yield { type: 'done', data: { runId: input.runId } };
+
       return;
     }
 

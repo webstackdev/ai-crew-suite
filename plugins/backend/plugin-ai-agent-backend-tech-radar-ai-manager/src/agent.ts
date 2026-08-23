@@ -19,8 +19,10 @@ import { TECH_RADAR_WORKFLOW_ID } from './workflow/RadarGraph';
 
 /** Stable route ID for deterministic technology radar analysis. */
 export const TECH_RADAR_AGENT_ID = 'tech-radar-ai-manager';
+
 /** Current read-only tool allow-list. */
 export const TECH_RADAR_TOOL_IDS = ['vcs.repository.read_file'] as const;
+
 /** Evidence-only prompt posture forbidding inferred rings and writes. */
 export const TECH_RADAR_SYSTEM_PROMPT =
   'Use only parsed radar entries and direct manifest dependencies. Never infer rings, claim durable submission, or submit a radar proposal.';

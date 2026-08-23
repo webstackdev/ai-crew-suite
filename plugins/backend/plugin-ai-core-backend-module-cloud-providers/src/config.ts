@@ -13,21 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// plugins/backend/plugin-ai-core-backend-module-cloud-providers/src/config.ts
 import { Config } from '@backstage/config';
 import { CloudProvidersConfig } from '@webstackbuilders/plugin-ai-core-node';
 
-export const readCloudProvidersConfig = (config: Config): CloudProvidersConfig => {
-  const cloudConfig = config.getOptionalConfig('ai.integrations.cloudProviders');
+export const readCloudProvidersConfig = (
+  config: Config,
+): CloudProvidersConfig => {
+  const cloudConfig = config.getOptionalConfig(
+    'ai.integrations.cloudProviders',
+  );
+
   if (!cloudConfig) {
     throw new Error(
       'Cloud providers module requires ai.integrations.cloudProviders configuration to be set',
     );
   }
 
-  const defaultProvider = cloudConfig.getOptionalString('defaultProvider') as any;
+  const defaultProvider = cloudConfig.getOptionalString(
+    'defaultProvider',
+  ) as any;
+
   if (!defaultProvider) {
-    throw new Error('Cloud providers module requires ai.integrations.cloudProviders.defaultProvider to be set');
+    throw new Error(
+      'Cloud providers module requires ai.integrations.cloudProviders.defaultProvider to be set',
+    );
   }
 
   const providers: any = {};
@@ -35,7 +44,10 @@ export const readCloudProvidersConfig = (config: Config): CloudProvidersConfig =
 
   // Extract keys dynamically to support open-ended driver vendor namespaces
   for (const providerId of Object.keys(rootObj)) {
-    const providerConfig = cloudConfig.getOptionalConfig(`providers.${providerId}`);
+    const providerConfig = cloudConfig.getOptionalConfig(
+      `providers.${providerId}`,
+    );
+
     if (providerConfig) {
       providers[providerId] = {
         region: providerConfig.getOptionalString('region'),

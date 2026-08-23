@@ -45,6 +45,7 @@ const collect = async (events: AsyncIterable<AgentEvent>) => {
   for await (const event of events) output.push(event);
   return output;
 };
+
 describe('RadarGraph', () => {
   it('emits a cited analysis from radar and package manifest evidence', async () => {
     const reader = {
