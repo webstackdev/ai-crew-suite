@@ -6,4 +6,10 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and limitations under the License.
  */
-export { techRadarModule as default, techRadarModule } from './module'; export * from './agent'; export * from './config'; export * from './workflow/state'; export * from './workflow/rules'; export * from './workflow/RadarGraph'; export * from './services/RadarArtifactWriter';
+export { techRadarModule as default, techRadarModule } from './module';
+export * from './agent';
+export * from './config';
+export * from './workflow/state';
+export * from './workflow/rules';
+export * from './workflow/RadarGraph';
+export * from './services/RadarArtifactWriter';

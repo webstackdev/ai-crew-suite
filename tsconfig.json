@@ -98,6 +98,7 @@
     { "path": "./plugins/backend/plugin-ai-agent-backend-search-ai-archeology" },
     { "path": "./plugins/backend/plugin-ai-agent-backend-tech-debt-ai-scout" },
     { "path": "./plugins/backend/plugin-ai-agent-backend-tech-radar-ai-manager" },
+    { "path": "./plugins/frontend/plugin-ai-agent-frontend-tech-radar-ai-manager" },
     { "path": "./plugins/frontend/plugin-ai-agent-frontend-tech-debt-ai-scout" },
     { "path": "./plugins/frontend/plugin-ai-agent-frontend-search-ai-archeology" },
 

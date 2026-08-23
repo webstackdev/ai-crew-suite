@@ -30,6 +30,7 @@ import catalogAiInsightsPlugin from '@webstackbuilders/plugin-ai-agent-frontend-
 import rfcAdrReviewerPlugin from '@webstackbuilders/plugin-ai-agent-frontend-rfc-adr-ai-reviewer/alpha';
 import searchArcheologyPlugin from '@webstackbuilders/plugin-ai-agent-frontend-search-ai-archeology/alpha';
 import techDebtScoutPlugin from '@webstackbuilders/plugin-ai-agent-frontend-tech-debt-ai-scout/alpha';
+import techRadarPlugin from '@webstackbuilders/plugin-ai-agent-frontend-tech-radar-ai-manager/alpha';
 import { navModule } from './modules/nav';
 
 const features: FrontendFeature[] = [
@@ -49,6 +50,7 @@ const features: FrontendFeature[] = [
   rfcAdrReviewerPlugin,
   searchArcheologyPlugin,
   techDebtScoutPlugin,
+  techRadarPlugin,
 ];
 
 const app = createApp({

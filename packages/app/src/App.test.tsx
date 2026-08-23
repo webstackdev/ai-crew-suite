@@ -78,6 +78,10 @@ vi.mock(
   '@webstackbuilders/plugin-ai-agent-frontend-tech-debt-ai-scout/alpha',
   () => ({ default: 'tech-debt-ai-scout' })
 );
+vi.mock(
+  '@webstackbuilders/plugin-ai-agent-frontend-tech-radar-ai-manager/alpha',
+  () => ({ default: 'tech-radar-ai-manager' })
+);
 vi.mock('./modules/nav', () => ({ navModule: 'navigation' }));
 
 describe('App', () => {
@@ -106,6 +110,7 @@ describe('App', () => {
         'rfc-adr-ai-reviewer',
         'search-ai-archeology',
         'tech-debt-ai-scout',
+        'tech-radar-ai-manager',
       ],
     });
     expect(mocks.createRoot).toHaveBeenCalledWith();

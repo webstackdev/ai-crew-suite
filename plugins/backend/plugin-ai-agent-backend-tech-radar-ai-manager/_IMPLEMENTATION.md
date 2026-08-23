@@ -512,6 +512,142 @@ Exit criteria: `yarn test:e2e:tech-radar-ai-manager` demonstrates analysis → p
 
 Exit criteria: staged rollout with sweeps enabled but writes disabled, verified measurement grounding, and the durability caveat documented for the review board.
 
+## Frontend Complete
+
+## Delivered
+
+### Standalone analysis UI
+
+- Route: `/tech-radar-ai-manager`
+
+- Agent: `tech-radar-ai-manager`
+
+- Artifact: `radar-analysis`
+
+- Supports authenticated AI Core SSE:
+
+  - Start a scoped repository analysis.
+  - Replay persisted analysis with `?run=<id>`.
+
+### UI behavior
+
+- Requires an HTTP(S) repository URL.
+
+- Displays:
+
+  - Analysis progress.
+  - Coverage totals.
+  - Declared direct-dependency adoption metrics.
+  - Current authoritative radar ring.
+  - Deterministic transition recommendations.
+  - Triggered deterministic rules.
+  - Backend limitations.
+  - Evidence citations.
+
+- Clearly labels recommendations as analysis-only.
+
+- Intentionally provides __no__ submit, approval, ticket, or radar mutation controls.
+
+### Honesty boundaries reflected in the UI
+
+The page does not imply that these later-plan capabilities are available:
+
+- Fleet-wide scans.
+- Durable longitudinal velocity analysis.
+- Knowledge-enrichment rationale.
+- Deprecation ticket filing.
+- Approval-gated radar proposal submission.
+- Persisted/durable radar changes.
+
+## Registration
+
+Wired into:
+
+- `/home/kevin/Repos/backstage/ai-crew-suite/tsconfig.json`
+- `/home/kevin/Repos/backstage/ai-crew-suite/.eslintrc.cjs`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/app/package.json`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/app/src/App.tsx`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/app/src/App.test.tsx`
+- `/home/kevin/Repos/backstage/ai-crew-suite/yarn.lock`
+
+## Tests
+
+Added:
+
+- Radar artifact reducer success and malformed-JSON handling.
+- Analysis panel rendering for metrics, transition recommendation, limitations, and evidence links.
+- Updated the app feature-list test for `tech-radar-ai-manager`.
+
+## Backend Complete
+
+## Delivered
+
+### AI Core module
+
+- Agent ID: `tech-radar-ai-manager`
+- Workflow ID: `tech-radar-analysis`
+- Artifact: `radar-analysis`
+- Current read-only tool allow-list:
+  - `vcs.repository.read_file`
+
+### Deterministic scoped analysis
+
+- Validates one versioned, HTTP(S)-scoped repository request.
+- Reads the configured authoritative JSON radar source through `coreServices.urlReader`.
+- Parses current radar entries and uses their rings/quadrants as the only authoritative radar state.
+- Reads the repository’s `package.json` through `vcs.repository.read_file`.
+- Extracts direct declared dependencies only.
+- Calculates direct-dependency adoption metrics.
+- Deterministically proposes only `assess → trial` transitions when the configured threshold is met.
+- Emits a replayable cited `radar-analysis` artifact.
+- Fails honestly as `radar_unavailable` when the radar source cannot be loaded or parsed.
+
+### Explicit limitations retained in every analysis
+
+The current workflow correctly identifies these planned capabilities as unavailable rather than implying they work:
+
+- Catalog fleet enumeration and multi-repository coverage.
+- Durable longitudinal/velocity history.
+- Knowledge retrieval enrichment.
+- Approval-gated radar proposal submission.
+- Deprecation ticket filing.
+- Durable Tech Radar submission—the installed driver is in-memory and non-durable.
+
+No radar writes are exposed by this implementation.
+
+## Tests
+
+Added focused coverage for:
+
+- JSON radar parsing.
+- Direct dependency measurement.
+- Deterministic assess-to-trial proposal creation.
+- No promotion for adopted or unused dependencies.
+- Radar graph artifact creation from radar and package manifest evidence.
+- Module registration and strict read-only tool allow-list.
+
+## Wiring
+
+Registered the module in:
+
+- `/home/kevin/Repos/backstage/ai-crew-suite/tsconfig.json`
+- `/home/kevin/Repos/backstage/ai-crew-suite/.eslintrc.cjs`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/backend/package.json`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/backend/src/index.ts`
+- `/home/kevin/Repos/backstage/ai-crew-suite/app-config.yaml`
+- `/home/kevin/Repos/backstage/ai-crew-suite/yarn.lock`
+
+Configured:
+
+```yaml
+ai:
+  agents:
+    techRadarManager:
+      model: tech-radar-manager
+      radar:
+        sourceUrl: https://example.invalid/radar-data.json
+```
+
 ## Definition of Done
 
 - Package, agent, runner (`run` + `resume`), triggers (manual + sweep), config schema, and the allow-list implemented and registered (root + backend/app wiring included), with a barrel `index.ts` in every directory.

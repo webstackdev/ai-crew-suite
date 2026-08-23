@@ -8,7 +8,14 @@
  */
 import { createBackendPlugin } from '@backstage/backend-plugin-api';
 import { mockServices, startTestBackend } from '@backstage/backend-test-utils';
-import { agentExtensionPoint, triggerExtensionPoint, workflowRunnerExtensionPoint, type AgentExtensionPoint, type TriggerExtensionPoint, type WorkflowRunnerExtensionPoint } from '@webstackbuilders/plugin-ai-core-node';
+import {
+  agentExtensionPoint,
+  triggerExtensionPoint,
+  workflowRunnerExtensionPoint,
+  type AgentExtensionPoint,
+  type TriggerExtensionPoint,
+  type WorkflowRunnerExtensionPoint,
+} from '@webstackbuilders/plugin-ai-core-node';
 import { describe, expect, it, vi } from 'vitest';
 import { techRadarModule } from '../module';
 
@@ -17,29 +24,58 @@ describe('techRadarModule', () => {
     const points = {
       agents: { addAgent: vi.fn() },
       triggers: { addTrigger: vi.fn() },
-      workflows: { registerRunner: vi.fn() }
+      workflows: { registerRunner: vi.fn() },
     };
+
     const host = createBackendPlugin({
       pluginId: 'ai-core',
       register(env) {
-        env.registerExtensionPoint(agentExtensionPoint, points.agents as unknown as AgentExtensionPoint);
-        env.registerExtensionPoint(triggerExtensionPoint, points.triggers as unknown as TriggerExtensionPoint);
-        env.registerExtensionPoint(workflowRunnerExtensionPoint, points.workflows as unknown as WorkflowRunnerExtensionPoint);
+        env.registerExtensionPoint(
+          agentExtensionPoint,
+          points.agents as unknown as AgentExtensionPoint,
+        );
+
+        env.registerExtensionPoint(
+          triggerExtensionPoint,
+          points.triggers as unknown as TriggerExtensionPoint,
+        );
+
+        env.registerExtensionPoint(
+          workflowRunnerExtensionPoint,
+          points.workflows as unknown as WorkflowRunnerExtensionPoint,
+        );
+
         env.registerInit({ deps: {}, async init() {} });
-      }
+      },
     });
+
     await startTestBackend({
       features: [
         host,
         techRadarModule,
         mockServices.rootConfig.factory({
-          data: { ai: { agents: { techRadarManager: { model: 'tech-radar-manager', radar: { sourceUrl: 'https://example.test/radar.json' } } } } }
+          data: {
+            ai: {
+              agents: {
+                techRadarManager: {
+                  model: 'tech-radar-manager',
+                  radar: { sourceUrl: 'https://example.test/radar.json' },
+                },
+              },
+            },
+          },
         }),
         mockServices.logger.factory(),
-        mockServices.urlReader.factory()
-      ]
+        mockServices.urlReader.factory(),
+      ],
     });
-    expect(points.workflows.registerRunner.mock.calls[0][0].id).toBe('tech-radar-analysis');
-    expect(points.agents.addAgent.mock.calls[0][0].toolIds).toEqual(['vcs.repository.read_file']);
+
+    expect(points.workflows.registerRunner.mock.calls[0][0].id).toBe(
+      'tech-radar-analysis',
+    );
+
+    expect(points.agents.addAgent.mock.calls[0][0].toolIds).toEqual([
+      'vcs.repository.read_file',
+    ]);
   });
 });
