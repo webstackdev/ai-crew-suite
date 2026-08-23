@@ -13,16 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export interface Config {
-  ai?: {
-    agents?: {
-      techDebtScout?: {
-        model: string;
-        maxQuestionChars?: number;
-        maxSignals?: number;
-        maxToolInvocations?: number;
-        triage?: { escalationThreshold?: number };
-      };
-    };
-  };
-}
+import type { AgentEvent } from '@webstackbuilders/plugin-ai-core-node';
+import type { DebtReport } from '../workflow/state';
+/** Artifact kind emitted for replayable deterministic debt reports. */
+export const TECH_DEBT_REPORT_ARTIFACT = 'tech-debt-report';
+/** Creates a serialized, cited technical-debt report artifact event. */
+export const techDebtReportArtifact = (runId: string, report: DebtReport): AgentEvent => ({ type: 'artifact', data: { runId, kind: TECH_DEBT_REPORT_ARTIFACT, ref: JSON.stringify(report) } });

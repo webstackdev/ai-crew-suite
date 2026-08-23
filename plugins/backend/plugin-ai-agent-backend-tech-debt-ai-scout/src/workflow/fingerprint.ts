@@ -13,16 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export interface Config {
-  ai?: {
-    agents?: {
-      techDebtScout?: {
-        model: string;
-        maxQuestionChars?: number;
-        maxSignals?: number;
-        maxToolInvocations?: number;
-        triage?: { escalationThreshold?: number };
-      };
-    };
-  };
-}
+import { createHash } from 'node:crypto';
+import type { DebtSignal } from './state';
+/** Computes a line-independent stable fingerprint from path and normalized redacted snippet. */
+export const fingerprintSignal = (signal: DebtSignal): string => createHash('sha256').update(`${signal.path}\n${signal.raw.toLowerCase().replace(/\s+/g, ' ').trim()}`).digest('hex');

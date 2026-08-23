@@ -13,16 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export interface Config {
-  ai?: {
-    agents?: {
-      techDebtScout?: {
-        model: string;
-        maxQuestionChars?: number;
-        maxSignals?: number;
-        maxToolInvocations?: number;
-        triage?: { escalationThreshold?: number };
-      };
-    };
-  };
-}
+export { techDebtScoutModule as default, techDebtScoutModule } from './module';
+export * from './agent';
+export * from './config';
+export * from './workflow/state';
+export * from './workflow/request';
+export * from './workflow/fingerprint';
+export * from './workflow/triager';
+export * from './workflow/ScoutGraph';
+export * from './rules/markers';
+export * from './rules/secrets';
+export * from './services/ScoutToolRunner';
+export * from './services/ScoutArtifactWriter';

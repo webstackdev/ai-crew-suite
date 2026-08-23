@@ -494,3 +494,92 @@ Exit criteria: staged rollout with sweeps and filing disabled by default, bounde
 - The plugin writes no scorecard, opens no PR, and modifies no code.
 - Frontend renders the dashboard, severity rationale, suppressed findings, repo coverage, and approval over live SSE and replay via `ApiBlueprint`/`PageBlueprint`; Playwright verifies scan, approve, reject, and dedupe paths on fixtures.
 - No output surface (SSE, artifacts, logs, audit, tests, tickets) contains secret values, unbounded snippets, uncited findings, fabricated CVEs, or author attribution.
+
+## Frontend Completed
+
+
+
+## Backend Completed
+
+### Delivered functionality
+
+- AI Core backend module:
+
+  - Agent ID: `tech-debt-ai-scout`
+  - Workflow ID: `tech-debt-scout`
+  - Artifact kind: `tech-debt-report`
+
+- Stateless, manual, read-only agent.
+
+- Scoped versioned request validation requiring an HTTP(S) repository URL.
+
+- Bounded `vcs.repository.search` scan for:
+
+  - `TODO`
+  - `FIXME`
+  - `HACK`
+  - `XXX`
+  - secret-shaped literals.
+
+- Deterministic triage:
+
+  - Generic TODOs are retained as `suppressed`.
+  - `FIXME(security)` is escalated to `high`.
+  - Secret-shaped literals are critical and redacted.
+
+- Stable line-independent SHA-256 fingerprinting based on normalized path/snippet content.
+
+- Secret safety:
+
+  - Secret values never enter signals, findings, artifacts, or logs.
+  - Only a pattern classification such as `[REDACTED PASSWORD LITERAL]` is retained.
+
+- Explicit unsupported-provider behavior:
+
+  - Bitbucket/Gerrit repository URLs produce `search_unsupported`.
+  - Such scans are `partial`; zero findings are never presented as clean.
+
+- Failure-tolerant bounded tool runner.
+
+- Replayable cited report artifact.
+
+- README documenting the active scope and limitations.
+
+### Tests added
+
+- Generic TODO suppression vs security-FIXME escalation.
+- Secret literal redaction.
+- Fingerprint stability when source lines move.
+- Unsupported-provider partial reporting.
+- Scan behavior using only `vcs.repository.search`.
+- Backend module registration with no write tools.
+
+## Registration and configuration
+
+Wired into:
+
+- `/home/kevin/Repos/backstage/ai-crew-suite/tsconfig.json`
+- `/home/kevin/Repos/backstage/ai-crew-suite/.eslintrc.cjs`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/backend/package.json`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/backend/src/index.ts`
+- `/home/kevin/Repos/backstage/ai-crew-suite/app-config.yaml`
+
+Added config:
+
+```yaml
+ai:
+  agents:
+    techDebtScout:
+      model: tech-debt-scout
+```
+
+## Intentionally not represented as active
+
+The current package accurately labels these later-plan capabilities as inactive:
+
+- Catalog fleet target enumeration and scheduled sweeps.
+- Manifest/dependency scans.
+- Scorecard and knowledge-retrieval enrichment.
+- Persistent dedupe ledger and existing-ticket dedupe.
+- Approval-gated ticket filing and workflow `resume()`.
+
