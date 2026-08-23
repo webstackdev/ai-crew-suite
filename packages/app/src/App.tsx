@@ -32,6 +32,7 @@ import searchArcheologyPlugin from '@webstackbuilders/plugin-ai-agent-frontend-s
 import techDebtScoutPlugin from '@webstackbuilders/plugin-ai-agent-frontend-tech-debt-ai-scout/alpha';
 import techRadarPlugin from '@webstackbuilders/plugin-ai-agent-frontend-tech-radar-ai-manager/alpha';
 import techdocsJanitorPlugin from '@webstackbuilders/plugin-ai-agent-frontend-techdocs-ai-janitor/alpha';
+import techdocsPostmortemPlugin from '@webstackbuilders/plugin-ai-agent-frontend-techdocs-ai-postmortem/alpha';
 import { navModule } from './modules/nav';
 
 const features: FrontendFeature[] = [
@@ -53,6 +54,7 @@ const features: FrontendFeature[] = [
   techDebtScoutPlugin,
   techRadarPlugin,
   techdocsJanitorPlugin,
+  techdocsPostmortemPlugin,
 ];
 
 const app = createApp({

@@ -86,6 +86,10 @@ vi.mock(
   '@webstackbuilders/plugin-ai-agent-frontend-techdocs-ai-janitor/alpha',
   () => ({ default: 'techdocs-ai-janitor' })
 );
+vi.mock(
+  '@webstackbuilders/plugin-ai-agent-frontend-techdocs-ai-postmortem/alpha',
+  () => ({ default: 'techdocs-ai-postmortem' })
+);
 vi.mock('./modules/nav', () => ({ navModule: 'navigation' }));
 
 describe('App', () => {
@@ -116,6 +120,7 @@ describe('App', () => {
         'tech-debt-ai-scout',
         'tech-radar-ai-manager',
         'techdocs-ai-janitor',
+        'techdocs-ai-postmortem',
       ],
     });
     expect(mocks.createRoot).toHaveBeenCalledWith();

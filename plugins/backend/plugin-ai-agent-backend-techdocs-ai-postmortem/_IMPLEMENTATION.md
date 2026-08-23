@@ -496,6 +496,87 @@ Exit criteria: `yarn test:e2e:techdocs-ai-postmortem` demonstrates incident → 
 
 Exit criteria: staged rollout with `publish.mode: 'none'` and the sweep disabled by default, verified citation grounding, and the blameless policy documented for incident reviewers.
 
+## Frontend Completed
+
+
+
+## Backend Completed
+
+### AI Core module
+
+- Agent ID: `techdocs-ai-postmortem`
+
+- Workflow ID: `techdocs-postmortem`
+
+- Artifact kind: `postmortem-draft`
+
+- Read-only tool allow-list:
+
+  - `incident.incident.get`
+  - `incident.alert.history`
+
+### Deterministic timeline draft
+
+- Validates a versioned request for one incident ID.
+
+- Fetches incident detail, lifecycle timestamps, and responder-note timestamps.
+
+- Requires the incident to be resolved:
+
+  - Emits `incident_open` without timeline drafting for unresolved incidents.
+  - Emits `incident_unavailable` if incident retrieval fails.
+
+- Derives a bounded incident lifecycle window using configured padding.
+
+- Collects alert-history evidence within that window.
+
+- Produces a stable chronological merge with deterministic source/ID tie-breaking.
+
+- Emits one cited timeline event ID per incident, note, alert, and resolution event.
+
+- Produces an evidence-only narrative composed from the ordered timeline.
+
+### Explicit coverage and limitations
+
+Every draft records the unavailable/deferred sources instead of implying they were silent:
+
+- Chat transcript.
+- Observability metrics and logs.
+- Deployment/PR activity.
+- Causal/root-cause analysis.
+- Publication, incident annotation, tickets, and documentation PRs.
+
+The agent does not attribute fault, infer causes, publish Markdown, or invoke any write tool.
+
+## Tests
+
+Added focused coverage for:
+
+- Stable chronological merge with deterministic tie-breaking.
+- Resolved incident timeline construction.
+- Incident notes and alert firings included in order.
+- Confirmation that the workflow invokes only incident detail and alert-history reads.
+
+## Registration
+
+Wired into:
+
+- `/home/kevin/Repos/backstage/ai-crew-suite/tsconfig.json`
+- `/home/kevin/Repos/backstage/ai-crew-suite/.eslintrc.cjs`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/backend/package.json`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/backend/src/index.ts`
+- `/home/kevin/Repos/backstage/ai-crew-suite/app-config.yaml`
+- `/home/kevin/Repos/backstage/ai-crew-suite/yarn.lock`
+
+Configuration added:
+
+```yaml
+ai:
+  agents:
+    techdocsPostmortem:
+      model: techdocs-postmortem
+```
+
 ## Definition of Done
 
 - Package, agent, runner (`run` + `resume`), triggers (manual + sweep), config schema, and the allow-list implemented and registered (root + backend/app wiring included), with a barrel `index.ts` in every directory.

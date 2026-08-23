@@ -217,6 +217,10 @@ module.exports = {
       createConfigForRole(__dirname, 'backend-plugin-module'),
     ),
     ...scopedOverrides(
+      'plugins/frontend/plugin-ai-agent-frontend-techdocs-ai-postmortem',
+      createConfigForRole(__dirname, 'frontend-plugin'),
+    ),
+    ...scopedOverrides(
       'plugins/frontend/plugin-ai-agent-frontend-techdocs-ai-janitor',
       createConfigForRole(__dirname, 'frontend-plugin'),
     ),
