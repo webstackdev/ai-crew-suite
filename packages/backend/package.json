@@ -56,6 +56,7 @@
     "@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-guardrail-agent": "workspace:^",
     "@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-infra": "workspace:^",
     "@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-intent": "workspace:^",
+    "@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-shadow-detective": "workspace:^",
     "@webstackbuilders/plugin-ai-agent-backend-search-ai-archeology": "workspace:^",
     "@webstackbuilders/plugin-ai-agent-backend-search-ai-context": "workspace:^",
     "@webstackbuilders/plugin-ai-agent-backend-tech-debt-ai-scout": "workspace:^",

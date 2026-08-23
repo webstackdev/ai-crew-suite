@@ -1,0 +1,1 @@
+export interface Config { ai?: { agents?: { shadowDetective?: { model: string; catalog: { annotation: string }; claim: { templateRef: string; baseUrl?: string }; maxResources?: number; ownership?: { ownerTagKeys?: string[] }; scan?: { enabled?: boolean } } } } }

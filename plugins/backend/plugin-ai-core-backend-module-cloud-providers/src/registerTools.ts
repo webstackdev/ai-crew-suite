@@ -13,52 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { CreateCloudProviderToolsOptions } from '@webstackbuilders/plugin-ai-core-node';
+import { CreateCloudProviderToolsOptions, ToolDefinition } from '@webstackbuilders/plugin-ai-core-node';
 
-export function createCloudProviderTools(options: CreateCloudProviderToolsOptions) {
+/** Creates typed, read-only AI Core tools that delegate to the active cloud driver. */
+export const createCloudProviderTools = (options: CreateCloudProviderToolsOptions): ToolDefinition[] => {
   const { driver, logger } = options;
-  const tools: any[] = [];
-
-  tools.push({
-    name: `${driver.providerId}_lookup_account`,
-    description: 'Retrieves structural configuration and baseline tags for a targeted landing zone or tenant account context.',
-    execute: async (args: { accountId?: string; name?: string }) => {
-      try {
-        const summary = await driver.lookupAccount(args);
-        return summary ? { account: summary } : { account: null };
-      } catch (error: any) {
-        logger.error(`Error executing lookup_account: ${error.message}`);
-        return { error: error.message };
-      }
-    },
-  });
-
-  tools.push({
-    name: `${driver.providerId}_lookup_resource`,
-    description: 'Searches and returns live cloud inventory infrastructure metrics based on tags, service domains, or owner teams.',
-    execute: async (args: { service?: string; tags?: Record<string, string>; owner?: string; catalogEntityRef?: string }) => {
-      try {
-        const resources = await driver.lookupResource(args);
-        return { resources };
-      } catch (error: any) {
-        logger.error(`Error executing lookup_resource: ${error.message}`);
-        return { error: error.message };
-      }
-    },
-  });
-
-  tools.push({
-    name: `${driver.providerId}_resource_dependencies`,
-    description: 'Evaluates dependent infrastructure matrices, parsing associated logical networking boundaries or cross-resource maps.',
-    execute: async (args: { resourceId: string }) => {
-      try {
-        return await driver.resourceDependencies(args);
-      } catch (error: any) {
-        logger.error(`Error executing resource_dependencies: ${error.message}`);
-        return { error: error.message };
-      }
-    },
-  });
-
-  return tools;
-}
+  return [
+    { id: 'cloud.account.lookup', description: 'Returns a cloud account summary for the active provider.', effect: 'read', async invoke(args: unknown) { const payload = args as { accountId?: string; name?: string }; logger.debug('cloud.account.lookup invoked', payload); return driver.lookupAccount(payload); } },
+    { id: 'cloud.resource.lookup', description: 'Returns bounded live cloud resource inventory from the active provider.', effect: 'read', async invoke(args: unknown) { const payload = args as { service?: string; tags?: Record<string, string>; owner?: string; catalogEntityRef?: string }; logger.debug('cloud.resource.lookup invoked', payload); return driver.lookupResource(payload); } },
+    { id: 'cloud.resource.dependencies', description: 'Returns dependency summaries for one cloud resource.', effect: 'read', async invoke(args: unknown) { const payload = args as { resourceId: string }; logger.debug('cloud.resource.dependencies invoked', payload); return driver.resourceDependencies(payload); } },
+  ];
+};

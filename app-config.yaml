@@ -79,6 +79,12 @@ ai:
       templates:
         allowed:
           - template:default/react-service-template
+    shadowDetective:
+      model: shadow-detective
+      catalog:
+        annotation: example.com/resource-id
+      claim:
+        templateRef: template:default/register-existing-resource
       blueprints:
         sources:
           - id: example-terraform

@@ -88,7 +88,7 @@ describe('aiCoreBackendModuleCloudProviders', () => {
       ],
     });
 
-    expect(addedTools.some(t => t.name === 'mock-cloud_lookup_account')).toBe(true);
+    expect(addedTools.some(tool => tool.id === 'cloud.account.lookup')).toBe(true);
   });
 
   it('should throw an informative boot-time error when the required driver has not registered', async () => {
