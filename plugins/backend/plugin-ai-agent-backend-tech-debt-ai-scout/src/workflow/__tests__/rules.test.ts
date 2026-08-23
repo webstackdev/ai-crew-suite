@@ -19,4 +19,61 @@ import { secretFromSnippet } from '../../rules/secrets';
 import { fingerprintSignal } from '../fingerprint';
 import { triageSignals } from '../triager';
 
-describe('tech debt deterministic rules', () => { it('suppresses a generic TODO and escalates a security FIXME', () => { const todo = markerFromSnippet({ id: 'sig-1', repoUrl: 'https://github.com/acme/payments', path: 'src/a.ts', line: 1, snippet: '// TODO: clean this up' })!; const security = markerFromSnippet({ id: 'sig-2', repoUrl: 'https://github.com/acme/payments', path: 'src/b.ts', line: 2, snippet: '// FIXME(security): hardcoded encryption salt' })!; const findings = triageSignals([todo, security], 5); expect(findings[0]).toMatchObject({ disposition: 'suppressed', severity: 'low' }); expect(findings[1]).toMatchObject({ disposition: 'escalate', severity: 'high', reasons: expect.arrayContaining(['security_scope']) }); }); it('redacts a secret literal before it can become report evidence', () => { const signal = secretFromSnippet({ id: 'sig-1', repoUrl: 'https://github.com/acme/payments', path: 'src/config.ts', snippet: 'const password = "super-secret-123"' })!; expect(signal.raw).toContain('REDACTED'); expect(signal.raw).not.toContain('super-secret-123'); }); it('keeps a fingerprint stable when only line position changes', () => { const signal = markerFromSnippet({ id: 'sig-1', repoUrl: 'https://github.com/acme/payments', path: 'src/a.ts', line: 1, snippet: '// TODO: temporary hack' })!; expect(fingerprintSignal(signal)).toBe(fingerprintSignal({ ...signal, line: 99 })); }); });
+describe('tech debt deterministic rules', () => {
+  it('suppresses a generic TODO and escalates a security FIXME', () => {
+    const todo = markerFromSnippet({
+      id: 'sig-1',
+      repoUrl: 'https://github.com/acme/payments',
+      path: 'src/a.ts',
+      line: 1,
+      snippet: '// TODO: clean this up',
+    })!;
+
+    const security = markerFromSnippet({
+      id: 'sig-2',
+      repoUrl: 'https://github.com/acme/payments',
+      path: 'src/b.ts',
+      line: 2,
+      snippet: '// FIXME(security): hardcoded encryption salt',
+    })!;
+
+    const findings = triageSignals([todo, security], 5);
+
+    expect(findings[0]).toMatchObject({
+      disposition: 'suppressed',
+      severity: 'low',
+    });
+
+    expect(findings[1]).toMatchObject({
+      disposition: 'escalate',
+      severity: 'high',
+      reasons: expect.arrayContaining(['security_scope']),
+    });
+  });
+
+  it('redacts a secret literal before it can become report evidence', () => {
+    const signal = secretFromSnippet({
+      id: 'sig-1',
+      repoUrl: 'https://github.com/acme/payments',
+      path: 'src/config.ts',
+      snippet: 'const password = "super-secret-123"',
+    })!;
+
+    expect(signal.raw).toContain('REDACTED');
+    expect(signal.raw).not.toContain('super-secret-123');
+  });
+
+  it('keeps a fingerprint stable when only line position changes', () => {
+    const signal = markerFromSnippet({
+      id: 'sig-1',
+      repoUrl: 'https://github.com/acme/payments',
+      path: 'src/a.ts',
+      line: 1,
+      snippet: '// TODO: temporary hack',
+    })!;
+
+    expect(fingerprintSignal(signal)).toBe(
+      fingerprintSignal({ ...signal, line: 99 }),
+    );
+  });
+});

@@ -31,4 +31,42 @@ const markerScore = (signal: DebtSignal): number => {
 };
 
 /** Deterministically scores code markers and redacted secrets without model input. */
-export const triageSignals = (signals: DebtSignal[], escalationThreshold: number): DebtFinding[] => signals.map(signal => { let score = markerScore(signal); const reasons: string[] = []; if (signal.kind === 'secret_literal') reasons.push('secret_literal'); if (signal.markerTag) reasons.push(`marker_${signal.markerTag.toLowerCase()}`); if (signal.markerScope === 'security') { score = 7; reasons.push('security_scope'); } else if (/(hardcoded|salt|password|temporary hack)/i.test(signal.raw)) { score += 3; reasons.push('escalation_keyword'); } const severity = severityFor(score); const disposition = score >= escalationThreshold ? 'escalate' : 'suppressed'; const location = signal.line ? `:${signal.line}` : ''; return { signal, fingerprint: fingerprintSignal(signal), severity, score, reasons, disposition, summary: `Deterministic ${severity} code-debt finding at ${signal.path}${location}.`, corroboration: [] }; });
+export const triageSignals = (
+  signals: DebtSignal[],
+  escalationThreshold: number,
+): DebtFinding[] =>
+  signals.map(signal => {
+    let score = markerScore(signal);
+    const reasons: string[] = [];
+
+    if (signal.kind === 'secret_literal') reasons.push('secret_literal');
+
+    if (signal.markerTag)
+      reasons.push(`marker_${signal.markerTag.toLowerCase()}`);
+
+    if (signal.markerScope === 'security') {
+      score = 7;
+      reasons.push('security_scope');
+    } else if (/(hardcoded|salt|password|temporary hack)/i.test(signal.raw)) {
+      score += 3;
+      reasons.push('escalation_keyword');
+    }
+
+    const severity = severityFor(score);
+
+    const disposition =
+      score >= escalationThreshold ? 'escalate' : 'suppressed';
+
+    const location = signal.line ? `:${signal.line}` : '';
+
+    return {
+      signal,
+      fingerprint: fingerprintSignal(signal),
+      severity,
+      score,
+      reasons,
+      disposition,
+      summary: `Deterministic ${severity} code-debt finding at ${signal.path}${location}.`,
+      corroboration: [],
+    };
+  });

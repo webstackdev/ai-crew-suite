@@ -15,6 +15,27 @@
  */
 import type { DebtSignal } from '../workflow/state';
 
-const secretPattern = /\b(api[_-]?key|password|secret|token)\b\s*[:=]\s*(['"]?)([^'"\s]{8,})\2/i;
+const secretPattern =
+  /\b(api[_-]?key|password|secret|token)\b\s*[:=]\s*(['"]?)([^'"\s]{8,})\2/i;
+
 /** Detects secret-shaped literals and retains only their pattern class, never their value. */
-export const secretFromSnippet = (input: { id: string; repoUrl: string; path: string; line?: number; snippet?: string }): DebtSignal | undefined => { const snippet = input.snippet?.slice(0, 512) ?? ''; const match = secretPattern.exec(snippet); if (!match) return undefined; return { id: input.id, kind: 'secret_literal', repoUrl: input.repoUrl, path: input.path, line: input.line, raw: `[REDACTED ${match[1].toUpperCase()} LITERAL]`, evidence: [input.id] }; };
+export const secretFromSnippet = (input: {
+  id: string;
+  repoUrl: string;
+  path: string;
+  line?: number;
+  snippet?: string;
+}): DebtSignal | undefined => {
+  const snippet = input.snippet?.slice(0, 512) ?? '';
+  const match = secretPattern.exec(snippet);
+  if (!match) return undefined;
+  return {
+    id: input.id,
+    kind: 'secret_literal',
+    repoUrl: input.repoUrl,
+    path: input.path,
+    line: input.line,
+    raw: `[REDACTED ${match[1].toUpperCase()} LITERAL]`,
+    evidence: [input.id],
+  };
+};

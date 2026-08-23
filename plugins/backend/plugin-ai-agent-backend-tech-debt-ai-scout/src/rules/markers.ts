@@ -14,5 +14,31 @@
  * limitations under the License.
  */
 import type { DebtSignal } from '../workflow/state';
+
 /** Extracts one supported marker tag and optional parenthesized scope from a search snippet. */
-export const markerFromSnippet = (input: { id: string; repoUrl: string; path: string; line?: number; snippet?: string }): DebtSignal | undefined => { const snippet = input.snippet?.slice(0, 512) ?? ''; const match = /\b(TODO|FIXME|HACK|XXX)(?:\(([^)]+)\))?\s*:?(.*)/i.exec(snippet); if (!match) return undefined; return { id: input.id, kind: 'marker', repoUrl: input.repoUrl, path: input.path, line: input.line, raw: snippet, markerTag: match[1].toUpperCase() as DebtSignal['markerTag'], markerScope: match[2]?.trim().toLowerCase(), evidence: [input.id] }; };
+export const markerFromSnippet = (input: {
+  id: string;
+  repoUrl: string;
+  path: string;
+  line?: number;
+  snippet?: string;
+}): DebtSignal | undefined => {
+  const snippet = input.snippet?.slice(0, 512) ?? '';
+  const match = /\b(TODO|FIXME|HACK|XXX)(?:\(([^)]+)\))?\s*:?(.*)/i.exec(
+    snippet,
+  );
+
+  if (!match) return undefined;
+
+  return {
+    id: input.id,
+    kind: 'marker',
+    repoUrl: input.repoUrl,
+    path: input.path,
+    line: input.line,
+    raw: snippet,
+    markerTag: match[1].toUpperCase() as DebtSignal['markerTag'],
+    markerScope: match[2]?.trim().toLowerCase(),
+    evidence: [input.id],
+  };
+};

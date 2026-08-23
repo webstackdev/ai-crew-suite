@@ -13,6 +13,56 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { ToolInvocationResult, WorkflowContext } from '@webstackbuilders/plugin-ai-core-node';
+import type {
+  ToolInvocationResult,
+  WorkflowContext,
+} from '@webstackbuilders/plugin-ai-core-node';
+
 /** Bounded, failure-tolerant facade for scout read tools. */
-export class ScoutToolRunner { private calls = 0; private readonly failures: string[] = []; constructor(private readonly context: WorkflowContext, private readonly maxCalls: number) {} /** Limitations accumulated from missing sources or exhausted budgets. */ get limitations(): string[] { return [...this.failures]; } /** Invokes one allow-listed tool and degrades failures into an explicit limitation. */ async invoke<TArgs, TResult>(toolId: string, args: TArgs): Promise<ToolInvocationResult<TResult> | undefined> { if (this.calls >= this.maxCalls) { this.failures.push(`Tool '${toolId}' was skipped: scout tool budget exhausted.`); return undefined; } this.calls += 1; try { return await this.context.invokeTool<TArgs, TResult>({ toolId, args, limits: { timeoutMs: 10_000 } }); } catch (error) { const message = error instanceof Error ? error.message : String(error); this.failures.push(`Tool '${toolId}' is unavailable: ${message}`); this.context.logger.warn(`Tech debt scout tool '${toolId}' failed`, { error: message }); return undefined; } } }
+export class ScoutToolRunner {
+  private calls = 0;
+  private readonly failures: string[] = [];
+
+  constructor(
+    private readonly context: WorkflowContext,
+    private readonly maxCalls: number,
+  ) {}
+
+  /** Limitations accumulated from missing sources or exhausted budgets. */ get limitations(): string[] {
+    return [...this.failures];
+  }
+
+  /** Invokes one allow-listed tool and degrades failures into an explicit limitation. */ async invoke<
+    TArgs,
+    TResult,
+  >(
+    toolId: string,
+    args: TArgs,
+  ): Promise<ToolInvocationResult<TResult> | undefined> {
+    if (this.calls >= this.maxCalls) {
+      this.failures.push(
+        `Tool '${toolId}' was skipped: scout tool budget exhausted.`,
+      );
+      return undefined;
+    }
+
+    this.calls += 1;
+
+    try {
+      return await this.context.invokeTool<TArgs, TResult>({
+        toolId,
+        args,
+        limits: { timeoutMs: 10_000 },
+      });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+
+      this.failures.push(`Tool '${toolId}' is unavailable: ${message}`);
+      this.context.logger.warn(`Tech debt scout tool '${toolId}' failed`, {
+        error: message,
+      });
+
+      return undefined;
+    }
+  }
+}

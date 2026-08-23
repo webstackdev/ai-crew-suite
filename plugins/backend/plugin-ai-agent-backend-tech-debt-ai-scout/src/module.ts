@@ -13,11 +13,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { coreServices, createBackendModule } from '@backstage/backend-plugin-api';
-import { agentExtensionPoint, triggerExtensionPoint, workflowRunnerExtensionPoint } from '@webstackbuilders/plugin-ai-core-node';
+import {
+  coreServices,
+  createBackendModule,
+} from '@backstage/backend-plugin-api';
+import {
+  agentExtensionPoint,
+  triggerExtensionPoint,
+  workflowRunnerExtensionPoint,
+} from '@webstackbuilders/plugin-ai-core-node';
 import { createTechDebtScoutAgent } from './agent';
 import { readTechDebtScoutConfig } from './config';
 import { ScoutGraph } from './workflow/ScoutGraph';
+
 /** Registers the deterministic read-only technical-debt scout with AI Core. */
-export const techDebtScoutModule = createBackendModule({ pluginId: 'ai-core', moduleId: 'agent-tech-debt-ai-scout', register(env) { env.registerInit({ deps: { config: coreServices.rootConfig, logger: coreServices.logger, agents: agentExtensionPoint, triggers: triggerExtensionPoint, workflows: workflowRunnerExtensionPoint }, async init({ config, logger, agents, triggers, workflows }) { const resolved = readTechDebtScoutConfig(config); workflows.registerRunner(new ScoutGraph(resolved)); const agent = createTechDebtScoutAgent(resolved); agents.addAgent(agent); for (const trigger of agent.triggers ?? []) triggers.addTrigger(trigger); logger.info('Registered read-only technical-debt scout workflow'); } }); } });
+export const techDebtScoutModule = createBackendModule({
+  pluginId: 'ai-core',
+  moduleId: 'agent-tech-debt-ai-scout',
+  register(env) {
+    env.registerInit({
+      deps: {
+        config: coreServices.rootConfig,
+        logger: coreServices.logger,
+        agents: agentExtensionPoint,
+        triggers: triggerExtensionPoint,
+        workflows: workflowRunnerExtensionPoint,
+      },
+      async init({ config, logger, agents, triggers, workflows }) {
+        const resolved = readTechDebtScoutConfig(config);
+        workflows.registerRunner(new ScoutGraph(resolved));
+        const agent = createTechDebtScoutAgent(resolved);
+        agents.addAgent(agent);
+        for (const trigger of agent.triggers ?? [])
+          triggers.addTrigger(trigger);
+        logger.info('Registered read-only technical-debt scout workflow');
+      },
+    });
+  },
+});
+
 export default techDebtScoutModule;

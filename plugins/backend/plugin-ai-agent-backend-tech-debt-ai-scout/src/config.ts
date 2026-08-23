@@ -14,7 +14,40 @@
  * limitations under the License.
  */
 import { Config } from '@backstage/config';
+
 /** Runtime limits and deterministic triage policy for debt scouting. */
-export type TechDebtScoutConfig = { modelRef: string; maxQuestionChars: number; maxSignals: number; maxToolInvocations: number; escalationThreshold: number };
+export type TechDebtScoutConfig = {
+  modelRef: string;
+  maxQuestionChars: number;
+  maxSignals: number;
+  maxToolInvocations: number;
+  escalationThreshold: number;
+};
+
 /** Reads the bounded scout configuration and rejects unsafe score thresholds. */
-export const readTechDebtScoutConfig = (config: Config): TechDebtScoutConfig => { const section = config.getOptionalConfig('ai.agents.techDebtScout'); if (!section) throw new Error('Tech debt scout requires ai.agents.techDebtScout configuration to be set'); const triage = section.getOptionalConfig('triage'); const escalationThreshold = triage?.getOptionalNumber('escalationThreshold') ?? 5; if (escalationThreshold < 1) throw new Error('Tech debt scout escalationThreshold must be positive'); return { modelRef: section.getString('model'), maxQuestionChars: section.getOptionalNumber('maxQuestionChars') ?? 500, maxSignals: section.getOptionalNumber('maxSignals') ?? 100, maxToolInvocations: section.getOptionalNumber('maxToolInvocations') ?? 12, escalationThreshold }; };
+export const readTechDebtScoutConfig = (
+  config: Config,
+): TechDebtScoutConfig => {
+  const section = config.getOptionalConfig('ai.agents.techDebtScout');
+
+  if (!section)
+    throw new Error(
+      'Tech debt scout requires ai.agents.techDebtScout configuration to be set',
+    );
+
+  const triage = section.getOptionalConfig('triage');
+
+  const escalationThreshold =
+    triage?.getOptionalNumber('escalationThreshold') ?? 5;
+
+  if (escalationThreshold < 1)
+    throw new Error('Tech debt scout escalationThreshold must be positive');
+
+  return {
+    modelRef: section.getString('model'),
+    maxQuestionChars: section.getOptionalNumber('maxQuestionChars') ?? 500,
+    maxSignals: section.getOptionalNumber('maxSignals') ?? 100,
+    maxToolInvocations: section.getOptionalNumber('maxToolInvocations') ?? 12,
+    escalationThreshold,
+  };
+};

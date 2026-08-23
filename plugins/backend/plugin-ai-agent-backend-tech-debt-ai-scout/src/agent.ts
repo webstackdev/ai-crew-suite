@@ -16,11 +16,30 @@
 import type { AgentDefinition } from '@webstackbuilders/plugin-ai-core-node';
 import type { TechDebtScoutConfig } from './config';
 import { TECH_DEBT_SCOUT_WORKFLOW_ID } from './workflow/ScoutGraph';
+
 /** Stable route identifier for technical-debt scouting. */
 export const TECH_DEBT_SCOUT_AGENT_ID = 'tech-debt-ai-scout';
 /** Current read-only tool allow-list; ticket creation remains disabled. */
 export const TECH_DEBT_SCOUT_TOOL_IDS = ['vcs.repository.search'] as const;
 /** Prompt posture forbidding author attribution, secret disclosure, and unsupported claims. */
-export const TECH_DEBT_SCOUT_SYSTEM_PROMPT = 'Use only deterministic, cited code-debt evidence. Never reveal secret values, attribute findings to people, invent CVEs, or open tickets. Scores describe code findings only.';
-/** Creates the stateless, read-only scout agent. */
-export const createTechDebtScoutAgent = (config: TechDebtScoutConfig): AgentDefinition => ({ id: TECH_DEBT_SCOUT_AGENT_ID, modelRef: config.modelRef, workflowRef: TECH_DEBT_SCOUT_WORKFLOW_ID, memory: 'none', systemPrompt: TECH_DEBT_SCOUT_SYSTEM_PROMPT, toolIds: [...TECH_DEBT_SCOUT_TOOL_IDS], triggers: [{ id: 'debt-scan-on-demand', source: 'manual', agentId: TECH_DEBT_SCOUT_AGENT_ID }] });
+export const TECH_DEBT_SCOUT_SYSTEM_PROMPT =
+  'Use only deterministic, cited code-debt evidence. Never reveal secret values, attribute findings to people, invent CVEs, or open tickets. Scores describe code findings only.';
+
+  /** Creates the stateless, read-only scout agent. */
+export const createTechDebtScoutAgent = (
+  config: TechDebtScoutConfig,
+): AgentDefinition => ({
+  id: TECH_DEBT_SCOUT_AGENT_ID,
+  modelRef: config.modelRef,
+  workflowRef: TECH_DEBT_SCOUT_WORKFLOW_ID,
+  memory: 'none',
+  systemPrompt: TECH_DEBT_SCOUT_SYSTEM_PROMPT,
+  toolIds: [...TECH_DEBT_SCOUT_TOOL_IDS],
+  triggers: [
+    {
+      id: 'debt-scan-on-demand',
+      source: 'manual',
+      agentId: TECH_DEBT_SCOUT_AGENT_ID,
+    },
+  ],
+});

@@ -15,5 +15,11 @@
  */
 import { createHash } from 'node:crypto';
 import type { DebtSignal } from './state';
+
 /** Computes a line-independent stable fingerprint from path and normalized redacted snippet. */
-export const fingerprintSignal = (signal: DebtSignal): string => createHash('sha256').update(`${signal.path}\n${signal.raw.toLowerCase().replace(/\s+/g, ' ').trim()}`).digest('hex');
+export const fingerprintSignal = (signal: DebtSignal): string =>
+  createHash('sha256')
+    .update(
+      `${signal.path}\n${signal.raw.toLowerCase().replace(/\s+/g, ' ').trim()}`,
+    )
+    .digest('hex');
