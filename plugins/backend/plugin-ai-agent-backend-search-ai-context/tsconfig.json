@@ -1,0 +1,1 @@
+{"extends":"../../../tsconfig.base.json","compilerOptions":{"outDir":"../../../dist-types/plugins/backend/plugin-ai-agent-backend-search-ai-context"},"include":["src/**/*"],"exclude":["src/**/*.test.*","src/**/*.spec.*"]}

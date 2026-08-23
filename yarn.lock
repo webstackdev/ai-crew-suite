@@ -15942,6 +15942,20 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@webstackbuilders/plugin-ai-agent-backend-search-ai-context@workspace:^, @webstackbuilders/plugin-ai-agent-backend-search-ai-context@workspace:plugins/backend/plugin-ai-agent-backend-search-ai-context":
+  version: 0.0.0-use.local
+  resolution: "@webstackbuilders/plugin-ai-agent-backend-search-ai-context@workspace:plugins/backend/plugin-ai-agent-backend-search-ai-context"
+  dependencies:
+    "@backstage/backend-plugin-api": "backstage:^"
+    "@backstage/backend-test-utils": "backstage:^"
+    "@backstage/catalog-client": "backstage:^"
+    "@backstage/cli": "backstage:^"
+    "@backstage/config": "backstage:^"
+    "@webstackbuilders/plugin-ai-core-node": "workspace:*"
+    vitest: "npm:^4.1.11"
+  languageName: unknown
+  linkType: soft
+
 "@webstackbuilders/plugin-ai-agent-backend-tech-debt-ai-scout@workspace:^, @webstackbuilders/plugin-ai-agent-backend-tech-debt-ai-scout@workspace:plugins/backend/plugin-ai-agent-backend-tech-debt-ai-scout":
   version: 0.0.0-use.local
   resolution: "@webstackbuilders/plugin-ai-agent-backend-tech-debt-ai-scout@workspace:plugins/backend/plugin-ai-agent-backend-tech-debt-ai-scout"
@@ -18204,6 +18218,7 @@ __metadata:
     "@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-guardrail-agent": "workspace:^"
     "@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-infra": "workspace:^"
     "@webstackbuilders/plugin-ai-agent-backend-search-ai-archeology": "workspace:^"
+    "@webstackbuilders/plugin-ai-agent-backend-search-ai-context": "workspace:^"
     "@webstackbuilders/plugin-ai-agent-backend-tech-debt-ai-scout": "workspace:^"
     "@webstackbuilders/plugin-ai-agent-backend-tech-radar-ai-manager": "workspace:^"
     "@webstackbuilders/plugin-ai-agent-backend-techdocs-ai-janitor": "workspace:^"

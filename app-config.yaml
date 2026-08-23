@@ -81,6 +81,11 @@ ai:
             url: https://example.invalid/approved/main.tf
     searchArcheology:
       model: search-archeology
+    searchContext:
+      model: search-context
+      maxDepth: 3
+      maxConsumers: 50
+      capableProviders: [github, gitlab, azuredevops]
     techDebtScout:
       model: tech-debt-scout
     techRadarManager:

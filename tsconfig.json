@@ -96,6 +96,7 @@
     { "path": "./plugins/backend/plugin-ai-agent-backend-scaffolder-ai-infra" },
     { "path": "./plugins/frontend/plugin-ai-agent-frontend-scaffolder-ai-infra" },
     { "path": "./plugins/backend/plugin-ai-agent-backend-search-ai-archeology" },
+    { "path": "./plugins/backend/plugin-ai-agent-backend-search-ai-context" },
     { "path": "./plugins/backend/plugin-ai-agent-backend-tech-debt-ai-scout" },
     { "path": "./plugins/backend/plugin-ai-agent-backend-tech-radar-ai-manager" },
     { "path": "./plugins/backend/plugin-ai-agent-backend-techdocs-ai-janitor" },

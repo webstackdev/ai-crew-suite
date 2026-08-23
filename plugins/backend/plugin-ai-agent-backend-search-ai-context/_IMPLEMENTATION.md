@@ -448,6 +448,74 @@ Exit criteria: `yarn test:e2e:search-ai-context` demonstrates change → crawl �
 
 Exit criteria: staged rollout with bounded search-quota usage, verified citation grounding, and the `unknown`-vs-`unaffected` distinction documented for operators.
 
+## Frontend Completed
+
+
+
+## Backend Completed
+
+- AI Core backend module registration:
+
+  - Agent: `search-ai-context`
+  - Workflow: `cross-service-impact`
+  - Manual trigger only
+  - Read-only allow-list: repository search/read and knowledge retrieval
+  - `memory: 'none'`
+
+- Config parsing for `ai.agents.searchContext`, including bounded depth, consumer, tool, and capable-provider settings.
+
+- Local `CatalogEntityResolver` adapter using `CatalogClient`, avoiding imports from sibling plugin private source.
+
+- Deterministic impact workflow:
+
+  - Validates versioned, scoped requests.
+
+  - Checks source entity accessibility.
+
+  - Traverses bounded catalog relation graphs.
+
+  - Resolves consumer repositories from catalog integrations.
+
+  - Runs code search for the requested symbol.
+
+  - Correctly distinguishes:
+
+    - `impacted` — positive textual code match.
+    - `unaffected` — capable provider with zero matches.
+    - `unknown` — no repository, unsupported provider, or failed search.
+
+  - Emits an `impact-assessment` artifact.
+
+  - Produces impacted-only, deterministic owner rollups.
+
+- README documenting safety semantics and the currently deferred plan work.
+
+- Tests:
+
+  - Classification safety matrix, especially unsupported search providers never becoming `unaffected`.
+  - Two-consumer workflow scenario: one match becomes impacted, one zero-match capable repository becomes unaffected.
+
+### Monorepo registration
+
+Updated:
+
+- `/home/kevin/Repos/backstage/ai-crew-suite/tsconfig.json`
+- `/home/kevin/Repos/backstage/ai-crew-suite/.eslintrc.cjs`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/backend/package.json`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/backend/src/index.ts`
+- `/home/kevin/Repos/backstage/ai-crew-suite/app-config.yaml`
+- `/home/kevin/Repos/backstage/ai-crew-suite/yarn.lock`
+
+### Deliberately deferred
+
+In line with the implementation plan and current runtime constraints, this initial backend slice does __not__ claim to support:
+
+- Retrieval enrichment or file-context reads.
+- Multiple query aliases/variant search expansion.
+- Exact graph-hop calculation beyond resolver-bounded candidate traversal.
+- Durable per-repository checkpoints and resume flow.
+- Any write, ticket, PR, catalog mutation, or notification behavior.
+
 ## Definition of Done
 
 - Package, agent, runner (`run` + `resume`), manual trigger, config schema, and the read-only allow-list implemented and registered (root + backend/app wiring included), with a barrel `index.ts` in every directory.

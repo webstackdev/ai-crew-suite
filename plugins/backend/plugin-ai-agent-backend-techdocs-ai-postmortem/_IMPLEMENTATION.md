@@ -498,7 +498,65 @@ Exit criteria: staged rollout with `publish.mode: 'none'` and the sweep disabled
 
 ## Frontend Completed
 
+### Standalone postmortem timeline UI
 
+- Route: `/techdocs-ai-postmortem`
+
+- Agent: `techdocs-ai-postmortem`
+
+- Artifact: `postmortem-draft`
+
+- Supports authenticated AI Core SSE for:
+
+  - Starting a draft from one resolved incident ID.
+  - Replaying persisted drafts via `?run=<id>`.
+
+### UI behavior
+
+- Incident ID dialog for initiating one draft.
+
+- Draft page rendering:
+
+  - Ordered, cited incident and alert timeline events.
+  - Timeline source/reference links.
+  - Lifecycle analysis window.
+  - Per-source coverage states.
+  - Narrative with event citations.
+  - Explicit limitations and missing evidence classes.
+
+- Clear blameless/draft-only wording.
+
+### Honesty boundaries
+
+The UI deliberately does not expose:
+
+- Root-cause or blame controls.
+- Approval or publication controls.
+- Ticket creation.
+- Incident annotation.
+- Documentation PR delivery.
+- Chat, observability, deployment, or PR evidence collection controls.
+
+Those unavailable capabilities remain visible only as source coverage gaps and backend limitations.
+
+## Registration
+
+Wired into:
+
+- `/home/kevin/Repos/backstage/ai-crew-suite/tsconfig.json`
+- `/home/kevin/Repos/backstage/ai-crew-suite/.eslintrc.cjs`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/app/package.json`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/app/src/App.tsx`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/app/src/App.test.tsx`
+- `/home/kevin/Repos/backstage/ai-crew-suite/yarn.lock`
+
+## Tests
+
+Added:
+
+- Postmortem artifact reducer extraction and malformed JSON handling.
+- Timeline event, coverage, limitation, and source-reference rendering.
+- App feature-list coverage for `techdocs-ai-postmortem`.
 
 ## Backend Completed
 
