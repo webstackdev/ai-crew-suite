@@ -4,8 +4,7 @@
   "version": "1.0.0",
   "main": "./src/index.ts",
   "exports": {
-    "./src/utils/mockUtils": "./src/utils/mockUtils.ts",
-    "./src/mocks/mockApis": "./src/mocks/mockApis.ts"
+    "./src/utils/mockUtils": "./src/utils/mockUtils.ts"
   },
   "scripts": {
     "lint": "yarn --cwd ../.. exec eslint packages/storybook/src --max-warnings 0",

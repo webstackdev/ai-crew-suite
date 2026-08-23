@@ -1,10 +1,10 @@
 {
-  "extends": "../../tsconfig.base.json",
+  "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
     "composite": true,         // 1. Mandatory for TypeScript Project References to function
     "declaration": true,       // 2. Instructs tsc to generate the required .d.ts files
     "declarationMap": true,    // 3. Allows IDE "Go to Definition" shortcuts to jump to your source code
-    "outDir": "../../dist-types/packages/storybook"
+    "outDir": "../../../dist-types/plugins/frontend/plugin-ai-agent-frontend-alert-ai-tuner"
   },
   "include": ["src/**/*"]
 }

@@ -15359,17 +15359,18 @@ __metadata:
     "@backstage/frontend-plugin-api": "backstage:^"
     "@backstage/test-utils": "backstage:^"
     "@material-ui/core": "npm:^4.12.4"
-    "@testing-library/jest-dom": "npm:^6.9.1"
+    "@testing-library/jest-dom": "npm:^6.10.0"
     "@testing-library/react": "npm:^16.3.2"
-    "@testing-library/user-event": "npm:^14.6.1"
+    "@testing-library/user-event": "npm:^14.6.6"
     "@types/react": "npm:*"
     "@types/react-dom": "npm:*"
     "@webstackbuilders/storybook-workspace-infra": "workspace:*"
     eventsource-parser: "npm:^2.0.1"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
-    react-router-dom: "npm:^6.30.4"
-    vitest: "npm:^4.1.10"
+    react-router-dom: "npm:^6.30.6"
+    storybook: "npm:^10.5.10"
+    vitest: "npm:^4.1.11"
   peerDependencies:
     react: ^18.3.1
     react-router-dom: ^6.30.4
@@ -15391,19 +15392,20 @@ __metadata:
     "@material-ui/core": "npm:^4.12.4"
     "@material-ui/icons": "npm:^4.11.3"
     "@testing-library/dom": "npm:^10.4.1"
-    "@testing-library/jest-dom": "npm:^6.9.1"
+    "@testing-library/jest-dom": "npm:^6.10.0"
     "@testing-library/react": "npm:^16.3.2"
-    "@testing-library/user-event": "npm:^14.6.1"
+    "@testing-library/user-event": "npm:^14.6.6"
     "@types/react": "npm:*"
     "@types/react-dom": "npm:*"
     eventsource-parser: "npm:^2.0.1"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
-    react-router-dom: "npm:^6.30.4"
+    react-router-dom: "npm:^6.30.6"
+    storybook: "npm:^10.5.10"
     vitest: "npm:^4.1.10"
   peerDependencies:
     react: ^18.3.1
-    react-router-dom: ^6.30.4
+    react-router-dom: ^6.30.6
   languageName: unknown
   linkType: soft
 
@@ -15428,11 +15430,12 @@ __metadata:
     eventsource-parser: "npm:^2.0.1"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
-    react-router-dom: "npm:^6.30.4"
+    react-router-dom: "npm:^6.30.6"
+    storybook: "npm:^10.5.10"
     vitest: "npm:^4.1.11"
   peerDependencies:
     react: ^18.3.1
-    react-router-dom: ^6.30.4
+    react-router-dom: ^6.30.6
   languageName: unknown
   linkType: soft
 
@@ -15448,19 +15451,20 @@ __metadata:
     "@backstage/test-utils": "backstage:^"
     "@material-ui/core": "npm:^4.12.4"
     "@material-ui/icons": "npm:^4.11.3"
-    "@testing-library/jest-dom": "npm:^6.9.1"
+    "@testing-library/jest-dom": "npm:^6.10.0"
     "@testing-library/react": "npm:^16.3.2"
-    "@testing-library/user-event": "npm:^14.6.1"
+    "@testing-library/user-event": "npm:^14.6.6"
     "@types/react": "npm:*"
     "@types/react-dom": "npm:*"
     eventsource-parser: "npm:^2.0.1"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
-    react-router-dom: "npm:^6.30.4"
-    vitest: "npm:^4.1.10"
+    react-router-dom: "npm:^6.30.6"
+    storybook: "npm:^10.5.10"
+    vitest: "npm:^4.1.11"
   peerDependencies:
     react: ^18.3.1
-    react-router-dom: ^6.30.4
+    react-router-dom: ^6.30.6
   languageName: unknown
   linkType: soft
 
@@ -15475,19 +15479,20 @@ __metadata:
     "@backstage/frontend-plugin-api": "backstage:^"
     "@backstage/test-utils": "backstage:^"
     "@material-ui/core": "npm:^4.12.4"
-    "@testing-library/jest-dom": "npm:^6.9.1"
+    "@testing-library/jest-dom": "npm:^6.10.0"
     "@testing-library/react": "npm:^16.3.2"
-    "@testing-library/user-event": "npm:^14.6.1"
+    "@testing-library/user-event": "npm:^14.6.6"
     "@types/react": "npm:*"
     "@types/react-dom": "npm:*"
     eventsource-parser: "npm:^2.0.1"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
-    react-router-dom: "npm:^6.30.4"
+    react-router-dom: "npm:^6.30.6"
+    storybook: "npm:^10.5.10"
     vitest: "npm:^4.1.10"
   peerDependencies:
     react: ^18.3.1
-    react-router-dom: ^6.30.4
+    react-router-dom: ^6.30.6
   languageName: unknown
   linkType: soft
 
@@ -15504,19 +15509,20 @@ __metadata:
     "@material-ui/core": "npm:^4.12.4"
     "@material-ui/icons": "npm:^4.11.3"
     "@testing-library/dom": "npm:^10.4.1"
-    "@testing-library/jest-dom": "npm:^6.9.1"
+    "@testing-library/jest-dom": "npm:^6.10.0"
     "@testing-library/react": "npm:^16.3.2"
-    "@testing-library/user-event": "npm:^14.6.1"
+    "@testing-library/user-event": "npm:^14.6.6"
     "@types/react": "npm:*"
     "@types/react-dom": "npm:*"
     eventsource-parser: "npm:^2.0.1"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
-    react-router-dom: "npm:^6.30.4"
+    react-router-dom: "npm:^6.30.6"
+    storybook: "npm:^10.5.10"
     vitest: "npm:^4.1.10"
   peerDependencies:
     react: ^18.3.1
-    react-router-dom: ^6.30.4
+    react-router-dom: ^6.30.6
   languageName: unknown
   linkType: soft
 
@@ -15539,7 +15545,7 @@ __metadata:
     eventsource-parser: "npm:^2.0.1"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
-    react-router-dom: "npm:^6.30.4"
+    react-router-dom: "npm:^6.30.6"
     vitest: "npm:^4.1.11"
   peerDependencies:
     react: ^18.3.1
@@ -15558,16 +15564,16 @@ __metadata:
     "@backstage/frontend-plugin-api": "backstage:^"
     "@backstage/test-utils": "backstage:^"
     "@material-ui/core": "npm:^4.12.4"
-    "@testing-library/jest-dom": "npm:^6.9.1"
+    "@testing-library/jest-dom": "npm:^6.10.0"
     "@testing-library/react": "npm:^16.3.2"
-    "@testing-library/user-event": "npm:^14.6.1"
+    "@testing-library/user-event": "npm:^14.6.6"
     "@types/react": "npm:*"
     "@types/react-dom": "npm:*"
     eventsource-parser: "npm:^2.0.1"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
-    react-router-dom: "npm:^6.30.4"
-    vitest: "npm:^4.1.10"
+    react-router-dom: "npm:^6.30.6"
+    vitest: "npm:^4.1.11"
   peerDependencies:
     react: ^18.3.1
     react-router-dom: ^6.30.6
@@ -33815,6 +33821,7 @@ __metadata:
     node-gyp: "npm:^13.0.1"
     prettier: "npm:^3.9.6"
     prop-types: "npm:^15.8.1"
+    storybook: "npm:^10.5.10"
     turbo: "npm:^2.10.9"
     typescript: "npm:6.0.3"
     typescript-eslint: "npm:^8.67.0"

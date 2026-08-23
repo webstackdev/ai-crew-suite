@@ -15,88 +15,150 @@
  */
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { expect, screen, userEvent, waitFor, within } from 'storybook/test';
 import { AlertTunerPage } from './AlertTunerPage';
-import { createMockApi } from '@webstackbuilders/storybook-workspace-infra/src/utils/mockUtils';
-
-// Import your custom plugin API Reference identifier safely
-import { alertTunerApiRef } from '@webstackbuilders/plugin-ai-agent-frontend-alert-ai-tuner';
+import { createMockApi, createMockFn } from '@webstackbuilders/storybook-workspace-infra/src/utils/mockUtils';
+import {
+  alertTunerApiRef,
+  type AlertTunerApi
+} from '@webstackbuilders/plugin-ai-agent-frontend-alert-ai-tuner';
+import type { AiRunEvent } from '../../@types';
 
 const meta: Meta<typeof AlertTunerPage> = {
   title: 'Plugins/AgentCrewSuite/AlertTunerPage',
   component: AlertTunerPage,
+  tags: ['autodocs'],
+  parameters: {
+    layout: 'fullscreen',
+    docs: {
+      description: {
+        component: 'An exemplar page story with typed API mocks and route-driven streaming states.'
+      }
+    }
+  }
 };
 export default meta;
 type Story = StoryObj<typeof AlertTunerPage>;
 
-// Centralized mock builder utility
-const createMockHookReturnValue = (overrides = {}) => ({
-  state: {
-    phase: 'idle',
-    runId: null,
-    error: null,
-    publication: null,
-    rejected: false,
-    proposal: null,
-    approval: null,
-    ...overrides,
+const emptyEvents = async function* (): AsyncGenerator<AiRunEvent> {};
+
+const proposal = {
+  alertId: 'payments-api-high-error-rate',
+  service: 'payments-api',
+  status: 'noisy' as const,
+  window: { from: '2026-02-01T00:00:00Z', to: '2026-02-15T00:00:00Z' },
+  score: {
+    samples: 42,
+    autoResolveRatio: 0.86,
+    medianSelfClearSeconds: 75,
+    p90SelfClearSeconds: 210,
+    pagedRatio: 0.09,
+    verdict: 'noisy' as const
   },
-  evaluate: () => Promise.resolve(),
-  resume: () => Promise.resolve(),
-  decide: () => Promise.resolve(),
+  changes: [
+    {
+      field: 'threshold' as const,
+      from: '5%',
+      to: '8%',
+      rationale: 'Reduces transient deployment-alert noise while retaining sustained error detection.'
+    }
+  ],
+  patch: {
+    path: 'alerts/payments-api.yaml',
+    patchHash: '47cdd2',
+    diff: '@@ -12,7 +12,7 @@\n- threshold: 5%\n+ threshold: 8%'
+  },
+  confidence: 'high' as const,
+  limitations: ['The evaluation window excludes maintenance periods without incident records.'],
+  evidence: [
+    {
+      id: 'alert-history-1',
+      source: 'alert' as const,
+      summary: '36 of 42 firings self-cleared within four minutes.'
+    }
+  ]
+};
+
+const runEvents = (...events: AiRunEvent[]) =>
+  async function* (): AsyncGenerator<AiRunEvent> {
+    yield* events;
+  };
+
+const createStoryApi = (streamRunEvents = emptyEvents): AlertTunerApi =>
+  createMockApi<AlertTunerApi>({
+    evaluateAlert: createMockFn(emptyEvents),
+    streamRunEvents: createMockFn(streamRunEvents),
+    submitApproval: createMockFn(emptyEvents)
+  });
+
+const withApi = (api: AlertTunerApi) => async () => ({
+  mockApis: [[alertTunerApiRef, api]]
 });
 
-/** Baseline Initial State (Idle / Empty Canvas) */
+const withRun = (api: AlertTunerApi, runId: string) => ({
+  loaders: [withApi(api)],
+  parameters: { backstage: { routeEntries: [`/?run=${runId}`] } }
+});
+
+/** Fresh page state with an action-panel-visible API mock. */
 export const DefaultIdle: Story = {
-  loaders: [
-    async () => {
-      const mockApiInstance = createMockApi(['getLatestRun']);
-      // Synchronously mock the return value BEFORE React component mounting runs
-      mockApiInstance.getLatestRun.mockReturnValue(createMockHookReturnValue());
-      return {
-        mockApis: [
-          [alertTunerApiRef, mockApiInstance]
-        ]
-      };
-    }
-  ]
+  loaders: [withApi(createStoryApi())],
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByRole('button', { name: 'Evaluate alert' }));
+    const dialog = await screen.findByRole('dialog');
+    await waitFor(() => expect(dialog).toBeVisible());
+  }
 };
 
-/** Active Agent Calculation State (Triggers Backstage Progress Bars) */
+/** A stream that has started but not emitted its terminal `done` event. */
 export const AgentRunning: Story = {
-  loaders: [
-    async () => {
-      const mockApiInstance = createMockApi(['getLatestRun']);
-      mockApiInstance.getLatestRun.mockReturnValue(
-        createMockHookReturnValue({
-          phase: 'running',
-          runId: 'run-9921-xyz',
-        })
-      );
-      return {
-        mockApis: [
-          [alertTunerApiRef, mockApiInstance]
-        ]
-      };
-    }
-  ]
+  ...withRun(
+    createStoryApi(
+      runEvents(
+        { type: 'step', data: { runId: 'run-9921-xyz', seq: 1, node: 'collect-evidence', phase: 'enter' } },
+        { type: 'tool_result', data: { runId: 'run-9921-xyz', tool: 'incident.alert.history', ok: true, summary: '42 firings found' } }
+      )
+    ),
+    'run-9921-xyz'
+  )
 };
 
-/** Agent Evaluation Failure State (Renders Error Paper component) */
+/** A completed evaluation with a reviewable proposal, evidence, and IaC diff. */
+export const ProposalReady: Story = {
+  ...withRun(
+    createStoryApi(
+      runEvents(
+        { type: 'artifact', data: { runId: 'run-proposal-1', kind: 'alert-tuning-proposal', ref: JSON.stringify(proposal) } },
+        { type: 'done', data: { runId: 'run-proposal-1' } }
+      )
+    ),
+    'run-proposal-1'
+  )
+};
+
+/** A proposal paused for the explicit human approval required before publication. */
+export const ApprovalRequired: Story = {
+  ...withRun(
+    createStoryApi(
+      runEvents(
+        { type: 'artifact', data: { runId: 'run-approval-1', kind: 'alert-tuning-proposal', ref: JSON.stringify(proposal) } },
+        { type: 'approval_request', data: { runId: 'run-approval-1', approvalId: 'approval-1', reason: 'Open an IaC pull request for the threshold change.', effect: 'write' } }
+      )
+    ),
+    'run-approval-1'
+  )
+};
+
+/** An error returned from the streamed evaluation. */
 export const AgenticError: Story = {
-  loaders: [
-    async () => {
-      const mockApiInstance = createMockApi(['getLatestRun']);
-      mockApiInstance.getLatestRun.mockReturnValue(
-        createMockHookReturnValue({
-          phase: 'error',
-          error: 'Failed to synthesize IaC Proposal: LLM token generation limit exceeded on gateway node-4.',
-        })
-      );
-      return {
-        mockApis: [
-          [alertTunerApiRef, mockApiInstance]
-        ]
-      };
-    }
-  ]
+  ...withRun(
+    createStoryApi(
+      runEvents({
+        type: 'error',
+        data: { runId: 'run-error-1', message: 'Failed to synthesize the IaC proposal: LLM token limit exceeded on gateway node-4.' }
+      })
+    ),
+    'run-error-1'
+  )
 };

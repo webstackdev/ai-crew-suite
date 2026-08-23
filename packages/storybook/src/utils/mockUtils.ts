@@ -15,12 +15,16 @@
  */
 import { fn } from 'storybook/test';
 
-export const createMockApi = (methods: string[] = []) => {
-  const mockObj: Record<string, any> = {};
+/**
+ * Creates a typed Backstage API mock from the methods a story needs to exercise.
+ *
+ * Keep API-specific fixtures beside their stories; this helper deliberately has
+ * no knowledge of individual frontend plugins or their API references.
+ */
+export const createMockApi = <TApi extends object>(implementations: Partial<TApi>): TApi =>
+  implementations as TApi;
 
-  methods.forEach((method) => {
-    mockObj[method] = fn().mockResolvedValue(null);
-  });
-
-  return mockObj;
-};
+/** Creates an action-panel-visible mock function with an optional implementation. */
+export const createMockFn = <TFunction extends (...args: never[]) => unknown>(
+  implementation?: TFunction
+) => fn(implementation) as unknown as TFunction;

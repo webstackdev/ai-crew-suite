@@ -42,5 +42,11 @@ export const TuningRunView = ({ state }: TuningRunViewProps) => (
         {tool.summary ? `: ${tool.summary}` : ''}
       </Typography>
     ))}
+
+    {state.steps.length === 0 && state.tools.length === 0 ? (
+      <Typography color="textSecondary">
+        No run activity yet.
+      </Typography>
+    ) : null}
   </section>
 );

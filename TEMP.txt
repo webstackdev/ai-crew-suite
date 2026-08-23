@@ -13,20 +13,5 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { fn } from 'storybook/test';
 
-export class MockAlertTunerApi {
-  getLatestRun = fn();
-  evaluate = fn().mockResolvedValue(null);
-  resume = fn().mockResolvedValue(null);
-  decide = fn().mockResolvedValue(null);
-
-  resetAllMocks() {
-    this.getLatestRun.mockReset();
-    this.evaluate.mockReset();
-    this.resume.mockReset();
-    this.decide.mockReset();
-  }
-}
-
-export const globalMockAlertTunerApi = new MockAlertTunerApi();
+Next let's implement a story for plugins/frontend/plugin-ai-agent-frontend-alert-ai-tuner/src/components/TuningRunView/TuningRunView.tsx following the instructions in .vscode/instructions/storybook.instructions.md

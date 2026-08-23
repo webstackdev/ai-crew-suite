@@ -17,10 +17,9 @@ import React from 'react';
 import type { Preview, ReactRenderer } from '@storybook/react-vite';
 import type { DecoratorFunction } from 'storybook/internal/types';
 import { CssBaseline } from '@material-ui/core';
-import { themes } from '@backstage/theme';
+import { themes, UnifiedThemeProvider } from '@backstage/theme';
 import { TestApiProvider, wrapInTestApp } from '@backstage/test-utils';
 import { alertApiRef, errorApiRef, ErrorApi } from '@backstage/core-plugin-api';
-import { AppThemeProvider } from '@backstage/core-components';
 
 const mockErrorApi: Partial<ErrorApi> = {
   post: () => {},
@@ -44,18 +43,23 @@ const backstageDecorator: DecoratorFunction<ReactRenderer> = (Story, context) =>
       [errorApiRef, mockErrorApi],
       ...storyMockApis
     ]}>
-      {/* 3. Wrap using AppThemeProvider instead of ThemeProvider */}
-      <AppThemeProvider theme={activeTheme}>
+      <UnifiedThemeProvider theme={activeTheme}>
         <CssBaseline />
-        {wrapInTestApp(<Story />)}
-      </AppThemeProvider>
+        {wrapInTestApp(<Story />, context.parameters.backstage)}
+      </UnifiedThemeProvider>
     </TestApiProvider>
   );
 };
 
 const preview: Preview = {
   parameters: {
-    controls: { matchers: { color: /(background|color)$/i, date: /Date$/i } },
+    actions: { argTypesRegex: '^on[A-Z].*' },
+    controls: {
+      expanded: true,
+      matchers: { color: /(background|color)$/i, date: /Date$/i }
+    },
+    docs: { source: { type: 'dynamic' } },
+    options: { panelPosition: 'bottom' },
   },
   globalTypes: {
     theme: {
