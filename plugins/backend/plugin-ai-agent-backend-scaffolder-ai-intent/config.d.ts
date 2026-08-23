@@ -1,0 +1,1 @@
+export interface Config { ai?: { agents?: { scaffolderIntent?: { model: string; maxUtteranceChars?: number; minSelectionScore?: number; templates: { allowed: string[] }; validation?: { checkCatalogName?: boolean }; execute?: { enabled?: boolean } } } } }

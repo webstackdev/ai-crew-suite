@@ -15929,6 +15929,21 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-intent@workspace:^, @webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-intent@workspace:plugins/backend/plugin-ai-agent-backend-scaffolder-ai-intent":
+  version: 0.0.0-use.local
+  resolution: "@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-intent@workspace:plugins/backend/plugin-ai-agent-backend-scaffolder-ai-intent"
+  dependencies:
+    "@backstage/backend-plugin-api": "backstage:^"
+    "@backstage/backend-test-utils": "backstage:^"
+    "@backstage/catalog-client": "backstage:^"
+    "@backstage/cli": "backstage:^"
+    "@backstage/config": "backstage:^"
+    "@backstage/plugin-scaffolder-node": "npm:^0.13.6"
+    "@webstackbuilders/plugin-ai-core-node": "workspace:*"
+    vitest: "npm:^4.1.11"
+  languageName: unknown
+  linkType: soft
+
 "@webstackbuilders/plugin-ai-agent-backend-search-ai-archeology@workspace:^, @webstackbuilders/plugin-ai-agent-backend-search-ai-archeology@workspace:plugins/backend/plugin-ai-agent-backend-search-ai-archeology":
   version: 0.0.0-use.local
   resolution: "@webstackbuilders/plugin-ai-agent-backend-search-ai-archeology@workspace:plugins/backend/plugin-ai-agent-backend-search-ai-archeology"
@@ -18244,6 +18259,7 @@ __metadata:
     "@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-drift-detector": "workspace:^"
     "@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-guardrail-agent": "workspace:^"
     "@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-infra": "workspace:^"
+    "@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-intent": "workspace:^"
     "@webstackbuilders/plugin-ai-agent-backend-search-ai-archeology": "workspace:^"
     "@webstackbuilders/plugin-ai-agent-backend-search-ai-context": "workspace:^"
     "@webstackbuilders/plugin-ai-agent-backend-tech-debt-ai-scout": "workspace:^"

@@ -74,6 +74,11 @@ ai:
         - id: corp-architecture
     scaffolderInfra:
       model: scaffolder-infra
+    scaffolderIntent:
+      model: scaffolder-intent
+      templates:
+        allowed:
+          - template:default/react-service-template
       blueprints:
         sources:
           - id: example-terraform

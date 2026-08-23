@@ -450,7 +450,65 @@ Exit criteria: staged rollout with bounded search-quota usage, verified citation
 
 ## Frontend Completed
 
+- Frontend plugin package with:
 
+  - `search-ai-context` plugin ID
+  - legacy plugin entry point and `/alpha` frontend-system entry point
+  - `ApiBlueprint`, `PageBlueprint`, and `EntityCardBlueprint`
+  - standalone route: `/search-ai-context`
+
+- Typed authenticated AI Core SSE client:
+
+  - Starts assessments via `agents/search-ai-context/runs`
+  - Replays persisted events via `?run=<runId>`
+  - Uses configured `ai.endpointPath`, defaulting to `ai-core`
+
+- Typed run reducer/hook with safe malformed-artifact handling.
+
+- Change assessment dialog:
+
+  - Source catalog entity
+  - Change kind
+  - Changed symbol
+  - Optional replacement
+
+- Assessment UI:
+
+  - Progress steps
+  - First-class `complete`, `partial`, `no_consumers`, and `out_of_scope` outcomes
+  - Consumer verification list
+  - Code-match evidence links
+  - Impacted-owner rollups
+  - Explicit truncation warning
+  - Limitations and textual-reference caveat
+
+- Safety-critical classification presentation:
+
+  - `impacted`, `unaffected`, and `unknown` render distinctly.
+  - `unknown` includes its verification reason, such as `no_repository`, `search_unsupported`, or `search_failed`.
+  - The UI explicitly states that unknown is not unaffected.
+
+### Registration completed
+
+Updated:
+
+- `/home/kevin/Repos/backstage/ai-crew-suite/tsconfig.json`
+- `/home/kevin/Repos/backstage/ai-crew-suite/.eslintrc.cjs`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/app/package.json`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/app/src/App.tsx`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/app/src/App.test.tsx`
+- `/home/kevin/Repos/backstage/ai-crew-suite/yarn.lock`
+
+### Tests added
+
+- Reducer test for valid and malformed `impact-assessment` artifacts.
+
+- Panel test covering:
+
+  - owner rollup
+  - clickable code evidence
+  - truncation notice
+  - visually/textually distinct `unknown` and `unaffected` outcomes
 
 ## Backend Completed
 

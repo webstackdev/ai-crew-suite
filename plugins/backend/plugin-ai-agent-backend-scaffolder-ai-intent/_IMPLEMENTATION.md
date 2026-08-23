@@ -433,6 +433,71 @@ Exit criteria: `yarn test:e2e:scaffolder-ai-intent` demonstrates utterance → c
 
 Exit criteria: staged rollout with execution disabled by default, bounded costs, and verified schema grounding.
 
+## Frontend Completed
+
+
+
+## Backend Completed
+
+- AI Core backend module:
+
+  - Agent ID: `scaffolder-ai-intent`
+  - Workflow ID: `scaffolder-intent`
+  - Manual trigger
+  - Session memory declaration
+  - Read-only supplemental tool allow-list
+
+- Config parsing for:
+
+  - required model
+  - required allow-listed `templates.allowed`
+  - utterance-size limit
+  - selection threshold
+  - catalog name validation
+  - execution-enabled setting, retained but not used in this proposal-only milestone
+
+- Schema-backed template proposal pipeline:
+
+  1. Validates versioned manual intent requests.
+  2. Extracts bounded facts from simple provisioning phrasing, including name and kind.
+  3. Ranks only configured allow-listed template references.
+  4. Fetches live template parameter schemas through `scaffolderServiceRef`.
+  5. Flattens multi-step schemas.
+  6. Emits only schema-declared name/default parameters.
+  7. Reports missing required template fields.
+  8. Performs catalog component-name collision checks.
+  9. Emits a replayable `template-intent-proposal` artifact.
+
+- Collision safety behavior:
+
+  - `Create a react app called payment-gateway` with an existing catalog component emits:
+
+    - selected allow-listed template
+    - `name_taken` blocking issue
+    - targeted correction question
+    - `awaiting_correction` status
+
+  - No `scaffold()` call exists in the workflow path.
+
+### Registration
+
+Updated:
+
+- `/home/kevin/Repos/backstage/ai-crew-suite/tsconfig.json`
+- `/home/kevin/Repos/backstage/ai-crew-suite/.eslintrc.cjs`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/backend/package.json`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/backend/src/index.ts`
+- `/home/kevin/Repos/backstage/ai-crew-suite/app-config.yaml`
+- `/home/kevin/Repos/backstage/ai-crew-suite/yarn.lock`
+
+### Tests
+
+Added focused tests for:
+
+- Multi-step schema flattening, defaults, and missing required fields.
+- Catalog name collision producing `awaiting_correction`.
+- Verification that live template-schema lookup is used.
+
 ## Definition of Done
 
 - Package, agent, runner (`run` + `resume`), manual trigger, config schema, and the read-only tool allow-list implemented and registered (root + backend/app wiring included), with a barrel `index.ts` in every directory.
