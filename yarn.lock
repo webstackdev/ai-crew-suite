@@ -15968,6 +15968,20 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@webstackbuilders/plugin-ai-agent-backend-techdocs-ai-janitor@workspace:^, @webstackbuilders/plugin-ai-agent-backend-techdocs-ai-janitor@workspace:plugins/backend/plugin-ai-agent-backend-techdocs-ai-janitor":
+  version: 0.0.0-use.local
+  resolution: "@webstackbuilders/plugin-ai-agent-backend-techdocs-ai-janitor@workspace:plugins/backend/plugin-ai-agent-backend-techdocs-ai-janitor"
+  dependencies:
+    "@backstage/backend-plugin-api": "backstage:^"
+    "@backstage/backend-test-utils": "backstage:^"
+    "@backstage/catalog-client": "backstage:^"
+    "@backstage/cli": "backstage:^"
+    "@backstage/config": "backstage:^"
+    "@webstackbuilders/plugin-ai-core-node": "workspace:*"
+    vitest: "npm:^4.1.10"
+  languageName: unknown
+  linkType: soft
+
 "@webstackbuilders/plugin-ai-agent-frontend-alert-ai-tuner@workspace:^, @webstackbuilders/plugin-ai-agent-frontend-alert-ai-tuner@workspace:plugins/frontend/plugin-ai-agent-frontend-alert-ai-tuner":
   version: 0.0.0-use.local
   resolution: "@webstackbuilders/plugin-ai-agent-frontend-alert-ai-tuner@workspace:plugins/frontend/plugin-ai-agent-frontend-alert-ai-tuner"
@@ -18127,6 +18141,7 @@ __metadata:
     "@webstackbuilders/plugin-ai-agent-backend-search-ai-archeology": "workspace:^"
     "@webstackbuilders/plugin-ai-agent-backend-tech-debt-ai-scout": "workspace:^"
     "@webstackbuilders/plugin-ai-agent-backend-tech-radar-ai-manager": "workspace:^"
+    "@webstackbuilders/plugin-ai-agent-backend-techdocs-ai-janitor": "workspace:^"
     "@webstackbuilders/plugin-ai-core-backend": "workspace:^"
     "@webstackbuilders/plugin-ai-core-backend-module-cloud-providers": "workspace:^"
     "@webstackbuilders/plugin-ai-core-backend-module-communication": "workspace:^"

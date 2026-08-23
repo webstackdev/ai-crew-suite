@@ -87,6 +87,8 @@ ai:
       model: tech-radar-manager
       radar:
         sourceUrl: https://example.invalid/radar-data.json
+    techdocsJanitor:
+      model: techdocs-janitor
     catalogAiInsights:
       # Installation-registered model ID; map it to a provider through a
       # chat-model module (e.g. plugin-ai-core-backend-module-llm-openai).
