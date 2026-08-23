@@ -83,6 +83,10 @@ ai:
       model: search-archeology
     techDebtScout:
       model: tech-debt-scout
+    techRadarManager:
+      model: tech-radar-manager
+      radar:
+        sourceUrl: https://example.invalid/radar-data.json
     catalogAiInsights:
       # Installation-registered model ID; map it to a provider through a
       # chat-model module (e.g. plugin-ai-core-backend-module-llm-openai).
