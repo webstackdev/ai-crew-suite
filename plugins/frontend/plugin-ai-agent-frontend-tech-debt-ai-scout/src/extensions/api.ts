@@ -13,9 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { configApiRef, discoveryApiRef, fetchApiRef, identityApiRef } from '@backstage/core-plugin-api';
+import {
+  configApiRef,
+  discoveryApiRef,
+  fetchApiRef,
+  identityApiRef,
+} from '@backstage/core-plugin-api';
 import { ApiBlueprint, createApiFactory } from '@backstage/frontend-plugin-api';
 import { TechDebtScoutClient, techDebtScoutApiRef } from '../api';
 
 /** New-frontend-system API blueprint for technical-debt scan event streams. */
-export const techDebtScoutApiExtension = ApiBlueprint.make({ params: define => define(createApiFactory({ api: techDebtScoutApiRef, deps: { configApi: configApiRef, discoveryApi: discoveryApiRef, fetchApi: fetchApiRef, identityApi: identityApiRef }, factory: deps => new TechDebtScoutClient(deps) })) });
+export const techDebtScoutApiExtension = ApiBlueprint.make({
+  params: define =>
+    define(
+      createApiFactory({
+        api: techDebtScoutApiRef,
+        deps: {
+          configApi: configApiRef,
+          discoveryApi: discoveryApiRef,
+          fetchApi: fetchApiRef,
+          identityApi: identityApiRef,
+        },
+        factory: deps => new TechDebtScoutClient(deps),
+      }),
+    ),
+});

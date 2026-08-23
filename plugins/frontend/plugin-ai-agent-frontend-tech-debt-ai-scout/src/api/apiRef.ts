@@ -15,7 +15,14 @@
  */
 import { createApiRef } from '@backstage/core-plugin-api';
 import type { AiRunEvent, StartDebtScanInput } from '../@types';
+
 /** Typed browser API for starting and replaying technical-debt scan reports. */
-export interface TechDebtScoutApi { startScan(input: StartDebtScanInput): AsyncGenerator<AiRunEvent>; streamRunEvents(runId: string): AsyncGenerator<AiRunEvent>; }
+export interface TechDebtScoutApi {
+  startScan(input: StartDebtScanInput): AsyncGenerator<AiRunEvent>;
+  streamRunEvents(runId: string): AsyncGenerator<AiRunEvent>;
+}
+
 /** Backstage API reference consumed by the debt scan hook. */
-export const techDebtScoutApiRef = createApiRef<TechDebtScoutApi>({ id: 'plugin.tech-debt-ai-scout.api' });
+export const techDebtScoutApiRef = createApiRef<TechDebtScoutApi>({
+  id: 'plugin.tech-debt-ai-scout.api',
+});

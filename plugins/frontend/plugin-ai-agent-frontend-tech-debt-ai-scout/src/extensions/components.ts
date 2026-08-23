@@ -18,6 +18,16 @@ import { PageBlueprint } from '@backstage/frontend-plugin-api';
 import { ROOT_PATH, rootRouteRef } from '../routes';
 
 /** New-frontend-system page extension for technical-debt scan reports. */
-export const techDebtScoutPageExtension = PageBlueprint.make({ name: 'tech-debt-ai-scout', params: { path: ROOT_PATH, title: 'Technical debt scout', routeRef: rootRouteRef, loader: () =>
-  // @ts-expect-error - NodeNext requires .js while the bundler resolves TypeScript source
-  import('../components/DebtScoutPage/DebtScoutPage').then(module => React.createElement(module.DebtScoutPage)) } });
+export const techDebtScoutPageExtension = PageBlueprint.make({
+  name: 'tech-debt-ai-scout',
+  params: {
+    path: ROOT_PATH,
+    title: 'Technical debt scout',
+    routeRef: rootRouteRef,
+    loader: () =>
+      // @ts-expect-error - NodeNext requires .js while the bundler resolves TypeScript source
+      import('../components/DebtScoutPage/DebtScoutPage').then(module =>
+        React.createElement(module.DebtScoutPage),
+      ),
+  },
+});

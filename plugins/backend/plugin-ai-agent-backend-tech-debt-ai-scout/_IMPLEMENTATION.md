@@ -497,7 +497,58 @@ Exit criteria: staged rollout with sweeps and filing disabled by default, bounde
 
 ## Frontend Completed
 
+## Delivered
 
+- Standalone route: `/tech-debt-ai-scout`
+
+- Alpha and legacy plugin entry points.
+
+- Typed authenticated AI Core SSE client for:
+
+  - Starting `tech-debt-ai-scout` scans.
+  - Replaying persisted scans with `?run=<id>`.
+
+- Typed `tech-debt-report` browser contract matching the deployed backend artifact.
+
+- Reducer-backed run state that safely ignores malformed artifact JSON.
+
+- Repository scan dialog requiring an HTTP(S) repository URL.
+
+- Report UI with:
+
+  - Scan progress.
+  - Repository outcomes.
+  - Escalated findings.
+  - Retained suppressed findings.
+  - Finding severity, deterministic rule rationale, citations, and fingerprint.
+  - Explicit report limitations.
+  - Evidence links.
+
+- Clear UX messaging that:
+
+  - The scan is read-only.
+  - Secret-shaped values are redacted.
+  - Bitbucket/Gerrit `search_unsupported` results are not equivalent to a clean repository.
+  - Ticket filing and later-plan sweep/dedupe/enrichment features are unavailable in the deployed backend, so no misleading controls are shown.
+
+## App and monorepo wiring
+
+Registered in:
+
+- `/home/kevin/Repos/backstage/ai-crew-suite/tsconfig.json`
+- `/home/kevin/Repos/backstage/ai-crew-suite/.eslintrc.cjs`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/app/package.json`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/app/src/App.tsx`
+- `/home/kevin/Repos/backstage/ai-crew-suite/packages/app/src/App.test.tsx`
+- `/home/kevin/Repos/backstage/ai-crew-suite/yarn.lock`
+
+## Tests
+
+Added:
+
+- Reducer extraction of valid reports and malformed artifact safety.
+- Report rendering for suppressed findings, unsupported repository outcomes, limitations, and evidence links.
+- Updated the app feature-list test for the newly registered alpha plugin.
 
 ## Backend Completed
 

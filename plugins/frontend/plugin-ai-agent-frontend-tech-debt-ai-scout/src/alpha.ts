@@ -13,10 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { createFrontendPlugin, type ExtensionDefinition, type FrontendFeature } from '@backstage/frontend-plugin-api';
+import {
+  createFrontendPlugin,
+  type ExtensionDefinition,
+  type FrontendFeature,
+} from '@backstage/frontend-plugin-api';
 import { techDebtScoutApiExtension } from './extensions/api';
 import { techDebtScoutPageExtension } from './extensions/components';
 
-const createPlugin = createFrontendPlugin as unknown as (options: { pluginId: string; extensions: readonly ExtensionDefinition[] }) => FrontendFeature;
+const createPlugin = createFrontendPlugin as unknown as (options: {
+  pluginId: string;
+  extensions: readonly ExtensionDefinition[];
+}) => FrontendFeature;
+
 /** Alpha entry point exposing the technical-debt scan API and report page. */
-export default createPlugin({ pluginId: 'tech-debt-ai-scout', extensions: [techDebtScoutApiExtension as unknown as ExtensionDefinition, techDebtScoutPageExtension as unknown as ExtensionDefinition] });
+export default createPlugin({
+  pluginId: 'tech-debt-ai-scout',
+  extensions: [
+    techDebtScoutApiExtension as unknown as ExtensionDefinition,
+    techDebtScoutPageExtension as unknown as ExtensionDefinition,
+  ],
+});

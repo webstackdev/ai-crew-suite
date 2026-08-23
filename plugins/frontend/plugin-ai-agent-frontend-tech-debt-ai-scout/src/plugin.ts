@@ -13,13 +13,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { configApiRef, createApiFactory, createPlugin, createRoutableExtension, discoveryApiRef, fetchApiRef, identityApiRef } from '@backstage/core-plugin-api';
+import {
+  configApiRef,
+  createApiFactory,
+  createPlugin,
+  createRoutableExtension,
+  discoveryApiRef,
+  fetchApiRef,
+  identityApiRef,
+} from '@backstage/core-plugin-api';
 import { TechDebtScoutClient, techDebtScoutApiRef } from './api';
 import { rootRouteRef } from './routes';
 
 /** Legacy frontend-plugin entry point for deterministic technical-debt reports. */
-export const techDebtScoutPlugin = createPlugin({ id: 'tech-debt-ai-scout', apis: [createApiFactory({ api: techDebtScoutApiRef, deps: { configApi: configApiRef, discoveryApi: discoveryApiRef, fetchApi: fetchApiRef, identityApi: identityApiRef }, factory: deps => new TechDebtScoutClient(deps) })], routes: { root: rootRouteRef } });
+export const techDebtScoutPlugin = createPlugin({
+  id: 'tech-debt-ai-scout',
+  apis: [
+    createApiFactory({
+      api: techDebtScoutApiRef,
+      deps: {
+        configApi: configApiRef,
+        discoveryApi: discoveryApiRef,
+        fetchApi: fetchApiRef,
+        identityApi: identityApiRef,
+      },
+      factory: deps => new TechDebtScoutClient(deps),
+    }),
+  ],
+  routes: { root: rootRouteRef },
+});
+
 /** Routable standalone technical-debt scout page. */
-export const DebtScoutPage = techDebtScoutPlugin.provide(createRoutableExtension({ name: 'DebtScoutPage', component: () =>
-  // @ts-expect-error - NodeNext requires .js while the bundler resolves TypeScript source
-  import('./components/DebtScoutPage/DebtScoutPage').then(module => module.DebtScoutPage), mountPoint: rootRouteRef }));
+export const DebtScoutPage = techDebtScoutPlugin.provide(
+  createRoutableExtension({
+    name: 'DebtScoutPage',
+    component: () =>
+      // @ts-expect-error - NodeNext requires .js while the bundler resolves TypeScript source
+      import('./components/DebtScoutPage/DebtScoutPage').then(
+        module => module.DebtScoutPage,
+      ),
+    mountPoint: rootRouteRef,
+  }),
+);

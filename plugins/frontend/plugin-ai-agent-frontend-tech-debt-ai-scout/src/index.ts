@@ -14,8 +14,19 @@
  * limitations under the License.
  */
 export { techDebtScoutPlugin, DebtScoutPage } from './plugin';
-export { TechDebtScoutClient, techDebtScoutApiRef, TECH_DEBT_SCOUT_AGENT_ID, type TechDebtScoutApi } from './api';
-export { useDebtScoutRun, reduceDebtScoutRun, initialDebtScoutRunState, TECH_DEBT_REPORT_ARTIFACT, type DebtScoutRunState } from './hooks/useDebtScoutRun';
+export {
+  TechDebtScoutClient,
+  techDebtScoutApiRef,
+  TECH_DEBT_SCOUT_AGENT_ID,
+  type TechDebtScoutApi,
+} from './api';
+export {
+  useDebtScoutRun,
+  reduceDebtScoutRun,
+  initialDebtScoutRunState,
+  TECH_DEBT_REPORT_ARTIFACT,
+  type DebtScoutRunState,
+} from './hooks/useDebtScoutRun';
 export * from './components';
 export { ROOT_PATH, rootRouteRef } from './routes';
 export type * from './@types';

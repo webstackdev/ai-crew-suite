@@ -14,6 +14,45 @@
  * limitations under the License.
  */
 import { describe, expect, it } from 'vitest';
-import { initialDebtScoutRunState, reduceDebtScoutRun, TECH_DEBT_REPORT_ARTIFACT } from '../useDebtScoutRun';
+import {
+  initialDebtScoutRunState,
+  reduceDebtScoutRun,
+  TECH_DEBT_REPORT_ARTIFACT,
+} from '../useDebtScoutRun';
 
-describe('reduceDebtScoutRun', () => { it('extracts the known technical-debt report artifact', () => { const report = { scannedAt: '2026-01-01T00:00:00.000Z', targets: [], findings: [], counts: { escalate: 0, suppressed: 0, alreadyTracked: 0 }, bySeverity: { critical: 0, high: 0, medium: 0, low: 0 }, byOwner: [], status: 'no_findings', limitations: [], evidence: [] } as const; const next = reduceDebtScoutRun(initialDebtScoutRunState, { type: 'artifact', data: { runId: 'run-1', kind: TECH_DEBT_REPORT_ARTIFACT, ref: JSON.stringify(report) } }); expect(next).toMatchObject({ runId: 'run-1', report }); }); it('does not trust malformed artifact JSON', () => { const next = reduceDebtScoutRun(initialDebtScoutRunState, { type: 'artifact', data: { runId: 'run-1', kind: TECH_DEBT_REPORT_ARTIFACT, ref: '{' } }); expect(next.runId).toBe('run-1'); expect(next.report).toBeUndefined(); }); });
+describe('reduceDebtScoutRun', () => {
+  it('extracts the known technical-debt report artifact', () => {
+    const report = {
+      scannedAt: '2026-01-01T00:00:00.000Z',
+      targets: [],
+      findings: [],
+      counts: { escalate: 0, suppressed: 0, alreadyTracked: 0 },
+      bySeverity: { critical: 0, high: 0, medium: 0, low: 0 },
+      byOwner: [],
+      status: 'no_findings',
+      limitations: [],
+      evidence: [],
+    } as const;
+
+    const next = reduceDebtScoutRun(initialDebtScoutRunState, {
+      type: 'artifact',
+      data: {
+        runId: 'run-1',
+        kind: TECH_DEBT_REPORT_ARTIFACT,
+        ref: JSON.stringify(report),
+      },
+    });
+
+    expect(next).toMatchObject({ runId: 'run-1', report });
+  });
+
+  it('does not trust malformed artifact JSON', () => {
+    const next = reduceDebtScoutRun(initialDebtScoutRunState, {
+      type: 'artifact',
+      data: { runId: 'run-1', kind: TECH_DEBT_REPORT_ARTIFACT, ref: '{' },
+    });
+
+    expect(next.runId).toBe('run-1');
+    expect(next.report).toBeUndefined();
+  });
+});

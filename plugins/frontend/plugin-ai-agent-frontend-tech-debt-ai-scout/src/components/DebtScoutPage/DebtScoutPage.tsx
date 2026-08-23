@@ -22,4 +22,84 @@ import { DebtReportPanel } from '../DebtReportPanel/DebtReportPanel';
 import { StartDebtScanDialog } from '../StartDebtScanDialog/StartDebtScanDialog';
 
 /** Standalone page for submitting and replaying read-only technical-debt scans. */
-export const DebtScoutPage = () => { const { state, scan, replay } = useDebtScoutRun(); const [params, setParams] = useSearchParams(); const [open, setOpen] = useState(false); const initialRun = useRef(params.get('run')); const initialized = useRef(false); useEffect(() => { if (initialized.current) return; initialized.current = true; if (initialRun.current) void replay(initialRun.current); }, [replay]); useEffect(() => { if (!state.runId) return; setParams(previous => { const next = new URLSearchParams(previous); next.set('run', state.runId!); return next; }, { replace: true }); }, [state.runId, setParams]); return <Page themeId="tool"><Header title="Technical debt scout" subtitle="Read-only, deterministic code-marker scans with redacted secret patterns" /><Content>{state.phase === 'error' ? <Paper role="alert"><Typography>{state.error}</Typography></Paper> : null}<Button color="primary" variant="contained" onClick={() => setOpen(true)}>Scan repository</Button>{state.phase === 'running' ? <Progress /> : null}<Grid container spacing={3}><Grid item xs={12} md={4}><Typography variant="h6">Scan progress</Typography>{state.steps.length ? state.steps.map((step, index) => <Typography key={`${step.node}-${index}`}>{step.phase}: {step.node}</Typography>) : <Typography>No scan selected.</Typography>}</Grid><Grid item xs={12} md={8}>{state.report ? <DebtReportPanel report={state.report} /> : <Typography>Start a scoped repository scan or open a saved run to view its report.</Typography>}</Grid></Grid><StartDebtScanDialog open={open} onClose={() => setOpen(false)} onScan={input => { setOpen(false); void scan(input); }} /></Content></Page>; };
+export const DebtScoutPage = () => {
+  const { state, scan, replay } = useDebtScoutRun();
+  const [params, setParams] = useSearchParams();
+  const [open, setOpen] = useState(false);
+  const initialRun = useRef(params.get('run'));
+  const initialized = useRef(false);
+
+  useEffect(() => {
+    if (initialized.current) return;
+    initialized.current = true;
+    if (initialRun.current) void replay(initialRun.current);
+  }, [replay]);
+
+  useEffect(() => {
+    if (!state.runId) return;
+    setParams(
+      previous => {
+        const next = new URLSearchParams(previous);
+        next.set('run', state.runId!);
+        return next;
+      },
+      { replace: true },
+    );
+  }, [state.runId, setParams]);
+
+  return (
+    <Page themeId="tool">
+      <Header
+        title="Technical debt scout"
+        subtitle="Read-only, deterministic code-marker scans with redacted secret patterns"
+      />
+      <Content>
+        {state.phase === 'error' ? (
+          <Paper role="alert">
+            <Typography>{state.error}</Typography>
+          </Paper>
+        ) : null}
+        <Button
+          color="primary"
+          variant="contained"
+          onClick={() => setOpen(true)}
+        >
+          Scan repository
+        </Button>
+        {state.phase === 'running' ? <Progress /> : null}
+        <Grid container spacing={3}>
+          <Grid item xs={12} md={4}>
+            <Typography variant="h6">Scan progress</Typography>
+            {state.steps.length ? (
+              state.steps.map((step, index) => (
+                <Typography key={`${step.node}-${index}`}>
+                  {step.phase}: {step.node}
+                </Typography>
+              ))
+            ) : (
+              <Typography>No scan selected.</Typography>
+            )}
+          </Grid>
+          <Grid item xs={12} md={8}>
+            {state.report ? (
+              <DebtReportPanel report={state.report} />
+            ) : (
+              <Typography>
+                Start a scoped repository scan or open a saved run to view its
+                report.
+              </Typography>
+            )}
+          </Grid>
+        </Grid>
+        <StartDebtScanDialog
+          open={open}
+          onClose={() => setOpen(false)}
+          onScan={input => {
+            setOpen(false);
+            void scan(input);
+          }}
+        />
+      </Content>
+    </Page>
+  );
+};
