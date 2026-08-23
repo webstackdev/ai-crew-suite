@@ -110,7 +110,6 @@ backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-agent-backend
 backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-infra')));
 backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-infra/scaffolderModule')));
 backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-agent-backend-search-ai-archeology')));
-// @ts-expect-error NodeNext requires an explicit extension for dynamic import source resolution.
 backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-agent-backend-search-ai-context')));
 backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-agent-backend-tech-debt-ai-scout')));
 backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-agent-backend-tech-radar-ai-manager')));

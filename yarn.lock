@@ -16288,6 +16288,32 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@webstackbuilders/plugin-ai-agent-frontend-search-ai-context@workspace:^, @webstackbuilders/plugin-ai-agent-frontend-search-ai-context@workspace:plugins/frontend/plugin-ai-agent-frontend-search-ai-context":
+  version: 0.0.0-use.local
+  resolution: "@webstackbuilders/plugin-ai-agent-frontend-search-ai-context@workspace:plugins/frontend/plugin-ai-agent-frontend-search-ai-context"
+  dependencies:
+    "@backstage/cli": "backstage:^"
+    "@backstage/core-components": "backstage:^"
+    "@backstage/core-plugin-api": "backstage:^"
+    "@backstage/dev-utils": "backstage:^"
+    "@backstage/frontend-plugin-api": "backstage:^"
+    "@backstage/plugin-catalog-react": "backstage:^"
+    "@backstage/test-utils": "backstage:^"
+    "@material-ui/core": "npm:^4.12.4"
+    "@testing-library/react": "npm:^16.3.2"
+    "@types/react": "npm:*"
+    "@types/react-dom": "npm:*"
+    eventsource-parser: "npm:^2.0.1"
+    react: "npm:^18.3.1"
+    react-dom: "npm:^18.3.1"
+    react-router-dom: "npm:^6.30.4"
+    vitest: "npm:^4.1.10"
+  peerDependencies:
+    react: ^18.3.1
+    react-router-dom: ^6.30.4
+  languageName: unknown
+  linkType: soft
+
 "@webstackbuilders/plugin-ai-agent-frontend-tech-debt-ai-scout@workspace:^, @webstackbuilders/plugin-ai-agent-frontend-tech-debt-ai-scout@workspace:plugins/frontend/plugin-ai-agent-frontend-tech-debt-ai-scout":
   version: 0.0.0-use.local
   resolution: "@webstackbuilders/plugin-ai-agent-frontend-tech-debt-ai-scout@workspace:plugins/frontend/plugin-ai-agent-frontend-tech-debt-ai-scout"
@@ -17507,6 +17533,7 @@ __metadata:
     "@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-guardrail-agent": "workspace:^"
     "@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-infra": "workspace:^"
     "@webstackbuilders/plugin-ai-agent-frontend-search-ai-archeology": "workspace:^"
+    "@webstackbuilders/plugin-ai-agent-frontend-search-ai-context": "workspace:^"
     "@webstackbuilders/plugin-ai-agent-frontend-tech-debt-ai-scout": "workspace:^"
     "@webstackbuilders/plugin-ai-agent-frontend-tech-radar-ai-manager": "workspace:^"
     "@webstackbuilders/plugin-ai-agent-frontend-techdocs-ai-janitor": "workspace:^"

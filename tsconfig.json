@@ -106,6 +106,7 @@
     { "path": "./plugins/frontend/plugin-ai-agent-frontend-tech-radar-ai-manager" },
     { "path": "./plugins/frontend/plugin-ai-agent-frontend-tech-debt-ai-scout" },
     { "path": "./plugins/frontend/plugin-ai-agent-frontend-search-ai-archeology" },
+    { "path": "./plugins/frontend/plugin-ai-agent-frontend-search-ai-context" },
 
     // 9. Observability
     { "path": "./plugins/backend/plugin-ai-core-backend-module-observability" },

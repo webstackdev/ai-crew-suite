@@ -75,6 +75,10 @@ vi.mock(
   () => ({ default: 'search-ai-archeology' })
 );
 vi.mock(
+  '@webstackbuilders/plugin-ai-agent-frontend-search-ai-context/alpha',
+  () => ({ default: 'search-ai-context' })
+);
+vi.mock(
   '@webstackbuilders/plugin-ai-agent-frontend-tech-debt-ai-scout/alpha',
   () => ({ default: 'tech-debt-ai-scout' })
 );
@@ -117,6 +121,7 @@ describe('App', () => {
         'scaffolder-ai-infra',
         'rfc-adr-ai-reviewer',
         'search-ai-archeology',
+        'search-ai-context',
         'tech-debt-ai-scout',
         'tech-radar-ai-manager',
         'techdocs-ai-janitor',
