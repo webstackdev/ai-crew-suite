@@ -55,6 +55,7 @@ export const StartPostmortemDialog = (props: {
           value={incidentId}
           onChange={event => setIncidentId(event.target.value)}
           margin="normal"
+          inputProps={{ 'aria-label': 'Resolved incident ID' }}
         />
       </DialogContent>
       <DialogActions>
