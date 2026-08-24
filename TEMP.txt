@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-Next let's implement a story for plugins/frontend/plugin-ai-agent-frontend-tech-debt-ai-scout/src/components/StartDebtScanDialog/StartDebtScanDialog.tsx following the instructions in .vscode/instructions/storybook.instructions.md following the instructions in .vscode/instructions/storybook.instructions.md
+Next let's implement a story for plugins/frontend/plugin-ai-agent-frontend-techdocs-ai-janitor/src/components/JanitorReportPanel/JanitorReportPanel.tsx following the instructions in .vscode/instructions/storybook.instructions.md following the instructions in .vscode/instructions/storybook.instructions.md

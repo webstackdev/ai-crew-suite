@@ -59,6 +59,7 @@ export const StartRadarAnalysisDialog = (props: {
           value={repoUrl}
           onChange={event => setRepoUrl(event.target.value)}
           margin="normal"
+          inputProps={{ 'aria-label': 'Repository URL' }}
           helperText="Use an HTTP(S) repository URL."
         />
       </DialogContent>
