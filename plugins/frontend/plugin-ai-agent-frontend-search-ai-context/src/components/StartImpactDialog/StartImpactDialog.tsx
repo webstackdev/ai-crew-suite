@@ -74,6 +74,7 @@ export const StartImpactDialog = (props: {
           onChange={event => setEntityRef(event.target.value)}
           margin="normal"
           helperText="For example: component:default/core-payment-api"
+          inputProps={{ 'aria-label': 'Source catalog entity' }}
         />
         <TextField
           select
@@ -104,7 +105,7 @@ export const StartImpactDialog = (props: {
           value={symbol}
           onChange={event => setSymbol(event.target.value)}
           margin="normal"
-          inputProps={{ maxLength: 500 }}
+          inputProps={{ maxLength: 500, 'aria-label': 'Changed symbol' }}
           helperText="For example: /v1/payments/charge"
         />
         <TextField
@@ -113,6 +114,7 @@ export const StartImpactDialog = (props: {
           value={replacement}
           onChange={event => setReplacement(event.target.value)}
           margin="normal"
+          inputProps={{ 'aria-label': 'Suggested replacement' }}
         />
       </DialogContent>
       <DialogActions>
