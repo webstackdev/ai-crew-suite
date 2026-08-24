@@ -15397,6 +15397,23 @@ __metadata:
     "@testing-library/user-event": "npm:^14.6.6"
     "@types/react": "npm:*"
     "@types/react-dom": "npm:*"
+    "@webstackbuilders/plugin-ai-agent-frontend-kubernetes-ai-responder": "workspace:^"
+    "@webstackbuilders/plugin-ai-agent-frontend-oncall-ai-handover-assistant": "workspace:^"
+    "@webstackbuilders/plugin-ai-agent-frontend-release-notes-ai-generator": "workspace:^"
+    "@webstackbuilders/plugin-ai-agent-frontend-rfc-adr-ai-reviewer": "workspace:^"
+    "@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-drift-detector": "workspace:^"
+    "@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-guardrail-agent": "workspace:^"
+    "@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-infra": "workspace:^"
+    "@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-intent": "workspace:^"
+    "@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-prd": "workspace:^"
+    "@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-shadow-detective": "workspace:^"
+    "@webstackbuilders/plugin-ai-agent-frontend-search-ai-archeology": "workspace:^"
+    "@webstackbuilders/plugin-ai-agent-frontend-search-ai-context": "workspace:^"
+    "@webstackbuilders/plugin-ai-agent-frontend-tech-debt-ai-scout": "workspace:^"
+    "@webstackbuilders/plugin-ai-agent-frontend-tech-radar-ai-manager": "workspace:^"
+    "@webstackbuilders/plugin-ai-agent-frontend-techdocs-ai-janitor": "workspace:^"
+    "@webstackbuilders/plugin-ai-agent-frontend-techdocs-ai-postmortem": "workspace:^"
+    "@webstackbuilders/storybook-workspace-infra": "workspace:^"
     eventsource-parser: "npm:^2.0.1"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
@@ -15599,11 +15616,11 @@ __metadata:
     eventsource-parser: "npm:^2.0.1"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
-    react-router-dom: "npm:^6.30.4"
+    react-router-dom: "npm:^6.30.6"
     vitest: "npm:^4.1.11"
   peerDependencies:
     react: ^18.3.1
-    react-router-dom: ^6.30.4
+    react-router-dom: ^6.30.6
   languageName: unknown
   linkType: soft
 
@@ -15624,11 +15641,11 @@ __metadata:
     eventsource-parser: "npm:^2.0.1"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
-    react-router-dom: "npm:^6.30.4"
+    react-router-dom: "npm:^6.30.6"
     vitest: "npm:^4.1.11"
   peerDependencies:
     react: ^18.3.1
-    react-router-dom: ^6.30.4
+    react-router-dom: ^6.30.6
   languageName: unknown
   linkType: soft
 
@@ -15649,11 +15666,11 @@ __metadata:
     eventsource-parser: "npm:^2.0.1"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
-    react-router-dom: "npm:^6.30.4"
-    vitest: "npm:^4.1.10"
+    react-router-dom: "npm:^6.30.6"
+    vitest: "npm:^4.1.11"
   peerDependencies:
     react: ^18.3.1
-    react-router-dom: ^6.30.4
+    react-router-dom: ^6.30.6
   languageName: unknown
   linkType: soft
 
@@ -15674,11 +15691,11 @@ __metadata:
     eventsource-parser: "npm:^2.0.1"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
-    react-router-dom: "npm:^6.30.4"
-    vitest: "npm:^4.1.10"
+    react-router-dom: "npm:^6.30.6"
+    vitest: "npm:^4.1.11"
   peerDependencies:
     react: ^18.3.1
-    react-router-dom: ^6.30.4
+    react-router-dom: ^6.30.6
   languageName: unknown
   linkType: soft
 
@@ -15731,7 +15748,7 @@ __metadata:
     vitest: "npm:^4.1.11"
   peerDependencies:
     react: ^18.3.1
-    react-router-dom: ^6.30.4
+    react-router-dom: ^6.30.6
   languageName: unknown
   linkType: soft
 
@@ -15752,11 +15769,11 @@ __metadata:
     eventsource-parser: "npm:^2.0.1"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
-    react-router-dom: "npm:^6.30.4"
-    vitest: "npm:^4.1.10"
+    react-router-dom: "npm:^6.30.6"
+    vitest: "npm:^4.1.11"
   peerDependencies:
     react: ^18.3.1
-    react-router-dom: ^6.30.4
+    react-router-dom: ^6.30.6
   languageName: unknown
   linkType: soft
 
@@ -15777,11 +15794,11 @@ __metadata:
     eventsource-parser: "npm:^2.0.1"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
-    react-router-dom: "npm:^6.30.4"
+    react-router-dom: "npm:^6.30.6"
     vitest: "npm:^4.1.11"
   peerDependencies:
     react: ^18.3.1
-    react-router-dom: ^6.30.4
+    react-router-dom: ^6.30.6
   languageName: unknown
   linkType: soft
 
@@ -15806,7 +15823,7 @@ __metadata:
     vitest: "npm:^4.1.11"
   peerDependencies:
     react: ^18.3.1
-    react-router-dom: ^6.30.4
+    react-router-dom: ^6.30.6
   languageName: unknown
   linkType: soft
 
@@ -15827,11 +15844,11 @@ __metadata:
     eventsource-parser: "npm:^2.0.1"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
-    react-router-dom: "npm:^6.30.4"
+    react-router-dom: "npm:^6.30.6"
     vitest: "npm:^4.1.11"
   peerDependencies:
     react: ^18.3.1
-    react-router-dom: ^6.30.4
+    react-router-dom: ^6.30.6
   languageName: unknown
   linkType: soft
 
@@ -16395,7 +16412,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@webstackbuilders/storybook-workspace-infra@workspace:*, @webstackbuilders/storybook-workspace-infra@workspace:packages/storybook":
+"@webstackbuilders/storybook-workspace-infra@workspace:*, @webstackbuilders/storybook-workspace-infra@workspace:^, @webstackbuilders/storybook-workspace-infra@workspace:packages/storybook":
   version: 0.0.0-use.local
   resolution: "@webstackbuilders/storybook-workspace-infra@workspace:packages/storybook"
   dependencies:

@@ -32,9 +32,12 @@ const answeredReport: CatalogInsightReport = {
 };
 
 describe('InsightStatusBanner', () => {
-  it('is hidden while idle', () => {
-    const { container } = render(<InsightStatusBanner phase="idle" />);
-    expect(container).toBeEmptyDOMElement();
+  it('prompts the user to start an insight while idle', () => {
+    render(<InsightStatusBanner phase="idle" />);
+    expect(screen.getByRole('status')).toHaveTextContent('Ready for a question');
+    expect(screen.getByRole('status')).toHaveTextContent(
+      'Ask a question to gather cited context for this entity.',
+    );
   });
 
   it('announces progress with a live region while running', () => {

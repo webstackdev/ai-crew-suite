@@ -102,6 +102,11 @@ export const InsightRunView = ({
           </ul>
         </div>
       ) : null}
+      {steps.length === 0 && toolEvents.length === 0 ? (
+        <Typography variant="body2" color="textSecondary">
+          No run activity yet.
+        </Typography>
+      ) : null}
     </section>
   );
 };

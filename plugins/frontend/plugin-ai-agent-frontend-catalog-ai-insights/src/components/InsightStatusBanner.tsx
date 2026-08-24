@@ -53,6 +53,13 @@ const describeRun = (
   if (phase === 'running') {
     return { tone: 'running', title: 'Answering your question' };
   }
+  if (phase === 'idle') {
+    return {
+      tone: 'running',
+      title: 'Ready for a question',
+      detail: 'Ask a question to gather cited context for this entity.',
+    };
+  }
   if (phase !== 'finished') {
     return undefined;
   }
