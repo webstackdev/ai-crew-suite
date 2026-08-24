@@ -24,7 +24,13 @@ export type ResolutionBannerProps = {
 
 /** Shows the released parameter set while retaining the server-side enforcement warning. */
 export const ResolutionBanner = ({ resolution }: ResolutionBannerProps) => {
-  if (!resolution) return null;
+  if (!resolution) {
+    return (
+      <Paper role="status">
+        <Typography>No guardrail resolution is available yet.</Typography>
+      </Paper>
+    );
+  }
 
   return (
     <Paper role="status">

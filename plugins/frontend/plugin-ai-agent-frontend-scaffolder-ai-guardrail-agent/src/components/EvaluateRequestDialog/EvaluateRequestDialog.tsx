@@ -88,6 +88,7 @@ export const EvaluateRequestDialog = ({
             value={environment}
             onChange={event => setEnvironment(event.target.value)}
             fullWidth
+            inputProps={{ 'aria-label': 'Environment (optional)' }}
           />
   
           <TextField
