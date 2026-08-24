@@ -59,7 +59,7 @@ export const reducePrdRun = (state: PrdRunState, event: AiRunEvent): PrdRunState
       if (
         !blueprint ||
         !Array.isArray(blueprint.stories) ||
-        !blueprint.template
+        (blueprint.status === 'blueprint_only' && !blueprint.template)
       )
         return { ...state, runId };
       return { ...state, runId, blueprint };

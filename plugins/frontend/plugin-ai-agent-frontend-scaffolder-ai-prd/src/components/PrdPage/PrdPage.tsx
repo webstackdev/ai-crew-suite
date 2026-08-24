@@ -65,7 +65,7 @@ export const PrdPage = () => {
           label="Product requirements document"
           value={text}
           onChange={event => setText(event.target.value)}
-          inputProps={{ maxLength: 20_000 }}
+          inputProps={{ maxLength: 20_000, 'aria-label': 'Product requirements document' }}
         />
         <Button
           color="primary"

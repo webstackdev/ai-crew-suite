@@ -52,4 +52,27 @@ describe('reducePrdRun', () => {
       }).blueprint?.title,
     ).toBe('MFA');
   });
+
+  it('retains an unparseable blueprint without a template plan', () => {
+    const state = reducePrdRun(initialPrdRunState, {
+      type: 'artifact',
+      data: {
+        runId: 'run-unparseable',
+        kind: 'delivery-blueprint',
+        ref: JSON.stringify({
+          title: 'Unresolved product request',
+          blueprintHash: 'hash',
+          readiness: 'partial',
+          stories: [],
+          openQuestions: ['Which product capability should be planned?'],
+          limitations: [],
+          evidence: [],
+          status: 'unparseable',
+        }),
+      },
+    });
+
+    expect(state.blueprint?.status).toBe('unparseable');
+    expect(state.blueprint?.template).toBeUndefined();
+  });
 });
