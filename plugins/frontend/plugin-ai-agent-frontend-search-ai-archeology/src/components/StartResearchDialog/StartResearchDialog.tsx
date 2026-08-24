@@ -69,7 +69,7 @@ export const StartResearchDialog = (props: {
           value={question}
           onChange={event => setQuestion(event.target.value)}
           margin="normal"
-          inputProps={{ maxLength: 500 }}
+          inputProps={{ maxLength: 500, 'aria-label': 'Research question' }}
           helperText="For example: Who has triaged payment-reconciliation incidents?"
         />
         <TextField
@@ -78,6 +78,7 @@ export const StartResearchDialog = (props: {
           value={repoUrl}
           onChange={event => setRepoUrl(event.target.value)}
           margin="normal"
+          inputProps={{ 'aria-label': 'Repository URL' }}
         />
         <TextField
           fullWidth
@@ -86,6 +87,7 @@ export const StartResearchDialog = (props: {
           onChange={event => setEntityRef(event.target.value)}
           margin="normal"
           helperText="Provide a repository URL or catalog entity reference."
+          inputProps={{ 'aria-label': 'Catalog entity reference' }}
         />
       </DialogContent>
       <DialogActions>
