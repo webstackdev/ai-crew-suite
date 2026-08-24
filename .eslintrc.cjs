@@ -91,10 +91,6 @@ module.exports = {
       createConfigForRole(__dirname, 'backend'),
     ),
     ...scopedOverrides(
-      'plugins/frontend/plugin-ai-crew-suite',
-      createConfigForRole(__dirname, 'frontend-plugin'),
-    ),
-    ...scopedOverrides(
       'plugins/frontend/plugin-ai-agent-frontend-kubernetes-ai-responder',
       createConfigForRole(__dirname, 'frontend-plugin'),
     ),

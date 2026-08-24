@@ -64,7 +64,6 @@ The important design rule is that core packages communicate through contracts, n
 | `@webstackbuilders/plugin-ai-core-backend-module-llm-aws`             | AWS Bedrock embeddings module that contributes an embeddings-backed retrieval/indexing tool.                                                         |
 | `@webstackbuilders/plugin-ai-core-backend-module-llm-openai`          | OpenAI embeddings module that contributes an embeddings-backed retrieval/indexing tool.                                                              |
 | `@webstackbuilders/plugin-ai-core-backend-module-llm-openrouter`      | OpenRouter model provider module that contributes LangChain chat models to the model registry.                                                       |
-| `@webstackbuilders/plugin-ai-crew-suite`                              | Frontend plugin surface for interacting with AI Crew Suite capabilities in Backstage.                                                                |
 
 See [docs/core-development/index.md](docs/core-development/index.md) for the deeper core development documentation.
 
@@ -111,7 +110,7 @@ packages/
   backend/   Backstage backend app shell
 plugins/
   backend/   AI Core backend plugin and provider modules
-  frontend/  AI Crew Suite frontend plugin
+  frontend/  Dedicated AI agent workflow plugins
 docs/
   core-development/  Architecture and maintainer docs for the core AI plugins
 ```
@@ -125,7 +124,6 @@ Run package-specific commands from the monorepo root so Yarn PnP and workspace r
 ```bash
 yarn workspace @webstackbuilders/plugin-ai-core-backend test
 yarn workspace @webstackbuilders/plugin-ai-core-backend-module-llm-openrouter build
-yarn tsc -b plugins/frontend/plugin-ai-crew-suite/tsconfig.json --noEmit
 ```
 
 When adding or changing a core backend module, update the matching package README and the relevant page under [docs/core-development](docs/core-development). The core docs are organized by operational layer:

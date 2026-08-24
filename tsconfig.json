@@ -25,7 +25,6 @@
     { "path": "./packages/storybook" },
 
     // 2. Frontend Plugins
-    { "path": "./plugins/frontend/plugin-ai-crew-suite" },
     {
       "path": "./plugins/frontend/plugin-ai-agent-frontend-kubernetes-ai-responder"
     },

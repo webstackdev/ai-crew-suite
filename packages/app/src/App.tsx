@@ -18,7 +18,6 @@ import type { FrontendFeature } from '@backstage/frontend-plugin-api';
 import catalogPlugin from '@backstage/plugin-catalog/alpha';
 import notificationsPlugin from '@backstage/plugin-notifications/alpha';
 import searchPlugin from '@backstage/plugin-search/alpha';
-import ragAiPlugin from '@webstackbuilders/plugin-ai-crew-suite/alpha';
 import kubernetesAiResponderPlugin from '@webstackbuilders/plugin-ai-agent-frontend-kubernetes-ai-responder/alpha';
 import oncallHandoverPlugin from '@webstackbuilders/plugin-ai-agent-frontend-oncall-ai-handover-assistant/alpha';
 import releaseNotesPlugin from '@webstackbuilders/plugin-ai-agent-frontend-release-notes-ai-generator/alpha';
@@ -44,7 +43,6 @@ const features: FrontendFeature[] = [
   notificationsPlugin as FrontendFeature,
   searchPlugin as FrontendFeature,
   navModule as FrontendFeature,
-  ragAiPlugin,
   kubernetesAiResponderPlugin,
   oncallHandoverPlugin,
   releaseNotesPlugin,

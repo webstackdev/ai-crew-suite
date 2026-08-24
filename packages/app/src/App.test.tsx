@@ -27,9 +27,6 @@ vi.mock('@backstage/plugin-notifications/alpha', () => ({
   default: 'notifications',
 }));
 vi.mock('@backstage/plugin-search/alpha', () => ({ default: 'search' }));
-vi.mock('@webstackbuilders/plugin-ai-crew-suite/alpha', () => ({
-  default: 'ai-crew',
-}));
 vi.mock(
   '@webstackbuilders/plugin-ai-agent-frontend-kubernetes-ai-responder/alpha',
   () => ({
@@ -122,7 +119,6 @@ describe('App', () => {
         'notifications',
         'search',
         'navigation',
-        'ai-crew',
         'kubernetes-ai-responder',
         'oncall-handover-assistant',
         'release-notes-ai-generator',
