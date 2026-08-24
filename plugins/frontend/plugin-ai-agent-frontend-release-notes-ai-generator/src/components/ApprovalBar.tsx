@@ -33,25 +33,29 @@ export const ApprovalBar = ({
   onDecide: (decision: ApprovalDecision) => void;
 }) => {
   const [note, setNote] = useState('');
+  const decide = (status: ApprovalDecision['status']) =>
+    onDecide({ status, note: note.trim() || undefined });
 
   return (
     <Paper role="region" aria-label="Publication approval">
       <Typography>{reason}</Typography>
 
       <TextField
+        id="release-notes-approval-note"
         label="Approval note (optional)"
         value={note}
         onChange={(event) => setNote(event.target.value)}
+        inputProps={{ 'aria-label': 'Approval note (optional)' }}
       />
 
       <Button
         color="primary"
-        onClick={() => onDecide({ status: 'approved', note: note || undefined })}
+        onClick={() => decide('approved')}
       >
         Approve publication
       </Button>
 
-      <Button onClick={() => onDecide({ status: 'rejected', note: note || undefined })}>
+      <Button onClick={() => decide('rejected')}>
         Reject publication
       </Button>
     </Paper>

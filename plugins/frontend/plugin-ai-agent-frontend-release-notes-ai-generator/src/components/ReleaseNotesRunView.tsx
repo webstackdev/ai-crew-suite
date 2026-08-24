@@ -48,5 +48,11 @@ export const ReleaseNotesRunView = ({ state }: { state: ReleaseNotesRunState }) 
         {tool.summary ? `: ${tool.summary}` : ''}
       </Typography>
     ))}
+
+    {state.steps.length === 0 && state.tools.length === 0 ? (
+      <Typography variant="body2" color="textSecondary">
+        No release-notes run activity yet.
+      </Typography>
+    ) : null}
   </section>
 );

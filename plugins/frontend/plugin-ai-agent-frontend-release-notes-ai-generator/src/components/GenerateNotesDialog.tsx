@@ -69,6 +69,7 @@ export const GenerateNotesDialog = ({
 
         <DialogContent>
           <TextField
+            id="generate-notes-repository-url"
             label="Repository URL"
             required
             fullWidth
@@ -76,8 +77,10 @@ export const GenerateNotesDialog = ({
             value={repoUrl}
             onChange={(event) => setRepoUrl(event.target.value)}
             placeholder="https://github.com/acme/product"
+            inputProps={{ 'aria-label': 'Repository URL' }}
           />
           <TextField
+            id="generate-notes-target-version"
             label="Target version"
             required
             fullWidth
@@ -85,20 +88,25 @@ export const GenerateNotesDialog = ({
             value={targetVersion}
             onChange={(event) => setTargetVersion(event.target.value)}
             placeholder="v1.2.0"
+            inputProps={{ 'aria-label': 'Target version' }}
           />
           <TextField
+            id="generate-notes-window-start"
             label="Window start (optional ISO timestamp)"
             fullWidth
             margin="normal"
             value={since}
             onChange={(event) => setSince(event.target.value)}
+            inputProps={{ 'aria-label': 'Window start (optional ISO timestamp)' }}
           />
           <TextField
+            id="generate-notes-window-end"
             label="Window end (optional ISO timestamp)"
             fullWidth
             margin="normal"
             value={until}
             onChange={(event) => setUntil(event.target.value)}
+            inputProps={{ 'aria-label': 'Window end (optional ISO timestamp)' }}
           />
         </DialogContent>
 

@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-Next let's implement a story for plugins/frontend/plugin-ai-agent-frontend-oncall-ai-handover-assistant/src/components/HandoverStatusBanner.tsx following the instructions in .vscode/instructions/storybook.instructions.md
+Next let's implement a story for plugins/frontend/plugin-ai-agent-frontend-rfc-adr-ai-reviewer/src/components/ApprovalBar/ApprovalBar.tsx following the instructions in .vscode/instructions/storybook.instructions.md
