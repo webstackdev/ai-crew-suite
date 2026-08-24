@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-Next let's implement a story for plugins/frontend/plugin-ai-agent-frontend-kubernetes-ai-responder/src/components/EvidencePanel.tsx following the instructions in .vscode/instructions/storybook.instructions.md
+Next let's implement a story for plugins/frontend/plugin-ai-agent-frontend-oncall-ai-handover-assistant/src/components/BriefPanels.tsx following the instructions in .vscode/instructions/storybook.instructions.md

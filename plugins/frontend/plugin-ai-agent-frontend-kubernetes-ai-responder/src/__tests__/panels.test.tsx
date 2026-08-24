@@ -68,6 +68,11 @@ const report: IncidentTriageReport = {
 };
 
 describe('RunTimeline', () => {
+  it('explains when no investigation activity exists yet', () => {
+    render(<RunTimeline steps={[]} toolEvents={[]} />);
+    expect(screen.getByText('No investigation activity yet.')).toBeInTheDocument();
+  });
+
   it('lists workflow nodes with their latest phase and tool activity', () => {
     render(
       <RunTimeline

@@ -147,6 +147,7 @@ export const TriggerIncidentDialog = ({
             COORD_FIELDS.map(field => (
               <TextField
                 key={field.key}
+                id={`incident-${field.key}`}
                 label={field.label}
                 value={coords[field.key]}
                 onChange={setCoord(field.key)}
@@ -157,6 +158,7 @@ export const TriggerIncidentDialog = ({
             ))
           )}
           <TextField
+            id="incident-summary"
             label="Summary (optional)"
             value={summary}
             onChange={event => setSummary(event.target.value)}
@@ -166,6 +168,7 @@ export const TriggerIncidentDialog = ({
             minRows={2}
           />
           <TextField
+            id="incident-severity"
             label="Severity (optional)"
             value={severity}
             onChange={event => setSeverity(event.target.value)}

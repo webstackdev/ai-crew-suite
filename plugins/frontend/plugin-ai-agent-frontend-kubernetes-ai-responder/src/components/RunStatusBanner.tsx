@@ -53,6 +53,13 @@ const describeRun = (
   if (phase === 'running') {
     return { tone: 'running', title: 'Investigation in progress' };
   }
+  if (phase === 'idle') {
+    return {
+      tone: 'running',
+      title: 'Ready to investigate',
+      detail: 'Start an investigation to collect bounded Kubernetes evidence.',
+    };
+  }
   if (phase !== 'finished') {
     return undefined;
   }

@@ -37,9 +37,12 @@ const investigatedReport: IncidentTriageReport = {
 };
 
 describe('RunStatusBanner', () => {
-  it('is hidden while idle', () => {
-    const { container } = render(<RunStatusBanner phase="idle" />);
-    expect(container).toBeEmptyDOMElement();
+  it('prompts the user to start an investigation while idle', () => {
+    render(<RunStatusBanner phase="idle" />);
+    expect(screen.getByRole('status')).toHaveTextContent('Ready to investigate');
+    expect(screen.getByRole('status')).toHaveTextContent(
+      'Start an investigation to collect bounded Kubernetes evidence.',
+    );
   });
 
   it('announces progress with a live region while running', () => {

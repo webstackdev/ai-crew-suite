@@ -101,6 +101,11 @@ export const RunTimeline = ({
           </ul>
         </div>
       ) : null}
+      {steps.length === 0 && toolEvents.length === 0 ? (
+        <Typography variant="body2" color="textSecondary">
+          No investigation activity yet.
+        </Typography>
+      ) : null}
     </section>
   );
 };
