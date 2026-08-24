@@ -15474,6 +15474,7 @@ __metadata:
     "@testing-library/user-event": "npm:^14.6.6"
     "@types/react": "npm:*"
     "@types/react-dom": "npm:*"
+    "@webstackbuilders/storybook-workspace-infra": "workspace:^"
     eventsource-parser: "npm:^2.0.1"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"

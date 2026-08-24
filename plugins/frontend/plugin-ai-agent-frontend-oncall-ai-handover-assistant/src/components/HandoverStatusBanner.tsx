@@ -23,6 +23,7 @@ const messageFor = (
   error: string | undefined
 ) => {
   if (error) return 'Handover compilation failed';
+  if (phase === 'idle') return 'Ready to compile a handover brief';
   if (phase === 'running') return 'Compiling handover brief';
   if (brief?.status === 'no_activity') return 'No activity in this handover window';
   if (brief?.status === 'partial') return 'Partial handover brief';
@@ -39,8 +40,6 @@ export const HandoverStatusBanner = ({
   brief?: HandoverBrief;
   error?: string;
 }) => {
-  if (phase === 'idle') return null;
-
   return (
     <Paper role="status" aria-live="polite">
       <Typography>{messageFor(phase, brief, error)}</Typography>

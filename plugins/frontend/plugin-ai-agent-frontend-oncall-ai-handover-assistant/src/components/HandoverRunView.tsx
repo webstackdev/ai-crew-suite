@@ -39,5 +39,11 @@ export const HandoverRunView = ({ state }: { state: HandoverRunState }) => (
         {tool.summary ? `: ${tool.summary}` : ''}
       </Typography>
     ))}
+
+    {state.steps.length === 0 && state.tools.length === 0 ? (
+      <Typography variant="body2" color="textSecondary">
+        No run activity yet.
+      </Typography>
+    ) : null}
   </section>
 );

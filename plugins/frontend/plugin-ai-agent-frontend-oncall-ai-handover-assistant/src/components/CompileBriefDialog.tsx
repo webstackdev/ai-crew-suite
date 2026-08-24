@@ -65,6 +65,7 @@ export const CompileBriefDialog = ({
         <DialogTitle id="compile-brief-title">Compile handover brief</DialogTitle>
         <DialogContent>
           <TextField
+            id="compile-brief-team"
             label="Team or rotation"
             required
             fullWidth
@@ -73,6 +74,7 @@ export const CompileBriefDialog = ({
             onChange={(event) => setTeam(event.target.value)}
           />
           <TextField
+            id="compile-brief-hours"
             label="Trailing window (hours)"
             type="number"
             fullWidth
@@ -81,6 +83,7 @@ export const CompileBriefDialog = ({
             onChange={(event) => setHours(event.target.value)}
           />
           <TextField
+            id="compile-brief-incoming-engineer"
             label="Incoming engineer (optional)"
             fullWidth
             margin="normal"
