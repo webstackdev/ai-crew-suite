@@ -20,9 +20,11 @@ import { describe, expect, it } from 'vitest';
 import { PublicationBanner } from '../PublicationBanner';
 
 describe('PublicationBanner', () => {
-  it('is hidden until a decision has been made', () => {
-    const { container } = render(<PublicationBanner />);
-    expect(container).toBeEmptyDOMElement();
+  it('explains that publication is waiting for an approval decision', () => {
+    render(<PublicationBanner />);
+
+    expect(screen.getByRole('status')).toHaveTextContent('Ready to publish after approval');
+    expect(screen.getByRole('status')).toHaveTextContent('The critique has not been posted yet');
   });
 
   it('links the posted comment after an approved run', () => {

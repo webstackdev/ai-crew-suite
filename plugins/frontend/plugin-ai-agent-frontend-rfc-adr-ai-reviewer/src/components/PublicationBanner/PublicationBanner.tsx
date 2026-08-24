@@ -38,7 +38,7 @@ export type PublicationBannerProps = {
 /**
  * Outcome of the approval gate. Shows a link to the posted pull-request
  * comment after an approved run, or states that the critique remains unposted
- * after a rejection. Renders nothing while no decision has been made.
+ * after a rejection. Shows a readiness message while no decision has been made.
  */
 export const PublicationBanner = ({
   publication,
@@ -70,7 +70,16 @@ export const PublicationBanner = ({
   }
 
   if (!rejected) {
-    return null;
+    return (
+      <Paper role="status" data-outcome="pending">
+        <Typography variant="subtitle1" component="h3">
+          Ready to publish after approval
+        </Typography>
+        <Typography variant="body2" color="textSecondary">
+          The critique has not been posted yet; review the approval request before publishing.
+        </Typography>
+      </Paper>
+    );
   }
 
   return (
