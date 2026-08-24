@@ -15840,10 +15840,12 @@ __metadata:
     "@testing-library/react": "npm:^16.3.2"
     "@types/react": "npm:*"
     "@types/react-dom": "npm:*"
+    "@webstackbuilders/storybook-workspace-infra": "workspace:*"
     eventsource-parser: "npm:^2.0.1"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
     react-router-dom: "npm:^6.30.6"
+    storybook: "npm:^10.5.10"
     vitest: "npm:^4.1.11"
   peerDependencies:
     react: ^18.3.1

@@ -69,6 +69,7 @@ export const StartAuditDialog = (props: {
           value={entityRef}
           onChange={event => setEntityRef(event.target.value)}
           margin="normal"
+          inputProps={{ 'aria-label': 'Catalog entity reference' }}
         />
         <TextField
           fullWidth
@@ -77,6 +78,7 @@ export const StartAuditDialog = (props: {
           value={repoUrl}
           onChange={event => setRepoUrl(event.target.value)}
           margin="normal"
+          inputProps={{ 'aria-label': 'Repository URL' }}
         />
         <TextField
           fullWidth
@@ -87,6 +89,7 @@ export const StartAuditDialog = (props: {
           value={paths}
           onChange={event => setPaths(event.target.value)}
           margin="normal"
+          inputProps={{ 'aria-label': 'Markdown paths (one per line)' }}
           helperText="Explicit paths are required; documentation discovery is not active."
         />
       </DialogContent>
