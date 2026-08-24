@@ -87,6 +87,7 @@ export const PreviewGenerationDialog = ({
             value={region}
             onChange={event => setRegion(event.target.value)}
             fullWidth
+            inputProps={{ 'aria-label': 'Region (optional)' }}
           />
         </DialogContent>
 
