@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-Next let's implement a story for plugins/frontend/plugin-ai-agent-frontend-rfc-adr-ai-reviewer/src/components/StartReviewDialog/StartReviewDialog.tsx following the instructions in .vscode/instructions/storybook.instructions.md following the instructions in .vscode/instructions/storybook.instructions.md
+Next let's implement a story for plugins/frontend/plugin-ai-agent-frontend-scaffolder-ai-drift-detector/src/components/RunDriftCheckDialog/RunDriftCheckDialog.tsx following the instructions in .vscode/instructions/storybook.instructions.md following the instructions in .vscode/instructions/storybook.instructions.md

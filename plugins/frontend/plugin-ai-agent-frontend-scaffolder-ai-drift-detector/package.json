@@ -37,6 +37,7 @@
     "@backstage/core-plugin-api": "backstage:^",
     "@backstage/frontend-plugin-api": "backstage:^",
     "@material-ui/core": "^4.12.4",
+    "@webstackbuilders/storybook-workspace-infra": "workspace:*",
     "eventsource-parser": "^2.0.1",
     "vitest": "^4.1.11"
   },
@@ -55,6 +56,7 @@
     "@types/react-dom": "*",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^6.30.6"
+    "react-router-dom": "^6.30.6",
+    "storybook": "^10.5.10"
   }
 }
