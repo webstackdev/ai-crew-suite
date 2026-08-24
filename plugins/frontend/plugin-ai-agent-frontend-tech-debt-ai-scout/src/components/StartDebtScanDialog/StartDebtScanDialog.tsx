@@ -65,6 +65,7 @@ export const StartDebtScanDialog = (props: {
           value={repoUrl}
           onChange={event => setRepoUrl(event.target.value)}
           margin="normal"
+          inputProps={{ 'aria-label': 'Repository URL' }}
           helperText="Use an HTTP(S) repository URL. Bitbucket and Gerrit scans are reported as unsupported, not clean."
         />
         <TextField
@@ -73,7 +74,10 @@ export const StartDebtScanDialog = (props: {
           value={question}
           onChange={event => setQuestion(event.target.value)}
           margin="normal"
-          inputProps={{ maxLength: 500 }}
+          inputProps={{
+            'aria-label': 'Optional research context',
+            maxLength: 500,
+          }}
         />
       </DialogContent>
       <DialogActions>
