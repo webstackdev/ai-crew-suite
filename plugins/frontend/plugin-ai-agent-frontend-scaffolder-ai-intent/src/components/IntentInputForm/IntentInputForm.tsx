@@ -35,7 +35,7 @@ export const IntentInputForm = (props: { onSubmit(input: StartIntentInput): void
         label="Provisioning request"
         value={utterance}
         onChange={event => setUtterance(event.target.value)}
-        inputProps={{ maxLength: 1000 }}
+        inputProps={{ maxLength: 1000, 'aria-label': 'Provisioning request' }}
         helperText="For example: Create a react app called payment-gateway."
       />
       <Button
