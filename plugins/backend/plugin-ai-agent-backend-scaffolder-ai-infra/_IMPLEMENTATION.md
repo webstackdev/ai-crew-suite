@@ -1,5 +1,30 @@
 # Scaffolder AI Infra Implementation Plan
 
+## Overview
+
+This plugin automatically generates Infrastructure as Code (IaC) files matching your organization's compliance blueprints directly during the project scaffolding step.
+
+- **The Task**: Generating tailored, security-hardened infrastructure-as-code files directly during software provisioning runs.
+- **The Logic**: Rather than acting as a loose, standalone code generator, this tool executes as an integrated **Scaffolder Action step**. When a software template is triggered, a stateful LangGraph multi-agent network split by technology roles (**Terraform Expert node** vs. **CloudFormation Expert node**) reads the specific capacity variables, pulls base corporate modules via the `urlReader`, generates structural configurations, runs pre-flight syntax checks, and returns compliant code blocks to the active workspace.
+
+Here are the concrete examples of what the data sources and dependencies look like in a Backstage ecosystem:
+
+1. Catalog Dependencies (Context & Naming Registry)
+
+Before generating code, the agent queries the **Backstage Software Catalog** to extract entity definitions and global resource limits.
+
+- **`Resource` & `System` Entities**: The agent inspects existing Catalog resources to ensure it doesn't create duplicate cloud setups. For example, if it needs to provision a database for a service, it checks the catalog to ensure an active `Resource` with that identifier doesn't already exist.
+- **Organizational Ownership (`Group` Entities)**: The agent pulls ownership metadata from the catalog to inject precise tag keys into the `main.tf` file. This ensures every cloud resource is automatically tagged with its valid Backstage team owner (e.g., `tags = { Owner = "team-checkout" }`).
+- Policy Registries (Compliance Guardrails)
+
+Instead of hardcoding compliance logic inside your prompt templates, your LangGraph validation nodes query external governance engines or static schema definition objects.
+
+- **Open Policy Agent (OPA) / Rego Registry**: Your company might maintain an OPA server to enforce infrastructure policies. The LangGraph validation node passes the generated code strings to OPA to run automated compliance checks before writing to the workspace.
+  - _Example policy_: "Databases cannot have public IP addresses exposed to the internet."
+  - _Example check_: If the agent generates an `aws_db_instance` with `publicly_accessible = true`, the OPA policy registry rejects it, and the graph loops backward to force a self-correction.
+- **Backstage Permission Policies**: The registry validates whether the user triggering the Scaffolder template actually has the permission to provision the requested resource tier (e.g., restricting large production-grade cluster sizes to authorized team leads).
+- **Static Architecture Policies**: A centralized file registry defining valid configuration criteria—such as lists of allowed AWS regions, standard instance families, and mandatory encryption algorithms.
+
 ## Goal
 
 Implement `@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-infra` as a **custom Scaffolder action** (plus a companion AI Core runner for persisted preview/replay) that generates security-hardened Infrastructure-as-Code inside the live Scaffolder workspace during a template run. It reads capacity/provider parameters from the action input, pulls the organization's approved base blueprint via `coreServices.urlReader`, deterministically routes to a **Terraform expert** or **CloudFormation expert** generator node, injects catalog-derived ownership tags, validates the emitted files against policy and syntax, self-corrects a bounded number of times on validation failure, and only then writes the files into the workspace. A paired frontend plugin renders generation previews, validation findings, and run history.
@@ -450,20 +475,7 @@ frontend intentionally does not invent syntax-highlighted content tabs or a
 history/list API. File writes remain exclusive to the real
 `ai:infra:generate` Scaffolder action.
 
-### Wiring and validation
-
-- Registered TypeScript/ESLint coverage, app package dependency, alpha feature,
-  and app feature expectation.
-- 5 focused tests cover report replay, progress/malformed artifact handling,
-  blocking/empty validation findings, and explicit non-writing preview status.
-- `yarn vitest run plugins/frontend/plugin-ai-agent-frontend-scaffolder-ai-infra/src` — __5 tests passed__
-- Package `tsc --noEmit`, package lint, and app registration test — clean.
-
 ## Backend Completed
-
-Implemented the deterministic approved-blueprint backend at:
-
-`/home/kevin/Repos/backstage/ai-crew-suite/plugins/backend/plugin-ai-agent-backend-scaffolder-ai-infra`
 
 ### Implemented
 
@@ -491,14 +503,6 @@ adapters, policy-driver validation over generated files, repository-blueprint
 reads, RAG, and a dedicated Scaffolder action test helper require additional
 confirmed integrations and remain deferred. The preview runner never writes a
 workspace; writes occur only within an actual sandboxed Scaffolder action.
-
-### Tests and validation
-
-- 7 focused tests across 3 files: Terraform route/file name, deterministic
-  placeholder render, blocking holes/secrets, workspace write, dry-run,
-  traversal rejection, preview artifact, and blueprint-unavailable outcome.
-- `yarn vitest run plugins/backend/plugin-ai-agent-backend-scaffolder-ai-infra/src` — __7 tests passed__
-- Package `tsc --noEmit` and package lint — clean
 
 ### Wiring added
 

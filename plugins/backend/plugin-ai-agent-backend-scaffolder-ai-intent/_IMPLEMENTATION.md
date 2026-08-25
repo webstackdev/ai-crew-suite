@@ -1,5 +1,16 @@
 # Scaffolder AI Intent Implementation Plan
 
+## Overview
+
+This plugin analyzes natural language intent inputs from users to automatically select, pre-fill, and execute appropriate software template blueprints.
+
+**Value**: High. Standard Scaffolder forms can suffer from field fatigue, often requiring complex regex validations and deep knowledge of enterprise parameter syntax.
+
+**Optimization Strategy**: Shift this from a basic form-filler into a **Self-Healing Parameter Validator**. Instead of just guessing strings, your LangGraph orchestrator should parse the natural language, match it to the Scaffolder schema, and use your platform's **idempotency and validation loops** to test the inputs against live infrastructure rules (e.g., verifying if a requested service name is already taken in the Backstage Catalog) before prompting the user with a confirmation screen.
+
+- **The Task:** Replacing manual Scaffolder forms with natural-language service requests.
+- **The Logic:** A dev describes their needs in plain English. The agent selects the correct Software Template and pre-fills the parameters.
+
 ## Goal
 
 Implement `@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-intent` as an AI Core backend module that turns a plain-English provisioning request ("create a react app called payment-gateway") into a **validated** Scaffolder template selection with pre-filled parameters. It is not a form-filler: parameters are coerced against the template's real JSON schema, then tested against live infrastructure rules — chiefly catalog name availability — and any failure loops back through a **self-healing correction turn** that asks the developer for a specific fix. The graph then freezes at a human confirmation gate and triggers the Scaffolder task only after an explicit confirmation. A paired frontend plugin owns the conversational correction form and the confirmation screen.

@@ -1,5 +1,12 @@
 # Tech Debt AI Scout Implementation Plan
 
+## Overview
+
+This plugin systematically crawls your code repositories to automatically map, prioritize, and surface code rot, deprecated library usages, and complex technical debt hotspots.
+
+- **The Task:** Surfacing tech debt across the organization's repositories.
+- **The Logic:** A crew periodically scans repositories for deprecated libraries or "TODO" comments, creating Jira tickets or Backstage Scorecard updates.
+
 ## Goal
 
 Implement `@webstackbuilders/plugin-ai-agent-backend-tech-debt-ai-scout` as an AI Core backend module that turns scattered code rot into a prioritized, owner-routed backlog. A scheduled sweep walks catalog-registered repositories; a **Scanner** stage reads bounded source and dependency manifests to extract raw debt signals; a **Triager** stage deterministically scores them so a security `FIXME` or a CVE-exposed dependency escalates while a generic housekeeping `TODO` is suppressed; and a **Reporter** stage emits a cited `DebtReport` and — only after approval — opens one tracking ticket per escalated finding. A persistent fingerprint ledger guarantees a weekly cron never files the same ticket twice. A paired frontend plugin renders the debt dashboard, severity rationale, and suppressed findings.

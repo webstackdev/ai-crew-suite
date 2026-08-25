@@ -1,5 +1,12 @@
 # Scaffolder AI PRD Implementation Plan
 
+## Overview
+
+This plugin automatically parses Product Requirement Documents (PRDs) and translates them into actionable engineering templates and task definitions during the scaffolding phase.
+
+- **The Task**: Transforming a raw Product Requirement Document (PRD) into a comprehensive, multi-entity project footprint spanning ticketing, code repositories, and documentation.
+- **The Logic**: When a user submits a PRD, a stateful LangGraph multi-agent network distributes the work to specialized node agents. The **Product Manager node** translates product specs into structured Jira Epics and Stories, the **Engineer node** parses technical mandates to determine which Backstage Software Templates to configure, and the **Technical Writer node** generates the baseline architectural documentation. The execution automatically freezes at a persistent database checkpoint for engineering lead sign-off before executing any write operations across external tools.
+
 ## Goal
 
 Implement `@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-prd` as an AI Core backend module that turns one raw Product Requirements Document into a **cited, multi-domain delivery blueprint**. Three specialist nodes run concurrently over the same parsed PRD — a **Product Manager** node deriving an epic/story hierarchy, an **Engineer** node selecting the Software Template and its parameters, and a **Technical Writer** node outlining baseline architecture docs. Their outputs merge deterministically into a single `DeliveryBlueprint`, the run freezes at a human approval checkpoint, and only after sign-off does it commit the external writes (tickets, then the scaffolder task). A paired frontend plugin renders the three channels streaming in parallel, the merged plan, and the approval bar.
@@ -432,10 +439,6 @@ Exit criteria: `yarn test:e2e:scaffolder-ai-prd` demonstrates PRD → three chan
 - [ ] Opt-in real-model evaluation suite (grounding: every epic/story/parameter/doc path cites a `prd-N` span; no invented scope, owners, or estimates; template parameters are all schema-declared) within budget.
 
 Exit criteria: staged rollout with execution disabled by default, bounded per-PRD cost, and verified citation grounding.
-
-## Frontend Completed
-
-
 
 ## Backend Completed
 

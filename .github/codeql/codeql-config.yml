@@ -1,0 +1,17 @@
+name: "CodeQL Configuration"
+
+paths:
+  - "packages"
+  - "plugins"
+  - "scripts"
+  - "test"
+
+paths-ignore:
+  - "**/node_modules"
+  - "**/dist"
+  - "**/build"
+  - "**/.turbo"
+  - "**/.yarn"
+
+queries:
+  - uses: security-and-quality

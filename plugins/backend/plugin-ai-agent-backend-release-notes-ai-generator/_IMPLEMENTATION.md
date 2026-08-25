@@ -1,5 +1,12 @@
 # Release Notes AI Generator Implementation Plan
 
+## Overview
+
+This plugin analyzes branch diffs, commit histories, and pull request bodies to automatically generate release notes tailored for product teams and stakeholders.
+
+- **The Task:** Generating customer-facing release notes from merged PRs.
+- **The Logic:** An agent aggregates all merged PRs since the last tag and generates customer-facing release notes.
+
 ## Goal
 
 Implement `@webstackbuilders/plugin-ai-agent-backend-release-notes-ai-generator` as an AI Core backend module that turns "all merged PRs since the last release tag" into **customer-facing release notes**. It gathers the PR delta for a repository/window, categorizes changes against a configurable taxonomy, filters out internal chores, resolves cryptic PR titles into readable feature descriptions via linked tickets, summarizes per category with an LLM, and — only after **explicit human approval** — publishes the notes. A paired frontend plugin drives generation, shows the draft, and provides the approve/reject gate.
@@ -386,12 +393,6 @@ Exit criteria: staged rollout with publish + schedules disabled by default, boun
 
 ## Completed Backend
 
-Completed
-
-Implemented the release-notes backend module at:
-
-`/home/kevin/Repos/backstage/ai-crew-suite/plugins/backend/plugin-ai-agent-backend-release-notes-ai-generator`
-
 ### Implemented: draft-generation milestone
 
 The module now provides a readable, JSDoc-documented, deterministic draft workflow:
@@ -468,20 +469,6 @@ Added deterministic coverage for:
 - internal chore filtering
 - no-changes draft behavior
 - backend module registration, agent shape, tool allow-list, and triggers
-
-### Validation completed
-
-Passed:
-
-- `yarn workspace @webstackbuilders/plugin-ai-agent-backend-release-notes-ai-generator test`
-  - __3 tests passed__
-- Package TypeScript compilation
-- Package lint
-- `yarn typecheck --force`
-  - __46/46 tasks successful__
-- `yarn lint --force`
-  - __46/46 tasks successful__; only existing warning-only findings remain in unrelated packages
-- `git diff --check`
 
 They were scaffolding remnants from the implementation plan, not intentional required empty directories.
 
@@ -565,29 +552,3 @@ Therefore:
 - approval controls render only when a future backend emits `approval_request`;
 - no UI path implies that publication is currently available.
 
-### Validation
-
-Passed:
-
-- Frontend package tests: __4 passed__
-
-  - draft/replay reducer
-  - future approval-event reducer state
-  - cited draft rendering
-  - no-changes/filtering UI states
-
-- Package TypeScript compilation
-
-- Package lint
-
-- App feature-registration test
-
-- `yarn typecheck --force`
-  - __47/47 tasks successful__
-
-- `yarn lint --force`
-  - __47/47 tasks successful__; existing unrelated warning-only lint findings remain
-
-- `git diff --check`
-
-One React/MUI v4 `findDOMNode` deprecation warning appears in the component test due to MUI's `Link component="button"` implementation; tests still pass and no application behavior is affected.

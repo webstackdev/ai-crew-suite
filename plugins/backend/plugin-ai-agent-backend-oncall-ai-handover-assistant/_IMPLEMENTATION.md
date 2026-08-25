@@ -1,5 +1,12 @@
 # On-Call Handover Assistant Implementation Plan
 
+## Overview
+
+This plugin automates the collection of shift events, unresolved alerts, and systemic notes to generate structured summary briefs for incoming on-call engineers.
+
+- **The Task:** Briefing the incoming on-call engineer on the previous shift.
+- **The Logic:** A **LangGraph** agent summarizes the most frequent alerts and service changes from the previous shift.
+
 ## Goal
 
 Implement `@webstackbuilders/plugin-ai-agent-backend-oncall-ai-handover-assistant` as an AI Core backend module that compiles a structured **shift handover brief** for an incoming on-call engineer. It aggregates a trailing operational window (default 12h, configurable) across incidents/alerts, deployments, merged PRs, and open high-severity tickets, deduplicates and clusters the noise, and produces a cited, LLM-summarized brief. A paired frontend plugin surfaces the brief on demand and shows scheduled pre-shift briefs.
@@ -413,38 +420,11 @@ Registered the frontend package in:
 - `/home/kevin/Repos/backstage/ai-crew-suite/packages/app/src/App.test.tsx`
 - `/home/kevin/Repos/backstage/ai-crew-suite/yarn.lock`
 
-### Tests and validation
-
-Passed:
-
-- Frontend package tests: __2 passed__
-
-  - artifact/replay reducer behavior
-  - terminal error behavior
-
-- Package TypeScript compilation
-
-- Package lint
-
-- App feature-set test
-
-- `yarn typecheck --force`
-  - __45/45 tasks successful__
-
-- `yarn lint --force`
-  - __45/45 tasks successful__; existing unrelated warning-only findings remain
-
-- `git diff --check`
-
 ### Limitation
 
 The implementation plan calls for a `BriefHistoryList` of scheduled briefs. AI Core currently exposes run creation and per-run event replay, but no confirmed runs-list endpoint. I did not invent a history API; scheduled briefs are supported through their persisted, deep-linkable `?run=<id>` replay path.
 
 ## Backend Completed
-
-Implemented the backend module at:
-
-`/home/kevin/Repos/backstage/ai-crew-suite/plugins/backend/plugin-ai-agent-backend-oncall-ai-handover-assistant`
 
 ### Implemented backend capabilities
 
@@ -519,19 +499,5 @@ Added:
 - Shift schedule planning
 - Backend module registration, agent tool policy, and trigger registration
 
-### Validation completed
 
-Passed:
-
-- `yarn workspace @webstackbuilders/plugin-ai-agent-backend-oncall-ai-handover-assistant test`
-  - __6 tests passed__
-- Package TypeScript compilation with the Yarn PnP TypeScript SDK
-- Package lint
-- `yarn typecheck --force`
-  - __44/44 tasks successful__
-- `yarn lint --force`
-  - __44/44 tasks successful__; existing unrelated warning-only lint findings remain
-- `git diff --check`
-
-The frontend and E2E work listed as Milestone 3 in the implementation plan was intentionally not added; this change implements the requested backend plugin and its backend wiring.
 

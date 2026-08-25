@@ -1,9 +1,9 @@
-name: Automate Staleness
+name: Flag and Close Stale Issues and Pull Requests
 
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 */6 * * *" # Executes at minute 0 past every 6th hour
+    - cron: "0 */6 * * *"
 
 permissions:
   contents: read
@@ -11,17 +11,17 @@ permissions:
 jobs:
   stale:
     permissions:
-      issues: write # Grants permissions to flag/close stale issues
-      pull-requests: write # Grants permissions to flag/close stale PRs
+      issues: write
+      pull-requests: write
     runs-on: ubuntu-latest
     steps:
       - name: 🛡️ Harden GitHub Actions Runner
-        uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
+        uses: step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c # v2.21.0
         with:
           egress-policy: audit
 
       - name: 🧹 Flag Stale Issues and Pull Requests
-        uses: actions/stale@1e223db275d687790206a7acac4d1a11bd6fe629 # v10.4.0
+        uses: actions/stale@4391f3da665fdf50b6810c1a66712fb9ba21aa93 # v11.0.0
         id: stale
         with:
           # --- Issue Configurations ---
@@ -46,8 +46,8 @@ jobs:
             recent activity from the author. It will be closed if no further activity occurs.
             If the PR was closed and you want it re-opened, let us know
             and we'll re-open the PR so that you can continue the contribution!
-          days-before-pr-stale: 14 # Bumped from 7 to 14 days to provide a safer buffer for complex RAG/AI refactors
-          days-before-pr-close: 7 # Bumped from 5 to 7 days to match standard issue cycles
+          days-before-pr-stale: 14
+          days-before-pr-close: 7
           stale-pr-label: stale
           exempt-pr-labels: >-
             after-vacations,
@@ -55,4 +55,4 @@ jobs:
             dependencies
 
           # --- Operation Boundaries ---
-          operations-per-run: 150 # Increased from 100 to comfortably evaluate our 24+ workspace branches
+          operations-per-run: 150

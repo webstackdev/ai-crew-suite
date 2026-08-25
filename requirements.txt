@@ -1,0 +1,11 @@
+actions-toolkit==0.1.15
+libsql-client==0.3.1
+PyGithub==2.9.1
+pylint==4.0.7
+pytest-plus==0.8.1
+pytest-sugar==1.1.1
+pytest-xdist==3.8.0
+pytest==9.1.1
+python-dotenv==1.2.3
+PyYAML==6.0.3
+requests==2.34.2

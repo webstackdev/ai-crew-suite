@@ -1,5 +1,12 @@
 # RFC / ADR AI Reviewer Implementation Plan
 
+## Overview
+
+This plugin automatically parses Request for Comments (RFCs) and Architecture Decision Records (ADRs) to flag design pattern deviations, security anomalies, and dependency mismatches.
+
+- **The Task**: Providing automated, multi-perspective architectural and security gate feedback on new internal RFCs or Architecture Decision Records (ADRs) submitted across the engineering org.
+- **The Logic**: When a new design document or ADR is detected (via a repository PR or a Backstage Software Template execution), a **Stateful Multi-Agent Review Loop** initializes. A **"Senior Architect" Agent Node** extracts the system design proposals and uses `knowledge.retrieve` to cross-reference them against live catalog dependencies and active API schemas. Concurrently, a **"Security Lead" Agent Node** parses the document against enterprise compliance rules. The runtime leverages **SSE structured streaming** to display the agents' multi-turn feedback debate natively in the Backstage UI before generating a final **Design Critique Artifact** and opening an automated feedback issue/PR.
+
 ## Goal
 
 Implement `@webstackbuilders/plugin-ai-agent-backend-rfc-adr-ai-reviewer` as an AI Core backend module that acts as an automated **architecture-governance gate** for RFCs/ADRs. When a design document is detected (repo PR touching `adr/`/`rfc/`, or a Scaffolder template event), it runs a **parallel multi-perspective review**: a **Senior Architect** node cross-references referenced components/APIs against the live catalog and standards via `knowledge.retrieve`, while a **Security Lead** node evaluates the document against enterprise compliance rules. A compilation node merges both critique channels into a single cited **Design Critique** artifact, streamed to the UI as a multi-turn debate over SSE, and — only after **human approval** — posts the critique back to the PR.
@@ -439,15 +446,6 @@ the write milestone and stay hidden during draft-only runs.
 - `ApprovalBar`: approve with note, reject without note
 - `PublicationBanner`: hidden, published link, rejected-unposted
 
-### Validation completed
-
-- `yarn vitest run plugins/frontend/plugin-ai-agent-frontend-rfc-adr-ai-reviewer/src` — __19 tests passed__
-- `yarn vitest run packages/app/src/App.test.tsx` — __1 test passed__
-- Package `tsc --noEmit` and package lint — clean
-- `yarn typecheck --force` — __49/49 tasks successful__
-- `yarn lint --force` — __49/49 tasks successful__ (only pre-existing unrelated
-  warnings remain)
-
 ### Still out of scope here
 
 Milestone 3's Playwright E2E scenarios and the shared fixture profile were not
@@ -455,10 +453,6 @@ added; the backend still has no write tool or event trigger, so an approve/rejec
 browser path cannot be exercised end to end yet.
 
 ## Backend Completed
-
-Implemented the RFC/ADR reviewer backend module at:
-
-`/home/kevin/Repos/backstage/ai-crew-suite/plugins/backend/plugin-ai-agent-backend-rfc-adr-ai-reviewer`
 
 ### Implemented: read-only parallel-review milestone
 
@@ -550,17 +544,3 @@ Registered the module in:
 - Merge findings from both channels and derive a blocking verdict from high severity
 - Extract component/API references and redact secret-like document values
 - Module registration, workflow ID, agent profile, and manual trigger coverage
-
-### Validation completed
-
-Passed:
-
-- `yarn workspace @webstackbuilders/plugin-ai-agent-backend-rfc-adr-ai-reviewer test`
-  - __3 tests passed__
-- Package TypeScript compilation
-- Package lint
-- `yarn typecheck --force`
-  - __48/48 tasks successful__
-- `yarn lint --force`
-  - __48/48 tasks successful__; existing unrelated warning-only findings remain
-- `git diff --check`

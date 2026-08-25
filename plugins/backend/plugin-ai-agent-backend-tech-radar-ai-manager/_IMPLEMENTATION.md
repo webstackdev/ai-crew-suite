@@ -1,5 +1,16 @@
 # Tech Radar AI Manager Implementation Plan
 
+## Overview
+
+This plugin continuously scans internal repositories and software lifecycle telemetry to automatically recommend status promotions or deprecations on your company's Technology Radar.
+
+- **The Task:** Maintaining the Backstage Tech Radar.
+- **The Logic:** A **LangGraph** agent monitors all new PRs and `package.json` changes across the organization.
+  - **Deprecation & Security Drift Tracking**: If a library is moved to the "Hold" or "End of Life" quadrant on your radar, the agent can scan all repositories, flag components still utilizing it, and automatically open tracking issues for the respective software owners.
+  - **Library Adoption**: If it sees a sudden spike in a new library (e.g., everyone is suddenly using _Vite_ instead of _Webpack_), it automatically drafts a proposal to move that technology from "Assess" to "Adopt" on the company Tech Radar.
+  - **Duplicate Capability Alerts**: If a team introduces an entirely new state-management tool when three others are already widely adopted, the agent can flag the PR and notify the authors (_"We noticed you are introducing X; did you consider using Y, which is currently in our 'Adopt' quadrant?"_).
+  - **Quarterly Review Summarizer**: The agent can compile a historical ledger of adoption velocity over the past 90 days, drafting an executive summary for your Architecture Review Board to streamline manual radar updates.
+
 ## Goal
 
 Implement `@webstackbuilders/plugin-ai-agent-backend-tech-radar-ai-manager` as an AI Core backend module that keeps the Technology Radar honest by measuring what the organization *actually* uses. A scheduled sweep reads the radar source file, enumerates catalog-registered repositories, parses their dependency manifests, and computes **deterministic adoption ratios** per technology. Crossing a configured threshold drafts a ring-promotion proposal (Vite at 30%+ of manifests: `assess → trial`); a dependency still present in a `hold`/EOL ring produces per-owner deprecation findings. Every proposal cites the exact repositories counted. A paired frontend plugin renders the proposal dashboard, adoption evidence, and the quarterly review summary.
@@ -513,8 +524,6 @@ Exit criteria: `yarn test:e2e:tech-radar-ai-manager` demonstrates analysis → p
 Exit criteria: staged rollout with sweeps enabled but writes disabled, verified measurement grounding, and the durability caveat documented for the review board.
 
 ## Frontend Complete
-
-## Delivered
 
 ### Standalone analysis UI
 

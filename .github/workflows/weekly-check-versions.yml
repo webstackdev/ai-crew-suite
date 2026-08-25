@@ -23,9 +23,16 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
+      - name: 📦 Install Workspace Dependencies
+        uses: backstage/actions/yarn-install@2cd6978b476cbdc39fec48346f8b6ca13199dd6a # v0.7.8
+        with:
+          cache-prefix: ${{ runner.os }}-node-${{ matrix.node-version }}
+
+      - name: 🏎️ Initialize Turborepo Remote GitHub Actions Cache
+        uses: rharkor/caching-for-turbo@2238fae6eb9a9936f92356f54cb3660200d105e7 # v2.5.1
+
       - name: 📦 Install Tools and Check Backstage Upstream Upgrades
         run: |
-          yarn install
           yarn backstage-cli versions:bump
         env:
           YARN_ENABLE_IMMUTABLE_INSTALLS: false # Intentionally false to allow version file rewriting

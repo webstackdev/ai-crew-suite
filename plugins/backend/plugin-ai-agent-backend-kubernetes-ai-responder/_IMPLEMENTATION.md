@@ -1,5 +1,12 @@
 # Kubernetes AI Responder Implementation Plan
 
+## Overview
+
+This plugin interfaces with your active Kubernetes infrastructure to parse error states, investigate pod logs, and serve real-time remediation playbooks.
+
+- **The Task:** Providing a "likely cause" summary when a service fails.
+- **The Logic:** An agent monitors [Kubernetes](https://medium.com/@naeemulhaq/architecting-an-internal-developer-platform-idp-with-backstage-and-kubernetes-9ec6311d866d) status in Backstage and, upon failure, gathers logs, traces, and recent PRs to build a root-cause hypothesis.
+
 ## Goal
 
 Implement `@webstackbuilders/plugin-ai-agent-backend-kubernetes-ai-responder` as a backend module that turns an authenticated incident trigger into a bounded, auditable Kubernetes investigation. The workflow produces a cited likely-cause summary and recommended next steps. It does not mutate Kubernetes, repositories, or third-party systems in the first release.
@@ -762,10 +769,6 @@ __Tests (22, all passing)__ — `useIncidentRun.test.ts` (pure reducer: progress
 ### Wired into the app
 
 - `packages/app/package.json` dep + `App.tsx` `/alpha` feature registration; updated `App.test.tsx` (mock + expected feature list). Ran `yarn install` (lockfile updated).
-
-### Final validation (after prettier normalization)
-
-- __Typecheck: 41/41__ · __Lint: 41/41__ · __Tests: 94 files / 368 passed__ ✅
 
 ### Notes / follow-ups
 

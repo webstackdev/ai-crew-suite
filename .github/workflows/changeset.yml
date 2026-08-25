@@ -1,4 +1,4 @@
-name: Changeset
+name: Changeset PRs
 
 on:
   push:
@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [22] # Upgraded from 18 to align with your v22 monorepo stack
+        node-version: [22]
 
     steps:
       - name: 📂 Checkout Repository
@@ -25,12 +25,12 @@ jobs:
       - name: 📦 Install Workspace Dependencies
         uses: backstage/actions/yarn-install@2cd6978b476cbdc39fec48346f8b6ca13199dd6a # v0.7.8
         with:
-          cache-prefix: ${{ runner.os }}-v${{ matrix.node-version }}
+          cache-prefix: ${{ runner.os }}-node-${{ matrix.node-version }}
 
       - name: 🚀 Create Release Pull Request
-        uses: changesets/action@22ccf9aa43179fe9e27dc62e575971d28cce197c # v2.0.0
+        uses: changesets/action@8488615a623b1b9c987934bb89eae8af6a946ac1 # v2.1.1
         with:
-          version-script: yarn release # Triggers your custom prettier + changelog formatting script
-          pr-title: 'Version Packages - plugins'
+          version-script: yarn release
+          pr-title: "Version Packages - plugins"
           # v2 reads the token only from this input; the GITHUB_TOKEN env var is ignored
           github-token: ${{ secrets.GITHUB_TOKEN }}

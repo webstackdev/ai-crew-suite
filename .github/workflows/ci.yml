@@ -21,7 +21,7 @@ jobs:
 
     env:
       CI: true
-      NODE_OPTIONS: --max-old-space-size=4096 # Preserves your Backstage memory buffer fix
+      NODE_OPTIONS: --max-old-space-size=4096 # Preserves Backstage memory buffer fix
 
     steps:
       - name: 📂 Checkout Repository
@@ -30,14 +30,14 @@ jobs:
           fetch-depth: 0
 
       - name: 🟢 Setup Node.js v${{ matrix.node-version }}
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
 
       - name: 📦 Install Workspace Dependencies
         uses: backstage/actions/yarn-install@2cd6978b476cbdc39fec48346f8b6ca13199dd6a # v0.7.8
         with:
-          cache-prefix: ${{ runner.os }}-v${{ matrix.node-version }}
+          cache-prefix: ${{ runner.os }}-node-${{ matrix.node-version }}
 
       - name: 🏎️ Initialize Turborepo Remote GitHub Actions Cache
         uses: rharkor/caching-for-turbo@2238fae6eb9a9936f92356f54cb3660200d105e7 # v2.5.1

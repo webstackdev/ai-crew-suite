@@ -30,12 +30,13 @@ jobs:
       - name: 📦 Install Workspace Dependencies
         uses: backstage/actions/yarn-install@2cd6978b476cbdc39fec48346f8b6ca13199dd6a # v0.7.8
         with:
-          cache-prefix: ${{ runner.os }}-v${{ matrix.node-version }}
+          cache-prefix: ${{ runner.os }}-node-${{ matrix.node-version }}
 
       - name: 🏎️ Initialize Turborepo Remote GitHub Actions Cache
         uses: rharkor/caching-for-turbo@2238fae6eb9a9936f92356f54cb3660200d105e7 # v2.5.1
 
-      - name: 🔍 Fetch previous commit for release check
+      - name: 🔍 Fetch previous commit for release check (if available)
+        if: github.event.before != '0000000000000000000000000000000000000000' && github.event.before
         run: git fetch origin '${{ github.event.before }}'
 
       - name: 📝 Check if release
@@ -56,7 +57,7 @@ jobs:
           SLACK_COLOR: "#FF0000"
           SLACK_USERNAME: "Crew Suite Deploy Bot"
           SLACK_TITLE: "❌ Master Build Failed"
-          SLACK_MESSAGE: "The main production compilation has failed. Review the logs at: https://github.com{{ github.repository }}/actions/runs/${{ github.run_id }}"
+          SLACK_MESSAGE: "The main production compilation has failed. Review the logs at: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
   release:
     needs: build
@@ -78,12 +79,12 @@ jobs:
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: ${{ matrix.node-version }}
-          registry-url: https://registry.npmjs.org
+          registry-url: https://registry.npmjs.org/
 
       - name: 📦 Install Workspace Dependencies
         uses: backstage/actions/yarn-install@2cd6978b476cbdc39fec48346f8b6ca13199dd6a # v0.7.8
         with:
-          cache-prefix: ${{ runner.os }}-v${{ matrix.node-version }}
+          cache-prefix: ${{ runner.os }}-node-${{ matrix.node-version }}
 
       - name: 🏎️ Initialize Turborepo Remote GitHub Actions Cache
         uses: rharkor/caching-for-turbo@2238fae6eb9a9936f92356f54cb3660200d105e7 # v2.5.1
@@ -98,12 +99,14 @@ jobs:
           git config --global user.email "bot@webstackbuilders.com"
           git config --global user.name "webstackbuilders-bot"
 
-          yarn config set npmAuthToken '${NODE_AUTH_TOKEN}'
-          yarn config set npmScopes.webstackbuilders.npmRegistryServer "https://npmjs.org"
-          yarn config set npmScopes.webstackbuilders.npmPublishRegistry "https://npmjs.org"
+          # Configure npm registry for @webstackbuilders scope
+          yarn config set npmScopes.webstackbuilders.npmRegistryServer "https://registry.npmjs.org/"
+          yarn config set npmScopes.webstackbuilders.npmPublishRegistry "https://registry.npmjs.org/"
           yarn config set npmScopes.webstackbuilders.npmAlwaysAuth true
+          yarn config set npmAuthToken "${NODE_AUTH_TOKEN}"
 
-          yarn workspaces foreach --all --jobs 1 --parallel --no-private npm publish --tolerate-republish
+          # Publish all packages with version bumps using Changesets
+          yarn changeset publish
 
       - name: 🏷️ Create a release tag
         id: create_tag
@@ -123,4 +126,4 @@ jobs:
           SLACK_COLOR: "#36a64f"
           SLACK_USERNAME: "Crew Suite Deploy Bot"
           SLACK_TITLE: "🚀 New Release Published Successfully"
-          SLACK_MESSAGE: "A new version has been deployed under the @webstackbuilders scope! View changelogs here: https://github.com{{ github.repository }}/releases/tag/${{ steps.create_tag.outputs.tag_name }}"
+          SLACK_MESSAGE: "A new version has been deployed under the @webstackbuilders scope! View changelogs here: https://github.com/${{ github.repository }}/releases/tag/${{ steps.create_tag.outputs.tag_name }}"

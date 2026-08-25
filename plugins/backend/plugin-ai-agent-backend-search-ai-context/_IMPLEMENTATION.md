@@ -1,5 +1,12 @@
 # Search AI Context Implementation Plan
 
+## Overview
+
+This plugin connects isolated documentation silos across disparate tools and messaging spaces to surface contextually relevant, unified engineering answers natively inside Backstage.
+
+- **The Task**: Resolving complex, multi-entity architectural dependencies and impact analysis queries that standard keyword or isolated-file searches cannot handle.
+- **The Logic**: A **Stateful Graph Investigation Agent** combines semantic text retrieval (`knowledge.retrieve`) over the Backstage Software Catalog with active tool calls to upstream repositories. When an engineering mutation occurs (such as an API deprecation), a multi-agent loop evaluates catalog ownership relationships (`dependsOn`), runs static validation checks across downstream consumer repos via the **GitHub/GitLab tool pack**, and generates an actionable **Impact Assessment Artifact** summarizing exactly which components and teams will be broken.
+
 ## Goal
 
 Implement `@webstackbuilders/plugin-ai-agent-backend-search-ai-context` as an AI Core backend module that answers *"what breaks if I change this?"* Given one source entity plus a concrete change signature (a deprecated endpoint, a renamed schema field), it recursively walks the catalog's `dependsOn`/`providesApi`/`dependencyOf` edges to build a bounded multi-tier consumer graph, then **verifies each candidate at the code level** with a targeted `vcs.repository.search` — separating consumers that genuinely reference the changed symbol from those merely declared as dependents. The output is a cited `ImpactAssessment` classifying every consumer as `impacted`, `unaffected`, or `unknown`, rolled up by owning team. A paired frontend plugin renders the dependency graph, the code-level evidence, and the owner rollup.

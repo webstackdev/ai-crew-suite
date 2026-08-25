@@ -1,5 +1,42 @@
 # TechDocs AI Janitor Implementation Plan
 
+## Overview
+
+This plugin automatically parses your markdown documentation trees to identify and patch out-of-date setup commands, dead external URLs, and stale code syntax patterns.
+
+Traditional documentation tools evaluate files in structural isolation. While version control system (**VCS**) platforms handle isolated repository workflows well, they lack an overarching organizational context.
+
+The `techdocs-ai-janitor` is an intelligent, graph-driven plugin for Spotify **Backstage**. By leveraging **LangGraph**, it transitions from static linting to multi-turn, stateful engineering reasoning. Instead of analyzing code files in a vacuum, the plugin utilizes the **Backstage Software Catalog**, **Search Telemetry**, and **TechDocs storage buckets** to autonomously detect architectural drift, heal broken ecosystem links, map shifting team ownership, and proactively resolve documentation gaps across the entire enterprise.
+
+## Features
+
+### **Feature 1:** Cross-Service Architectural Drift Resolution
+
+- **The Problem**: A core infrastructure service updates an internal API schema. Dozens of consumer services have outdated integration guides in their TechDocs.
+- **The LangGraph Win**: The graph acts on Catalog lifecycle relationships (`dependsOn`, `providesApi`). When a schema mutation occurs, the node navigates the dependency tree, evaluates the downstream TechDocs files in the storage bucket, rewrites code invocation blocks, and opens automated PRs across all affected repositories.
+
+### **Feature 2:** Intelligent "Intent-Aware" Dead Link Deflection
+
+- **The Problem**: Hardcoded internal links to legacy Confluence paths, retired codebases, or legacy Slack channels rot over time, returning dead links or 404s.
+- **The LangGraph Win**: When a link-checker edge in the graph flags a failure, a dedicated **Resolution Agent Node** queries the Backstage global search index and catalog history to infer what the developer _meant_ to link to. If a service was deprecated in favor of a newer system, the agent automatically edits the source Markdown file to reference the active Backstage portal resource.
+
+### **Feature 3:** Demand-Driven Documentation (Telemetry Ingestion)
+
+- **The Problem**: Teams write documentation they _think_ developers need, while actual knowledge gaps go unaddressed.
+- **The LangGraph Win**: The plugin acts as a consumer of the **Backstage Search Telemetry API**. If the data shows that developers are repeatedly entering queries like _"how to configure mTLS token rotation"_ and hitting empty results or high bounce rates, the graph initializes. It researches the system configuration, outlines a missing TechDocs section, and assigns an issue or a pre-populated draft PR directly to the owning engineering team.
+
+### **Feature 4:** Governance & Component Metadata Enrichment
+
+- **The Problem**: System ownership (`spec.owner`) shifts frequently during company reorganizations, causing PagerDuty escalation documentation, team names, and communication links within TechDocs files to rapidly go out of date.
+- **The LangGraph Win**: The graph matches TechDocs references against live entity metadata inside the Backstage Catalog. It automatically updates point-of-contact details, Slack channel hooks, and support workflows directly in the source Markdown files.
+
+## Nodes & Operational Logic
+
+- **Orchestrator Node**: Evaluates incoming trigger events (such as catalog updates, telemetry data spikes, or a scheduled cron execution) and sets the target state.
+- **Researcher Node**: Queries the Backstage Catalog API, parses the downstream dependencies, reads live OpenAPI schemas, and cross-references them with the text stored in the target TechDocs bucket.
+- **Writer Node**: Invokes targeted LLMs to perform code-to-text synthesis, rewrites outdated sections, fixes dead URLs, and populates the `proposed_patches` list.
+- **Validation Node (The Conditional Edge)**: Runs markdown linters, checks formatting compliance rules, and validates compiled outputs against organizational standards. If compilation checks fail, it loops back to the Writer Node with the failure logs. If they pass, it passes execution to the pull request generation phase.
+
 ## Goal
 
 Implement `@webstackbuilders/plugin-ai-agent-backend-techdocs-ai-janitor` as an AI Core backend module that finds and drafts fixes for rotting documentation. It reads a component's TechDocs markdown, then runs **deterministic detectors** over it: dead internal/external links, ownership references that disagree with the live catalog (`spec.owner`, Slack/PagerDuty annotations), and integration snippets that drift from a dependency's current API. Each finding becomes a `JanitorDiscrepancy` citing an exact source range, and — where a confident replacement exists — an **anchored** `DocumentationPatch` validated to apply cleanly. Patches are proposals: they are surfaced for review and, once the VCS write tool lands, opened as an approval-gated PR. A paired frontend plugin renders the findings queue, per-file diffs, and the approval bar.
@@ -500,8 +537,6 @@ Exit criteria: `yarn test:e2e:techdocs-ai-janitor` demonstrates scan → anchore
 Exit criteria: staged rollout with `deliver.mode: 'none'` by default, verified anchoring, and the external-link policy documented.
 
 ## Frontend Completed
-
-## Delivered
 
 ### Standalone TechDocs audit UI
 

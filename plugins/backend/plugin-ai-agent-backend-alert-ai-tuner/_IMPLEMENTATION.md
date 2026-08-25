@@ -1,5 +1,12 @@
 # Alert Fatigue Tuner Implementation Plan
 
+## Overview
+
+This plugin analyzes alerting matrices to suppress noisy or redundant indicators automatically. This assistant operates a **highly sensitive write-back workflow**. It reads alert resolution histories, cross-references infra changes, calculates statistical thresholds, and modifies Infrastructure-as-Code (IaC) files directly.
+
+- **The Task:** Reducing Alert Fatigue.
+- **The Logic:** An agent monitors your PagerDuty or Opsgenie alerts. If an alert is triggered but consistently closed without any code changes or manual action (false positives), the agent opens a PR to your Terraform repository to tweak the threshold of that specific Prometheus alert.
+
 ## Goal
 
 Implement `@webstackbuilders/plugin-ai-agent-backend-alert-ai-tuner` as an AI Core backend module that reduces alert fatigue. It reads a bounded window of alert firing history, statistically isolates alert definitions that fire repeatedly and clear themselves without human action, correlates each candidate against deploys/incidents to rule out real signal, locates the threshold expression in the owning Infrastructure-as-Code file, and computes a **capped** threshold/duration patch. The patch is published as a reviewable proposal artifact and — only after **explicit human approval** — opened as a pull request against the infrastructure repository. A paired frontend plugin drives the evaluation, renders the statistical evidence and exact diff, and owns the approve/reject gate.
@@ -454,10 +461,6 @@ Exit criteria: staged rollout with sweep and publish disabled by default, bounde
 
 ## Backend Completed
 
-Implemented the alert fatigue tuner backend module at:
-
-`/home/kevin/Repos/backstage/ai-crew-suite/plugins/backend/plugin-ai-agent-backend-alert-ai-tuner`
-
 Delivered **Milestone 0** (shared pure engines), **Milestone 1** (propose-only
 backend), and **Milestone 3** (weekly sweep). Milestone 2's publish path was
 deliberately not built — see "Contract limitations" below.
@@ -561,15 +564,6 @@ is now a **veto** rather than a raise: when the peak plus headroom will not fit
 under the cap, no change is proposed at all, because loosening a threshold past a
 value the service already exceeds would silently disable the alert.
 
-### Validation completed
-
-- `yarn vitest run plugins/backend/plugin-ai-agent-backend-alert-ai-tuner/src` — __40 tests passed__
-- Package `tsc --noEmit` and package lint — clean
-- `yarn typecheck --force` — __50/50 tasks successful__
-- `yarn lint --force` — __50/50 tasks successful__ (only pre-existing unrelated
-  warnings remain)
-- `git diff --check` — clean
-
 ### Not implemented here
 
 Milestone 2 (approval gate and PR publish, blocked on the shared VCS write
@@ -614,16 +608,6 @@ arrive; it does not fabricate a write gate, a PR link, or a dashboard list.
 - `/home/kevin/Repos/backstage/ai-crew-suite/packages/app/src/App.tsx`
 - `/home/kevin/Repos/backstage/ai-crew-suite/packages/app/src/App.test.tsx`
 - `/home/kevin/Repos/backstage/ai-crew-suite/yarn.lock`
-
-### Tests and validation
-
-- 10 tests across 4 files cover proposal replay/artifact parsing, streamed step
-  and tool progress, future approval state, malformed artifact resilience,
-  deterministic evidence/citation display, no-score display, diff and patch-hash
-  display, no-patch state, and form validation/submission.
-- `yarn vitest run plugins/frontend/plugin-ai-agent-frontend-alert-ai-tuner/src` — __10 tests passed__
-- `yarn vitest run packages/app/src/App.test.tsx` — __1 test passed__
-- Package `tsc --noEmit` and package lint — clean
 
 ### Still out of scope
 

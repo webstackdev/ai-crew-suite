@@ -1,5 +1,35 @@
 # Scaffolder AI Drift Detector Implementation Plan
 
+## Overview
+
+This plugin continuously scans repositories created via software templates to identify deviations, outdated configurations, and non-compliant pattern drift over time.
+
+- **The Task**: Detecting, analyzing, and auto-remediating variance between a component's original golden-path Scaffolder blueprint and its live, operational infrastructure state.
+- **The Logic**: Rather than performing a simple string comparison, a **Stateful Reconciliation Agent** ingests live topology data using the **Kubernetes and Cloud Provider tool packs** and contrasts it against the original Software Template specs stored in PostgreSQL. When structural anomalies or "shadow IT" resources are identified, the graph initializes an evaluation loop. Instead of just failing a check, the agent calculates the technical and financial delta, compiles a remediation patch, and routes it through a **HITL platform gate** allowing engineers to auto-sync the repo infrastructure files back to the golden path with one click.
+
+## Strategic Evaluation
+
+**Is this better done by SaaS tools, and will developers use it?**
+
+_SaaS Product Overlap_
+
+**Yes, there is heavy overlap with specialized tools, but with a critical gap.**
+Infrastructure drift detection is natively handled by tools like **Terraform Cloud, Atlantis, or AWS Config**, while Kubernetes configuration drift is dominated by GitOps controllers like **ArgoCD**.
+
+However, SaaS tools suffer from a **context vacuum**. ArgoCD can tell an operator that a Kubernetes deployment has changed, but it has _no idea why_. It does not know who owns the service, what team handles it, what business unit it belongs to, or what the original "golden path" blueprint looked like.
+
+_The Backstage Win_
+
+Your plugin wins because **Backstage is the single source of context.** By anchoring drift detection inside your monorepo platform, your agent can uniquely cross-reference live infrastructure drift with the **Backstage Org Graph and Catalog Metadata**:
+
+- When a SaaS tool alerts, it goes to a generic platform engineering Slack channel.
+- When _your_ agent detects drift, it identifies the exact `spec.owner` from the Backstage catalog, looks up the team's active channel via the **Slack tool pack**, and sends a targeted, context-rich notification directly to the developers responsible.
+
+_Will Users Actually Use It?_
+
+- **Platform Engineers / SREs**: **Absolutely.** This solves their biggest headache: developers spinning up non-compliant, unmonitored resources after a project is scaffolded. A centralized Backstage dashboard showing compliance drift across all microservices is an enterprise platform team's holy grail.
+- **Product Developers**: They will not interact with it actively. Instead, they will consume its output passively when the agent opens an automated, easy-to-merge Pull Request fixing a misconfigured file in their repository to bring them back into compliance.
+
 ## Goal
 
 Implement `@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-drift-detector` as an AI Core backend module that continuously reconciles a component's **live infrastructure state** (Kubernetes + cloud topology) against its original **golden-path Scaffolder blueprint**. Instead of static pass/fail checks, it computes the technical **and** financial drift delta, compiles a remediation patch, and routes it through a **human-in-the-loop (HITL) approval gate** so an engineer can auto-sync the repo's infrastructure files back to the golden path with one click. A paired frontend shows the drift dashboard and the one-click remediate flow.
@@ -399,19 +429,7 @@ VCS write tool. Consequently this frontend intentionally does not invent the
 plan's fleet dashboard API, patch preview, approval/reject button, or PR link.
 Those UI paths can be added when their real backend contracts land.
 
-### Wiring and validation
-
-- Registered root TypeScript/ESLint coverage and package/app alpha feature load.
-- 7 focused tests across reducer, cited drift-item rendering, empty in-sync
-  state, and temporary blueprint form validation/submission.
-- `yarn vitest run plugins/frontend/plugin-ai-agent-frontend-scaffolder-ai-drift-detector/src` — __7 tests passed__
-- Package `tsc --noEmit`, package lint, and `packages/app/src/App.test.tsx` — clean
-
 ## Backend Completed
-
-Implemented the viable read-only detection milestone at:
-
-`/home/kevin/Repos/backstage/ai-crew-suite/plugins/backend/plugin-ai-agent-backend-scaffolder-ai-drift-detector`
 
 ### Implemented
 
@@ -443,14 +461,6 @@ cross-sweep fingerprint state, and fleet scheduler dispatch were not fabricated.
 The module is explicitly Kubernetes-backed, detect-only, and advisory. The
 configuration retains future sweep/remediation fields but they are not activated
 until the shared contracts land.
-
-### Tests and validation
-
-- 5 tests across 3 files: deterministic replica/memory delta with citations,
-  in-sync state, reconciliation via dynamic tool router without a write call,
-  missing-blueprint degradation, and backend module/allow-list registration.
-- `yarn vitest run plugins/backend/plugin-ai-agent-backend-scaffolder-ai-drift-detector/src` — __5 tests passed__
-- Package `tsc --noEmit` and package lint — clean
 
 ### Wiring added
 

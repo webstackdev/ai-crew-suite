@@ -1,5 +1,12 @@
 # Scaffolder AI Shadow Detective Implementation Plan
 
+## Overview
+
+This plugin audits deployed infrastructure assets against the Software Catalog, actively identifying orphaned or undocumented cloud resources that lack matching Scaffolder ancestry records.
+
+- **The Task**: Identifying unregistered cloud infrastructure and autonomously migrating "shadow IT" resources into governed Backstage Software Catalog components.
+- **The Logic**: A stateful **Multi-Agent Reconciliation Loop** executes scheduled deep infrastructure audits. A **Scout Agent Node** utilizes cloud provider tool packs to inventory live cloud resources (e.g., S3 buckets, RDS instances, EC2 clusters). A downstream **Archivist Agent Node** cross-references these assets against active Backstage Catalog entity bindings. If an orphaned resource is detected, the agent analyzes historical resource tags, billing codes, and creation logs to deduce ownership. Finally, a **Communicator Agent Node** pings the targeted team via the _Slack Tool Pack_, delivering a direct, pre-populated link to a **Backstage Scaffolder template** to safely register or decommission the asset.
+
 ## Goal
 
 Implement `@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-shadow-detective` as an AI Core backend module that closes the loop between live cloud infrastructure and the Software Catalog. A scheduled reconciliation run inventories cloud resources, deterministically filters out everything already bound to a catalog `Resource` via an infrastructure annotation, and for each genuine orphan infers likely ownership from tags, creator identity, and billing codes — resolving a creator email through the Backstage org graph to a current team. Each finding becomes a `ShadowResource` carrying a **pre-populated Scaffolder claim URL**, and — only after approval — an outreach message to the inferred owning team. A paired frontend plugin renders the shadow inventory, ownership confidence, and one-click claim links.

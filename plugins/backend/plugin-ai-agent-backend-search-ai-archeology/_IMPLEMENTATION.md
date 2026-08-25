@@ -1,5 +1,12 @@
 # Search AI Archeology Implementation Plan
 
+## Overview
+
+This plugin acts as a semantic search engine across deprecated spaces, legacy wikis, and historical repositories, digging up context and documentation that keyword search engines miss.
+
+- **The Task**: Identifying active subject matter experts and uncovering lost historical tribal knowledge across shifting organizational structures.
+- **The Logic**: Instead of running expensive, noisy vector embeddings over millions of historical code diffs, a **Multi-Tool Research Agent** executes a hybrid search. It uses `knowledge.retrieve` over high-level TechDocs and Architecture Decision Records (ADRs) to isolate target files and components. It then invokes time-bounded queries via the **GitHub and Jira tool packs** (e.g., historical `git blame` logs and ticket histories from specific eras) to calculate an **Expertise Matrix Artifact**, tracking down the original authors and code reviewers regardless of current catalog ownership.
+
 ## Goal
 
 Implement `@webstackbuilders/plugin-ai-agent-backend-search-ai-archeology` as an AI Core backend module that answers *"who actually knows this legacy system?"* It runs a **hybrid** research workflow rather than embedding millions of diffs: `knowledge.retrieve` over TechDocs/ADRs isolates the relevant files and components, deterministic time-bounded VCS and ticket queries surface the humans who wrote, reviewed, and triaged that code, and the Backstage Org Graph translates stale commit identities into **currently active** teams. The output is a cited `ExpertiseMatrix` that ranks living experts and explicitly labels offboarded contributors rather than dropping or fabricating them. A paired frontend plugin renders the research timeline, the matrix, and its citations.
@@ -512,22 +519,6 @@ Registered the frontend package in:
 - `/home/kevin/Repos/backstage/ai-crew-suite/packages/app/src/App.tsx`
 - `/home/kevin/Repos/backstage/ai-crew-suite/yarn.lock`
 
-### Validation
-
-Passed:
-
-- `yarn install --no-immutable`
-- Frontend package TypeScript check.
-- App TypeScript check.
-- Focused Vitest suite: __2 files, 3 tests passed__.
-- Frontend package lint.
-- `yarn typecheck --force`: __59/59 tasks successful__.
-- `yarn lint --force`: __59/59 tasks successful__.
-  - Only unrelated existing warnings from legacy backend test files.
-- `git diff --check`.
-
-The only test output warning is Material-UI v4's existing `findDOMNode` deprecation warning during the component test; it does not fail tests or lint.
-
 ## Backend Completed
 
 Implemented the `search-ai-archeology` backend plugin as the contract-verified, read-only ticket-triage research milestone.
@@ -576,16 +567,5 @@ Registered the module in:
 - `/home/kevin/Repos/backstage/ai-crew-suite/packages/backend/src/index.ts`
 - `/home/kevin/Repos/backstage/ai-crew-suite/app-config.yaml`
 
-### Validation completed
 
-- `yarn install --no-immutable`
-- Package TypeScript compilation via SDK `tsc --noEmit`
-- Focused Vitest suite: __3 files, 4 tests passed__
-- Package lint passed
-- `yarn typecheck --force`: __58/58 tasks successful__
-- `yarn lint --force`: __58/58 tasks successful__
-  - Only pre-existing warnings in unrelated cloud/runtime test files.
-- `git diff --check` passed.
-
-Note: The workspace already contained an unrelated modified file: `/home/kevin/Repos/backstage/ai-crew-suite/plugins/backend/plugin-ai-agent-backend-scaffolder-ai-infra/_IMPLEMENTATION.md`; it was not altered by this implementation.
 

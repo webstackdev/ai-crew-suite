@@ -1,5 +1,12 @@
 # Catalog AI Insights Implementation Plan
 
+## Overview
+
+This plugin leverages large language models to analyze catalog entity relations and auto-generate structural engineering summaries.
+
+- **The Task:** Answering contextual questions about any service in the Software Catalog (_"Who is the on-call?"_, _"Where are the logs?"_, _"Why did this service fail its last deployment?"_).
+- **The Logic:** The backend plugin orchestrates a large language model (LLM) pipeline that retrieves a service's catalog metadata, deployment history, and monitoring metrics via Backstage service interfaces to compile unified natural language insights.
+
 ## Goal
 
 Implement `@webstackbuilders/plugin-ai-agent-backend-catalog-ai-insights` as an AI Core backend module that answers contextual operational questions about any Software Catalog entity (_"Who is the on-call?"_, _"Where are the logs?"_, _"Why did this service fail its last deployment?"_) through a RAG-backed, intent-routed workflow. A paired frontend plugin surfaces answers on the catalog entity page and in a standalone ask view.
@@ -384,20 +391,5 @@ Registered the plugin in:
 - `/home/kevin/Repos/backstage/ai-crew-suite/yarn.lock`
 
 Also removed generated test/cache artifacts from the plugin directory.
-
-### Validation completed
-
-Passed:
-
-- `yarn workspace @webstackbuilders/plugin-ai-agent-frontend-catalog-ai-insights test`
-  - __15 tests passed__
-- Plugin lint
-- Plugin TypeScript compilation using the repository Yarn PnP TypeScript SDK
-- Application feature wiring test
-- `yarn typecheck --force`
-  - __43/43 tasks successful__
-- `yarn lint --force`
-  - __43/43 tasks successful__; only existing unrelated warnings remain
-- `git diff --check`
 
 ## Backend 

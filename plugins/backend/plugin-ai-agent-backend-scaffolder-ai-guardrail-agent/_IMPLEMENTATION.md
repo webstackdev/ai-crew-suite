@@ -1,5 +1,15 @@
 # Scaffolder AI Guardrail Agent Implementation Plan
 
+## Overview
+
+This plugin sits directly inside your software template wizard pipelines, running active compliance validation steps before any cloud resource provisioning or repository scaffolding takes place.
+
+- **The Task**: Intercepting and auditing inbound Backstage Scaffolder requests to enforce corporate architecture, security, and financial policies prior to infrastructure execution.
+- **The Logic**: Rather than relying on rigid, hardcoded schema validation, an inbound Scaffolder request triggers a **Policy Guardrail Agent**. The agent reads the request parameters and cross-references them against an organization's central policy directives. If a request violates standard operating boundaries (e.g., attempting to provision an unapproved database cluster size or selecting a non-compliant cloud region), the graph branches into a **Human-in-the-Loop (HITL) Clarification State**. This pauses execution, retains the session checkpoint in PostgreSQL, and alerts the platform security or finance team to review, override, or provide feedback directly within the Backstage UI.
+- **Framework**: **LangGraph / Stateful Orchestrator** using cyclic branching logic, centralized state persistence, and native HITL approval and escalation gates.
+- **The Core Platform Win**: This is an exceptional use of your specialized runtime. This plugin single-handedly solves one of the biggest platform engineering problems: balancing developer velocity with enterprise governance. Traditional OPA (Open Policy Agent) gates fail here because they are binary (pass/fail). Your agent platform introduces a **negotiation layer** where the agent can say, _"You cannot spin up this heavy instance type for a testing environment, but if you click approve, I will automatically downscale it for you and proceed."_
+- **Incorporate Cost Accounting Tools**: Because you built token and cost accounting controls into your core monorepo engine, pass those same metrics to the compliance judge. The agent can evaluate the financial impact of a Scaffolder request (e.g., estimating cloud spend based on the chosen instance type parameter) and conditionally route requests over a specific budget threshold through an explicit engineering leadership approval loop.
+
 ## Goal
 
 Implement `@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-guardrail-agent` as an AI Core backend module that intercepts inbound Backstage Scaffolder requests **before** any provisioning step fires and evaluates their parameters against corporate architecture, security, region, and financial policies. Unlike a binary OPA gate it opens a **negotiation layer**: when a request breaches a boundary it computes a deterministic, policy-derived *safe alternative* ("`db.m5.16xlarge` is not permitted in `test`; approve and I will downscale to `db.m5.large` at $120/mo"), suspends at a HITL clarification checkpoint, and resolves only with a parameter set an authorized human accepted. A paired frontend plugin renders violations, the cost estimate, and the accept/override panel.
@@ -455,10 +465,6 @@ Exit criteria: staged rollout with the report disabled by default, bounded costs
 
 ## Backend Completed
 
-Implemented the advisory guardrail backend module at:
-
-`/home/kevin/Repos/backstage/ai-crew-suite/plugins/backend/plugin-ai-agent-backend-scaffolder-ai-guardrail-agent`
-
 ### Implemented
 
 - Package, config schema, AI Core module, session-memory agent, manual trigger,
@@ -483,15 +489,6 @@ is therefore advisory and every assessment records
 `advisory-only: not enforced server-side`; direct Scaffolder API calls can bypass
 it until a shared pre-flight contract lands. No fictional Scaffolder service or
 interception hook was introduced.
-
-### Tests and validation
-
-- 7 focused tests: canonical fingerprint behavior, secret-safe canonical input,
-  fail-closed unmapped-policy severity, cost range/unknown handling,
-  config-ladder mutation, negotiated checkpoint/approval event with no
-  Scaffolder call, unavailable driver `undetermined`, and module registration.
-- `yarn vitest run plugins/backend/plugin-ai-agent-backend-scaffolder-ai-guardrail-agent/src` — __7 tests passed__
-- Package `tsc --noEmit` and package lint — clean
 
 ### Wiring added
 
@@ -538,12 +535,3 @@ interception hook. The frontend intentionally does not invent a dashboard list
 API or claim that a direct Scaffolder API submission has been gated; it renders
 the backend's persistent `advisory-only: not enforced server-side` limitation.
 
-### Wiring and validation
-
-- Registered the TypeScript reference, frontend ESLint role, package dependency,
-  alpha feature import, and app feature expectation.
-- 7 focused tests cover assessment replay, approval state, malformed artifacts,
-  driver violation citations, empty compliant state, mutation acceptance, and
-  absence of a blocking accept control.
-- `yarn vitest run plugins/frontend/plugin-ai-agent-frontend-scaffolder-ai-guardrail-agent/src` — __7 tests passed__
-- Package `tsc --noEmit`, package lint, and app registration test — clean.
