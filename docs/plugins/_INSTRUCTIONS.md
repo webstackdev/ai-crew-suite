@@ -2,7 +2,7 @@
 
 You are a Principal Technical Writer specializing in Developer Portals. We are going to generate a comprehensive User Technical Guide in markdown format.
 
-Next let's generate docs/plugins/catalog-ai-insights.md from the plugins/backend/plugin-ai-agent-backend-catalog-ai-insights/_IMPLEMENTATION.md plan. Let's make sure the code base stays the source of truth if the completed implementation plan varies from it, and we add a Roadmap section at the end if we can identify work that was out of scope for the initial implementation.
+Next let's generate docs/plugins/rfc-adr-ai-reviewer.md from the plugins/backend/plugin-ai-agent-backend-rfc-adr-ai-reviewer/_IMPLEMENTATION.md. Let's continue making sure the code base stays the source of truth if the completed implementation plan varies from it, and we add a Roadmap section at the end if we can identify work that was out of scope for the initial implementation.
 
 ## Documentation Constraints
 

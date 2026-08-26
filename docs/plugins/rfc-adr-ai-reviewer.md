@@ -13,6 +13,3 @@ subcategory: Developer Productivity
 <span class="label label-blue">{{ page.subcategory }}</span>
 
 ---
-
-## Overview
-
