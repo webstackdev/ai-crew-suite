@@ -13,6 +13,3 @@ subcategory: Reliability & Incident Management
 <span class="label label-blue">{{ page.subcategory }}</span>
 
 ---
-
-## Overview
-

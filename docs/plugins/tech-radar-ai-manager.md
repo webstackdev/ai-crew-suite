@@ -13,6 +13,3 @@ subcategory: Strategic Planning
 <span class="label label-blue">{{ page.subcategory }}</span>
 
 ---
-
-## Overview
-

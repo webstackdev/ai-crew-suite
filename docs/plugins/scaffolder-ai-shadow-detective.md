@@ -13,6 +13,3 @@ subcategory: Governance
 <span class="label label-blue">{{ page.subcategory }}</span>
 
 ---
-
-## Overview
-

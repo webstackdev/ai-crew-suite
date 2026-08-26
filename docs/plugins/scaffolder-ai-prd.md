@@ -13,6 +13,3 @@ subcategory: Product & Delivery
 <span class="label label-blue">{{ page.subcategory }}</span>
 
 ---
-
-## Overview
-
