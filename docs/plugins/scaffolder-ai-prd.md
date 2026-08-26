@@ -374,7 +374,7 @@ Ensure `playwright/.auth/login.json` exists.
 
 The following features are planned for future releases.
 
-### AI-Powered Channel Synthesis (Milestone 1)
+### AI-Powered Channel Synthesis
 
 The `modelRef`, `systemPrompt`, and all four registered tools are unused in the current implementation. When the LLM integration and tool drivers are available:
 
@@ -392,7 +392,7 @@ The Engineer channel currently selects `allowedTemplates[0]` with empty paramete
 - PRD content will be analyzed for parameter values (service name, environment, capacity, region)
 - The `coerceParameters()` pattern from `scaffolder-ai-intent` will fill schema-declared fields
 
-### Approval Gate & Multi-Write Transactional Commit (Milestone 2)
+### Approval Gate & Multi-Write Transactional Commit
 
 The `execute.enabled` config flag and `blueprintHash` are in place. When the approval gate is implemented:
 
@@ -416,7 +416,7 @@ When `CatalogClient` and `project.ticket.search` are integrated:
 
 The Writer channel will analyze PRD content to derive documentation sections specific to the project scope — architecture diagrams for backend services, API specifications for frontend services, deployment runbooks — rather than the current hardcoded three-section outline.
 
-### Playwright E2E Test Suite (Milestone 3)
+### Playwright E2E Test Suite
 
 - Controlled fixture data for PRD text and configured templates
 - Playwright scenarios covering full happy-path translation, blueprint rendering with three-channel output, and replay recovery
