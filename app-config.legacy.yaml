@@ -1,0 +1,8 @@
+# yaml-language-server: $schema=https://backstage.io
+backend:
+  baseUrl: http://localhost:7008
+  listen:
+    port: 7008
+  database:
+    client: better-sqlite3
+    connection: 'development-legacy.sqlite'

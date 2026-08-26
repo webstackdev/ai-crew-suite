@@ -22,8 +22,7 @@ Log.txt
 .env.development.local
 .env.test.local
 .env.production.local
-*.local.yaml
-app-config.local.yaml
+*.sqlite
 .clinerules
 
 # ==========================================

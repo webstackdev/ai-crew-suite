@@ -11,10 +11,3 @@ subcategory: Knowledge
 {: .no_toc }
 
 <span class="label label-blue">{{ page.subcategory }}</span>
-
----
-
-## Overview
-
-
-

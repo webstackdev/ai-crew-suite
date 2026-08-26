@@ -11,10 +11,6 @@ organization:
   name: AI Crew Suite
 
 backend:
-  baseUrl: http://localhost:7007
-  listen:
-    port: 7007
-
   csp:
     connect-src: ["'self'", 'http:', 'https:']
 
@@ -64,27 +60,33 @@ ai:
       # Propose-only threshold tuning; opening a pull request is unavailable
       # until the shared VCS write tool is registered.
       model: alert-tuner
+
     driftDetector:
       # Read-only Kubernetes-backed detection until shared blueprint/cloud/VCS contracts land.
       model: drift-detector
+
     scaffolderGuardrail:
       # Advisory only until the shared Scaffolder pre-flight contract is available.
       model: scaffolder-guardrail
       policies:
         - id: corp-architecture
+
     scaffolderInfra:
       model: scaffolder-infra
+
     scaffolderIntent:
       model: scaffolder-intent
       templates:
         allowed:
           - template:default/react-service-template
+
     shadowDetective:
       model: shadow-detective
       catalog:
         annotation: example.com/resource-id
       claim:
         templateRef: template:default/register-existing-resource
+
     scaffolderPrd:
       model: scaffolder-prd
       templates:
@@ -95,33 +97,43 @@ ai:
           - id: example-terraform
             provider: terraform
             url: https://example.invalid/approved/main.tf
+
     searchArcheology:
       model: search-archeology
+
     searchContext:
       model: search-context
       maxDepth: 3
       maxConsumers: 50
       capableProviders: [github, gitlab, azuredevops]
+
     techDebtScout:
       model: tech-debt-scout
+
     techRadarManager:
       model: tech-radar-manager
       radar:
         sourceUrl: https://example.invalid/radar-data.json
+
     techdocsJanitor:
       model: techdocs-janitor
+
     techdocsPostmortem:
       model: techdocs-postmortem
+
     catalogAiInsights:
       # Installation-registered model ID; map it to a provider through a
       # chat-model module (e.g. plugin-ai-core-backend-module-llm-openai).
       model: catalog-insights
+
     oncallHandover:
       # Installation-registered model ID for bounded, cited shift briefs.
       model: oncall-handover
+
     releaseNotes:
       # Draft generation is enabled; publishing remains unavailable pending the VCS write tool.
       model: release-notes
+
     rfcAdrReviewer:
       # Read-only parallel critique generation; PR commenting is not yet available.
       model: rfc-adr-review
