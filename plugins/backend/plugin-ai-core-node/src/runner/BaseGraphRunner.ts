@@ -20,7 +20,7 @@ import {
   AgentRunInput,
   WorkflowContext,
   AgentEvent
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '../@types';
 
 /**
  * Universal Base Graph Class to enforce defensive contract parsing at the runtime

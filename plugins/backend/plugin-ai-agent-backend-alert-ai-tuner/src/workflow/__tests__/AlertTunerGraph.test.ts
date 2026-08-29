@@ -33,6 +33,15 @@ const IAC_FILE = [
   '}',
 ].join('\n');
 
+const NOISY_REQUEST = {
+  version: 1,
+  source: 'manual',
+  alertId: 'cpu_high',
+  service: 'checkout',
+  repoUrl: 'https://github.com',
+  iacPath: 'alerts.tf',
+};
+
 /** Resolved configuration mirroring every documented default. */
 const CONFIG: AlertAiTunerConfig = {
   modelRef: 'alert-tuner',
@@ -102,10 +111,6 @@ const runInput = (query: unknown): AgentRunInput =>
     agentId: 'alert-ai-tuner',
     input: { query: JSON.stringify(query), source: 'catalog' },
   }) as AgentRunInput;
-
-const NOISY_REQUEST = {
-  service: 'checkout',
-};
 
 const collect = async (events: AsyncIterable<AgentEvent>) => {
   const collected: AgentEvent[] = [];

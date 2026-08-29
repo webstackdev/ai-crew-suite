@@ -17,18 +17,24 @@ import { z } from 'zod';
 import type { AiAgentSchemaRegistry } from '@webstackbuilders/plugin-ai-core-node';
 
 export const AlertTunerInputSchema = z.object({
-  /** The specific catalog microservice or infrastructure component identifier to analyze */
+  /** Strict structural api contract metadata properties expected by parseAlertTuningQuery */
+  version: z.number().int().positive(),
+  source: z.string().min(1),
+
+  /** Domain-specific business properties */
   service: z.string().min(1, 'Target service parameter is required'),
-  /** Optional lookback parameter to establish the evaluation historical context window */
+  alertId: z.string().min(1, 'Alert ID is required'),
+  repoUrl: z.string().url('A valid repository URL is required'),
+  iacPath: z.string().min(1, 'Infrastructure path parameter is required'),
+
+  /** Optional bounds parameters */
   lookbackDays: z.number().int().positive().optional(),
-  /** Custom ISO timestamp boundaries to override lookback default bounds */
   from: z.string().datetime().optional(),
   to: z.string().datetime().optional(),
-}).strict(); // Using strict to prevent arbitrary payload parameter pollution
+}).strict(); // Remained strictly guarded!
 
 export type AlertTunerInput = z.infer<typeof AlertTunerInputSchema>;
 
-// Inject definition contracts into your global extensible platform registry
 declare module '@webstackbuilders/plugin-ai-core-node' {
   interface AiAgentSchemaRegistry {
     'alert-ai-tuner': {
@@ -38,8 +44,4 @@ declare module '@webstackbuilders/plugin-ai-core-node' {
   }
 }
 
-/**
- * Empty explicit reference assertion that prevents bundlers, linters,
- * and compilers from stripping the unused node package import.
- */
 export type RegisteredAlertTunerSchema = AiAgentSchemaRegistry['alert-ai-tuner'];

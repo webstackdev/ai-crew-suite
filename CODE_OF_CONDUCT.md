@@ -18,7 +18,7 @@ Unacceptable behaviors include, but are not limited to:
 
 ## Reporting an Incident
 
-If you experience, observe, or witness unacceptable behavior—or have any other structural safety concerns—please report it immediately to our operations review team at **conduct@webstackbuilders.com**.
+If you experience, observe, or witness unacceptable behavior—or have any other structural safety concerns—please report it immediately to our operations review team at **conduct@ai-crew-suite.dev**.
 
 To assist us in conducting a thorough and rapid review, please include as many of the following details as possible in your initial communication:
 
