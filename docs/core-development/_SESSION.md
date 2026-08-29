@@ -12,3 +12,7 @@ In Roadie's architecture, text generation chunks are pumped directly to the Serv
 
 - The data shape on the wire: data: " structured" or data: " code"
 - The Danger: Passing this raw string chunk directly into JSON.parse() will instantly throw an exception and route execution directly into your catch block.
+
+- Extract a BaseGraphRunner class abstraction to encapsulate this safeParse logic across all 18 graph workflow run blocks
+- Code the Frontend UI Client hook integration that triggers this exact alert-ai-tuner payload typesafely
+- Design the validation rules for one of your supporting utility modules (e.g., the Slack or GitHub service channels)

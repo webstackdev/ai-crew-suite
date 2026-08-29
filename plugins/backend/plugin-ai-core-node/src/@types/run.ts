@@ -349,3 +349,12 @@ export interface Orchestrator {
     ctx: RunContext,
   ): AsyncIterable<AgentEvent>;
 }
+
+/**
+ * Global open-ended schema registry matching the Backstage module federation pattern.
+ * Each of the 18 workflow plugins will use module augmentation to attach their specific
+ * Zod configurations here.
+ */
+export interface AiAgentSchemaRegistry {
+  // Purposely empty. Populated at runtime dynamically by sub-plugins.
+}

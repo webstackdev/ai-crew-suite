@@ -11,7 +11,7 @@
     "types": "dist/index.d.ts"
   },
   "backstage": {
-    "role": "backend-plugin-module",
+    "role": "backend-plugin",
     "pluginId": "ai-core",
     "pluginPackage": [
       "@webstackbuilders/plugin-ai-core-backend"
@@ -35,6 +35,7 @@
   "dependencies": {
     "@backstage/backend-plugin-api": "backstage:^",
     "@backstage/config": "backstage:^",
+    "@webstackbuilders/plugin-ai-core-backend": "workspace:*",
     "@webstackbuilders/plugin-ai-core-node": "workspace:*"
   },
   "devDependencies": {

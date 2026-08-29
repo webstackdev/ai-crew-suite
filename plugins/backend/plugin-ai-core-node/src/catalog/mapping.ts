@@ -118,7 +118,7 @@ export const toCatalogEntityRelations = (
  * Extracts integration handles from well-known Backstage annotations:
  * Kubernetes (`backstage.io/kubernetes-id`), on-call providers
  * (`pagerduty.com/*`), monitoring providers, source location, and TechDocs.
- * Annotations with unknown key formats are ignored rather than misparsed.
+ * Annotations with unknown key formats are ignored rather than mis-parsed.
  */
 export const extractIntegrationReferences = (
   entity: CatalogEntityLike,
