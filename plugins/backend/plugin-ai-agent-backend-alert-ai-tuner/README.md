@@ -83,3 +83,23 @@ ai:
 ```
 
 See `config.d.ts` for every optional field and its default.
+
+## 🐳 Production Deployment & Docker Guardrails
+
+This plugin utilizes **`web-tree-sitter`**, a pure WebAssembly (WASM) parser execution runtime, to parse HCL files securely without requiring native C/C++ host compilers. By default the plugin dynamically resolves the pre-compiled `.wasm` binaries directly from the filesystem inside `node_modules` at runtime.
+
+### Aggressive `node_modules` Pruning in Dockerfiles
+
+If your organization utilizes a highly strict CI/CD Docker pipeline that aggressively strips, deletes, or flattens `node_modules` during the deployment phase (e.g., standardizing on an `esbuild` monobundle and wiping the surrounding folders), the initialization will throw a runtime file exception because the `.wasm` asset was discarded.
+
+#### How to Remediate:
+
+If your deployment pipeline drops or cleans up the package asset tree, implement one of these two fixes:
+
+1. **Docker Layer Intervention:** Update your production `Dockerfile` to manually pull the required `.wasm` binary into the final deployment layer right after your production dependency install step:
+
+```dockerfile
+COPY --from=build-stage /app/node_modules/@tree-sitter-grammars/tree-sitter-hcl/tree-sitter-hcl.wasm /app/node_modules/@tree-sitter-grammars/tree-sitter-hcl/tree-sitter-hcl.wasm
+```
+
+2. **Local Asset Mirroring:** If your environment completely blocks referencing files inside `node_modules` post-build, copy the `tree-sitter-hcl.wasm` file out of the package once, store it in your plugin's internal static `assets/` or `dist/` directory, commit it to your repository, and adjust the runtime filepath path resolution to point locally.

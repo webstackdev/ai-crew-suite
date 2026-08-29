@@ -13,7 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { ToolInvocationResult, WorkflowContext } from '@webstackbuilders/plugin-ai-core-node';
+import type {
+  ToolInvocationResult,
+  WorkflowContext
+} from '@webstackbuilders/plugin-ai-core-node';
 
 /**
  * Bounded, failure-tolerant facade for the tuner's read-only tool calls.

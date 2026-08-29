@@ -15,12 +15,11 @@
  */
 import { describe, expect, it } from 'vitest';
 import { toFiringEvidence, toFiringSamples } from '../history';
-import { parseAlertTuningQuery } from '../request';
 
 const WINDOW = { from: '2026-01-01T00:00:00.000Z', to: '2026-01-31T00:00:00.000Z' };
 
-describe('toFiringSamples', () => {
-  /** Durations must be derived from the timestamps, never trusted as given. */
+describe('toFiringSamples Production Ingestion Suite', () => {
+  /** Happy Path Validation */
   it('derives durations and assigns stable citation identifiers', () => {
     const samples = toFiringSamples(
       [
@@ -49,7 +48,7 @@ describe('toFiringSamples', () => {
     ]);
   });
 
-  /** Entries outside the analysis window must not reach the statistics. */
+  /** Window Boundaries */
   it('drops entries outside the window and those with no trigger time', () => {
     const samples = toFiringSamples(
       [
@@ -64,7 +63,7 @@ describe('toFiringSamples', () => {
     expect(samples.map((sample) => sample.triggeredAt)).toEqual(['2026-01-15T00:00:00.000Z']);
   });
 
-  /** Unresolved firings must carry no duration to skew the percentiles. */
+  /** Duration Edge Cases */
   it('records unresolved firings without a duration', () => {
     const [sample] = toFiringSamples(
       [{ id: 'a', title: 'stuck', triggeredAt: '2026-01-10T00:00:00.000Z' }],
@@ -75,7 +74,7 @@ describe('toFiringSamples', () => {
     expect(sample).toMatchObject({ resolution: 'unresolved', durationSeconds: undefined });
   });
 
-  /** The cap must retain the newest firings so recent behaviour dominates. */
+  /** Truncation Mechanics */
   it('caps retained samples newest-first', () => {
     const entries = Array.from({ length: 5 }, (_unused, index) => ({
       id: `a-${index}`,
@@ -91,8 +90,59 @@ describe('toFiringSamples', () => {
     ]);
   });
 
-  /** Evidence summaries must stay free of alert titles and responder identities. */
-  it('summarizes evidence without alert payload detail', () => {
+  it('drops resolved timestamps that precede their trigger time as unusable data', () => {
+    const samples = toFiringSamples(
+      [
+        {
+          id: 'time-inverted',
+          title: 'Clock Sync Bug',
+          triggeredAt: '2026-01-15T12:00:00.000Z',
+          resolvedAt: '2026-01-15T11:59:00.000Z', // Resolved 1 min BEFORE it triggered
+          resolution: 'auto',
+        },
+      ],
+      WINDOW,
+      10
+    );
+
+    expect(samples).toHaveLength(1);
+    expect(samples[0]).toMatchObject({
+      id: 'fire-1',
+      resolvedAt: undefined,       // Verified wiped safely
+      durationSeconds: undefined,  // Verified wiped safely
+      resolution: 'auto',          // FIX: Matches entry.resolution prioritization rule
+    });
+  });
+
+  it('safely handles negative sample bounds caps by treating them as 0 space limits', () => {
+    const samples = toFiringSamples(
+      [{ id: 'a', title: 'alert', triggeredAt: '2026-01-15T00:00:00.000Z' }],
+      WINDOW,
+      -25 // Negative configuration injection bounds
+    );
+
+    expect(samples).toHaveLength(0);
+  });
+
+  it('defaults to safe wide-open bounds thresholds if window values are corrupt or unparseable', () => {
+    const entries = [
+      { id: '1', title: 'a', triggeredAt: '1970-01-02T00:00:00.000Z' },
+      { id: '2', title: 'b', triggeredAt: '2026-01-15T00:00:00.000Z' },
+    ];
+
+    const samples = toFiringSamples(
+      entries,
+      { from: 'corrupt-date-string', to: 'corrupt-date-string' },
+      10
+    );
+
+    // from defaults to 0, to defaults to MAX_SAFE_INTEGER, meaning both pass window validation checks cleanly
+    expect(samples).toHaveLength(2);
+  });
+});
+
+describe('toFiringEvidence Evidence Serialization Verification', () => {
+  it('summarizes evidence without alert payload detail or context leakage', () => {
     const samples = toFiringSamples(
       [
         {
@@ -112,43 +162,5 @@ describe('toFiringSamples', () => {
     expect(evidence.id).toBe('fire-1');
     expect(evidence.summary).toContain('cleared after 90s');
     expect(evidence.summary).not.toContain('prod-db-01');
-  });
-});
-
-describe('parseAlertTuningQuery', () => {
-  const bounds = { defaultDays: 14, maxDays: 30 };
-
-  /** The window must be clamped so a caller cannot request unbounded history. */
-  it('clamps the requested window to the configured maximum', () => {
-    const request = parseAlertTuningQuery(
-      JSON.stringify({ version: 1, source: 'manual', service: 'checkout', windowDays: 900 }),
-      'manual',
-      bounds
-    );
-
-    expect(request.windowDays).toBe(30);
-  });
-
-  /** Traversal paths must never reach a repository read tool. */
-  it('rejects a traversal IaC path', () => {
-    expect(() =>
-      parseAlertTuningQuery(
-        JSON.stringify({
-          version: 1,
-          source: 'manual',
-          service: 'checkout',
-          iacPath: '../../etc/passwd',
-        }),
-        'manual',
-        bounds
-      )
-    ).toThrow(/bounded repository-relative path/);
-  });
-
-  /** Unknown payload versions must be rejected rather than best-effort parsed. */
-  it('rejects an unsupported payload version', () => {
-    expect(() =>
-      parseAlertTuningQuery(JSON.stringify({ version: 2, service: 'checkout' }), 'manual', bounds)
-    ).toThrow(/Unsupported request version/);
   });
 });

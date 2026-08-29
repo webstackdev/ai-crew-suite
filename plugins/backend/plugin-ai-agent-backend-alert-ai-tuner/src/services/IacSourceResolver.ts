@@ -13,7 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { RepositoryMetadata, RepositorySearchResult } from '@webstackbuilders/plugin-ai-core-node';
+import type {
+  RepositoryMetadata,
+  RepositorySearchResult
+} from '@webstackbuilders/plugin-ai-core-node';
 import type { TunerToolRunner } from './TunerToolRunner';
 
 /** Read-only VCS tool IDs used to resolve and read the owning IaC file. */

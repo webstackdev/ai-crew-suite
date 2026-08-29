@@ -35,16 +35,12 @@ import {
   statusForVerdict,
 } from './proposal';
 import {
-  AlertTuningRequestValidationError,
   parseAlertTuningQuery,
   resolveWindow,
 } from './request';
 import { proposePatch } from './pipeline';
 import { AlertTunerInputSchema, AlertTunerInput } from '../schema';
-import type {
-  AlertTuningRequest,
-  EvidenceRef,
-} from './state';
+import type { EvidenceRef } from './state';
 import { AlertHistoryReader } from '../services/AlertHistoryReader';
 import { TunerToolRunner } from '../services/TunerToolRunner';
 import { createTuningProposalArtifactEvent } from '../services/TunerArtifactWriter';

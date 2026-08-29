@@ -35,8 +35,11 @@
   "dependencies": {
     "@backstage/backend-plugin-api": "backstage:^",
     "@backstage/config": "backstage:^",
+    "@tree-sitter-grammars/tree-sitter-hcl": "^1.2.0",
     "@webstackbuilders/plugin-ai-core-backend": "workspace:*",
     "@webstackbuilders/plugin-ai-core-node": "workspace:*",
+    "web-tree-sitter": "^0.26.13",
+    "yaml": "2.9.0",
     "zod": "^4.5.2"
   },
   "devDependencies": {

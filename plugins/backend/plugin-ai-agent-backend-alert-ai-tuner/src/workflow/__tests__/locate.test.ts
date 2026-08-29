@@ -39,8 +39,8 @@ const PROMETHEUS_FILE = [
   '        for: 5m',
 ].join('\n');
 
-describe('locateThresholdAnchor', () => {
-  /** HCL anchors must carry exact line numbers so the diff can be pinned. */
+describe('locateThresholdAnchor Engine Isolation Suite', () => {
+  /** Happy Path Validation */
   it('locates an HCL alert block with its assignment line numbers', () => {
     const result = locateThresholdAnchor({
       path: 'alerts.tf',
@@ -56,16 +56,11 @@ describe('locateThresholdAnchor', () => {
     expect(result.anchor.currentDuration).toMatchObject({ value: '2m', line: 7 });
   });
 
-  /**
-   * Prometheus rule YAML is the other supported dialect, and the entry must be
-   * bounded so the following rule's `for` value is not captured.
-   */
+  /** Dialect Compatibility Tracking */
   it('locates a Prometheus rule entry without bleeding into the next rule', () => {
     const result = locateThresholdAnchor({
       path: 'prometheus-rules.yaml',
       content: PROMETHEUS_FILE,
-      // Separator and case differences are normalized away, so the provider
-      // alert ID `cpu_high` still matches the rule named `CpuHigh`.
       alertName: 'cpu_high',
     });
 
@@ -76,7 +71,7 @@ describe('locateThresholdAnchor', () => {
     expect(result.anchor.currentDuration).toMatchObject({ value: '2m', line: 6 });
   });
 
-  /** An unmatched alert name is terminal: the engine must never guess a block. */
+  /** Failure Isolation Rules */
   it('reports no match rather than guessing a block', () => {
     const result = locateThresholdAnchor({
       path: 'alerts.tf',
@@ -87,7 +82,7 @@ describe('locateThresholdAnchor', () => {
     expect(result).toMatchObject({ ok: false, reason: 'no_match' });
   });
 
-  /** Multiple candidate blocks are equally terminal, for the same reason. */
+  /** Ambiguity Traps */
   it('reports ambiguity when several blocks match', () => {
     const duplicated = `${HCL_FILE}\n${HCL_FILE.split('\n').slice(4).join('\n')}`;
 
@@ -100,7 +95,7 @@ describe('locateThresholdAnchor', () => {
     expect(result).toMatchObject({ ok: false, reason: 'ambiguous_match' });
   });
 
-  /** A matched block with nothing tunable must not yield an empty patch. */
+  /** Field Detection Failures */
   it('reports a matched block that exposes no tunable field', () => {
     const result = locateThresholdAnchor({
       path: 'alerts.tf',
@@ -109,5 +104,60 @@ describe('locateThresholdAnchor', () => {
     });
 
     expect(result).toMatchObject({ ok: false, reason: 'no_tunable_field' });
+  });
+
+  it('safely handles deeply nested structures and inline text brace patterns without premature truncation', () => {
+    const complexHclPayload = [
+      'resource "prometheus_alert" "cpu_high" {',
+      '  meta {',
+      '    summary = "Alert triggered for high cpu {instance_id}"', // Inline brace injection!
+      '    nested_details {',
+      '      active = true',
+      '    }',
+      '  }',
+      '  threshold = 90', // downstream target assignment parameter
+      '}',
+    ].join('\n');
+
+    const result = locateThresholdAnchor({
+      path: 'complex-nested.tf',
+      content: complexHclPayload,
+      alertName: 'cpu_high',
+    });
+
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+
+    // Confirms tracking brace depths correctly found the field at line index 8 instead of dropping on line 3
+    expect(result.anchor.currentThreshold).toMatchObject({ value: '90', line: 8 });
+  });
+
+  it('safely processes blank or flat un-broken string payloads without throwing lookup failures', () => {
+    const emptyResult = locateThresholdAnchor({
+      path: 'empty.tf',
+      content: '',
+      alertName: 'cpu_high',
+    });
+
+    expect(emptyResult).toMatchObject({ ok: false, reason: 'no_match', matches: 0 });
+  });
+
+  it('tolerates custom value formats like negative metrics limits inside rule definitions', () => {
+    const negativeValueHcl = [
+      'resource "prometheus_alert" "temp_low" {',
+      '  critical = -15.5', // Negative float parsing challenge
+      '}',
+    ].join('\n');
+
+    const result = locateThresholdAnchor({
+      path: 'negative.tf',
+      content: negativeValueHcl,
+      alertName: 'temp_low',
+    });
+
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+
+    expect(result.anchor.currentThreshold).toMatchObject({ value: '-15.5', line: 2 });
   });
 });

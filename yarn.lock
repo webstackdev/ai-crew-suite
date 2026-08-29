@@ -13601,6 +13601,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tree-sitter-grammars/tree-sitter-hcl@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "@tree-sitter-grammars/tree-sitter-hcl@npm:1.2.0"
+  dependencies:
+    node-addon-api: "npm:^8.3.1"
+    node-gyp: "npm:latest"
+    node-gyp-build: "npm:^4.8.4"
+  peerDependencies:
+    tree-sitter: ^0.25.0
+  peerDependenciesMeta:
+    tree-sitter:
+      optional: true
+  checksum: 10c0/07852302971154b8c7c3a29608dc26b6cadd9098c8d7cdc58e19c4d4bb25f10d19f6064cf7c6dc6cc0fdb207bbcede2f0dcf114d4d15e0116468238d2ad6e8e0
+  languageName: node
+  linkType: hard
+
 "@tree-sitter-grammars/tree-sitter-yaml@npm:=0.7.1":
   version: 0.7.1
   resolution: "@tree-sitter-grammars/tree-sitter-yaml@npm:0.7.1"
@@ -15543,9 +15559,12 @@ __metadata:
     "@backstage/backend-test-utils": "backstage:^"
     "@backstage/cli": "backstage:^"
     "@backstage/config": "backstage:^"
+    "@tree-sitter-grammars/tree-sitter-hcl": "npm:^1.2.0"
     "@webstackbuilders/plugin-ai-core-backend": "workspace:*"
     "@webstackbuilders/plugin-ai-core-node": "workspace:*"
     vitest: "npm:^4.1.11"
+    web-tree-sitter: "npm:^0.26.13"
+    yaml: "npm:2.9.0"
     zod: "npm:^4.5.2"
   languageName: unknown
   linkType: soft
@@ -38354,6 +38373,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"web-tree-sitter@npm:^0.26.13":
+  version: 0.26.13
+  resolution: "web-tree-sitter@npm:0.26.13"
+  checksum: 10c0/1b58d5df10b06a66dae171144be37f2ec99bfdbd70f4f0d55bcbe44639170143ab0710c6ed10711661f4284d945439e4e67bbffeb7825f38daf2f76230cfcacb
+  languageName: node
+  linkType: hard
+
 "webidl-conversions@npm:^3.0.0":
   version: 3.0.1
   resolution: "webidl-conversions@npm:3.0.1"
@@ -38916,7 +38942,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"yaml@npm:*, yaml@npm:^2.0.0, yaml@npm:^2.2.1, yaml@npm:^2.2.2, yaml@npm:^2.9.0":
+"yaml@npm:*, yaml@npm:2.9.0, yaml@npm:^2.0.0, yaml@npm:^2.2.1, yaml@npm:^2.2.2, yaml@npm:^2.9.0":
   version: 2.9.0
   resolution: "yaml@npm:2.9.0"
   bin:
