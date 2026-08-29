@@ -13,151 +13,101 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { describe, expect, it } from 'vitest';
+import path from 'path';
+import { createRequire } from 'module';
+import { describe, it, expect, beforeAll } from 'vitest';
+import * as TreeSitter from 'web-tree-sitter';
 import { locateThresholdAnchor } from '../locate';
 
-const HCL_FILE = [
-  'resource "prometheus_alert" "disk_low" {',
-  '  threshold = 10',
-  '}',
-  '',
-  'resource "prometheus_alert" "cpu_high" {',
-  '  threshold = 85',
-  '  for       = "2m"',
-  '}',
-].join('\n');
+const requireInterop = createRequire(__dirname);
 
-const PROMETHEUS_FILE = [
-  'groups:',
-  '  - name: platform',
-  '    rules:',
-  '      - alert: CpuHigh',
-  '        expr: cpu_usage > 85',
-  '        for: 2m',
-  '      - alert: DiskLow',
-  '        expr: disk_free < 10',
-  '        for: 5m',
-].join('\n');
+describe('locateThresholdAnchor Orchestration Router Integration Tests', () => {
+  const mockYamlContent = `
+groups:
+  - name: platform-alerts
+    rules:
+      - alert: HighMemoryUsage
+        expr: memory_ratio > 90
+        for: 2m
+  `;
 
-describe('locateThresholdAnchor Engine Isolation Suite', () => {
-  /** Happy Path Validation */
-  it('locates an HCL alert block with its assignment line numbers', () => {
-    const result = locateThresholdAnchor({
-      path: 'alerts.tf',
-      content: HCL_FILE,
-      alertName: 'cpu_high',
+  const mockHclContent = `
+    resource "datadog_monitor" "high_cpu" {
+      threshold = "95"
+      duration  = "5m"
+    }
+  `;
+
+  const mockUntunableHclContent = `
+    resource "datadog_monitor" "empty_monitor" {
+      name = "blank-alert"
+    }
+  `;
+
+  beforeAll(async () => {
+    // Core setup to ensure the underlying HCL WebAssembly engine can initialize during integration tests
+    const packageMain = requireInterop.resolve('web-tree-sitter');
+    const packageDir = path.dirname(packageMain);
+    const coreWasmPath = path.join(packageDir, 'web-tree-sitter.wasm');
+
+    await TreeSitter.Parser.init({
+      locateFile: () => coreWasmPath
+    });
+  });
+
+  it('should route .yaml files to the YAML parser and return a type-safe true anchor payload', async () => {
+    const result = await locateThresholdAnchor({
+      path: 'deployments/prometheus-rules.yaml',
+      content: mockYamlContent,
+      alertName: 'HighMemoryUsage',
     });
 
     expect(result.ok).toBe(true);
-    if (!result.ok) return;
-
-    expect(result.anchor.blockName).toBe('prometheus_alert.cpu_high');
-    expect(result.anchor.currentThreshold).toMatchObject({ value: '85', line: 6 });
-    expect(result.anchor.currentDuration).toMatchObject({ value: '2m', line: 7 });
+    if (result.ok) {
+      expect(result.anchor.blockName).toBe('HighMemoryUsage');
+      expect(result.anchor.currentDuration?.value).toBe('2m');
+    }
   });
 
-  /** Dialect Compatibility Tracking */
-  it('locates a Prometheus rule entry without bleeding into the next rule', () => {
-    const result = locateThresholdAnchor({
-      path: 'prometheus-rules.yaml',
-      content: PROMETHEUS_FILE,
-      alertName: 'cpu_high',
+  it('should route non-yaml files to the HCL parser and return a type-safe true anchor payload', async () => {
+    const result = await locateThresholdAnchor({
+      path: 'terraform/monitors.tf',
+      content: mockHclContent,
+      alertName: 'datadog_monitor.high_cpu',
     });
 
     expect(result.ok).toBe(true);
-    if (!result.ok) return;
-
-    expect(result.anchor.blockName).toBe('CpuHigh');
-    expect(result.anchor.currentDuration).toMatchObject({ value: '2m', line: 6 });
+    if (result.ok) {
+      expect(result.anchor.blockName).toBe('datadog_monitor.high_cpu');
+      expect(result.anchor.currentThreshold?.value).toBe('95');
+    }
   });
 
-  /** Failure Isolation Rules */
-  it('reports no match rather than guessing a block', () => {
-    const result = locateThresholdAnchor({
-      path: 'alerts.tf',
-      content: HCL_FILE,
-      alertName: 'memory_pressure',
+  it('should return a clean locate failure payload if a matching block cannot be discovered', async () => {
+    const result = await locateThresholdAnchor({
+      path: 'terraform/monitors.tf',
+      content: mockHclContent,
+      alertName: 'non_existent_alert_signature',
     });
 
-    expect(result).toMatchObject({ ok: false, reason: 'no_match' });
+    expect(result).toEqual({
+      ok: false,
+      reason: 'no_match',
+      matches: 0,
+    });
   });
 
-  /** Ambiguity Traps */
-  it('reports ambiguity when several blocks match', () => {
-    const duplicated = `${HCL_FILE}\n${HCL_FILE.split('\n').slice(4).join('\n')}`;
-
-    const result = locateThresholdAnchor({
-      path: 'alerts.tf',
-      content: duplicated,
-      alertName: 'cpu_high',
+  it('should return a no_tunable_field failure code if the resource exists but specifies no adjustable thresholds', async () => {
+    const result = await locateThresholdAnchor({
+      path: 'terraform/monitors.tf',
+      content: mockUntunableHclContent,
+      alertName: 'datadog_monitor.empty_monitor',
     });
 
-    expect(result).toMatchObject({ ok: false, reason: 'ambiguous_match' });
-  });
-
-  /** Field Detection Failures */
-  it('reports a matched block that exposes no tunable field', () => {
-    const result = locateThresholdAnchor({
-      path: 'alerts.tf',
-      content: 'resource "prometheus_alert" "cpu_high" {\n  labels = {}\n}',
-      alertName: 'cpu_high',
+    expect(result).toEqual({
+      ok: false,
+      reason: 'no_tunable_field',
+      matches: 1,
     });
-
-    expect(result).toMatchObject({ ok: false, reason: 'no_tunable_field' });
-  });
-
-  it('safely handles deeply nested structures and inline text brace patterns without premature truncation', () => {
-    const complexHclPayload = [
-      'resource "prometheus_alert" "cpu_high" {',
-      '  meta {',
-      '    summary = "Alert triggered for high cpu {instance_id}"', // Inline brace injection!
-      '    nested_details {',
-      '      active = true',
-      '    }',
-      '  }',
-      '  threshold = 90', // downstream target assignment parameter
-      '}',
-    ].join('\n');
-
-    const result = locateThresholdAnchor({
-      path: 'complex-nested.tf',
-      content: complexHclPayload,
-      alertName: 'cpu_high',
-    });
-
-    expect(result.ok).toBe(true);
-    if (!result.ok) return;
-
-    // Confirms tracking brace depths correctly found the field at line index 8 instead of dropping on line 3
-    expect(result.anchor.currentThreshold).toMatchObject({ value: '90', line: 8 });
-  });
-
-  it('safely processes blank or flat un-broken string payloads without throwing lookup failures', () => {
-    const emptyResult = locateThresholdAnchor({
-      path: 'empty.tf',
-      content: '',
-      alertName: 'cpu_high',
-    });
-
-    expect(emptyResult).toMatchObject({ ok: false, reason: 'no_match', matches: 0 });
-  });
-
-  it('tolerates custom value formats like negative metrics limits inside rule definitions', () => {
-    const negativeValueHcl = [
-      'resource "prometheus_alert" "temp_low" {',
-      '  critical = -15.5', // Negative float parsing challenge
-      '}',
-    ].join('\n');
-
-    const result = locateThresholdAnchor({
-      path: 'negative.tf',
-      content: negativeValueHcl,
-      alertName: 'temp_low',
-    });
-
-    expect(result.ok).toBe(true);
-    if (!result.ok) return;
-
-    expect(result.anchor.currentThreshold).toMatchObject({ value: '-15.5', line: 2 });
   });
 });

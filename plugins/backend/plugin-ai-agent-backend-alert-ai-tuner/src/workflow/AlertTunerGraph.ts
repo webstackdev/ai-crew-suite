@@ -79,13 +79,11 @@ export class AlertTunerGraph extends BaseGraphRunner<typeof AlertTunerInputSchem
    * @param options - Resolved configuration plus an optional injected clock.
    */
   constructor(private readonly options: AlertTunerGraphOptions) {
-    // FIXES Error 2377 and no-unreachable: Pass validation definition up to parent class first
     super(AlertTunerInputSchema);
   }
 
   /**
    * Executes one bounded tuning evaluation.
-   * FIXES Error 2515: Implements the exact abstract contract signature expected by BaseGraphRunner
    */
   protected async *executeGraph(
     requestInput: AlertTunerInput,
@@ -131,6 +129,7 @@ export class AlertTunerGraph extends BaseGraphRunner<typeof AlertTunerInputSchem
         summary: `${samples.length} firing(s) in window`,
       },
     };
+
     yield step('observe', 'exit');
 
     const limitations = [DEPLOY_TIMELINE_LIMITATION];
@@ -156,15 +155,20 @@ export class AlertTunerGraph extends BaseGraphRunner<typeof AlertTunerInputSchem
           confidence: 'low',
         })
       );
+
       yield { type: 'done', data: { runId: inputEnvelope.runId } };
+
       return;
     }
 
     yield step('analyze', 'enter');
+
     const baseScore = scoreNoise(samples, this.options.noise);
+
     yield step('analyze', 'exit');
 
     yield step('correlate', 'enter');
+
     const incidents = await tools.invoke<
       { service?: string; since: string; until: string; limit: number },
       unknown
@@ -189,6 +193,7 @@ export class AlertTunerGraph extends BaseGraphRunner<typeof AlertTunerInputSchem
       correlation.windows,
       this.options.noise.correlationWindowMinutes
     );
+
     yield step('correlate', 'exit');
 
     if (score.verdict !== 'noisy') {
@@ -205,11 +210,14 @@ export class AlertTunerGraph extends BaseGraphRunner<typeof AlertTunerInputSchem
           confidence: deriveConfidence({ score, hasMetrics: false, hasDeployTimeline: false }),
         })
       );
+
       yield { type: 'done', data: { runId: inputEnvelope.runId } };
+
       return;
     }
 
     yield step('locate', 'enter');
+
     const proposal = await proposePatch({
       request,
       window,
@@ -219,9 +227,11 @@ export class AlertTunerGraph extends BaseGraphRunner<typeof AlertTunerInputSchem
       tools,
       config: this.options,
     });
+
     yield step('locate', 'exit');
 
     yield createTuningProposalArtifactEvent(inputEnvelope.runId, proposal);
+
     yield { type: 'done', data: { runId: inputEnvelope.runId } };
   }
 }

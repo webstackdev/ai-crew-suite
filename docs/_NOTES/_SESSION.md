@@ -23,33 +23,21 @@ Now that the backend contract is complete and verified, let me know if you would
 - Set up the matching Frontend Client Factory in your shared frontend package to trigger this alert-ai-tuner typesafely
 - Design the Zod contract configuration schemas for your next agent plugin sequence (e.g., catalog-ai-insights)
 
+## Prompts
+
+I have a turbo monorepo of agentic workflow plugins for Spotify's backstage. It has a group of 18 agentic workflow plugins named in the pattern plugin-ai-agent-backend-*. Tests are in a __tests__ folder in the directory of code files.
+
+We also have a plugins/backend/plugin-ai-core-backend and its associated plugins/backend/plugin-ai-core-node plugin. There are also plugins following a plugins/backend/plugin-ai-core-backend-module-* naming scheme that provide access to third-party platforms through a uniform interface, and to external storage and llm providers.
+
+I'm working through improving the code quality of plugins. Implementation code should be enterprise-quality and highly robust. Unit test coverage should be robust.
+
 ## Production code issues
-
-1. Regex-Based AST Parsing (High Vulnerability to Code Formatting Shifts)
-
-In `locate.ts`, the logic attempts to locate code sections and variable boundaries in HCL (HashiCorp Configuration Language) and YAML files using raw line-by-line regular expressions (`findHclBlocks`, `findPrometheusBlocks`).
-
-- **The Problem:** Regular expressions are incapable of parsing context-aware grammar natively. The line walker relies on string matches like `match(/\{/g)` to calculate structural indentation tracking.
-- **The Risk:**
-  - **Comment Traps:** If a DevOps engineer leaves a comment containing an unbalanced brace inside an alert block (e.g., `# Note: Fix this block later }`), the brace counter breaks instantly. It will terminate block tracking early and point your downstream automated patch editor (`proposePatch`) to the wrong lines, corrupting adjacent infrastructure.
-  - **Multi-Line Strings:** If an entry like an alert description or a routing template spans multiple lines and contains inline curly braces, the line counter will go completely out of alignment.
-- **The Fix:** Real production platform engines use light, native AST (Abstract Syntax Tree) lexers—such as an HCL structural scanner or a lightweight YAML parser—to extract structural offsets deterministically instead of traversing raw text lines with regular expressions.
 
 ------
 Deleted unused imports in `workflow/AlertTunerGraph.ts`:
 
 - `AlertTuningRequestValidationError` from `request.ts`
 - `AlertTuningRequest` from `state.ts`
-------
-
-2. Loose String Type Fallbacks in `Date.parse()`
-
-In `correlate.ts`, the utility method `millisecond` parses timestamps using `Date.parse(value)` and maps anomalies back to `undefined` via `Number.isNaN()`.
-
-- **The Problem:** `Date.parse()` is highly non-deterministic across different Node.js runtime environment versions when handed invalid or partial string fragments.
-- **The Risk:** If a downstream tool module outputs a partial time format (e.g., just a year or an unconventional timezone array), `Date.parse` can return unintended timestamps instead of failing cleanly. This can slip past your `Number.isNaN()` guard and cause your `overlaps` calculations to silently fail or correlate improperly.
-- **The Fix:** Enforce a strict format parse boundary inside your shared node library using explicit ISO-8601 validation or a strict date token evaluator before running any mathematical comparisons.
-
 ------
 
 3. Untyped Integration Payloads (`toSuppressionWindows`)

@@ -62,6 +62,7 @@ export abstract class BaseGraphRunner<TSchema extends z.ZodType> implements Work
 
       // 2. Execute strict verification of validation schema constraints
       const validation = this.inputSchema.safeParse(rawQuery);
+
       if (!validation.success) {
         throw new InputError(`Defensive Validation Guard Blocked Workflow [${this.id}]: ${validation.error.message}`);
       }

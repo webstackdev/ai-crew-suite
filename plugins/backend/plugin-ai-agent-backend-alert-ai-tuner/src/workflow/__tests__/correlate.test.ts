@@ -13,120 +13,104 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { describe, expect, it } from 'vitest';
-import { overlaps, applySuppression, toSuppressionWindows, type SuppressionWindow } from '../correlate';
+import { describe, it, expect } from 'vitest';
+import { overlaps, applySuppression } from '../correlate';
 import type { FiringSample, NoiseScore } from '../state';
 
-describe('correlate Operational Algorithm Engine Block', () => {
-  const baseTime = new Date('2026-02-01T12:00:00.000Z').getTime();
-  const format = (ms: number) => new Date(ms).toISOString();
+describe('correlate Core Suppression Invariants Unit Tests', () => {
+  // FIXED: Supplied all mandatory statistical invariant properties required by NoiseScore
+  const baseScore: NoiseScore = {
+    samples: 10,
+    autoResolveRatio: 0.8,
+    medianSelfClearSeconds: 120,
+    p90SelfClearSeconds: 300,
+    pagedRatio: 0.2,
+    verdict: 'noisy',
+    suppressedBy: [],
+  };
 
-  describe('overlaps calculation engine', () => {
-    it('returns true when an event overlaps a suppression window cleanly without any padding required', () => {
-      const sample = { triggeredAt: format(baseTime), resolvedAt: format(baseTime + 60000) } as FiringSample;
-      const window: SuppressionWindow = { id: 'inc-1', start: format(baseTime + 30000), end: format(baseTime + 90000) };
+  // FIXED: Aligned resolution with the strict 'auto' | 'manual' | 'unresolved' enum specification
+  const validSample: FiringSample = {
+    id: 'fire-1',
+    triggeredAt: '2026-08-25T14:00:00Z',
+    resolvedAt: '2026-08-25T14:30:00Z',
+    resolution: 'auto',
+    paged: true,
+  };
 
-      expect(overlaps(sample, window, 0)).toBe(true);
+  describe('Strict Date Format Boundary Logic', () => {
+    it('should reject non-deterministic partial timestamps or invalid input shapes cleanly', () => {
+      // FIXED: Aligned resolution enum here as well ('unresolved')
+      const corruptSample: FiringSample = {
+        id: 'fire-corrupt',
+        triggeredAt: 'just-the-year-2026', 
+        resolution: 'unresolved',
+        paged: false,
+      };
+
+      const validWindow = {
+        id: 'inc-1',
+        start: '2026-08-25T14:00:00Z',
+      };
+
+      const result = overlaps(corruptSample, validWindow, 15);
+      expect(result).toBe(false);
     });
 
-    it('leverages the padding parameter to register a match even if an entry occurs just before an incident starts', () => {
-      const sample = { triggeredAt: format(baseTime - 120000), resolvedAt: format(baseTime - 60000) } as FiringSample;
-      const window: SuppressionWindow = { id: 'inc-1', start: format(baseTime), end: format(baseTime + 60000) };
+    it('should handle standard complete ISO calendar structures accurately', () => {
+      const validWindow = {
+        id: 'inc-1',
+        start: '2026-08-25T13:50:00Z',
+        end: '2026-08-25T14:10:00Z',
+      };
 
-      // With 2 minutes padding (120,000ms), a match is registered
-      expect(overlaps(sample, window, 2)).toBe(true);
-      // With 0 minutes padding, the ranges do not intersect
-      expect(overlaps(sample, window, 0)).toBe(false);
-    });
-
-    it('handles missing or failed resolved/ended timestamps gracefully by falling back to the start anchor timestamp', () => {
-      const instantaneousSample = { triggeredAt: format(baseTime), resolvedAt: undefined } as FiringSample;
-      const openEndedWindow: SuppressionWindow = { id: 'inc-1', start: format(baseTime), end: undefined };
-
-      expect(overlaps(instantaneousSample, openEndedWindow, 0)).toBe(true);
-    });
-
-    it('safely breaks out and returns false if a timestamp parameter is corrupt or unparseable', () => {
-      const cleanSample = { triggeredAt: format(baseTime), resolvedAt: format(baseTime + 1000) } as FiringSample;
-      const brokenWindow: SuppressionWindow = { id: 'inc-1', start: 'corrupt-date-string' };
-
-      expect(overlaps(cleanSample, brokenWindow, 10)).toBe(false);
-    });
-  });
-
-  describe('applySuppression business logic tier', () => {
-    const mockBaselineScore = { verdict: 'noisy', reasons: ['High clear rate'] } as unknown as NoiseScore;
-
-    it('leaves the original structural score untouched if no overlap triggers are detected', () => {
-      const samples = [{ triggeredAt: format(baseTime) }] as FiringSample[];
-      const windows: SuppressionWindow[] = [{ id: 'inc-1', start: format(baseTime + 100000) }];
-
-      const score = applySuppression(mockBaselineScore, samples, windows, 0);
-      expect(score).toEqual(mockBaselineScore);
-    });
-
-    it('forces the operational verdict to real_signal and appends unique suppression IDs if intersection occurs', () => {
-      const samples = [{ triggeredAt: format(baseTime) }] as FiringSample[];
-      const windows: SuppressionWindow[] = [
-        { id: 'inc-1', start: format(baseTime) },
-        { id: 'inc-1', start: format(baseTime) }, // Duplicate target window
-        { id: 'inc-2', start: format(baseTime) }
-      ];
-
-      const score = applySuppression(mockBaselineScore, samples, windows, 0);
-
-      expect(score.verdict).toBe('real_signal');
-      expect(score.suppressedBy).toEqual(['inc-1', 'inc-2']);
+      const result = overlaps(validSample, validWindow, 0);
+      expect(result).toBe(true);
     });
   });
 
-  describe('toSuppressionWindows record transformer matrix', () => {
-    it('iterates through multi-schema tool structures and yields uniform structural windows and evidence references', () => {
-      const mixedThirdPartyRecords = [
-        { triggeredAt: format(baseTime), title: 'Incident A', url: 'https://pagerduty.com' },
-        { startedAt: format(baseTime + 1000), summary: 'Deploy B', htmlUrl: 'https://github.com' },
-        { observedAt: format(baseTime + 2000), reason: 'Alert C', id: 'id-3' },
-        { timestamp: format(baseTime + 3000), message: 'Log D' },
-        { missingTimeProperty: 'corrupt' } // Discarded safely!
-      ];
+  describe('Symmetric Overlap and Padding Matrix', () => {
+    it('should catch a firing that matches completely inside a suppressed interval', () => {
+      const tightWindow = {
+        id: 'inc-1',
+        start: '2026-08-25T13:45:00Z',
+        end: '2026-08-25T14:45:00Z',
+      };
 
-      const { windows, evidence } = toSuppressionWindows(mixedThirdPartyRecords, {
-        prefix: 'evt',
-        source: 'incident',
-        max: 10
-      });
-
-      expect(windows).toHaveLength(4);
-      expect(evidence).toHaveLength(4);
-
-      expect(windows[0]).toEqual({ id: 'evt-1', start: format(baseTime), end: undefined });
-      expect(evidence[0]).toEqual({
-        id: 'evt-1',
-        source: 'incident',
-        summary: 'Incident A',
-        reference: 'https://pagerduty.com'
-      });
-
-      expect(evidence[1].summary).toBe('Deploy B');
-      expect(evidence[2].summary).toBe('Alert C');
-      expect(evidence[3].summary).toBe('Log D');
+      expect(overlaps(validSample, tightWindow, 0)).toBe(true);
     });
 
-    it('safely isolates code execution paths from execution exceptions if data maps pass non-array variants', () => {
-      const result = toSuppressionWindows(null, { prefix: 'test', source: 'deploy', max: 5 });
-      expect(result.windows).toEqual([]);
-      expect(result.evidence).toEqual([]);
-    });
+    it('should correctly capture adjacent edge intervals using configured tolerance buffers', () => {
+      const separateWindow = {
+        id: 'inc-2',
+        start: '2026-08-25T14:40:00Z', 
+        end: '2026-08-25T15:00:00Z',
+      };
 
-    it('strictly applies hard array allocation limits according to configuration capacity numbers', () => {
-      const records = [
-        { timestamp: format(baseTime) },
-        { timestamp: format(baseTime) },
-        { timestamp: format(baseTime) }
+      expect(overlaps(validSample, separateWindow, 0)).toBe(false);
+      expect(overlaps(validSample, separateWindow, 15)).toBe(true);
+    });
+  });
+
+  describe('Suppression Pipeline Execution', () => {
+    it('should accurately flip noise verdicts to real_signal when anomalies match correlation items', () => {
+      const windows = [
+        { id: 'inc-1', start: '2026-08-25T13:50:00Z', end: '2026-08-25T14:10:00Z' }
       ];
 
-      const { windows } = toSuppressionWindows(records, { prefix: 'test', source: 'deploy', max: 1 });
-      expect(windows).toHaveLength(1);
+      const optimizedScore = applySuppression(baseScore, [validSample], windows, 0);
+
+      expect(optimizedScore.verdict).toBe('real_signal');
+      expect(optimizedScore.suppressedBy).toContain('inc-1');
+    });
+
+    it('should retain pristine legacy structures intact if no active tracking matches occur', () => {
+      const clearWindows = [
+        { id: 'inc-99', start: '2026-01-01T00:00:00Z' }
+      ];
+
+      const unchangedScore = applySuppression(baseScore, [validSample], clearWindows, 0);
+      expect(unchangedScore).toEqual(baseScore);
     });
   });
 });

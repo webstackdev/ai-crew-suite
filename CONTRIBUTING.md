@@ -98,5 +98,5 @@ yarn changeset
 
 ## Code of Conduct & Security
 
-- **Code of Conduct**: All contributors are required to uphold our community standards. Review our detailed protocols inside [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md). For safety concerns, contact **conduct@webstackbuilders.com**.
-- **Vulnerability Disclosure**: If you discover a security vulnerability, do not open a public issue. Review our disclosure steps inside [SECURITY.md](SECURITY.md) and report it securely to **security@webstackbuilders.com**.
+- **Code of Conduct**: All contributors are required to uphold our community standards. Review our detailed protocols inside [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md). For safety concerns, contact **conduct@ai-crew-suite.dev**.
+- **Vulnerability Disclosure**: If you discover a security vulnerability, do not open a public issue. Review our disclosure steps inside [SECURITY.md](SECURITY.md) and report it securely to **security@ai-crew-suite.dev**.
