@@ -36,7 +36,8 @@
     "@backstage/backend-plugin-api": "backstage:^",
     "@backstage/config": "backstage:^",
     "@webstackbuilders/plugin-ai-core-backend": "workspace:*",
-    "@webstackbuilders/plugin-ai-core-node": "workspace:*"
+    "@webstackbuilders/plugin-ai-core-node": "workspace:*",
+    "zod": "^4.5.2"
   },
   "devDependencies": {
     "@backstage/backend-test-utils": "backstage:^",

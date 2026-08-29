@@ -15546,6 +15546,7 @@ __metadata:
     "@webstackbuilders/plugin-ai-core-backend": "workspace:*"
     "@webstackbuilders/plugin-ai-core-node": "workspace:*"
     vitest: "npm:^4.1.11"
+    zod: "npm:^4.5.2"
   languageName: unknown
   linkType: soft
 
@@ -16826,7 +16827,6 @@ __metadata:
     "@backstage/backend-plugin-api": "backstage:^"
     "@backstage/cli": "backstage:^"
     "@backstage/config": "backstage:^"
-    "@backstage/errors": "backstage:^"
     "@jest/globals": "npm:^30.5.0"
     "@langchain/core": "npm:^1.2.9"
     "@opentelemetry/api": "npm:^1.9.1"
@@ -16837,7 +16837,6 @@ __metadata:
     express-promise-router: "npm:^4.1.1"
     i18next: "npm:26.4.0"
     vitest: "npm:^4.1.11"
-    zod: "npm:^4.5.2"
   languageName: unknown
   linkType: soft
 
@@ -16847,10 +16846,12 @@ __metadata:
   dependencies:
     "@backstage/backend-plugin-api": "backstage:^"
     "@backstage/cli": "backstage:^"
+    "@backstage/errors": "backstage:^"
     "@backstage/integration": "backstage:^"
     "@langchain/core": "npm:^1.2.9"
     i18next: "npm:26.4.0"
     vitest: "npm:^4.1.11"
+    zod: "npm:^4.5.2"
   languageName: unknown
   linkType: soft
 

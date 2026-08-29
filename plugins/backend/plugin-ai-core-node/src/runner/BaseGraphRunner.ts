@@ -26,7 +26,7 @@ import {
  * Universal Base Graph Class to enforce defensive contract parsing at the runtime
  * engine entrypoint. All agentic workflow plugins inherit from this class.
  */
-export abstract class BaseGraphRunner<TSchema extends z.ZodTypeAny> implements WorkflowRunner {
+export abstract class BaseGraphRunner<TSchema extends z.ZodType> implements WorkflowRunner {
   /** Stable ID referenced by `AgentDefinition.workflowRef`. */
   abstract readonly id: string;
 

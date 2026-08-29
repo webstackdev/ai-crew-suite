@@ -104,12 +104,7 @@ const runInput = (query: unknown): AgentRunInput =>
   }) as AgentRunInput;
 
 const NOISY_REQUEST = {
-  version: 1,
-  source: 'manual',
-  alertId: 'cpu_high',
   service: 'checkout',
-  repoUrl: 'https://github.com/acme/infra',
-  iacPath: 'alerts.tf',
 };
 
 const collect = async (events: AsyncIterable<AgentEvent>) => {

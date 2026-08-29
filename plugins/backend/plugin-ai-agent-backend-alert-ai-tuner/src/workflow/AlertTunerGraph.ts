@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { BaseGraphRunner } from '@webstackbuilders/plugin-ai-core-backend';
+import { BaseGraphRunner } from '@webstackbuilders/plugin-ai-core-node';
 import type {
   AgentEvent,
   AgentRunInput,
   WorkflowContext,
-  WorkflowRunner,
 } from '@webstackbuilders/plugin-ai-core-node';
 import type { AlertAiTunerConfig } from '../config';
 import {
@@ -41,6 +40,7 @@ import {
   resolveWindow,
 } from './request';
 import { proposePatch } from './pipeline';
+import { AlertTunerInputSchema, AlertTunerInput } from '../schema';
 import type {
   AlertTuningRequest,
   EvidenceRef,
@@ -76,45 +76,42 @@ export type AlertTunerGraphOptions = AlertAiTunerConfig & { now?: () => Date };
  * Every decision that can affect infrastructure — the verdict, the new values,
  * and the diff — is computed in pure code, so no model output can reach a patch.
  */
-export class AlertTunerGraph implements WorkflowRunner {
+export class AlertTunerGraph extends BaseGraphRunner<typeof AlertTunerInputSchema> {
   readonly id = ALERT_TUNING_WORKFLOW_ID;
 
   /**
    * @param options - Resolved configuration plus an optional injected clock.
    */
-  constructor(private readonly options: AlertTunerGraphOptions) {}
+  constructor(private readonly options: AlertTunerGraphOptions) {
+    // FIXES Error 2377 and no-unreachable: Pass validation definition up to parent class first
+    super(AlertTunerInputSchema);
+  }
 
   /**
    * Executes one bounded tuning evaluation.
-   *
-   * @param input - Run identity and the versioned request payload.
-   * @param context - AI Core workflow facade supplying allow-listed tools.
-   * @returns An async stream of node, tool, artifact, and terminal events.
+   * FIXES Error 2515: Implements the exact abstract contract signature expected by BaseGraphRunner
    */
-  async *run(input: AgentRunInput, context: WorkflowContext): AsyncIterable<AgentEvent> {
+  protected async *executeGraph(
+    requestInput: AlertTunerInput,
+    inputEnvelope: AgentRunInput,
+    context: WorkflowContext
+  ): AsyncIterable<AgentEvent> {
     let seq = 0;
     const step = (node: string, phase: 'enter' | 'exit'): AgentEvent => ({
       type: 'step',
-      data: { runId: input.runId, seq: ++seq, node, phase },
+      data: { runId: inputEnvelope.runId, seq: ++seq, node, phase },
     });
 
     yield step('observe', 'enter');
 
-    let request: AlertTuningRequest;
-    try {
-      request = parseAlertTuningQuery(input.input.query, input.trigger ? 'scheduler' : 'manual', {
+    const request = parseAlertTuningQuery(
+      JSON.stringify(requestInput), 
+      inputEnvelope.trigger ? 'scheduler' : 'manual', 
+      {
         defaultDays: this.options.windowDays,
         maxDays: this.options.maxWindowDays,
-      });
-    } catch (error) {
-      const message =
-        error instanceof AlertTuningRequestValidationError || error instanceof Error
-          ? error.message
-          : String(error);
-
-      yield { type: 'error', data: { runId: input.runId, message } };
-      return;
-    }
+      }
+    );
 
     const window = resolveWindow(request, this.options.now);
     const tools = new TunerToolRunner(context, {
@@ -132,7 +129,7 @@ export class AlertTunerGraph implements WorkflowRunner {
     yield {
       type: 'tool_result',
       data: {
-        runId: input.runId,
+        runId: inputEnvelope.runId,
         tool: 'incident.alert.history',
         ok: samples.length > 0,
         summary: `${samples.length} firing(s) in window`,
@@ -145,11 +142,9 @@ export class AlertTunerGraph implements WorkflowRunner {
       limitations.push(PUBLISH_LIMITATION);
     }
 
-    // Below the statistical floor there is no basis for a proposal, so the run
-    // terminates before any model call or repository read.
     if (samples.length < this.options.noise.minSamples) {
       yield createTuningProposalArtifactEvent(
-        input.runId,
+        inputEnvelope.runId,
         buildTuningProposal({
           request,
           window,
@@ -165,7 +160,7 @@ export class AlertTunerGraph implements WorkflowRunner {
           confidence: 'low',
         })
       );
-      yield { type: 'done', data: { runId: input.runId } };
+      yield { type: 'done', data: { runId: inputEnvelope.runId } };
       return;
     }
 
@@ -200,11 +195,9 @@ export class AlertTunerGraph implements WorkflowRunner {
     );
     yield step('correlate', 'exit');
 
-    // A real incident overlap or an inconclusive statistic removes the patch
-    // path entirely: a genuine failure signal must never be tuned away.
     if (score.verdict !== 'noisy') {
       yield createTuningProposalArtifactEvent(
-        input.runId,
+        inputEnvelope.runId,
         buildTuningProposal({
           request,
           window,
@@ -216,7 +209,7 @@ export class AlertTunerGraph implements WorkflowRunner {
           confidence: deriveConfidence({ score, hasMetrics: false, hasDeployTimeline: false }),
         })
       );
-      yield { type: 'done', data: { runId: input.runId } };
+      yield { type: 'done', data: { runId: inputEnvelope.runId } };
       return;
     }
 
@@ -232,7 +225,7 @@ export class AlertTunerGraph implements WorkflowRunner {
     });
     yield step('locate', 'exit');
 
-    yield createTuningProposalArtifactEvent(input.runId, proposal);
-    yield { type: 'done', data: { runId: input.runId } };
+    yield createTuningProposalArtifactEvent(inputEnvelope.runId, proposal);
+    yield { type: 'done', data: { runId: inputEnvelope.runId } };
   }
 }

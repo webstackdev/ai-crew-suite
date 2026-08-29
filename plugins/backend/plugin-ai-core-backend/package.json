@@ -55,7 +55,6 @@
     "@backstage/backend-defaults": "backstage:^",
     "@backstage/backend-plugin-api": "backstage:^",
     "@backstage/config": "backstage:^",
-    "@backstage/errors": "backstage:^",
     "@jest/globals": "^30.5.0",
     "@langchain/core": "^1.2.9",
     "@opentelemetry/api": "^1.9.1",
@@ -64,8 +63,7 @@
     "express": "^4.22.2",
     "express-promise-router": "^4.1.1",
     "i18next": "26.4.0",
-    "vitest": "^4.1.11",
-    "zod": "^4.5.2"
+    "vitest": "^4.1.11"
   },
   "devDependencies": {
     "@backstage/cli": "backstage:^",
