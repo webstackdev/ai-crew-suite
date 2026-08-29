@@ -460,13 +460,10 @@ The threshold change would violate a safety cap, the alert verdict was `not_nois
 **Approval bar and publication banner never appear**
 
 These components are built for the future publish milestone. The current backend is proposal-only — there is no VCS write tool, so no `approval_request` SSE event is ever emitted. The page correctly hides these controls rather than fabricating a gate. When the shared `vcs.pull_request.create` tool lands in `plugin-ai-core-backend-module-vcs`, these controls will activate automatically.
----
 
 ## Roadmap
 
-The following features are planned for future releases once their shared infrastructure dependencies land.
-
-### VCS Write Tool & Approval Gate (Milestone 2)
+### VCS Write Tool & Approval Gate
 
 Blocked on `vcs.pull_request.create` / `vcs.branch.create` (`effect: 'write'`) in `VcsDriver` and `plugin-ai-core-backend-module-vcs`. Once the shared write tool lands, the tuner will:
 
@@ -500,7 +497,7 @@ Requires a backend proposal-list endpoint. Once the endpoint is available, the f
 - A catalog entity card showing recent tuning proposals for a service, mountable on any entity page via the Backstage entity page extension system
 - A recent-proposal table with status, verdict, and patch summary columns, supporting filter-by-service and sort-by-date
 
-### Playwright E2E & Storybook Interaction Tests (Milestone 4)
+### Playwright E2E & Storybook Interaction Tests
 
 Dependent on the approval gate and VCS write tool. Once those are in place, the E2E suite will cover:
 
@@ -510,7 +507,7 @@ Dependent on the approval gate and VCS write tool. Once those are in place, the 
 - Replay: shareable `?run=<id>` URLs restore the full run state from persisted events
 - Storybook interaction tests for `ApprovalBar` and `PublicationBanner` components (currently built but hidden pending real approval events from the backend)
 
-### Production Dashboards & Model Evaluation Suite (Milestone 5)
+### Production Dashboards & Model Evaluation Suite
 
 Post-stabilization observability and quality surface:
 

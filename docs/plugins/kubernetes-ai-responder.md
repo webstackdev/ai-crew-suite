@@ -436,8 +436,6 @@ If the K8s driver returns empty results for every tool call, the evidence bundle
 
 ## Roadmap
 
-The following features are planned for future releases once their shared infrastructure dependencies or product requirements are met.
-
 ### Multi-Source Evidence Integration
 
 The current evidence bundle is Kubernetes-only. Future work will integrate additional data sources through existing shared module contracts:
