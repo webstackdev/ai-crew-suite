@@ -68,7 +68,13 @@ node_modules/
 !.yarn/sdks/
 
 # ==========================================
-# 5. Testing & Verification Artifacts
+# 5. Python Specifics
+# ==========================================
+
+.venv
+
+# ==========================================
+# 6. Testing & Verification Artifacts
 # ==========================================
 
 .pnp.*
