@@ -37,6 +37,7 @@
     "@backstage/core-plugin-api": "backstage:^",
     "@backstage/frontend-plugin-api": "backstage:^",
     "@material-ui/core": "^4.12.4",
+    "@webstackbuilders/plugin-ai-agent-frontend-core": "workspace:^",
     "@webstackbuilders/storybook-workspace-infra": "workspace:*",
     "eventsource-parser": "^2.0.1",
     "vitest": "^4.1.11"

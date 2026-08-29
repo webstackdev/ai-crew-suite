@@ -135,7 +135,7 @@ export class AlertTunerClient implements AlertTunerApi {
   }
 
   private toRunEvent(event: ParsedEvent): AiRunEvent | undefined {
-    const validEvents = [
+    const allowedTypes: (string | undefined)[] = [
       'step',
       'tool_call',
       'tool_result',
@@ -144,16 +144,21 @@ export class AlertTunerClient implements AlertTunerApi {
       'done',
       'error'
     ];
-
-    if (!validEvents.includes(event.event)) return undefined;
+    if (!allowedTypes.includes(event.event)) return undefined;
 
     try {
-      return { type: event.event, data: JSON.parse(event.data) } as AiRunEvent;
+      return {
+        type: event.event,
+        data: JSON.parse(event.data ?? '{}'),
+      } as AiRunEvent;
     } catch {
       return event.event === 'error'
         ? {
             type: 'error',
-            data: { runId: 'unknown', message: event.data || 'Unknown error' }
+            data: {
+              runId: 'unknown',
+              message: event.data || 'Unknown error'
+            }
           }
         : undefined;
     }

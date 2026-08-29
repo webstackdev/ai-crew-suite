@@ -21,7 +21,7 @@ This package acts as the central runtime plugin within the broader AI Crew Suite
 
 - **Upstream Interface**: Dependent upon abstract definitions provided in `plugin-ai-core-node`.
 - **Provider Inputs**: Consumes model definitions, tools, sources, agents, and triggers registered by backend modules.
-- **Storage Dependency**: Uses `plugin-ai-core-backend-module-storage-pgvector` to create the default runtime persistence store.
+- **Storage Dependency**: Uses `plugin-ai-core-backend-module-storage-pgvector` or `plugin-ai-core-backend-module-storage-qdrant` to create the default runtime vector embeddings persistence store.
 - **Downstream Consumer**: Directly ingested by a Backstage backend through the exported `ragAiPlugin` backend plugin.
 
 ---

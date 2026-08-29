@@ -19,155 +19,72 @@
   "files": [],
   "include": [],
   "references": [
-    // 1. Core Platform Packages
+    // ==========================================
+    // 1. Core Platform Infra & Packages
+    // ==========================================
     { "path": "./packages/app" },
     { "path": "./packages/backend" },
     { "path": "./packages/storybook" },
+    { "path": "./test" },
 
-    // 2. Frontend Plugins
-    {
-      "path": "./plugins/frontend/plugin-ai-agent-frontend-kubernetes-ai-responder"
-    },
-
-    // 3. Backend Core & Nodes
+    // ==========================================
+    // 2. Foundation Core Backend & Nodes
+    // ==========================================
     { "path": "./plugins/backend/plugin-ai-core-backend" },
     { "path": "./plugins/backend/plugin-ai-core-node" },
-
-    // 4. Cloud Providers
-    {
-      "path": "./plugins/backend/plugin-ai-core-backend-module-cloud-providers"
-    },
-    {
-      "path": "./plugins/backend/plugin-ai-core-backend-module-cloud-providers-aws"
-    },
-    {
-      "path": "./plugins/backend/plugin-ai-core-backend-module-cloud-providers-azure"
-    },
-    {
-      "path": "./plugins/backend/plugin-ai-core-backend-module-cloud-providers-gcp"
-    },
-
-    // 5. Communication
-    { "path": "./plugins/backend/plugin-ai-core-backend-module-communication" },
-    {
-      "path": "./plugins/backend/plugin-ai-core-backend-module-communication-slack"
-    },
-
-    // 6. Compliance
-    { "path": "./plugins/backend/plugin-ai-core-backend-module-compliance" },
-    {
-      "path": "./plugins/backend/plugin-ai-core-backend-module-compliance-opa"
-    },
-
-    // 7. Incident Management
-    {
-      "path": "./plugins/backend/plugin-ai-core-backend-module-incident-management"
-    },
-    {
-      "path": "./plugins/backend/plugin-ai-core-backend-module-incident-management-pagerduty"
-    },
-
-    // 8. Kubernetes
-    { "path": "./plugins/backend/plugin-ai-core-backend-module-kubernetes" },
-    {
-      "path": "./plugins/backend/plugin-ai-agent-backend-kubernetes-ai-responder"
-    },
-
-    // 8b. Agent workflow modules
-    {
-      "path": "./plugins/backend/plugin-ai-agent-backend-catalog-ai-insights"
-    },
-    {
-      "path": "./plugins/frontend/plugin-ai-agent-frontend-catalog-ai-insights"
-    },
-    { "path": "./plugins/frontend/plugin-ai-agent-frontend-oncall-ai-handover-assistant" },
-    { "path": "./plugins/frontend/plugin-ai-agent-frontend-release-notes-ai-generator" },
-
-    { "path": "./plugins/backend/plugin-ai-agent-backend-oncall-ai-handover-assistant" },
-    { "path": "./plugins/backend/plugin-ai-agent-backend-release-notes-ai-generator" },
-    { "path": "./plugins/backend/plugin-ai-agent-backend-rfc-adr-ai-reviewer" },
-    { "path": "./plugins/frontend/plugin-ai-agent-frontend-rfc-adr-ai-reviewer" },
-    { "path": "./plugins/backend/plugin-ai-agent-backend-alert-ai-tuner" },
-    { "path": "./plugins/frontend/plugin-ai-agent-frontend-alert-ai-tuner" },
-    { "path": "./plugins/backend/plugin-ai-agent-backend-scaffolder-ai-drift-detector" },
-    { "path": "./plugins/frontend/plugin-ai-agent-frontend-scaffolder-ai-drift-detector" },
-    { "path": "./plugins/backend/plugin-ai-agent-backend-scaffolder-ai-guardrail-agent" },
-    { "path": "./plugins/frontend/plugin-ai-agent-frontend-scaffolder-ai-guardrail-agent" },
-    { "path": "./plugins/backend/plugin-ai-agent-backend-scaffolder-ai-infra" },
-    { "path": "./plugins/backend/plugin-ai-agent-backend-scaffolder-ai-intent" },
-    { "path": "./plugins/backend/plugin-ai-agent-backend-scaffolder-ai-shadow-detective" },
-    { "path": "./plugins/backend/plugin-ai-agent-backend-scaffolder-ai-prd" },
-    { "path": "./plugins/frontend/plugin-ai-agent-frontend-scaffolder-ai-infra" },
-    { "path": "./plugins/frontend/plugin-ai-agent-frontend-scaffolder-ai-intent" },
-    { "path": "./plugins/frontend/plugin-ai-agent-frontend-scaffolder-ai-shadow-detective" },
-    { "path": "./plugins/frontend/plugin-ai-agent-frontend-scaffolder-ai-prd" },
-    { "path": "./plugins/backend/plugin-ai-agent-backend-search-ai-archeology" },
-    { "path": "./plugins/backend/plugin-ai-agent-backend-search-ai-context" },
-    { "path": "./plugins/backend/plugin-ai-agent-backend-tech-debt-ai-scout" },
-    { "path": "./plugins/backend/plugin-ai-agent-backend-tech-radar-ai-manager" },
-    { "path": "./plugins/backend/plugin-ai-agent-backend-techdocs-ai-janitor" },
-    { "path": "./plugins/backend/plugin-ai-agent-backend-techdocs-ai-postmortem" },
-    { "path": "./plugins/frontend/plugin-ai-agent-frontend-techdocs-ai-postmortem" },
-    { "path": "./plugins/frontend/plugin-ai-agent-frontend-techdocs-ai-janitor" },
-    { "path": "./plugins/frontend/plugin-ai-agent-frontend-tech-radar-ai-manager" },
-    { "path": "./plugins/frontend/plugin-ai-agent-frontend-tech-debt-ai-scout" },
-    { "path": "./plugins/frontend/plugin-ai-agent-frontend-search-ai-archeology" },
-    { "path": "./plugins/frontend/plugin-ai-agent-frontend-search-ai-context" },
-
-    // 9. Observability
-    { "path": "./plugins/backend/plugin-ai-core-backend-module-observability" },
-    {
-      "path": "./plugins/backend/plugin-ai-core-backend-module-observability-datadog"
-    },
-
-    // 10. Project Management
-    {
-      "path": "./plugins/backend/plugin-ai-core-backend-module-project-management"
-    },
-    {
-      "path": "./plugins/backend/plugin-ai-core-backend-module-project-management-jira"
-    },
-
-    // 11. Quality Scorecards
-    {
-      "path": "./plugins/backend/plugin-ai-core-backend-module-quality-scorecards"
-    },
-    {
-      "path": "./plugins/backend/plugin-ai-core-backend-module-quality-scorecards-scorecards"
-    },
-    {
-      "path": "./plugins/backend/plugin-ai-core-backend-module-quality-scorecards-soundcheck"
-    },
-    {
-      "path": "./plugins/backend/plugin-ai-core-backend-module-quality-scorecards-techradar"
-    },
-
-    // 12. Storage & Vector Connectors
-    {
-      "path": "./plugins/backend/plugin-ai-core-backend-module-storage-pgvector"
-    },
-    {
-      "path": "./plugins/backend/plugin-ai-core-backend-module-storage-qdrant"
-    },
     { "path": "./plugins/backend/plugin-ai-core-backend-module-runtime-store" },
+    { "path": "./plugins/backend/plugin-ai-core-backend-module-retrieval-augmenter" },
 
-    // 13. Embeddings Ecosystem
+    // ==========================================
+    // 3. Core Backend Extension Modules
+    // ==========================================
+    // Cloud Providers
+    { "path": "./plugins/backend/plugin-ai-core-backend-module-cloud-providers" },
+    { "path": "./plugins/backend/plugin-ai-core-backend-module-cloud-providers-aws" },
+    { "path": "./plugins/backend/plugin-ai-core-backend-module-cloud-providers-azure" },
+    { "path": "./plugins/backend/plugin-ai-core-backend-module-cloud-providers-gcp" },
+
+    // Communication
+    { "path": "./plugins/backend/plugin-ai-core-backend-module-communication" },
+    { "path": "./plugins/backend/plugin-ai-core-backend-module-communication-slack" },
+
+    // Compliance
+    { "path": "./plugins/backend/plugin-ai-core-backend-module-compliance" },
+    { "path": "./plugins/backend/plugin-ai-core-backend-module-compliance-opa" },
+
+    // Embeddings & LLM Ecosystem
     { "path": "./plugins/backend/plugin-ai-core-backend-module-llm-aws" },
     { "path": "./plugins/backend/plugin-ai-core-backend-module-llm-openai" },
-    {
-      "path": "./plugins/backend/plugin-ai-core-backend-module-llm-openrouter"
-    },
+    { "path": "./plugins/backend/plugin-ai-core-backend-module-llm-openrouter" },
 
-    // 14. Retrieval & Engine Capabilities
-    {
-      "path": "./plugins/backend/plugin-ai-core-backend-module-retrieval-augmenter"
-    },
+    // Incident Management
+    { "path": "./plugins/backend/plugin-ai-core-backend-module-incident-management" },
+    { "path": "./plugins/backend/plugin-ai-core-backend-module-incident-management-pagerduty" },
 
-    // 15. Version Control Systems
+    // Kubernetes
+    { "path": "./plugins/backend/plugin-ai-core-backend-module-kubernetes" },
+
+    // Observability
+    { "path": "./plugins/backend/plugin-ai-core-backend-module-observability" },
+    { "path": "./plugins/backend/plugin-ai-core-backend-module-observability-datadog" },
+
+    // Project Management
+    { "path": "./plugins/backend/plugin-ai-core-backend-module-project-management" },
+    { "path": "./plugins/backend/plugin-ai-core-backend-module-project-management-jira" },
+
+    // Quality Scorecards
+    { "path": "./plugins/backend/plugin-ai-core-backend-module-quality-scorecards" },
+    { "path": "./plugins/backend/plugin-ai-core-backend-module-quality-scorecards-scorecards" },
+    { "path": "./plugins/backend/plugin-ai-core-backend-module-quality-scorecards-soundcheck" },
+    { "path": "./plugins/backend/plugin-ai-core-backend-module-quality-scorecards-techradar" },
+
+    // Storage & Vector Connectors
+    { "path": "./plugins/backend/plugin-ai-core-backend-module-storage-pgvector" },
+    { "path": "./plugins/backend/plugin-ai-core-backend-module-storage-qdrant" },
+
+    // Version Control Systems (VCS)
     { "path": "./plugins/backend/plugin-ai-core-backend-module-vcs" },
-    {
-      "path": "./plugins/backend/plugin-ai-core-backend-module-vcs-aws-codecommit"
-    },
+    { "path": "./plugins/backend/plugin-ai-core-backend-module-vcs-aws-codecommit" },
     { "path": "./plugins/backend/plugin-ai-core-backend-module-vcs-azure" },
     { "path": "./plugins/backend/plugin-ai-core-backend-module-vcs-bitbucket" },
     { "path": "./plugins/backend/plugin-ai-core-backend-module-vcs-gerrit" },
@@ -175,7 +92,49 @@
     { "path": "./plugins/backend/plugin-ai-core-backend-module-vcs-github" },
     { "path": "./plugins/backend/plugin-ai-core-backend-module-vcs-gitlab" },
 
-    // 16. Test Harness
-    { "path": "./test" }
+    // ==========================================
+    // 4. Dedicated Backend Agent Modules (18)
+    // ==========================================
+    { "path": "./plugins/backend/plugin-ai-agent-backend-alert-ai-tuner" },
+    { "path": "./plugins/backend/plugin-ai-agent-backend-catalog-ai-insights" },
+    { "path": "./plugins/backend/plugin-ai-agent-backend-kubernetes-ai-responder" },
+    { "path": "./plugins/backend/plugin-ai-agent-backend-oncall-ai-handover-assistant" },
+    { "path": "./plugins/backend/plugin-ai-agent-backend-release-notes-ai-generator" },
+    { "path": "./plugins/backend/plugin-ai-agent-backend-rfc-adr-ai-reviewer" },
+    { "path": "./plugins/backend/plugin-ai-agent-backend-scaffolder-ai-drift-detector" },
+    { "path": "./plugins/backend/plugin-ai-agent-backend-scaffolder-ai-guardrail-agent" },
+    { "path": "./plugins/backend/plugin-ai-agent-backend-scaffolder-ai-infra" },
+    { "path": "./plugins/backend/plugin-ai-agent-backend-scaffolder-ai-intent" },
+    { "path": "./plugins/backend/plugin-ai-agent-backend-scaffolder-ai-prd" },
+    { "path": "./plugins/backend/plugin-ai-agent-backend-scaffolder-ai-shadow-detective" },
+    { "path": "./plugins/backend/plugin-ai-agent-backend-search-ai-archeology" },
+    { "path": "./plugins/backend/plugin-ai-agent-backend-search-ai-context" },
+    { "path": "./plugins/backend/plugin-ai-agent-backend-tech-debt-ai-scout" },
+    { "path": "./plugins/backend/plugin-ai-agent-backend-tech-radar-ai-manager" },
+    { "path": "./plugins/backend/plugin-ai-agent-backend-techdocs-ai-janitor" },
+    { "path": "./plugins/backend/plugin-ai-agent-backend-techdocs-ai-postmortem" },
+
+    // ==========================================
+    // 5. Dedicated Frontend Agent Modules (18)
+    // ==========================================
+    { "path": "./plugins/frontend/plugin-ai-agent-frontend-core" }, // Shared core module
+    { "path": "./plugins/frontend/plugin-ai-agent-frontend-alert-ai-tuner" },
+    { "path": "./plugins/frontend/plugin-ai-agent-frontend-catalog-ai-insights" },
+    { "path": "./plugins/frontend/plugin-ai-agent-frontend-kubernetes-ai-responder" },
+    { "path": "./plugins/frontend/plugin-ai-agent-frontend-oncall-ai-handover-assistant" },
+    { "path": "./plugins/frontend/plugin-ai-agent-frontend-release-notes-ai-generator" },
+    { "path": "./plugins/frontend/plugin-ai-agent-frontend-rfc-adr-ai-reviewer" },
+    { "path": "./plugins/frontend/plugin-ai-agent-frontend-scaffolder-ai-drift-detector" },
+    { "path": "./plugins/frontend/plugin-ai-agent-frontend-scaffolder-ai-guardrail-agent" },
+    { "path": "./plugins/frontend/plugin-ai-agent-frontend-scaffolder-ai-infra" },
+    { "path": "./plugins/frontend/plugin-ai-agent-frontend-scaffolder-ai-intent" },
+    { "path": "./plugins/frontend/plugin-ai-agent-frontend-scaffolder-ai-prd" },
+    { "path": "./plugins/frontend/plugin-ai-agent-frontend-scaffolder-ai-shadow-detective" },
+    { "path": "./plugins/frontend/plugin-ai-agent-frontend-search-ai-archeology" },
+    { "path": "./plugins/frontend/plugin-ai-agent-frontend-search-ai-context" },
+    { "path": "./plugins/frontend/plugin-ai-agent-frontend-tech-debt-ai-scout" },
+    { "path": "./plugins/frontend/plugin-ai-agent-frontend-tech-radar-ai-manager" },
+    { "path": "./plugins/frontend/plugin-ai-agent-frontend-techdocs-ai-janitor" },
+    { "path": "./plugins/frontend/plugin-ai-agent-frontend-techdocs-ai-postmortem" }
   ]
 }

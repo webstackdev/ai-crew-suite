@@ -157,13 +157,17 @@ export class LangGraphOrchestrator implements Orchestrator {
   /**
    * Context Component: Fetches and emits telemetry metadata for conversation history memory.
    */
-  private async loadHistoryContext(runId: string, sessionId: string | undefined, ctx: RunContext): Promise<SessionMessage[]> {
+  private async loadHistoryContext(
+    runId: string,
+    sessionId: string | undefined,
+    ctx: RunContext,
+  ): Promise<SessionMessage[]> {
     if (!ctx.sessionStore || !sessionId) return [];
-    
+
     this.emitStep(runId, 'memory.load', 'enter');
     const history = await ctx.sessionStore.listMessages(sessionId, HISTORY_LIMIT);
     this.emitStep(runId, 'memory.load', 'exit');
-    
+
     return history;
   }
 

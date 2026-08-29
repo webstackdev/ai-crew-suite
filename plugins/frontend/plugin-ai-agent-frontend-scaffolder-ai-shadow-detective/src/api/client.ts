@@ -64,6 +64,7 @@ export class ShadowDetectiveClient implements ShadowDetectiveApi {
       }),
     );
   }
+
   async *streamRunEvents(runId: string): AsyncGenerator<AiRunEvent> {
     yield* this.read(
       await this.fetchStream(`runs/${runId}/events`, {
