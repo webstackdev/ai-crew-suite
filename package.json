@@ -64,7 +64,7 @@
     "test:e2e:ui": "FORCE_COLOR=1 CI=1 npx playwright test --ui",
     "test:e2e": "FORCE_COLOR=1 CI=1 npx playwright test",
     "test:unit": "FORCE_COLOR=1 npx vitest run --config test/vitest.config.ts",
-    "test:unit:actions": "FORCE_COLOR=1 ANSIBLE_DEPRECATION_WARNINGS=False PYTHONWARNINGS=ignore::DeprecationWarning:ansible.* sh -c 'if [ -x .venv/bin/python ]; then .venv/bin/python -m pytest --import-mode=importlib .github/actions .github/test; else python3 -m pytest --import-mode=importlib .github/actions .github/test; fi'",
+    "test:unit:actions": "FORCE_COLOR=1 ANSIBLE_DEPRECATION_WARNINGS=False PYTHONWARNINGS=ignore::DeprecationWarning:ansible.* sh -c 'if [ -x .venv/bin/python ]; then .venv/bin/python -m pytest --import-mode=importlib .github/actions; else python3 -m pytest --import-mode=importlib .github/actions; fi'",
     "test:unit:coverage": "FORCE_COLOR=1 npx vitest run --coverage",
     "typecheck": "turbo typecheck",
     "typecheck:full": "turbo typecheck --force",

@@ -16,6 +16,10 @@ inputs:
     description: Max workflow runs to fetch.
     required: false
     default: '50'
+  pre_release_bypass:
+    description: Set to 'true' during early development to log warnings instead of failing the build.
+    required: false
+    default: 'true'
 
 runs:
   using: composite
@@ -29,5 +33,6 @@ runs:
         INPUT_EXPECTED_SHA: ${{ inputs.expected_sha }}
         INPUT_WORKFLOW_FILE: ${{ inputs.workflow_file }}
         INPUT_PER_PAGE: ${{ inputs.per_page }}
+        INPUT_PRE_RELEASE_BYPASS: ${{ inputs.pre_release_bypass }}
         GITHUB_API_URL: ${{ github.api_url }}
         GITHUB_REPOSITORY: ${{ github.repository }}

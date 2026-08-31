@@ -1,14 +1,17 @@
 from __future__ import annotations
 
+import email.message
 import io
 import json
 from pathlib import Path
 import urllib.error
+import urllib.request
 
 import pytest
 
 
 def load_module():
+    """Dynamically loads the main.py module to bypass scope pathing issues."""
     action_root = Path(__file__).resolve().parents[1]
     module_path = action_root / "src" / "main.py"
 
@@ -41,30 +44,21 @@ def test_find_success_for_sha() -> None:
 def test_fetch_workflow_runs_success(monkeypatch: pytest.MonkeyPatch) -> None:
     module = load_module()
 
-    class FakeResponse:
-        def __init__(self, payload: dict):
-            self._raw = json.dumps(payload).encode("utf-8")
+    class FakeResponse(io.BytesIO):
+        """Simulates a network response stream matching the interface of urlopen."""
 
-        def read(self) -> bytes:
-            return self._raw
+        pass  # io.BytesIO already natively provides type-compliant __enter__ and __exit__ methods
 
-        def __enter__(self):
-            return io.BytesIO(self._raw)
-
-        def __exit__(self, _exc_type, _exc, _tb):
-            return False
-
-    def fake_urlopen(_req, timeout: int):
+    def fake_urlopen(_req: urllib.request.Request, timeout: int):
         assert timeout == 30
-        return FakeResponse(
-            {"workflow_runs": [{"head_sha": "x", "conclusion": "success"}]}
-        )
+        payload = {"workflow_runs": [{"head_sha": "x", "conclusion": "success"}]}
+        return FakeResponse(json.dumps(payload).encode("utf-8"))
 
     monkeypatch.setattr(module.urllib.request, "urlopen", fake_urlopen)
 
     runs = module.fetch_workflow_runs(
-        api_url="https://api.github.com",
-        repository="webstackdev/astro.webstackbuilders.com",
+        api_url="https://github.com",
+        repository="webstackdev/://webstackbuilders.com",
         workflow_file="playwright.yml",
         token="t",
         per_page=50,
@@ -75,12 +69,15 @@ def test_fetch_workflow_runs_success(monkeypatch: pytest.MonkeyPatch) -> None:
 def test_fetch_workflow_runs_http_error(monkeypatch: pytest.MonkeyPatch) -> None:
     module = load_module()
 
-    def fake_urlopen(_req, timeout: int):
+    def fake_urlopen(_req: urllib.request.Request, timeout: int):
+        # Create a valid message container to resolve Pyright's strict structure rule
+        blank_headers = email.message.Message()
+
         raise urllib.error.HTTPError(
-            url="https://api.github.com/x",
+            url="https://github.com/x",
             code=500,
             msg="no",
-            hdrs=None,
+            hdrs=blank_headers,
             fp=io.BytesIO(b"boom"),
         )
 
@@ -88,8 +85,8 @@ def test_fetch_workflow_runs_http_error(monkeypatch: pytest.MonkeyPatch) -> None
 
     with pytest.raises(RuntimeError, match=r"\(500\)"):
         module.fetch_workflow_runs(
-            api_url="https://api.github.com",
-            repository="webstackdev/astro.webstackbuilders.com",
+            api_url="https://github.com",
+            repository="webstackdev/://webstackbuilders.com",
             workflow_file="playwright.yml",
             token="t",
             per_page=50,
