@@ -20,8 +20,9 @@ import { ToolRegistry } from './tool';
 import { SessionStore } from './session';
 import { SourceId, EntityFilterShape } from './source';
 import { CheckpointStore } from '../stores/checkpoint';
-export { AgentEvent, ErrorCode } from '../events/agentEvent';
 import type { AgentEvent } from '../events/agentEvent';
+
+export type { AgentEvent, ErrorCode } from '../events/agentEvent';
 
 /**
  * Input required to start an agent run.
