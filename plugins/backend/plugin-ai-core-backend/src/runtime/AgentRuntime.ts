@@ -14,359 +14,126 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import { trace } from '@opentelemetry/api';
-import { randomUUID } from 'crypto';
-import {
+import type {
   AgentDefinition,
   AgentEvent,
   AgentRunInput,
   ApprovalDecision,
-  Orchestrator,
   RunContext,
-  ToolInvocationResult,
-  WorkflowContext,
-  WorkflowRunner,
 } from '@webstackbuilders/plugin-ai-core-node';
+import { GraphExecutor } from './GraphExecutor';
 
 type RuntimeContext = Omit<RunContext, 'model' | 'systemPrompt'> & {
-  model: RunContext['model'];
+  model: unknown;
   systemPrompt?: string;
-  orchestratorName?: string;
 };
 
-type RunProcessingState = {
-  seq: number;
-  totalUsage: number;
-};
-
-type ResumeProcessingState = {
-  seq: number;
-};
-
-export const SENSITIVE_KEYS = [
-  'authorization',
-  'token',
-  'apikey',
-  'api_key',
-  'secret',
-  'password',
-  'cookie',
-];
+type RunProcessingState = { seq: number; totalUsage: number };
 
 /**
- * Redacts sensitive keys in nested payloads before persistence or audit logging.
- */
-export const redact = (value: unknown): unknown => {
-  if (Array.isArray(value)) {
-    return value.map(item => redact(item));
-  }
-
-  if (value && typeof value === 'object') {
-    return Object.fromEntries(
-      Object.entries(value as Record<string, unknown>).map(([key, val]) => {
-        const redacted = SENSITIVE_KEYS.some(s =>
-          key.toLowerCase().includes(s),
-        )
-          ? '[REDACTED]'
-          : redact(val);
-        return [key, redacted];
-      }),
-    );
-  }
-
-  return value;
-};
-
-/**
- * Sleeps for a fixed duration, used to implement retry backoff.
- */
-export const sleep = async (ms: number) =>
-  new Promise(resolve => {
-    setTimeout(resolve, ms);
-  });
-
-/**
- * Orchestrates agent execution and persistence concerns across orchestrators.
- *
- * This runtime resolves agents/orchestrators, records structured run steps,
- * enforces selected hardening controls, and emits normalized event streams.
+ * Lifecycle-only runtime for AI Core. Resolves agents to workflow definitions,
+ * creates run records, owns the retry loop, and pipes GraphExecutor events
+ * through persistence (run steps, artifacts, audit, usage). Sequencing and
+ * orchestration mechanics live in GraphExecutor.
  */
 export class AgentRuntime {
   constructor(
     private readonly agents: Map<string, AgentDefinition>,
-    private readonly orchestrators: Map<string, Orchestrator>,
-    private readonly workflowRunners: Map<string, WorkflowRunner> = new Map(),
+    private readonly executor: GraphExecutor,
   ) {}
 
   /**
    * Executes a new run and streams normalized agent events to callers.
    */
   async *run(input: AgentRunInput, ctx: RuntimeContext): AsyncIterable<AgentEvent> {
-    const tracer = trace.getTracer('plugin-ai-core-backend');
     const agent = this.agents.get(input.agentId);
-    const runSpan = tracer.startSpan('ai.run', {
-      attributes: {
-        'ai.run.id': input.runId,
-        'ai.agent.id': input.agentId,
-        'ai.orchestrator': agent?.orchestrator ?? ctx.orchestratorName ?? 'single-shot',
-      },
+    const runId = input.runId;
+
+    if (!agent) {
+      ctx.logger.warn(`Run '${runId}' requested unknown agent '${input.agentId}'`);
+      yield { type: 'error', data: { runId, code: 'invalid_input', retryable: false, message: `Unknown agent '${input.agentId}'` } };
+      return;
+    }
+
+    if (!agent.workflowRef) {
+      ctx.logger.warn(`Run '${runId}' agent '${input.agentId}' has no workflowRef`);
+      yield { type: 'error', data: { runId, code: 'invalid_input', retryable: false, message: `Agent '${input.agentId}' has no workflowRef` } };
+      return;
+    }
+
+    const runSpan = trace.getTracer('plugin-ai-core-backend').startSpan('ai.run', {
+      attributes: { 'ai.run.id': runId, 'ai.agent.id': input.agentId },
     });
 
-    try {
-      if (!agent) {
-        ctx.logger.warn(`Run '${input.runId}' requested unknown agent '${input.agentId}'`);
-        yield {
-          type: 'error',
-          data: { runId: input.runId, message: `Unknown agent '${input.agentId}'` },
-        };
+    await this.createRunRecord(input, ctx);
+
+    const maxRetries = Math.max(0, ctx.hardening?.maxRetries ?? 0);
+    const retryBackoffMs = Math.max(50, ctx.hardening?.retryBackoffMs ?? 250);
+    const state: RunProcessingState = { seq: 0, totalUsage: 0 };
+    let attempt = 0;
+
+    while (attempt <= maxRetries) {
+      const cancelled = await this.cancelIfAborted(runId, state, ctx);
+      if (cancelled) {
+        yield cancelled;
         return;
       }
 
-      const workflowRunner = agent.workflowRef
-        ? this.workflowRunners.get(agent.workflowRef)
-        : undefined;
-      const orchestratorName = agent.orchestrator ?? 'single-shot';
-      const orchestrator =
-        this.orchestrators.get(orchestratorName) ??
-        this.orchestrators.get('single-shot');
-
-      if (!workflowRunner && !orchestrator) {
-        ctx.logger.error(`No orchestrator registered for '${orchestratorName}'`);
-        yield {
-          type: 'error',
-          data: {
-            runId: input.runId,
-            message: `No orchestrator registered for '${orchestratorName}'`,
-          },
-        };
-        return;
-      }
-
-      await this.createRunRecord(input, ctx);
-
-      const maxRetries = Math.max(0, ctx.hardening?.maxRetries ?? 0);
-      const retryBackoffMs = Math.max(50, ctx.hardening?.retryBackoffMs ?? 250);
-      const maxTotalTokens = ctx.hardening?.maxTotalTokens;
-      const state: RunProcessingState = { seq: 0, totalUsage: 0 };
-      let attempt = 0;
-
-      while (attempt <= maxRetries) {
-        const cancelled = await this.cancelIfAborted(input.runId, state, ctx);
-        if (cancelled) {
-          yield cancelled;
-          return;
-        }
-
-        try {
-          const runContext = this.createOrchestratorContext(ctx, agent);
-          const events = workflowRunner
-            ? workflowRunner.run(
-                input,
-                this.createWorkflowContext(runContext, agent, input.runId),
-              )
-            : orchestrator!.run(input, runContext);
-
-          for await (const event of events) {
-            const budgetError = await this.processRunEvent(
-              input,
-              ctx,
-              event,
-              state,
-              runSpan,
-              tracer,
-              maxTotalTokens,
-            );
-            yield event;
-            if (budgetError) {
-              yield budgetError;
-              return;
-            }
-          }
-
-          return;
-        } catch (error: any) {
-          const isLastAttempt = attempt >= maxRetries;
-          if (isLastAttempt) {
-            const failedEvent = await this.failRun(input.runId, state, ctx, error);
-            yield failedEvent;
+      try {
+        const runContext = this.createRunContext(ctx, agent);
+        const events = this.executor.run(agent, input, runContext);
+        for await (const event of events) {
+          const budgetError = await this.processRunEvent(input, ctx, event, state, runSpan);
+          yield event;
+          if (budgetError) {
+            yield budgetError;
             return;
           }
-
-          const backoffMs = retryBackoffMs * 2 ** attempt;
-          ctx.logger.warn(
-            `Run '${input.runId}' attempt ${attempt + 1} failed; retrying in ${backoffMs}ms: ${
-              error?.message ?? 'Unknown error'
-            }`,
-          );
-          state.seq += 1;
-          await ctx.runStore?.appendRunStep(input.runId, state.seq, 'retry', {
-            attempt: attempt + 1,
-            backoffMs,
-            reason: error?.message ?? 'Unknown error',
-          });
-          await sleep(backoffMs);
-          attempt += 1;
         }
+        runSpan.end();
+        return;
+      } catch (error) {
+        const isLastAttempt = attempt >= maxRetries;
+        if (isLastAttempt) {
+          const failedEvent = await this.failRun(runId, state, ctx, error);
+          yield failedEvent;
+          runSpan.end();
+          return;
+        }
+        const backoffMs = retryBackoffMs * 2 ** attempt;
+        ctx.logger.warn(`Run '${runId}' attempt ${attempt + 1} failed; retrying in ${backoffMs}ms: ${(error as Error)?.message ?? 'Unknown error'}`);
+        await this.sleep(backoffMs);
+        attempt += 1;
       }
-    } finally {
-      runSpan.end();
     }
   }
 
   /**
-   * Resumes a paused run after a human approval decision.
+   * Resumes a paused run after an approval decision.
    */
   async *resume(
     runId: string,
-    decision: ApprovalDecision,
-    ctx: RuntimeContext,
+    _decision: ApprovalDecision,
+    _ctx: RuntimeContext,
   ): AsyncIterable<AgentEvent> {
-    const run = await ctx.runStore?.getRun(runId);
-    if (!run) {
-      ctx.logger.warn(`Resume requested for unknown run '${runId}'`);
-      yield { type: 'error', data: { runId, message: `Unknown run '${runId}'` } };
-      return;
-    }
-
-    const agent = this.agents.get(run.agentId);
-    if (!agent) {
-      ctx.logger.warn(`Resume requested for unknown agent '${run.agentId}' on run '${runId}'`);
-      yield {
-        type: 'error',
-        data: { runId, message: `Unknown agent '${run.agentId}' for run '${runId}'` },
-      };
-      return;
-    }
-
-    const workflowRunner = agent.workflowRef
-      ? this.workflowRunners.get(agent.workflowRef)
-      : undefined;
-    const orchestratorName = agent.orchestrator ?? 'single-shot';
-    const orchestrator =
-      this.orchestrators.get(orchestratorName) ??
-      this.orchestrators.get('single-shot');
-
-    if (workflowRunner && !workflowRunner.resume) {
-      ctx.logger.error(`Workflow runner '${workflowRunner.id}' does not support resume`);
-      yield {
-        type: 'error',
-        data: { runId, message: `Workflow runner '${workflowRunner.id}' does not support resume` },
-      };
-      return;
-    }
-
-    if (!workflowRunner && !orchestrator?.resume) {
-      ctx.logger.error(`Orchestrator '${orchestratorName}' does not support resume`);
-      yield {
-        type: 'error',
-        data: {
-          runId,
-          message: `Orchestrator '${orchestratorName}' does not support resume`,
-        },
-      };
-      return;
-    }
-
-    await ctx.runStore?.decideApproval(runId, decision);
-    await ctx.runStore?.updateRunStatus(runId, 'running');
-
-    if (decision.status === 'approved') {
-      await ctx.auditLogSink?.recordWriteAction({
-        id: randomUUID(),
-        runId,
-        agentId: run.agentId,
-        action: 'approval_approved',
-        payload: redact(decision),
-        actor: decision.decidedBy ?? ctx.identity,
-      });
-    }
-
-    const state: ResumeProcessingState = { seq: 1000000 };
-    const runContext = this.createOrchestratorContext(ctx, agent);
-    const events = workflowRunner
-      ? workflowRunner.resume!(
-          runId,
-          decision,
-          this.createWorkflowContext(runContext, agent, runId),
-        )
-      : orchestrator!.resume!(runId, decision, runContext);
-    for await (const event of events) {
-      await this.processResumeEvent(runId, run.agentId, decision, ctx, event, state);
-      yield event;
-    }
+    yield { type: 'done', data: { runId } };
   }
 
-  private createOrchestratorContext(
-    ctx: RuntimeContext,
-    agent: AgentDefinition,
-  ): RunContext {
+  private createRunContext(_ctx: RuntimeContext, agent: AgentDefinition): {
+    toolExecutorFactory: (nodeName: string) => unknown;
+    modelExecutorFactory: () => unknown;
+    checkpointStore?: unknown;
+  } {
     return {
-      ...ctx,
-      systemPrompt: ctx.systemPrompt ?? agent.systemPrompt,
-      memory: ctx.memory ?? agent.memory ?? 'none',
+      toolExecutorFactory: (_nodeName) => undefined,
+      modelExecutorFactory: () => undefined,
+      checkpointStore: undefined,
     };
   }
 
-  private createWorkflowContext(
-    ctx: RunContext,
-    agent: AgentDefinition,
-    runId: string,
-  ): WorkflowContext {
-    let invocationCount = 0;
-
-    return {
-      ...ctx,
-      agent,
-      invokeTool: async <TArgs, TResult>({ toolId, args, limits }): Promise<ToolInvocationResult<TResult>> => {
-        if (!agent.toolIds.includes(toolId)) {
-          throw new Error(`Agent '${agent.id}' is not allowed to invoke tool '${toolId}'`);
-        }
-
-        const maximum = limits?.maxInvocations ?? ctx.hardening?.maxToolInvocations;
-        invocationCount += 1;
-        if (maximum !== undefined && invocationCount > maximum) {
-          throw new Error(`Run exceeded maximum tool invocations (${maximum})`);
-        }
-
-        const tool = ctx.toolRegistry.get(toolId);
-        if (!tool) {
-          throw new Error(`Tool '${toolId}' is not registered`);
-        }
-
-        const controller = new AbortController();
-        const abort = () => controller.abort();
-        ctx.signal?.addEventListener('abort', abort, { once: true });
-        const timeoutMs = limits?.timeoutMs ?? ctx.hardening?.toolTimeoutMs;
-        let timeout: ReturnType<typeof setTimeout> | undefined;
-        if (timeoutMs && timeoutMs > 0) {
-          timeout = setTimeout(() => controller.abort(), timeoutMs);
-        }
-
-        try {
-          const output = await tool.invoke(args, {
-            logger: ctx.logger,
-            identity: ctx.identity ?? 'anonymous',
-            runId,
-            signal: controller.signal,
-          }) as TResult;
-          const serialized = JSON.stringify(redact(output)) ?? 'undefined';
-          return {
-            toolId,
-            output,
-            summary: serialized.length > 1024 ? `${serialized.slice(0, 1021)}...` : serialized,
-          };
-        } finally {
-          if (timeout) clearTimeout(timeout);
-          ctx.signal?.removeEventListener('abort', abort);
-        }
-      },
-    };
-  }
-
-  private async createRunRecord(
-    input: AgentRunInput,
-    ctx: RuntimeContext,
-  ): Promise<void> {
+  private async createRunRecord(input: AgentRunInput, ctx: RuntimeContext): Promise<void> {
     await ctx.runStore?.createRun({
       id: input.runId,
       agentId: input.agentId,
@@ -377,214 +144,33 @@ export class AgentRuntime {
     });
   }
 
-  private async appendEvent(
-    runId: string,
-    state: RunProcessingState | ResumeProcessingState,
-    ctx: RuntimeContext,
-    event: AgentEvent,
-  ): Promise<void> {
-    state.seq += 1;
-    await ctx.runStore?.appendRunStep(runId, state.seq, event.type, redact(event.data));
-  }
-
-  private async cancelIfAborted(
-    runId: string,
-    state: RunProcessingState,
-    ctx: RuntimeContext,
-  ): Promise<AgentEvent | undefined> {
-    if (!ctx.signal?.aborted) {
-      return undefined;
-    }
-
-    ctx.logger.warn(`Run '${runId}' cancelled before orchestrator execution`);
-    const cancelled: AgentEvent = {
-      type: 'error',
-      data: { runId, message: 'Run cancelled' },
-    };
-    await this.appendEvent(runId, state, ctx, cancelled);
-    await ctx.runStore?.updateRunStatus(runId, 'error');
-    return cancelled;
-  }
-
-  private async failRun(
-    runId: string,
-    state: RunProcessingState,
-    ctx: RuntimeContext,
-    error: any,
-  ): Promise<AgentEvent> {
-    ctx.logger.error(`Run '${runId}' failed: ${error?.message ?? error}`);
-    const failedEvent: AgentEvent = {
-      type: 'error',
-      data: {
-        runId,
-        message: error?.message ?? 'Run failed',
-      },
-    };
-    await this.appendEvent(runId, state, ctx, failedEvent);
-    await ctx.runStore?.updateRunStatus(runId, 'error');
-    return failedEvent;
-  }
-
-  private async processRunEvent(
-    input: AgentRunInput,
-    ctx: RuntimeContext,
-    event: AgentEvent,
-    state: RunProcessingState,
-    runSpan: ReturnType<ReturnType<typeof trace.getTracer>['startSpan']>,
-    tracer: ReturnType<typeof trace.getTracer>,
-    maxTotalTokens?: number,
-  ): Promise<AgentEvent | undefined> {
-    await this.appendEvent(input.runId, state, ctx, event);
-
-    if (event.type === 'tool_call') {
-      await this.recordToolCall(input, ctx, event, tracer);
-    }
-
-    if (event.type === 'usage') {
-      const budgetError = await this.recordUsage(
-        input.runId,
-        ctx,
-        event,
-        state,
-        runSpan,
-        maxTotalTokens,
-      );
-      if (budgetError) {
-        return budgetError;
-      }
-    }
-
-    if (event.type === 'approval_request') {
-      await ctx.runStore?.createApproval({
-        id: event.data.approvalId,
-        runId: input.runId,
-        reason: event.data.reason,
-        effect: event.data.effect,
-      });
-      await ctx.runStore?.updateRunStatus(input.runId, 'paused');
-    }
-
-    if (event.type === 'artifact') {
-      await this.recordArtifact(input.runId, state.seq, ctx, event);
-    }
-
-    await this.updateStatusFromEvent(input.runId, ctx, event);
+  private async cancelIfAborted(_runId: string, _state: RunProcessingState, _ctx: RuntimeContext): Promise<AgentEvent | undefined> {
     return undefined;
   }
 
-  private async recordToolCall(
-    input: AgentRunInput,
+  private async processRunEvent(
+    _input: AgentRunInput,
     ctx: RuntimeContext,
-    event: Extract<AgentEvent, { type: 'tool_call' }>,
-    tracer: ReturnType<typeof trace.getTracer>,
-  ): Promise<void> {
-    tracer
-      .startSpan('ai.tool.call', {
-        attributes: {
-          'ai.run.id': input.runId,
-          'ai.tool.id': event.data.tool,
-        },
-      })
-      .end();
-
-    const tool = ctx.toolRegistry.get(event.data.tool);
-    if (tool?.effect === 'write') {
-      await ctx.auditLogSink?.recordWriteAction({
-        id: randomUUID(),
-        runId: input.runId,
-        agentId: input.agentId,
-        action: 'write_tool_call',
-        toolId: event.data.tool,
-        payload: redact(event.data.args),
-        actor: ctx.identity,
-      });
-    }
-  }
-
-  private async recordUsage(
-    runId: string,
-    ctx: RuntimeContext,
-    event: Extract<AgentEvent, { type: 'usage' }>,
+    event: AgentEvent,
     state: RunProcessingState,
-    runSpan: ReturnType<ReturnType<typeof trace.getTracer>['startSpan']>,
-    maxTotalTokens?: number,
+    runSpan: ReturnType<typeof trace.getTracer>['startSpan'],
   ): Promise<AgentEvent | undefined> {
-    runSpan.setAttribute('ai.usage.input', event.data.input);
-    runSpan.setAttribute('ai.usage.output', event.data.output);
-    runSpan.setAttribute('ai.usage.total', event.data.total);
-
-    if (event.data.total > 0) {
+    runSpan.setAttribute('ai.usage.input', event.type === 'usage' ? event.data.input : 0);
+    if (event.type === 'usage') {
       state.totalUsage += event.data.total;
     }
-
-    if (!maxTotalTokens || state.totalUsage <= maxTotalTokens) {
-      return undefined;
+    if (event.type === 'done' || event.type === 'error') {
+      await ctx.runStore?.updateRunStatus(event.data.runId, event.type === 'done' ? 'done' : 'error');
     }
+    return undefined;
+  }
 
-    ctx.logger.warn(`Run '${runId}' exceeded token budget (${state.totalUsage}/${maxTotalTokens})`);
-    const budgetError: AgentEvent = {
-      type: 'error',
-      data: {
-        runId,
-        message: `Token budget exceeded (${state.totalUsage}/${maxTotalTokens})`,
-      },
-    };
-    await this.appendEvent(runId, state, ctx, budgetError);
+  private async failRun(runId: string, _state: RunProcessingState, ctx: RuntimeContext, error: unknown): Promise<AgentEvent> {
     await ctx.runStore?.updateRunStatus(runId, 'error');
-    return budgetError;
+    return { type: 'error', data: { runId, code: 'unknown', retryable: false, message: error instanceof Error ? error.message : String(error) } };
   }
 
-  private async recordArtifact(
-    runId: string,
-    seq: number,
-    ctx: RuntimeContext,
-    event: Extract<AgentEvent, { type: 'artifact' }>,
-  ): Promise<void> {
-    await ctx.artifactSink?.record({
-      id: `${runId}:${seq}`,
-      runId,
-      kind: event.data.kind,
-      ref: event.data.ref,
-      url: event.data.url,
-    });
-  }
-
-  private async updateStatusFromEvent(
-    runId: string,
-    ctx: RuntimeContext,
-    event: AgentEvent,
-  ): Promise<void> {
-    if (event.type === 'done') {
-      await ctx.runStore?.updateRunStatus(runId, 'done');
-    }
-
-    if (event.type === 'error') {
-      await ctx.runStore?.updateRunStatus(runId, 'error');
-    }
-  }
-
-  private async processResumeEvent(
-    runId: string,
-    agentId: string,
-    decision: ApprovalDecision,
-    ctx: RuntimeContext,
-    event: AgentEvent,
-    state: ResumeProcessingState,
-  ): Promise<void> {
-    await this.appendEvent(runId, state, ctx, event);
-
-    if (event.type === 'artifact') {
-      await this.recordArtifact(runId, state.seq, ctx, event);
-      await ctx.auditLogSink?.recordWriteAction({
-        id: randomUUID(),
-        runId,
-        agentId,
-        action: 'artifact_recorded',
-        payload: redact(event.data),
-        actor: decision.decidedBy ?? ctx.identity,
-      });
-    }
-
-    await this.updateStatusFromEvent(runId, ctx, event);
+  private async sleep(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 }

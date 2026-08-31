@@ -19,7 +19,6 @@ import {
   createBackendPlugin,
   coreServices,
 } from '@backstage/backend-plugin-api';
-import { BaseLLM } from '@langchain/core/language_models/llms';
 import { BaseChatModel } from '@langchain/core/language_models/chat_models';
 import {
   agentExtensionPoint,
@@ -27,8 +26,8 @@ import {
   ArtifactSink,
   AuditLogSink,
   CheckpointStore,
-  modelExtensionPoint,
-  ModelDefinition,
+  chatModelsExtensionPoint,
+  workflowRunnerExtensionPoint,
   RunStore,
   runtimeStoreExtensionPoint,
   SessionStore,
@@ -38,32 +37,22 @@ import {
   ToolDefinition,
   triggerExtensionPoint,
   TriggerBinding,
-  workflowRunnerExtensionPoint,
-  WorkflowRunner,
+  WorkflowDefinition,
 } from '@webstackbuilders/plugin-ai-core-node';
 import { createAiBackendServices, createRouter, createSourceRegistry } from './service';
 
 /**
  * Registers and boots the AI backend runtime.
- *
- * The plugin composes sources, tools, models, agents, and triggers, then
- * exposes the HTTP/SSE API surface through the router. Runtime persistence
- * stores (sessions, checkpoints, runs, artifacts, and audit logs) are
- * contributed by storage modules through the runtime store extension point;
- * when no module registers a store, the runtime operates without that
- * persistence.
- *
- * @public
  */
 export const ragAiPlugin = createBackendPlugin({
   pluginId: 'ai-core',
   register(env) {
     const sourceRegistry = createSourceRegistry();
-    const models = new Map<string, BaseLLM | BaseChatModel>();
+    const models = new Map<string, BaseChatModel>();
     const tools = new Map<string, ToolDefinition>();
     const agents = new Map<string, AgentDefinition>();
     const triggers: TriggerBinding[] = [];
-    const workflowRunners = new Map<string, WorkflowRunner>();
+    const workflowDefinitions = new Map<string, WorkflowDefinition>();
     const runtimeStores: {
       sessionStore?: SessionStore;
       checkpointStore?: CheckpointStore;
@@ -81,21 +70,20 @@ export const ragAiPlugin = createBackendPlugin({
       },
     });
 
+    env.registerExtensionPoint(chatModelsExtensionPoint, {
+      addChatModel(modelDefinition) {
+        if (models.has(modelDefinition.id)) {
+          throw new Error(`Model '${modelDefinition.id}' may only be registered once`);
+        }
+        models.set(modelDefinition.id, modelDefinition.model);
+      },
+
     env.registerExtensionPoint(toolExtensionPoint, {
       addTool(tool) {
         if (tools.has(tool.id)) {
           throw new Error(`Tool '${tool.id}' may only be registered once`);
         }
         tools.set(tool.id, tool);
-      },
-    });
-
-    env.registerExtensionPoint(modelExtensionPoint, {
-      addModel(modelDefinition: ModelDefinition) {
-        if (models.has(modelDefinition.id)) {
-          throw new Error(`Model '${modelDefinition.id}' may only be registered once`);
-        }
-        models.set(modelDefinition.id, modelDefinition.model);
       },
     });
 
@@ -109,11 +97,11 @@ export const ragAiPlugin = createBackendPlugin({
     });
 
     env.registerExtensionPoint(workflowRunnerExtensionPoint, {
-      registerRunner(runner) {
-        if (workflowRunners.has(runner.id)) {
-          throw new Error(`Workflow runner '${runner.id}' may only be registered once`);
+      registerWorkflow(workflow) {
+        if (workflowDefinitions.has(workflow.id)) {
+          throw new Error(`Workflow '${workflow.id}' may only be registered once`);
         }
-        workflowRunners.set(runner.id, runner);
+        workflowDefinitions.set(workflow.id, workflow);
       },
     });
 
@@ -178,7 +166,7 @@ export const ragAiPlugin = createBackendPlugin({
           artifactSink: runtimeStores.artifactSink,
           auditLogSink: runtimeStores.auditLogSink,
           triggers,
-          workflowRunners,
+          workflowDefinitions,
         });
 
         httpRouter.use(
@@ -193,3 +181,4 @@ export const ragAiPlugin = createBackendPlugin({
     });
   },
 });
+    });

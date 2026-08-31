@@ -22,8 +22,6 @@ import type { CreateRouterOptions, RouteController } from '../@types';
 
 /**
  * Validates that a requested source exists in the active source registry.
- *
- * The special "all" source remains available as a convenience umbrella value.
  */
 export const sourceValidator = (
   sourceRegistry: SourceRegistry,

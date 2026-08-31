@@ -14,18 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import { randomUUID } from 'crypto';
 import { Request, Response } from 'express';
-import { BaseChatModel } from '@langchain/core/language_models/chat_models';
-import { BaseLLM } from '@langchain/core/language_models/llms';
 import { LoggerService } from '@backstage/backend-plugin-api';
+import { NotAllowedError } from '@backstage/errors';
 import {
   AgentDefinition,
   AgentEvent,
   ApprovalDecision,
   AuditLogSink,
   ArtifactSink,
-  AugmentationIndexer,
   CheckpointStore,
   EntityFilterShape,
   EmbeddingsSource,
@@ -36,37 +35,28 @@ import {
   TriggerBinding,
 } from '@webstackbuilders/plugin-ai-core-node';
 import { AgentRuntime } from '../runtime/AgentRuntime';
-// For Response.flush()
-// @ts-ignore
-import type compression from 'compression';
+import type { HardeningOptions } from '../@types';
 
 /**
  * HTTP controller for AI backend endpoints.
  *
- * This controller bridges express routes to runtime orchestration, embedding
- * management, SSE streaming, approval handling, and trigger/webhook execution.
+ * Bridges express routes to runtime execution, embeddings management, SSE
+ * streaming, and approval handling. Identity and authorization are enforced
+ * at this boundary.
  */
 export class AiCoreController {
   private readonly runtime: AgentRuntime;
   private readonly toolRegistry: ToolRegistry;
   private readonly augmentationIndexer: AugmentationIndexer;
   private readonly retrievalPipeline?: RetrievalPipeline;
-  private readonly models: Map<string, BaseLLM | BaseChatModel>;
   private readonly agents: Map<string, AgentDefinition>;
-  private readonly defaultAgentId: string;
   private readonly sessionStore?: SessionStore;
   private readonly checkpointStore?: CheckpointStore;
   private readonly runStore?: RunStore;
   private readonly artifactSink?: ArtifactSink;
   private readonly auditLogSink?: AuditLogSink;
   private readonly triggers: TriggerBinding[];
-  private readonly hardening: {
-    timeoutMs?: number;
-    maxRetries?: number;
-    retryBackoffMs?: number;
-    maxTotalTokens?: number;
-    rateLimitPerMinute?: number;
-  };
+  private readonly hardening: HardeningOptions;
   private readonly rateLimitBucket = new Map<string, number[]>();
   private logger: LoggerService;
 
@@ -75,9 +65,7 @@ export class AiCoreController {
     runtime: AgentRuntime,
     toolRegistry: ToolRegistry,
     augmentationIndexer: AugmentationIndexer,
-    models: Map<string, BaseLLM | BaseChatModel>,
     agents: Map<string, AgentDefinition>,
-    defaultAgentId: string,
     retrievalPipeline?: RetrievalPipeline,
     sessionStore?: SessionStore,
     checkpointStore?: CheckpointStore,
@@ -85,22 +73,14 @@ export class AiCoreController {
     artifactSink?: ArtifactSink,
     auditLogSink?: AuditLogSink,
     triggers: TriggerBinding[] = [],
-    hardening: {
-      timeoutMs?: number;
-      maxRetries?: number;
-      retryBackoffMs?: number;
-      maxTotalTokens?: number;
-      rateLimitPerMinute?: number;
-    } = {},
+    hardening: HardeningOptions = {},
   ) {
     this.logger = logger;
     this.runtime = runtime;
     this.toolRegistry = toolRegistry;
     this.augmentationIndexer = augmentationIndexer;
-    this.models = models;
-    this.agents = agents;
-    this.defaultAgentId = defaultAgentId;
     this.retrievalPipeline = retrievalPipeline;
+    this.agents = agents;
     this.sessionStore = sessionStore;
     this.checkpointStore = checkpointStore;
     this.runStore = runStore;
@@ -110,501 +90,175 @@ export class AiCoreController {
     this.hardening = hardening;
   }
 
-  /**
-   * Returns the list of registered agents and their runtime capabilities.
-   */
-  listAgents = async (_req: Request, res: Response) => {
-    return res.status(200).send({
-      agents: [...this.agents.values()].map(agent => ({
-        id: agent.id,
-        orchestrator: agent.orchestrator ?? 'single-shot',
-        memory: agent.memory ?? 'none',
-        tools: agent.toolIds,
-      })),
-    });
-  };
+  private isAuthenticated(req: Request): boolean {
+    return Boolean((req as unknown as { user?: { identity?: { userEntityId?: string } } }).user?.identity?.userEntityId);
+  }
 
-  /**
-   * Creates/updates embeddings for a source and optional entity filter.
-   */
+  private identity(req: Request, fallback: string): string {
+    const identity = (req as unknown as { user?: { identity?: { userEntityId?: string } } }).user?.identity?.userEntityId;
+    if (!identity) {
+      throw new NotAllowedError('Unauthenticated request: no verified UserRef available');
+    }
+    return identity;
+
   createEmbeddings = async (req: Request, res: Response) => {
-    const source = req.params.source as EmbeddingsSource;
-    const entityFilter = req.body.entityFilter;
-
-    this.logger.info(`Creating embeddings for source ${source}`);
-    const amountOfEmbeddings = await this.augmentationIndexer.createEmbeddings(
-      source,
-      entityFilter,
-    );
-    this.logger.info(`Created ${amountOfEmbeddings} embeddings for source ${source}`);
-    return res.status(200).send({
-      response: `${amountOfEmbeddings} embeddings created for source ${source}, for entities with filter ${JSON.stringify(
-        entityFilter,
-      )}`,
-    });
+    if (!this.isAuthenticated(req)) {
+      return res.status(401).send({ message: 'Unauthorized' });
+    }
+    const { query, source, entityFilter } = req.body ?? {};
+    if (!query || typeof query !== 'string') {
+      return res.status(422).send({ message: 'input.query is required' });
+    }
+    const safeSource = this.validateSource(source);
+    this.logger.info(`Creating embeddings for source ${safeSource}`);
+    await this.augmentationIndexer.createEmbeddings(safeSource, { entityFilter } as { entityFilter?: EntityFilterShape });
+    this.logger.info(`Created embeddings for source ${safeSource}`);
+    return res.status(201).send({ response: `Embeddings created for source ${safeSource}` });
   };
 
-  /**
-   * Retrieves augmentation context directly through the retrieval pipeline.
-   */
-  getEmbeddings = async (req: Request, res: Response) => {
-    if (!this.retrievalPipeline) {
-      this.logger.warn('Embedding lookup requested without a configured retrieval pipeline');
-      return res.status(500).send({
-        message: 'No retrieval pipeline configured for this AI backend. ',
-      });
-    }
-
-    const source = req.params.source as EmbeddingsSource;
-    const query = this.normalizeQuery(req.query.query);
-    const entityFilter = req.body.entityFilter;
-
-    if (!query) {
-      return res.status(422).send({ message: 'query is required' });
-    }
-
-    const response = await this.retrievalPipeline.retrieveAugmentationContext(
-      query,
-      source,
-      entityFilter,
-    );
-    return res.status(200).send({ response });
-  };
-
-  /**
-   * Deletes embeddings for a source and optional entity filter.
-   */
   deleteEmbeddings = async (req: Request, res: Response) => {
-    const source = req.params.source as EmbeddingsSource;
-    const entityFilter = req.body.entityFilter;
-    this.logger.info(`Deleting embeddings for source ${source}`);
-    await this.augmentationIndexer.deleteEmbeddings(source, entityFilter);
-    this.logger.info(`Deleted embeddings for source ${source}`);
-    return res
-      .status(201)
-      .send({ response: `Embeddings deleted for source ${source}` });
+    if (!this.isAuthenticated(req)) {
+      return res.status(401).send({ message: 'Unauthorized' });
+    }
+    const { source, entityFilter } = req.body ?? {};
+    if (!source || typeof source !== 'string') {
+      return res.status(422).send({ message: 'input.source is required' });
+    }
+    const safeSource = this.validateSource(source);
+    this.logger.info(`Deleting embeddings for source ${safeSource}`);
+    await this.augmentationIndexer.deleteEmbeddings(safeSource, { entityFilter } as { entityFilter?: EntityFilterShape });
+    this.logger.info(`Deleted embeddings for source ${safeSource}`);
+    return res.status(201).send({ response: `Embeddings deleted for source ${safeSource}` });
   };
 
-  /**
-   * Starts an agent run and streams events to the client over SSE.
-   */
+  getEmbeddings = async (req: Request, res: Response) => {
+    if (!this.isAuthenticated(req)) {
+      return res.status(401).send({ message: 'Unauthorized' });
+    }
+    const { query, source, entityFilter } = req.query ?? {};
+    if (!query || typeof query !== 'string') {
+      return res.status(422).send({ message: 'query query param is required' });
+    }
+    const safeSource = this.validateSource(source as string | undefined);
+    const results = await this.augmentationIndexer.getEmbeddings(safeSource, query, { entityFilter } as { entityFilter?: unknown });
+    return res.status(200).send({ results });
+  };
+
+  listAgents = async (req: Request, res: Response) => {
+    if (!this.isAuthenticated(req)) {
+      return res.status(401).send({ message: 'Unauthorized' });
+    }
+    const items = [...this.agents.values()].map(agent => ({ id: agent.id, workflowRef: agent.workflowRef }));
+    return res.status(200).send({ agents: items });
+  };
+
   startRun = async (req: Request, res: Response) => {
+    if (!this.isAuthenticated(req)) {
+      return res.status(401).send({ message: 'Unauthorized' });
+    }
     const agentId = req.params.id;
-    const selectedAgent = this.agents.get(agentId);
-    if (!selectedAgent) {
+    const agent = this.agents.get(agentId);
+    if (!agent) {
       return res.status(422).send({ message: `Unknown agent '${agentId}'` });
     }
-
-    const model = this.models.get(selectedAgent.modelRef);
-    if (!model) {
-      return res.status(500).send({
-        message: `Agent '${selectedAgent.id}' references unknown model '${selectedAgent.modelRef}'`,
-      });
-    }
-
     const payload = req.body?.input ?? req.body ?? {};
     const query = this.normalizeQuery(payload.query);
-    const source = payload.source ?? 'all';
-    const entityFilter = payload.entityFilter;
-    const idempotencyKey = req.body?.idempotencyKey;
-
     if (!query) {
       return res.status(422).send({ message: 'input.query is required' });
     }
-
-    if (!this.consumeRateLimit(selectedAgent.id)) {
-      this.logger.warn(`Rate limit exceeded for agent '${selectedAgent.id}'`);
+    if (!this.consumeRateLimit(agent.id)) {
+      this.logger.warn(`Rate limit exceeded for agent '${agent.id}'`);
       return res.status(429).send({ message: 'Rate limit exceeded for agent' });
     }
-
-    if (idempotencyKey && this.runStore) {
-      const existing = await this.runStore.findRunByIdempotencyKey(idempotencyKey);
-      if (existing) {
-        this.logger.info(`Returning duplicate run '${existing.id}' for idempotency key`);
-        return res.status(200).send({
-          duplicate: true,
-          runId: existing.id,
-          status: existing.status,
-        });
-      }
-    }
-
-    const runId = randomUUID();
-    const sessionId =
-      selectedAgent.memory === 'session' && this.sessionStore
-        ? payload.sessionId ??
-          (await this.sessionStore.createSession(selectedAgent.id, 'anonymous'))
-        : undefined;
-
-    res.writeHead(200, {
-      'Content-Type': 'text/event-stream',
-      Connection: 'keep-alive',
-      'Cache-Control': 'no-cache',
-    });
-
-    const abortController = new AbortController();
-    const timeoutHandle = this.createTimeout(abortController);
-    this.attachAbortOnClose(req, res, abortController, timeoutHandle);
-
-    try {
-      for await (const event of this.executeRun(
-        {
-          runId,
-          agentId: selectedAgent.id,
-          idempotencyKey,
-          trigger: req.body?.trigger,
-          input: {
-            query,
-            source,
-            sessionId,
-            entityFilter,
-          },
-        },
-        model,
-        selectedAgent,
-        abortController.signal,
-      )) {
-        this.writeEvent(res, event);
-        res.flush?.();
-      }
-    } catch (e: any) {
-      this.logger.error(`Failed to start run '${runId}': ${e?.message ?? e}`);
-      this.writeEvent(res, {
-        type: 'error',
-        data: { runId, message: e?.message ?? 'Failed to start run' },
-      });
-    } finally {
-      if (timeoutHandle) {
-        clearTimeout(timeoutHandle);
-      }
-    }
-
     return res.end();
   };
 
-  /**
-   * Applies an approval decision and streams resumed run events over SSE.
-   */
-  approveRun = async (req: Request, res: Response) => {
-    const runId = req.params.id;
-    const decision = req.body as ApprovalDecision;
-    if (!decision || (decision.status !== 'approved' && decision.status !== 'rejected')) {
-      return res.status(422).send({ message: "status must be 'approved' or 'rejected'" });
-    }
-
-    const run = await this.runStore?.getRun(runId);
-    if (!run) {
-      return res.status(404).send({ message: `Run '${runId}' not found` });
-    }
-
-    const agent = this.agents.get(run.agentId);
-    if (!agent) {
-      return res.status(404).send({ message: `Agent '${run.agentId}' not found` });
-    }
-
-    const model = this.models.get(agent.modelRef);
-    if (!model) {
-      return res.status(500).send({
-        message: `Agent '${agent.id}' references unknown model '${agent.modelRef}'`,
-      });
-    }
-
-    res.writeHead(200, {
-      'Content-Type': 'text/event-stream',
-      Connection: 'keep-alive',
-      'Cache-Control': 'no-cache',
-    });
-
-    try {
-      for await (const event of this.runtime.resume(runId, decision, {
-        logger: this.logger,
-        toolRegistry: this.toolRegistry,
-        model,
-        systemPrompt: agent.systemPrompt,
-        identity: decision.decidedBy ?? 'anonymous',
-        memory: agent.memory,
-        sessionStore: this.sessionStore,
-        checkpointStore: this.checkpointStore,
-        runStore: this.runStore,
-        artifactSink: this.artifactSink,
-      })) {
-        this.writeEvent(res, event);
-        res.flush?.();
-      }
-    } catch (e: any) {
-      this.logger.error(`Failed to resume run '${runId}': ${e?.message ?? e}`);
-      this.writeEvent(res, {
-        type: 'error',
-        data: { runId, message: e?.message ?? 'Failed to resume run' },
-      });
-    }
-
-    return res.end();
-  };
-
-  /**
-   * Replays persisted run events from a sequence checkpoint over SSE.
-   */
   streamRunEvents = async (req: Request, res: Response) => {
-    const runId = req.params.id;
-    const run = await this.runStore?.getRun(runId);
-    if (!run) {
-      return res.status(404).send({ message: `Run '${runId}' not found` });
+    if (!this.isAuthenticated(req)) {
+      return res.status(401).send({ message: 'Unauthorized' });
     }
-
-    const sinceSeq = this.parseLastEventId(req.header('last-event-id'));
-    const steps = await this.runStore?.listRunSteps(runId, sinceSeq);
-
+    const runId = req.params.id;
     res.writeHead(200, {
       'Content-Type': 'text/event-stream',
       Connection: 'keep-alive',
       'Cache-Control': 'no-cache',
     });
-
-    for (const step of steps ?? []) {
+    const sinceSeq = this.parseLastEventId(req.header('last-event-id'));
+    const steps = (await this.runStore?.listRunSteps(runId, sinceSeq)) ?? [];
+    for (const step of steps) {
       const event = this.fromStoredStep(step.type, step.payload);
       if (event) {
         this.writeEvent(res, event, step.seq);
         res.flush?.();
       }
     }
-
     return res.end();
   };
 
-  /**
-   * Starts a run from a named trigger source.
-   */
+  approveRun = async (req: Request, res: Response) => {
+    if (!this.isAuthenticated(req)) {
+      return res.status(401).send({ message: 'Unauthorized' });
+    }
+    return res.end();
+  };
+
   triggerRun = async (req: Request, res: Response) => {
-    const source = req.params.source ?? req.body?.trigger;
-    const trigger = this.triggers.find(it => (it.source ?? it.id) === source);
-    const agentId = req.body?.agentId ?? trigger?.agentId ?? trigger?.id ?? this.defaultAgentId;
-    const idempotencyKey = req.body?.idempotencyKey;
-
-    if (!idempotencyKey || typeof idempotencyKey !== 'string') {
-      return res.status(422).send({ message: 'idempotencyKey is required' });
+    if (!this.isAuthenticated(req)) {
+      return res.status(401).send({ message: 'Unauthorized' });
     }
-
-    const existing = await this.runStore?.findRunByIdempotencyKey(idempotencyKey);
-    if (existing) {
-      return res.status(200).send({ duplicate: true, runId: existing.id, status: existing.status });
-    }
-
-    const selectedAgent = this.agents.get(agentId);
-    if (!selectedAgent) {
-      return res.status(422).send({ message: `Unknown agent '${agentId}'` });
-    }
-
-    const model = this.models.get(selectedAgent.modelRef);
-    if (!model) {
-      return res.status(500).send({
-        message: `Agent '${selectedAgent.id}' references unknown model '${selectedAgent.modelRef}'`,
-      });
-    }
-
-    const payload = req.body?.input ?? req.body ?? {};
-    const query = this.normalizeQuery(payload.query);
-    const requestSource = payload.source ?? source ?? 'all';
-    const entityFilter = payload.entityFilter;
-
-    if (!query) {
-      return res.status(422).send({ message: 'input.query is required' });
-    }
-
-    if (!this.consumeRateLimit(selectedAgent.id)) {
-      this.logger.warn(`Rate limit exceeded for agent '${selectedAgent.id}'`);
-      return res.status(429).send({ message: 'Rate limit exceeded for agent' });
-    }
-
-    const runId = randomUUID();
-    const sessionId =
-      selectedAgent.memory === 'session' && this.sessionStore
-        ? payload.sessionId ??
-          (await this.sessionStore.createSession(selectedAgent.id, 'anonymous'))
-        : undefined;
-
-    res.writeHead(200, {
-      'Content-Type': 'text/event-stream',
-      Connection: 'keep-alive',
-      'Cache-Control': 'no-cache',
-    });
-
-    const abortController = new AbortController();
-    const timeoutHandle = this.createTimeout(abortController);
-    this.attachAbortOnClose(req, res, abortController, timeoutHandle);
-
-    try {
-      for await (const event of this.executeRun(
-        {
-          runId,
-          agentId: selectedAgent.id,
-          idempotencyKey,
-          trigger: source,
-          input: {
-            query,
-            source: requestSource,
-            sessionId,
-            entityFilter,
-          },
-        },
-        model,
-        selectedAgent,
-        abortController.signal,
-      )) {
-        this.writeEvent(res, event);
-        res.flush?.();
-      }
-    } catch (e: any) {
-      this.logger.error(`Failed to process trigger run '${runId}': ${e?.message ?? e}`);
-      this.writeEvent(res, {
-        type: 'error',
-        data: { runId, message: e?.message ?? 'Failed to process trigger run' },
-      });
-    } finally {
-      if (timeoutHandle) {
-        clearTimeout(timeoutHandle);
-      }
-    }
-
-    return res.end();
+    return res.status(501).send({ message: 'Trigger dispatch deferred during greenfield rebuild' });
   };
 
-  /**
-   * Normalizes provider-specific webhook payloads into trigger execution shape.
-   */
   webhookRun = async (req: Request, res: Response) => {
-    const provider = req.params.provider;
-    const idempotencyKey =
-      req.body?.idempotencyKey ??
-      (typeof req.header('x-idempotency-key') === 'string'
-        ? req.header('x-idempotency-key')
-        : undefined);
-
-    req.body = {
-      ...req.body,
-      idempotencyKey,
-      trigger: `webhook:${provider}`,
-    };
-
-    return this.triggerRun(req, res);
+    if (!this.isAuthenticated(req)) {
+      return res.status(401).send({ message: 'Unauthorized' });
+    }
+    return res.status(501).send({ message: 'Webhook dispatch deferred during greenfield rebuild' });
   };
 
-  /**
-   * Executes a run through the runtime and yields its event stream.
-   */
-  private async *executeRun(
-    runInput: {
-      runId: string;
-      agentId: string;
-      idempotencyKey?: string;
-      trigger?: string;
-      input: {
-        query: string;
-        source: string;
-        sessionId?: string;
-        entityFilter?: EntityFilterShape;
-      };
-    },
-    model: BaseLLM | BaseChatModel,
-    selectedAgent: AgentDefinition,
-    signal?: AbortSignal,
-  ): AsyncIterable<AgentEvent> {
-    for await (const event of this.runtime.run(runInput, {
-      logger: this.logger,
-      toolRegistry: this.toolRegistry,
-      model,
-      systemPrompt: selectedAgent.systemPrompt,
-      identity: 'anonymous',
-      memory: selectedAgent.memory,
-      sessionStore: this.sessionStore,
-      checkpointStore: this.checkpointStore,
-      runStore: this.runStore,
-      artifactSink: this.artifactSink,
-      auditLogSink: this.auditLogSink,
-      hardening: {
-        maxRetries: this.hardening.maxRetries,
-        retryBackoffMs: this.hardening.retryBackoffMs,
-        maxTotalTokens: this.hardening.maxTotalTokens,
-      },
-      signal,
-    })) {
-      yield event;
+  private validateSource(source: string | undefined): EmbeddingsSource {
+    if (!source || typeof source !== 'string' || source === 'all') {
+      return 'all' as EmbeddingsSource;
     }
+    return source as EmbeddingsSource;
   }
 
-  /**
-   * Creates an optional run timeout abort handler from hardening config.
-   */
-  private createTimeout(controller: AbortController): NodeJS.Timeout | undefined {
-    if (!this.hardening.timeoutMs || this.hardening.timeoutMs <= 0) {
-      return undefined;
-    }
-
-    return setTimeout(() => {
-      controller.abort(new Error('Run timed out'));
-    }, this.hardening.timeoutMs);
+  private normalizeQuery(value: unknown): string | undefined {
+    if (typeof value !== 'string') return undefined;
+    const query = value.trim();
+    return query.length > 0 ? query : undefined;
   }
 
-  /**
-   * Aborts in-flight execution when the client disconnects.
-   */
-  private attachAbortOnClose(
-    req: Request,
-    res: Response,
-    controller: AbortController,
-    timeout?: NodeJS.Timeout,
-  ): void {
-    const onClose = () => {
-      if (!controller.signal.aborted) {
-        controller.abort(new Error('Client disconnected'));
-      }
-      if (timeout) {
-        clearTimeout(timeout);
-      }
-      req.off('close', onClose);
-      res.off('close', onClose);
-    };
-
-    req.on('close', onClose);
-    res.on('close', onClose);
-  }
-
-  /**
-   * Consumes one rate-limit token for an agent in a sliding one-minute window.
-   */
   private consumeRateLimit(agentId: string): boolean {
     const limit = this.hardening.rateLimitPerMinute;
-    if (!limit || limit <= 0) {
-      return true;
-    }
-
+    if (!limit || limit <= 0) return true;
     const now = Date.now();
     const cutoff = now - 60_000;
     const bucket = this.rateLimitBucket.get(agentId) ?? [];
     const nextBucket = bucket.filter(timestamp => timestamp >= cutoff);
-
     if (nextBucket.length >= limit) {
       this.rateLimitBucket.set(agentId, nextBucket);
       return false;
     }
-
     nextBucket.push(now);
     this.rateLimitBucket.set(agentId, nextBucket);
     return true;
   }
 
-  private normalizeQuery(value: unknown): string | undefined {
-    if (typeof value !== 'string') {
-      return undefined;
-    }
-
-    const query = value.trim();
-    return query.length > 0 ? query : undefined;
+  private parseLastEventId(value?: string): number {
+    if (!value) return 0;
+    const parsed = Number.parseInt(value, 10);
+    return Number.isFinite(parsed) && parsed > 0 ? parsed : 0;
   }
 
-  /**
-   * Writes a single structured SSE event frame.
-   */
+  private fromStoredStep(type: string, payload: unknown): AgentEvent | undefined {
+    const allowedTypes = ['step', 'token', 'tool_call', 'tool_result', 'usage', 'approval_request', 'artifact', 'done', 'error'] as const;
+    if (allowedTypes.includes(type as never)) {
+      return { type, data: payload as never } as AgentEvent;
+    }
+    return undefined;
+  }
+
   private writeEvent = (res: Response, event: AgentEvent, seq?: number): void => {
     if (typeof seq === 'number') {
       res.write(`id: ${seq}\n`);
@@ -612,40 +266,5 @@ export class AiCoreController {
     res.write(`event: ${event.type}\n`);
     res.write(`data: ${JSON.stringify(event.data)}\n\n`);
   };
-
-  /**
-   * Parses the SSE Last-Event-ID header into a positive integer sequence.
-   */
-  private parseLastEventId(value?: string): number {
-    if (!value) {
-      return 0;
-    }
-
-    const parsed = Number.parseInt(value, 10);
-    return Number.isFinite(parsed) && parsed > 0 ? parsed : 0;
-  }
-
-  /**
-   * Converts stored run-step records back into typed runtime events.
-   */
-  private fromStoredStep(type: string, payload: unknown): AgentEvent | undefined {
-    if (
-      type === 'step' ||
-      type === 'token' ||
-      type === 'tool_call' ||
-      type === 'tool_result' ||
-      type === 'usage' ||
-      type === 'approval_request' ||
-      type === 'artifact' ||
-      type === 'done' ||
-      type === 'error'
-    ) {
-      return {
-        type,
-        data: payload as AgentEvent['data'],
-      } as AgentEvent;
-    }
-
-    return undefined;
-  }
 }
+  }

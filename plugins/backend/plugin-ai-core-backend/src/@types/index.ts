@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { BaseLLM } from '@langchain/core/language_models/llms';
 import type { BaseChatModel } from '@langchain/core/language_models/chat_models';
 import type {
   LoggerService,
@@ -33,33 +32,15 @@ import type {
   ToolDefinition,
   ToolRegistry,
   TriggerBinding,
-  WorkflowRunner,
+  WorkflowDefinition,
 } from '@webstackbuilders/plugin-ai-core-node';
 import type { AgentRuntime } from '../runtime';
 import type { AiCoreController } from '../service/controller';
 
 /**
  * Plugin configuration for the `ai` root config section.
- *
- * This type intentionally mirrors the `ai` object declared in the package's
- * `config.d.ts` instead of importing it: `config.d.ts` lives at the package
- * root so it can ship standalone as the published config schema, and
- * importing it from `src` would leak a `../../config` reference into the
- * emitted `dist-types` tree that the declaration bundler cannot resolve.
- * A compile-time assertion in `src/__tests__/configSchemaSync.test-d.ts`
- * keeps the two declarations from drifting apart.
  */
 export type AiBackendConfig = {
-  /** Fallback values used when a specific agent does not provide overrides. */
-  defaults?: {
-    /** Default agent ID used when a request does not explicitly select one. */
-    agent?: string;
-    /** Default model reference (for example, `gpt-4o` or `claude-3-5-sonnet`). */
-    model?: string;
-    /** Default system prompt applied when no agent-specific prompt is configured. */
-    systemPrompt?: string;
-  };
-
   /** Per-agent execution settings keyed by agent ID. */
   agents?: Record<
     string,
@@ -68,77 +49,56 @@ export type AiBackendConfig = {
       model?: string;
       /** System prompt override for this agent. */
       systemPrompt?: string;
-      /** Registered domain workflow runner ID. */
+      /** Registered domain workflow definition ID. */
       workflow?: string;
-      /**
-       * Orchestration strategy used to execute this agent.
-       * - `single-shot`: One-pass retrieval and response.
-       * - `langgraph`: Stateful graph-based orchestration.
-       * - `crew`: Sequential multi-role collaboration.
-       */
-      orchestrator?: 'single-shot' | 'langgraph' | 'crew';
       /** Tool IDs that this agent is allowed to use. */
       tools?: string[];
-      /**
-       * Memory mode for this agent.
-       * - `none`: Stateless execution.
-       * - `session`: Persist conversational state per session.
-       */
+      /** Memory mode for this agent. */
       memory?: 'none' | 'session';
-      /** Crew role definitions, used only when `orchestrator` is `crew`. */
-      crew?: {
-        /** Ordered role list executed by the crew orchestrator. */
-        roles: {
-          /** Unique role identifier (for example, `security-auditor`). */
-          id: string;
-          /** System prompt that defines this role's behavior. */
-          systemPrompt: string;
-          /** Optional model override for this role. */
-          model?: string;
-          /** Optional tool IDs available only to this role. */
-          tools?: string[];
-        }[];
-      };
+      /** Per-category provider allow-list override for this agent. */
+      providers?: Record<string, readonly string[]>;
+      /** Per-agent guardrail enforcement. */
+      guardrails?: { input?: boolean; output?: boolean };
     }
   >;
-
+  /** Optional model tier map (tier name -> model registry ID). */
+  models?: {
+    tiers?: Record<string, string>;
+  };
+  /** Approval authorizer implementation. */
+  approval?: {
+    authorizer?: 'default' | 'compliance';
+  };
   /** Prompt wrappers applied to generated execution prompts. */
   prompts?: {
-    /** Text prepended before the generated prompt body. */
     prefix: string;
-    /** Text appended after the generated prompt body. */
     suffix: string;
   };
-
-  /** Allowed retrieval source IDs (for example, `techdocs` or `confluence`). */
+  /** Redaction policy overrides. */
+  redaction?: {
+    keyPatterns?: string[];
+    valuePatterns?: string[];
+    mode?: 'redact' | 'reject';
+  };
+  /** Allowed retrieval source IDs. */
   supportedSources?: string[];
-
-  /** Runtime hardening limits for timeout, retries, token budget, and rate control. */
+  /** Runtime hardening limits. */
   hardening?: {
-    /** Request timeout in milliseconds. */
     timeoutMs?: number;
-    /** Maximum retry attempts for transient failures. */
     maxRetries?: number;
-    /** Base backoff delay in milliseconds between retries. */
     retryBackoffMs?: number;
-    /** Maximum total tokens allowed per request lifecycle. */
     maxTotalTokens?: number;
-    /** Maximum allowed requests per rolling minute window. */
+    maxNodeDurationMs?: number;
     rateLimitPerMinute?: number;
   };
 };
 
 export type AgentsMap = Map<string, AgentDefinition>;
-export type ModelRegistry = Map<string, BaseLLM | BaseChatModel>;
+export type ModelRegistry = Map<string, BaseChatModel>;
 export type ToolMap = Map<string, ToolDefinition>;
-export type WorkflowRunnerMap = Map<string, WorkflowRunner>;
+export type WorkflowDefinitionMap = Map<string, WorkflowDefinition>;
 
-/**
- * Raw dependency bundle used to assemble AI backend runtime services.
- *
- * Callers provide pre-registered sources, agents, tools, and models together
- * with optional persistence sinks used by run orchestration endpoints.
- */
+/** Raw dependency bundle used to assemble AI backend runtime services. */
 export interface AiBackendServiceOptions {
   agents: AgentsMap;
   artifactSink?: ArtifactSink;
@@ -151,18 +111,15 @@ export interface AiBackendServiceOptions {
   sessionStore?: SessionStore;
   sourceRegistry: SourceRegistry;
   tools: ToolMap;
-  workflowRunners?: WorkflowRunnerMap;
+  workflowDefinitions?: WorkflowDefinitionMap;
   triggers?: TriggerBinding[];
 }
 
-/**
- * Resolved service bundle returned by the backend composition factory.
- */
+/** Resolved service bundle returned by the backend composition factory. */
 export interface AiBackendServices {
   aiBackendConfig?: AiBackendConfig;
   sourceRegistry: SourceRegistry;
   agents: Map<string, AgentDefinition>;
-  defaultAgentId: string;
   augmentationIndexer: AugmentationIndexer;
   retrievalPipeline: RetrievalPipeline;
   toolRegistry: ToolRegistry;
@@ -170,21 +127,13 @@ export interface AiBackendServices {
   controller: AiCoreController;
 }
 
-/**
- * Fully resolved dependencies required to bind the HTTP router.
- *
- * This lower-level shape is useful when callers want to prebuild controller
- * services separately from express route registration.
- */
+/** Fully resolved dependencies required to bind the HTTP router. */
 export interface RouterOptions extends AiBackendServiceOptions {
-  defaultAgentId: string;
   augmentationIndexer: AugmentationIndexer;
   retrievalPipeline: RetrievalPipeline;
 }
 
-/**
- * Minimal controller surface needed by the router binder.
- */
+/** Minimal controller surface needed by the router binder. */
 export type RouteController = Pick<
   AiCoreController,
   | 'createEmbeddings'
@@ -198,9 +147,7 @@ export type RouteController = Pick<
   | 'webhookRun'
 >;
 
-/**
- * Narrow route-binding contract for the express router.
- */
+/** Narrow route-binding contract for the express router. */
 export interface CreateRouterOptions {
   logger: LoggerService;
   config: RootConfigService;
@@ -208,29 +155,11 @@ export interface CreateRouterOptions {
   controller: RouteController;
 }
 
-/**
- * Normalized token accounting captured from model stream chunks.
- *
- * Used by orchestrators to emit consistent usage events and enforce
- * runtime budget controls regardless of the underlying model provider.
- */
+/** Normalized token accounting captured from model stream chunks. */
 export type UsageMetadata = {
   total_tokens: number;
   output_tokens: number;
   input_tokens: number;
-};
-
-/**
- * Declarative role definition for crew-style orchestration.
- *
- * Each role represents one handoff step in a multi-agent flow and can
- * optionally override model/tool selection from the parent agent defaults.
- */
-export type CrewRole = {
-  id: string;
-  systemPrompt: string;
-  modelRef?: string;
-  toolIds?: string[];
 };
 
 export type HardeningOptions = {
@@ -238,5 +167,6 @@ export type HardeningOptions = {
   maxRetries?: number;
   retryBackoffMs?: number;
   maxTotalTokens?: number;
+  maxNodeDurationMs?: number;
   rateLimitPerMinute?: number;
 };

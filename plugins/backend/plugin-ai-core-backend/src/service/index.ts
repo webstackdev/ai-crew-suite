@@ -23,9 +23,6 @@ export * from './router';
 
 /**
  * Creates the HTTP router object consumed by Backstage plugin wiring.
- *
- * The return shape matches Backstage backend expectations where a plugin
- * exposes its mounted express router through a `{ router }` object.
  */
 export const createApiRoutes = async (options: AiBackendServiceOptions) => {
   const services = createAiBackendServices(options);

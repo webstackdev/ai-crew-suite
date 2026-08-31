@@ -294,7 +294,8 @@ export default aiCoreBackendModuleLlmAws;
 
 ```
 src/
-  index.ts  setupTests.ts
+  index.ts
+  setupTests.ts
   OpenAiAugmenter.ts
   __tests__/module.test.ts
   __tests__/OpenAiAugmenter.test.ts
@@ -304,7 +305,8 @@ src/
 
 ```
 src/
-  index.ts  setupTests.ts
+  index.ts
+  setupTests.ts
   module.ts
   embeddings/
     index.ts

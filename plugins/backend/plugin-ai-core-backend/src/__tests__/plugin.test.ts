@@ -27,6 +27,7 @@ import { ragAiPlugin } from '../plugin';
 const createAgent = (id: string): AgentDefinition => ({
   id,
   modelRef: 'model-a',
+  workflowRef: 'workflow-a',
   systemPrompt: 'Use grounded context',
   toolIds: [],
 });
