@@ -1,21 +1,34 @@
 # Roadmap Items
 
-We created an `_IMPLEMENTATION.md`  for each of the backend and frontend agentic workflow that follow the pattern `plugins/backend/plugin-ai-agent-backend-*` and `plugins/frontend/plugin-ai-agent-frontend-*`. We then implemented each of the paired backend and frontend plugins and I copied the chat output detailing completion into the `_IMPLEMENTATION.md` file with a few exceptions.
+## Roadmap Items That Will Remain Blocked after the Core Refactor
 
-I realized after the fact that we had not implemented any actual LLM workflows for any of the plugins, and that several features for each paired set of backend / frontend plugins were not implemented waiting on additional functionality to be added to our core plugins like `plugins/backend/plugin-ai-core-backend`. I've tried to identify what those features are and aggregated them into groups:
+The refactor eliminates the *architectural* blockers (execution substrate, checkpoint/resume, approval gates, event attribution). These remain, by design:
 
-1. We have groups of plugins that follow the naming schema `plugin-ai-core-backend-module-*` and provide unified access to external systems, like vector stores, and platforms like version control systems (VCS). Some of the blocked roadmap items are waiting on feature implementations in these plugins.
-2. Our agentic workflow features using an LLM orchestrator are completely not implemented in any plugin pair. Some of the plugins don't have the agentic workflow features detailed below as insight into what it should be wasn't picked up in my attempts to distill out roadmap items, but is in the `_IMPLEMENTATION.md` file.
-3. Some are blocked on implementation of features related to Backstage core and built-in capabilities, like Catalog and Kubernetes.
-4. Some are specific to a paired backend / frontend feature set and not blocked on feature implementation in core or module plugins.
+### Events service integration (`coreServices.events` → trigger dispatch)
 
-Please read the `_IMPLEMENTATION.md` file in each of the 18 agentic workflow plugin directories. Determine what our roadmap items. There is a "Roadmap" section at the bottom of each file that has the items I identified - these lists may not be complete or include items that don't belong.
+**Lives in:** core-backend 
+**Blocked plugins:** search-ai-context, techdocs-postmortem, techdocs-janitor, tech-radar, rfc-adr
+**Why it's not in the refactor:** Additive feature - a new ingestion path into the existing trigger/run routes. The refactor doesn't touch trigger ingestion.
 
-Then, let's create a file in each of the plugin directories listed here that has features that need to be implemented named `_ROADMAP_IMPLEMENTATION.md`.  We don't need a detailed and complete implementation plan for each feature - just enough information that I can use it in a prompt to implement the feature.
+### `listArtifacts(filter)` on `RunStore`/`ArtifactSink`
 
-One goal is that many plugins are blocked on the same feature to core plugins. I'd like to aggregate these together so I can then implement the features in core and modules. After that we can return to implementing the features in the agentic workflow plugins themselves.
+**Lives in:** core-node + core-backend
+**Blocked plugins:** tech-radar, alert-tuner, oncall, drift-detector
+**Why it's not in the refactor:** Additive read API on stores. Not execution machinery. 
 
-At the end of the run, I'd like to answer the following question. Currently we have several orchestrators defined in `plugin-ai-core-backend`. I think that all eighteen agentic workflow plugins can use the `plugins/backend/plugin-ai-core-backend/src/orchestrators/LangGraphOrchestrator.ts` orchestrator, and I can remove the `CrewOrchestrator.ts` and `SingleShotOrchestrator.ts` orchestrators. But I'd like to confirm that.
+### Scaffolder helper library (`src/scaffolder/` blueprint/provenance reads + v2 pre-flight hook)
+
+**Lives in:** core-node
+**Blocked plugins:** drift-detector, guardrail-agent (v2 enforcement), infra
+**Why it's not in the refactor:** A domain helper library, orthogonal to the engine.
+
+### `CatalogEntityResolver.findUserByEmail` / `memberOf` traversal
+
+**Lives in:** core-node
+**Blocked plugins:** search-ai-archeology
+**Why it's not in the refactor:** An additive method on an existing contract.              
+
+Module-side items — VCS write ops, Kubernetes driver, scorecard publish, TechRadar durability, `communication.message.post` — you already scoped as driver-contract work, and per question 3 they land in modules without touching core.
 
 ## Agentic Workflow Plugins
 
