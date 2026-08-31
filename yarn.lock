@@ -7783,6 +7783,51 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@langchain/langgraph-checkpoint@npm:^1.1.5":
+  version: 1.1.5
+  resolution: "@langchain/langgraph-checkpoint@npm:1.1.5"
+  peerDependencies:
+    "@langchain/core": ^1.1.48
+  checksum: 10c0/13df16723a8e5a75b5338b8b74421c8a0903eee8641f941408e8755badde7baa97ab009646ea90db2da30e2898bec13b21df92bd536463c1bdcaea78f8f93f03
+  languageName: node
+  linkType: hard
+
+"@langchain/langgraph-sdk@npm:~1.10.0":
+  version: 1.10.0
+  resolution: "@langchain/langgraph-sdk@npm:1.10.0"
+  dependencies:
+    "@langchain/protocol": "npm:^0.0.19"
+    "@types/json-schema": "npm:^7.0.15"
+    p-queue: "npm:^9.0.1"
+    p-retry: "npm:^7.1.1"
+  peerDependencies:
+    "@langchain/core": ^1.1.48
+    react: ^18 || ^19
+    react-dom: ^18 || ^19
+  peerDependenciesMeta:
+    react:
+      optional: true
+    react-dom:
+      optional: true
+  checksum: 10c0/da3f9c6f2efea135536fd9cfd3fa90e50bb290a8045cd38c7c460bf25778217a79417845f231a76beb3a5d003fddf094375feb5e10229651fbd08efc509ae815
+  languageName: node
+  linkType: hard
+
+"@langchain/langgraph@npm:^1.4.13":
+  version: 1.4.13
+  resolution: "@langchain/langgraph@npm:1.4.13"
+  dependencies:
+    "@langchain/langgraph-checkpoint": "npm:^1.1.5"
+    "@langchain/langgraph-sdk": "npm:~1.10.0"
+    "@langchain/protocol": "npm:^0.0.18"
+    "@standard-schema/spec": "npm:1.1.0"
+  peerDependencies:
+    "@langchain/core": ^1.1.48
+    zod: ^3.25.32 || ^4.2.0
+  checksum: 10c0/c597692c396934c07488598b8e08d9b6b67a804892c7ee34e8cf10e9dc4f962bf92ce6124508aa14bdf15138b24d153e0771e2b491625bbd7fa64df9841caefe
+  languageName: node
+  linkType: hard
+
 "@langchain/openai@npm:1.5.6":
   version: 1.5.6
   resolution: "@langchain/openai@npm:1.5.6"
@@ -7819,6 +7864,20 @@ __metadata:
   peerDependencies:
     "@langchain/core": ^1.0.0
   checksum: 10c0/3aa080f9c26bde306864db42fc3f176eee7f59711926b3f5c30426043a996975d78d479d31cfe0d6fa13ca2ee813519d7079ca7eba4ddecffaf2ef4a1625e07c
+  languageName: node
+  linkType: hard
+
+"@langchain/protocol@npm:^0.0.18":
+  version: 0.0.18
+  resolution: "@langchain/protocol@npm:0.0.18"
+  checksum: 10c0/66e4d153368b9ec2aa1ddbbeb0319d756e3b6b8c040dfb57616be30af23a615d2b401f4b0548181d67217b7a245cb473fae1d703f54375ecf13f62c6a0792b44
+  languageName: node
+  linkType: hard
+
+"@langchain/protocol@npm:^0.0.19":
+  version: 0.0.19
+  resolution: "@langchain/protocol@npm:0.0.19"
+  checksum: 10c0/f83e973a59fae9c899325b4e611432b7662501a2eb24ba1e820e79be6f25c4d34af5781348ffad73354797c8ff628e00614131a8c2a531c4e31deb4bc13880ba
   languageName: node
   linkType: hard
 
@@ -12243,7 +12302,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@standard-schema/spec@npm:^1.1.0":
+"@standard-schema/spec@npm:1.1.0, @standard-schema/spec@npm:^1.1.0":
   version: 1.1.0
   resolution: "@standard-schema/spec@npm:1.1.0"
   checksum: 10c0/d90f55acde4b2deb983529c87e8025fa693de1a5e8b49ecc6eb84d1fd96328add0e03d7d551442156c7432fd78165b2c26ff561b970a9a881f046abb78d6a526
@@ -16848,6 +16907,7 @@ __metadata:
     "@backstage/config": "backstage:^"
     "@jest/globals": "npm:^30.5.0"
     "@langchain/core": "npm:^1.2.9"
+    "@langchain/langgraph": "npm:^1.4.13"
     "@opentelemetry/api": "npm:^1.9.1"
     "@types/compression": "npm:^1.8.1"
     "@types/express": "npm:4.17.25"
@@ -22568,7 +22628,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eventemitter3@npm:^5, eventemitter3@npm:^5.0.1":
+"eventemitter3@npm:^5, eventemitter3@npm:^5.0.1, eventemitter3@npm:^5.0.4":
   version: 5.0.4
   resolution: "eventemitter3@npm:5.0.4"
   checksum: 10c0/575b8cac8d709e1473da46f8f15ef311b57ff7609445a7c71af5cd42598583eee6f098fa7a593e30f27e94b8865642baa0689e8fa97c016f742abdb3b1bf6d9a
@@ -25853,7 +25913,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"is-network-error@npm:^1.0.0":
+"is-network-error@npm:^1.0.0, is-network-error@npm:^1.1.0":
   version: 1.3.2
   resolution: "is-network-error@npm:1.3.2"
   checksum: 10c0/37edc576497b21d022754b49203358ee80fdac4a11a71a09687f38ad789ec437dd930c223301df39f1c920566692b31345e0108ae720996e592cab3879eca74f
@@ -31036,6 +31096,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"p-queue@npm:^9.0.1":
+  version: 9.3.3
+  resolution: "p-queue@npm:9.3.3"
+  dependencies:
+    eventemitter3: "npm:^5.0.4"
+    p-timeout: "npm:^7.0.0"
+  checksum: 10c0/0d88a35cb3301bee2aac654c0a7018a2e40775fa597f3a06da66f33b0311d106bebbe9732c8e5968ae1e0e0b49f79c874333d2a7b0a57fad469189f236c066d7
+  languageName: node
+  linkType: hard
+
 "p-retry@npm:^4":
   version: 4.6.2
   resolution: "p-retry@npm:4.6.2"
@@ -31057,6 +31127,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"p-retry@npm:^7.1.1":
+  version: 7.1.1
+  resolution: "p-retry@npm:7.1.1"
+  dependencies:
+    is-network-error: "npm:^1.1.0"
+  checksum: 10c0/d72fb15dace25b8bf72c97a13c8a630ad1deb4667e708955e8806ee38f1d70e9611598ebe57bd9677349256e024a5599292f99aabb203143e0e13f1735e30818
+  languageName: node
+  linkType: hard
+
 "p-throttle@npm:^4.1.1":
   version: 4.1.1
   resolution: "p-throttle@npm:4.1.1"
@@ -31070,6 +31149,13 @@ __metadata:
   dependencies:
     p-finally: "npm:^1.0.0"
   checksum: 10c0/524b393711a6ba8e1d48137c5924749f29c93d70b671e6db761afa784726572ca06149c715632da8f70c090073afb2af1c05730303f915604fd38ee207b70a61
+  languageName: node
+  linkType: hard
+
+"p-timeout@npm:^7.0.0":
+  version: 7.0.1
+  resolution: "p-timeout@npm:7.0.1"
+  checksum: 10c0/87d96529d1096d506607218dba6f9ec077c6dbedd0c2e2788c748e33bcd05faae8a81009fd9d22ec0b3c95fc83f4717306baba223f6e464737d8b99294c3e863
   languageName: node
   linkType: hard
 

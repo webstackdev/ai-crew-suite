@@ -14,12 +14,20 @@
  * limitations under the License.
  */
 
-export * from './@types';
-export * from './catalog';
-export * from './events';
-export * from './extensions';
-export * from './models';
-export * from './redaction';
-export * from './stores';
-export * from './workflow';
-export * as testUtils from './testUtils';
+/**
+ * Registers a safety classifier (Llama Guard, Bedrock Guardrails, Azure Content
+ * Safety, OpenAI Moderation). The contract is uniform so the engine can block
+ * uniformly; provider-specific configuration lives in the provider module.
+ */
+export type GuardrailDefinition = {
+  /** Unique provider identifier. */
+  id: string;
+  classify(input: {
+    text: string;
+    direction: 'input' | 'output';
+  }): Promise<{
+    verdict: 'safe' | 'unsafe';
+    categories?: string[];
+    message?: string;
+  }>;
+};

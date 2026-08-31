@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-export * from './@types';
-export * from './catalog';
-export * from './events';
-export * from './extensions';
-export * from './models';
-export * from './redaction';
-export * from './stores';
-export * from './workflow';
-export * as testUtils from './testUtils';
+/** Registers a speech-to-text transcription provider (Whisper-style). */
+export type TranscriptionDefinition = {
+  /** Unique provider identifier. */
+  id: string;
+  transcribe(input: {
+    audio: Uint8Array;
+    mimeType?: string;
+  }): Promise<{ text: string }>;
+};

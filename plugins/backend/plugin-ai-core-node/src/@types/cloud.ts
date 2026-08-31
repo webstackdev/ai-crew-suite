@@ -16,7 +16,15 @@
 // plugins/backend/plugin-ai-core-node/src/@types/cloud.ts
 import { LoggerService } from '@backstage/backend-plugin-api';
 
-export type CloudProviderId = 'aws' | 'azure' | 'gcp';
+/** Provider identifier for a cloud driver. Open string. */
+export type CloudProviderId = string & { readonly __brand?: 'CloudProviderId' };
+
+/** Known cloud provider IDs, exported for autocomplete. */
+export const CLOUD_PROVIDERS = {
+  AWS: 'aws',
+  AZURE: 'azure',
+  GCP: 'gcp',
+} as const;
 
 export type ProviderConnectionConfig = {
   region?: string;

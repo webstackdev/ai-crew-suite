@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 import { LoggerService } from '@backstage/backend-plugin-api';
-import { BaseLLM } from '@langchain/core/language_models/llms';
 import { BaseChatModel } from '@langchain/core/language_models/chat_models';
 import { AgentDefinition } from './agent';
 import { ToolRegistry } from './tool';
 import { SessionStore } from './session';
 import { SourceId, EntityFilterShape } from './source';
+import { CheckpointStore } from '../stores/checkpoint';
+export { AgentEvent, ErrorCode } from '../events/agentEvent';
+import type { AgentEvent } from '../events/agentEvent';
 
 /**
  * Input required to start an agent run.
@@ -94,16 +96,6 @@ export interface WorkflowRunner {
     decision: ApprovalDecision,
     context: WorkflowContext,
   ): AsyncIterable<AgentEvent>;
-}
-
-/**
- * Store for resumable orchestration state.
- */
-export interface CheckpointStore {
-  /** Saves arbitrary checkpoint state for a run. */
-  save(runId: string, state: unknown): Promise<void>;
-  /** Loads checkpoint state for a run, or `undefined` when no checkpoint exists. */
-  load<T = unknown>(runId: string): Promise<T | undefined>;
 }
 
 /**
@@ -247,11 +239,11 @@ export type RunContext = {
   /** Registry of tools available to the current run. */
   toolRegistry: ToolRegistry;
   /** Language model selected for the current agent run. */
-  model: BaseLLM | BaseChatModel;
-  /** Optional system prompt applied by the orchestrator when calling the model. */
+  model: BaseChatModel;
+  /** Optional system prompt applied by the workflow when calling the model. */
   systemPrompt?: string;
-  /** Optional actor identity for tool context, audit logs, and session ownership. */
-  identity?: string;
+  /** Verified actor identity for tool context, audit logs, and session ownership. */
+  identity: string;
   /** Optional cancellation signal for long-running model or tool work. */
   signal?: AbortSignal;
   /** Optional session memory store for conversation history. */
@@ -282,73 +274,6 @@ export type RunContext = {
   /** Memory mode selected for the current agent. */
   memory?: 'none' | 'session';
 };
-
-/**
- * Event stream emitted by orchestrators and consumed by controllers/runtime stores.
- */
-export type AgentEvent =
-  /** Lifecycle step transition for a named orchestration node. */
-  | {
-      type: 'step';
-      /** Step transition payload. */
-      data: { runId: string; seq: number; node: string; phase: 'enter' | 'exit' };
-    }
-  /** Streaming model token or text chunk. */
-  | { type: 'token'; data: { runId: string; text: string } }
-  /** Tool invocation request emitted before a tool is executed. */
-  | { type: 'tool_call'; data: { runId: string; tool: string; args: unknown } }
-  /** Tool invocation result emitted after a tool completes or fails. */
-  | {
-      type: 'tool_result';
-      data: {
-        /** Run associated with the tool result. */
-        runId: string;
-        /** Tool identifier. */
-        tool: string;
-        /** Whether the tool completed successfully. */
-        ok: boolean;
-        /** Optional short summary suitable for event logs and UI display. */
-        summary?: string;
-        /** Optional raw or structured tool output. */
-        output?: unknown;
-      };
-    }
-  /** Token usage totals reported by the model or orchestrator. */
-  | {
-      type: 'usage';
-      /** Token usage payload for the run. */
-      data: { runId: string; input: number; output: number; total: number };
-    }
-  /** Request for human approval before continuing a run. */
-  | {
-      type: 'approval_request';
-      /** Approval request payload emitted to clients and run stores. */
-      data: { runId: string; approvalId: string; reason: string; effect: 'read' | 'write' };
-    }
-  /** Artifact produced by the run. */
-  | {
-      type: 'artifact';
-      /** Artifact payload emitted to clients and artifact sinks. */
-      data: { runId: string; kind: string; url?: string; ref?: string };
-    }
-  /** Successful completion marker for a run. */
-  | { type: 'done'; data: { runId: string; sessionId?: string } }
-  /** Non-recoverable error marker for a run. */
-  | { type: 'error'; data: { runId: string; message: string } };
-
-/**
- * Orchestrates an agent run and emits lifecycle, token, tool, and terminal events.
- */
-export interface Orchestrator {
-  /** Starts a run and returns its event stream. */
-  run(input: AgentRunInput, ctx: RunContext): AsyncIterable<AgentEvent>;
-  /** Resumes a paused run after an approval decision, when supported. */
-  resume?(
-    runId: string,
-    decision: ApprovalDecision,
-    ctx: RunContext,
-  ): AsyncIterable<AgentEvent>;
-}
 
 /**
  * Global open-ended schema registry matching the Backstage module federation pattern.

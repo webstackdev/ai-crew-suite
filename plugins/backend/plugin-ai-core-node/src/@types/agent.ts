@@ -14,67 +14,50 @@
  * limitations under the License.
  */
 
-// Note: Replace these LangChain placeholders with your monorepo's active imports
-import { BaseLLM } from '@langchain/core/language_models/llms';
-import { BaseChatModel } from '@langchain/core/language_models/chat_models';
-
 /**
- * Registers a language model that agents can reference by ID.
- */
-export type ModelDefinition = {
-  /** Unique model identifier used by agent definitions and crew roles. */
-  id: string;
-  /** LangChain LLM or chat model instance used for generation. */
-  model: BaseLLM | BaseChatModel;
-};
-
-/**
- * Binds an external trigger source to an optional default agent.
+ * Binds an external trigger source to an agent.
  */
 export type TriggerBinding = {
   /** Unique trigger identifier, such as `github-pr-opened` or `nightly-scan`. */
   id: string;
   /** Optional source name associated with the trigger payload. */
   source?: string;
-  /** Optional agent to run when this trigger fires. */
-  agentId?: string;
+  /** Agent to run when this trigger fires. Required — there is no default-agent fallback. */
+  agentId: string;
 };
 
 /**
  * Declarative profile for an agent that can be executed by the AI runtime.
+ *
+ * Every agent is bound to a domain `WorkflowDefinition` via `workflowRef`. There is
+ * no built-in orchestrator fallback; an agent without a workflow is a boot-time error.
  */
 export type AgentDefinition = {
   /** Unique agent identifier used in API routes, triggers, and run records. */
   id: string;
-  /** Model ID from the model registry that should be used by default. */
-  modelRef: string;
   /**
-   * Optional domain workflow runner ID. When omitted, AI Core selects the
-   * configured built-in orchestrator.
+   * Model ID from the chat model registry, or a tier name (e.g. `fast`, `reasoning`)
+   * resolved to a model ID via the `ai.models.tiers` config.
    */
-  workflowRef?: string;
+  modelRef: string;
+  /** Required domain workflow definition ID that executes this agent. */
+  workflowRef: string;
   /** System prompt applied to the agent's model calls. */
   systemPrompt: string;
   /** Tool IDs the agent is allowed to use. */
   toolIds: string[];
-  /** Orchestration strategy used to execute the agent. Defaults are runtime-defined. */
-  orchestrator?: 'single-shot' | 'langgraph' | 'crew';
   /** Memory mode for the agent. `session` enables persisted conversational history. */
   memory?: 'none' | 'session';
-  /** Optional crew configuration for multi-role sequential orchestration. */
-  crew?: {
-    /** Ordered roles executed by the crew orchestrator. */
-    roles: {
-      /** Unique role identifier within the agent's crew. */
-      id: string;
-      /** System prompt used for this role's model call. */
-      systemPrompt: string;
-      /** Optional model override for this role. Falls back to the agent model when omitted. */
-      modelRef?: string;
-      /** Optional tool allow-list override for this role. */
-      toolIds?: string[];
-    }[];
-  };
   /** Optional trigger bindings that can start this agent. */
   triggers?: TriggerBinding[];
+  /**
+   * Per-category provider allow-list, enforced by the tool executor at dispatch.
+   * Absent means any registered provider may be used. Example: `{ communication: ['slack'] }`.
+   */
+  providers?: Record<string, readonly string[]>;
+  /**
+   * Per-agent guardrail enforcement. When set, input and/or output text is classified
+   * through the registered guardrail model before dispatch/egress.
+   */
+  guardrails?: { input?: boolean; output?: boolean };
 };

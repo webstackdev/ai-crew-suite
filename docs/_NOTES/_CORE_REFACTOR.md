@@ -813,13 +813,6 @@ Audit items adopted/adapted, consolidated from `_CORE_REFACTOR_AUDIT_FOR_ENTERPR
 
 - **Deterministic fixture / fake model layer (ADOPT):** `FakeChatModel` + scripted fixtures + `runWorkflow` harness (§9).
 - **Fault-injection across tool/model boundaries (ADOPT, scoped):** timeouts, 429s, malformed payloads in the engine suite; decline distributed chaos beyond the engine boundary.
-## 9. Testing Strategy
-
-- **Engine suite** (`plugin-ai-core-backend/src/runtime/__tests__/`): a synthetic test workflow (linear + branch + parallel + interrupt + retryable node) driven through `GraphExecutor` with `FakeChatModel` and scripted tool fixtures. Covers: event ordering, checkpoint contents at every boundary, resume after approve/reject, budget aborts, cancellation mid-node, malformed state patch rejection, write-tool gating, idempotent re-resume, state-version mismatch refusal.
-- **Contract tests** (core-node `test-utils`): every plugin definition passes `validateWorkflowDefinition(def)` in CI — the same static validation the boot path runs.
-- **Plugin tests**: keep every existing domain test (pure engines are untouched). Workflow tests migrate to the shared `runWorkflow` harness; expected event sequences are re-recorded once against the engine and then locked.
-- **Eval harness**: the per-plugin opt-in real-model suites (`AI_EVAL_MODEL_REF`) continue unchanged at the prompt/citation level; engine migration must not alter prompt construction.
-
 ### 8.5 AuthN/AuthZ / RBAC (biggest gap; from your notes)
 
 - **Identity propagation (ADOPT — bug fix):** `identity: 'anonymous'` is hardcoded today in the controller (`controller.ts:324`, `controller.ts:517`). No `HttpAuthService` wiring anywhere. Fix: wire `coreServices.httpAuth` into the router/controller, extract verified `UserRef` from request tokens, make `identity` strict and non-nullable through `RunContext`; delete every `'anonymous'` fallback. Scheduled/trigger runs use service principal, explicitly labeled.
@@ -848,6 +841,13 @@ Audit items adopted/adapted, consolidated from `_CORE_REFACTOR_AUDIT_FOR_ENTERPR
 - **I.3 Configurable Redaction Policy:** `RedactionPolicy` contract with `keyPatterns` + `valuePatterns` + `mode: 'redact' | 'reject'`; config surface `ai.redaction.*` with secure defaults; the harness applies policy uniformly. Address the hardcoded `SENSITIVE_KEYS` gap.
 - **I.4 Per-plugin provider restriction:** `AgentDefinition.providers?: Record<string, readonly string[]>` (category → provider allow-list) enforced by `ToolExecutor` as a `tool_denied`; operators mirror via config `ai.agents.<id>.providers`.
 - **I.5 Drop `BaseLLM`:** `ModelDefinition.model` narrows to `BaseChatModel` only (verified: the three LLM modules already comply; typecheck confirms). Deletes legacy `BaseLLM` imports in `plugin.ts`, `controller.ts`, and `factory.ts` (as folded into §5.5).
+
+## 9. Testing Strategy
+
+- **Engine suite** (`plugin-ai-core-backend/src/runtime/__tests__/`): a synthetic test workflow (linear + branch + parallel + interrupt + retryable node) driven through `GraphExecutor` with `FakeChatModel` and scripted tool fixtures. Covers: event ordering, checkpoint contents at every boundary, resume after approve/reject, budget aborts, cancellation mid-node, malformed state patch rejection, write-tool gating, idempotent re-resume, state-version mismatch refusal.
+- **Contract tests** (core-node `test-utils`): every plugin definition passes `validateWorkflowDefinition(def)` in CI — the same static validation the boot path runs.
+- **Plugin tests**: keep every existing domain test (pure engines are untouched). Workflow tests migrate to the shared `runWorkflow` harness; expected event sequences are re-recorded once against the engine and then locked.
+- **Eval harness**: the per-plugin opt-in real-model suites (`AI_EVAL_MODEL_REF`) continue unchanged at the prompt/citation level; engine migration must not alter prompt construction.
 
 ## 10. Execution Sequence
 

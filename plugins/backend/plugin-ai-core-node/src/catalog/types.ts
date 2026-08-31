@@ -136,4 +136,21 @@ export interface CatalogEntityResolver {
   getIntegrationReferences(
     entityRef: string,
   ): Promise<CatalogIntegrationReferences>;
+
+  /**
+   * Finds a user entity by email address, for org-graph identity mapping.
+   * Returns `undefined` when no user matches (treated as an offboarded signal
+   * by consumers, never an exception).
+   */
+  findUserByEmail(email: string): Promise<CatalogEntitySummary | undefined>;
+
+  /**
+   * Finds a single entity by a generic field/value pair. Useful when the
+   * annotation helpers are too narrow (e.g. spec.profile.email).
+   */
+  findByField(input: {
+    field: string;
+    value: string;
+    kinds?: string[];
+  }): Promise<CatalogEntitySummary | undefined>;
 }

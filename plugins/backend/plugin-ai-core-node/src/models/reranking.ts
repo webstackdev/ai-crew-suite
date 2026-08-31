@@ -13,4 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export { BaseGraphRunner } from './BaseGraphRunner';
+
+/** Registers a retrieval reranking provider (e.g. Cohere Rerank). */
+export type RerankingDefinition = {
+  /** Unique provider identifier. */
+  id: string;
+  rerank(input: {
+    query: string;
+    documents: { id: string; text: string }[];
+  }): Promise<{ id: string; score: number }[]>;
+};

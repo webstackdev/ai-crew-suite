@@ -18,7 +18,19 @@ import { LoggerService, UrlReaderService } from '@backstage/backend-plugin-api';
 import type { ScmIntegrations, GithubCredentialsProvider } from '@backstage/integration';
 
 /** Valid active VCS identifiers supported natively by the ecosystem. */
-export type VcsProviderId = 'github' | 'gitlab' | 'bitbucket' | 'azuredevops';
+/**
+ * Provider identifier for a VCS driver. Open string (third-party providers assign
+ * their own IDs); the registry treats IDs as map keys.
+ */
+export type VcsProviderId = string & { readonly __brand?: 'VcsProviderId' };
+
+/** Known VCS provider IDs, exported for autocomplete on common providers. */
+export const VCS_PROVIDERS = {
+  GITHUB: 'github',
+  GITLAB: 'gitlab',
+  BITBUCKET: 'bitbucket',
+  AZURE: 'azuredevops',
+} as const;
 
 export type VcsConfig = {
   /** The actively selected active driver for tools fallback routing. */

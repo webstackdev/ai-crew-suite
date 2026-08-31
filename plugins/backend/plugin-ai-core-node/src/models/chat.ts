@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
-export * from './@types';
-export * from './catalog';
-export * from './events';
-export * from './extensions';
-export * from './models';
-export * from './redaction';
-export * from './stores';
-export * from './workflow';
-export * as testUtils from './testUtils';
+import type { BaseChatModel } from '@langchain/core/language_models/chat_models';
+
+/**
+ * Registers a chat model that agents can reference by ID. BaseChatModel only —
+ * legacy BaseLLM string-prompt support is removed across the platform.
+ */
+export type ChatModelDefinition = {
+  /** Unique model identifier used by agent definitions and tiers. */
+  id: string;
+  /** LangChain chat model instance used for generation. */
+  model: BaseChatModel;
+};
