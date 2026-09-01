@@ -18,42 +18,130 @@ All internal packages belong to the NPM organization scope `@ai-crew-suite`.
 
 ```text
 ai-crew-suite/
-├── apps/                      # Deployable Backstage instances
-│   └── backstage/             # Core Backstage runtime application
-│
-├── plugins/                   # Workspace Packages
-│   ├── core/                  # Tier 1: System Orchestration & Runtimes
-│   │   ├── backend/           # @ai-crew-suite/core-backend
-│   │   ├── node/              # @ai-crew-suite/core-node
-│   │   │
-│   │   └── infra/             # Foundational engine infrastructure (Registry/Provider pairs)
+├── .github/
+│   ├── actions/
+│   │   ├── require-playwright-success/
+│   │   └── validate-monorepo-architecture/ # Your custom Python linting action
+│   └── workflows/
+│       └── lint-architecture.yml
+├── apps/
+│   └── backstage/                          # Main Backstage app instance
+├── docs/
+│   └── ARCHITECTURE.md                     # Monorepo architecture standards file
+├── plugins/
+│   ├── core/                               # TIER 1: CORE ARCHITECTURE & INFRASTRUCTURE
+│   │   ├── backend/                        # @ai-crew-suite/core-backend
+│   │   ├── node/                           # @ai-crew-suite/core-node
+│   │   └── infra/                          # Foundational LangGraph framework engine pieces
 │   │       ├── llm/
-│   │       │   ├── core/      # @ai-crew-suite/infra-llm-core (Registry & Factory Hub)
-│   │       │   ├── openai/    # @ai-crew-suite/infra-llm-openai (Pure Driver Supplier)
-│   │       │   └── ...        # aws, openrouter
-│   │       └── vector/
-│   │           ├── core/      # @ai-crew-suite/infra-vector-core
-│   │           └── pgvector/  # @ai-crew-suite/infra-vector-pgvector
+│   │       │   ├── core/                   # @ai-crew-suite/infra-llm-core
+│   │       │   ├── aws/                    # @ai-crew-suite/infra-llm-aws
+│   │       │   ├── openai/                 # @ai-crew-suite/infra-llm-openai
+│   │       │   └── openrouter/             # @ai-crew-suite/infra-llm-openrouter
+│   │       ├── vector/
+│   │       │   ├── core/                   # @ai-crew-suite/infra-vector-core
+│   │       │   ├── pgvector/               # @ai-crew-suite/infra-vector-pgvector
+│   │       │   └── qdrant/                 # @ai-crew-suite/infra-vector-qdrant
+│   │       ├── retrieval-augmenter/        # @ai-crew-suite/infra-retrieval-augmenter
+│   │       └── runtime-store/              # @ai-crew-suite/infra-runtime-store
 │   │
-│   ├── agents/                # Tier 2: Agentic Workflows (Backend + Frontend pairs)
-│   │   ├── core-frontend/     # @ai-crew-suite/agent-core-frontend
+│   ├── agents/                             # TIER 2: AGENTIC WORKFLOW PAIRS (18 Agents + Core UI)
+│   │   ├── core-frontend/                  # @ai-crew-suite/agent-core-frontend
 │   │   ├── alert-tuner/
-│   │   │   ├── backend/       # @ai-crew-suite/agent-alert-tuner-backend
-│   │   │   └── frontend/      # @ai-crew-suite/agent-alert-tuner-frontend
-│   │   └── scaffolder-prd/
-│   │   │   ├── backend/       # @ai-crew-suite/agent-scaffolder-prd-backend
-│   │   │   └── frontend/      # @ai-crew-suite/agent-scaffolder-prd-frontend
-│   │   └── ...
+│   │   │   ├── backend/                    # @ai-crew-suite/agent-alert-tuner-backend
+│   │   │   └── frontend/                   # @ai-crew-suite/agent-alert-tuner-frontend
+│   │   ├── catalog-insights/
+│   │   │   ├── backend/                    # @ai-crew-suite/agent-catalog-insights-backend
+│   │   │   └── frontend/                   # @ai-crew-suite/agent-catalog-insights-frontend
+│   │   ├── kubernetes-responder/
+│   │   │   ├── backend/                    # @ai-crew-suite/agent-kubernetes-responder-backend
+│   │   │   └── frontend/                   # @ai-crew-suite/agent-kubernetes-responder-frontend
+│   │   ├── oncall-handover/
+│   │   │   ├── backend/                    # @ai-crew-suite/agent-oncall-handover-backend
+│   │   │   └── frontend/                   # @ai-crew-suite/agent-oncall-handover-frontend
+│   │   ├── release-notes-generator/
+│   │   │   ├── backend/                    # @ai-crew-suite/agent-release-notes-generator-backend
+│   │   │   └── frontend/                   # @ai-crew-suite/agent-release-notes-generator-frontend
+│   │   ├── rfc-adr-reviewer/
+│   │   │   ├── backend/                    # @ai-crew-suite/agent-rfc-adr-reviewer-backend
+│   │   │   └── frontend/                   # @ai-crew-suite/agent-rfc-adr-reviewer-frontend
+│   │   ├── scaffolder-drift-detector/
+│   │   │   ├── backend/                    # @ai-crew-suite/agent-scaffolder-drift-detector-backend
+│   │   │   └── frontend/                   # @ai-crew-suite/agent-scaffolder-drift-detector-frontend
+│   │   ├── scaffolder-guardrail/
+│   │   │   ├── backend/                    # @ai-crew-suite/agent-scaffolder-guardrail-backend
+│   │   │   └── frontend/                   # @ai-crew-suite/agent-scaffolder-guardrail-frontend
+│   │   ├── scaffolder-infra/
+│   │   │   ├── backend/                    # @ai-crew-suite/agent-scaffolder-infra-backend
+│   │   │   └── frontend/                   # @ai-crew-suite/agent-scaffolder-infra-frontend
+│   │   ├── scaffolder-intent/
+│   │   │   ├── backend/                    # @ai-crew-suite/agent-scaffolder-intent-backend
+│   │   │   └── frontend/                   # @ai-crew-suite/agent-scaffolder-intent-frontend
+│   │   ├── scaffolder-prd/
+│   │   │   ├── backend/                    # @ai-crew-suite/agent-scaffolder-prd-backend
+│   │   │   └── frontend/                   # @ai-crew-suite/agent-scaffolder-prd-frontend
+│   │   ├── scaffolder-shadow-detective/
+│   │   │   ├── backend/                    # @ai-crew-suite/agent-scaffolder-shadow-detective-backend
+│   │   │   └── frontend/                   # @ai-crew-suite/agent-scaffolder-shadow-detective-frontend
+│   │   ├── search-archeology/
+│   │   │   ├── backend/                    # @ai-crew-suite/agent-search-archeology-backend
+│   │   │   └── frontend/                   # @ai-crew-suite/agent-search-archeology-frontend
+│   │   ├── search-context/
+│   │   │   ├── backend/                    # @ai-crew-suite/agent-search-context-backend
+│   │   │   └── frontend/                   # @ai-crew-suite/agent-search-context-frontend
+│   │   ├── tech-debt-scout/
+│   │   │   ├── backend/                    # @ai-crew-suite/agent-tech-debt-scout-backend
+│   │   │   └── frontend/                   # @ai-crew-suite/agent-tech-debt-scout-frontend
+│   │   ├── techdocs-janitor/
+│   │   │   ├── backend/                    # @ai-crew-suite/agent-techdocs-janitor-backend
+│   │   │   └── frontend/                   # @ai-crew-suite/agent-techdocs-janitor-frontend
+│   │   ├── techdocs-postmortem/
+│   │   │   ├── backend/                    # @ai-crew-suite/agent-techdocs-postmortem-backend
+│   │   │   └── frontend/                   # @ai-crew-suite/agent-techdocs-postmortem-frontend
+│   │   └── tech-radar-manager/
+│   │       ├── backend/                    # @ai-crew-suite/agent-tech-radar-manager-backend
+│   │       └── frontend/                   # @ai-crew-suite/agent-tech-radar-manager-frontend
 │   │
-│   └── tools/                 # Tier 3: Third-Party Ecosystem Integrations
-│       ├── vcs/
-│       │   ├── core/          # @ai-crew-suite/tool-vcs-core (Registry & Factory Hub)
-│       │   ├── github/        # @ai-crew-suite/tool-vcs-github (Pure Driver Supplier)
-│       │   └── gitlab/        # @ai-crew-suite/tool-vcs-gitlab
-│       └── project-management/
-│       │   ├── core/          # @ai-crew-suite/tool-project-core
-│       │   └── jira/          # @ai-crew-suite/tool-project-jira
-│       └── ...
+│   └── tools/                              # TIER 3: THIRD-PARTY VENDOR INTEGRATION PLUGINS
+│       ├── cloud-providers/
+│       │   ├── core/                       # @ai-crew-suite/tool-cloud-providers-core
+│       │   ├── aws/                        # @ai-crew-suite/tool-cloud-providers-aws
+│       │   ├── azure/                      # @ai-crew-suite/tool-cloud-providers-azure
+│       │   └── gcp/                        # @ai-crew-suite/tool-cloud-providers-gcp
+│       ├── communication/
+│       │   ├── core/                       # @ai-crew-suite/tool-communication-core
+│       │   └── slack/                      # @ai-crew-suite/tool-communication-slack
+│       ├── compliance/
+│       │   ├── core/                       # @ai-crew-suite/tool-compliance-core
+│       │   └── opa/                        # @ai-crew-suite/tool-compliance-opa
+│       ├── incident-management/
+│       │   ├── core/                       # @ai-crew-suite/tool-incident-management-core
+│       │   └── pagerduty/                  # @ai-crew-suite/tool-incident-management-pagerduty
+│       ├── kubernetes/                     # @ai-crew-suite/tool-kubernetes (Self-contained driver)
+│       ├── observability/
+│       │   ├── core/                       # @ai-crew-suite/tool-observability-core
+│       │   └── datadog/                    # @ai-crew-suite/tool-observability-datadog
+│       ├── project-management/
+│       │   ├── core/                       # @ai-crew-suite/tool-project-management-core
+│       │   └── jira/                       # @ai-crew-suite/tool-project-management-jira
+│       ├── quality-scorecards/
+│       │   ├── core/                       # @ai-crew-suite/tool-quality-scorecards-core
+│       │   ├── scorecards/                 # @ai-crew-suite/tool-quality-scorecards-scorecards
+│       │   ├── soundcheck/                 # @ai-crew-suite/tool-quality-scorecards-soundcheck
+│       │   └── techradar/                  # @ai-crew-suite/tool-quality-scorecards-techradar
+│       └── vcs/
+│           ├── core/                       # @ai-crew-suite/tool-vcs-core
+│           ├── aws-codecommit/             # @ai-crew-suite/tool-vcs-aws-codecommit
+│           ├── azure/                      # @ai-crew-suite/tool-vcs-azure
+│           ├── bitbucket/                  # @ai-crew-suite/tool-vcs-bitbucket
+│           ├── gerrit/                     # @ai-crew-suite/tool-vcs-gerrit
+│           ├── git/                        # @ai-crew-suite/tool-vcs-git
+│           ├── github/                     # @ai-crew-suite/tool-vcs-github
+│           └── gitlab/                     # @ai-crew-suite/tool-vcs-gitlab
+│
+├── package.json                            # Root monorepo metadata
+└── turbo.json                              # Pipelines orchestration profile
+
 ```
 
 ## 🏷️ Package Naming Conventions
