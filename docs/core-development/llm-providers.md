@@ -46,7 +46,7 @@ The core backend fails startup if no model is registered. It also fails startup 
 
 ### OpenRouter Module
 
-`@webstackbuilders/plugin-ai-core-backend-module-llm-openrouter` registers one or more LangChain `ChatOpenRouter` instances through `modelExtensionPoint`.
+`@ai-crew-suite/agent-alert-tuner-backend-module-llm-openrouter` registers one or more LangChain `ChatOpenRouter` instances through `modelExtensionPoint`.
 
 Example config:
 

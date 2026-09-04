@@ -57,13 +57,13 @@ The important design rule is that core packages communicate through contracts, n
 | Package                                                               | Purpose                                                                                                                                              |
 | --------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `@webstackbuilders/plugin-ai-core-node`                               | Shared contracts and Backstage extension points for sources, tools, models, agents, triggers, orchestrators, vector stores, and runtime persistence. |
-| `@webstackbuilders/plugin-ai-core-backend`                            | Runtime backend plugin that assembles registries, validates wiring, creates the controller, runs orchestrators, and exposes HTTP/SSE routes.         |
-| `@webstackbuilders/plugin-ai-core-backend-module-retrieval-augmenter` | Default catalog/TechDocs indexing, vector retrieval, Backstage Search retrieval, source routing, and retrieval post-processing.                      |
-| `@webstackbuilders/plugin-ai-core-backend-module-storage-pgvector`    | PostgreSQL pgvector storage plus runtime persistence for sessions, runs, checkpoints, approvals, artifacts, and audit logs.                          |
-| `@webstackbuilders/plugin-ai-core-backend-module-storage-qdrant`      | Qdrant vector store module that persists embedding vectors and executes metadata-filtered similarity search.                                         |
-| `@webstackbuilders/plugin-ai-core-backend-module-llm-aws`             | AWS Bedrock embeddings module that contributes an embeddings-backed retrieval/indexing tool.                                                         |
-| `@webstackbuilders/plugin-ai-core-backend-module-llm-openai`          | OpenAI embeddings module that contributes an embeddings-backed retrieval/indexing tool.                                                              |
-| `@webstackbuilders/plugin-ai-core-backend-module-llm-openrouter`      | OpenRouter model provider module that contributes LangChain chat models to the model registry.                                                       |
+| `@ai-crew-suite/agent-alert-tuner-backend`                            | Runtime backend plugin that assembles registries, validates wiring, creates the controller, runs orchestrators, and exposes HTTP/SSE routes.         |
+| `@ai-crew-suite/agent-alert-tuner-backend-module-retrieval-augmenter` | Default catalog/TechDocs indexing, vector retrieval, Backstage Search retrieval, source routing, and retrieval post-processing.                      |
+| `@ai-crew-suite/agent-alert-tuner-backend-module-storage-pgvector`    | PostgreSQL pgvector storage plus runtime persistence for sessions, runs, checkpoints, approvals, artifacts, and audit logs.                          |
+| `@ai-crew-suite/agent-alert-tuner-backend-module-storage-qdrant`      | Qdrant vector store module that persists embedding vectors and executes metadata-filtered similarity search.                                         |
+| `@ai-crew-suite/agent-alert-tuner-backend-module-llm-aws`             | AWS Bedrock embeddings module that contributes an embeddings-backed retrieval/indexing tool.                                                         |
+| `@ai-crew-suite/agent-alert-tuner-backend-module-llm-openai`          | OpenAI embeddings module that contributes an embeddings-backed retrieval/indexing tool.                                                              |
+| `@ai-crew-suite/agent-alert-tuner-backend-module-llm-openrouter`      | OpenRouter model provider module that contributes LangChain chat models to the model registry.                                                       |
 
 See [docs/core-development/index.md](docs/core-development/index.md) for the deeper core development documentation.
 
@@ -122,8 +122,8 @@ The backend plugins are the center of the current refactor. Most implementation 
 Run package-specific commands from the monorepo root so Yarn PnP and workspace references resolve correctly. For example:
 
 ```bash
-yarn workspace @webstackbuilders/plugin-ai-core-backend test
-yarn workspace @webstackbuilders/plugin-ai-core-backend-module-llm-openrouter build
+yarn workspace @ai-crew-suite/agent-alert-tuner-backend test
+yarn workspace @ai-crew-suite/agent-alert-tuner-backend-module-llm-openrouter build
 ```
 
 When adding or changing a core backend module, update the matching package README and the relevant page under [docs/core-development](docs/core-development). The core docs are organized by operational layer:

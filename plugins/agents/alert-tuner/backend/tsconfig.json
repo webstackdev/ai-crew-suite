@@ -1,7 +1,7 @@
 {
   "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "../../../dist-types/plugins/backend/plugin-ai-agent-backend-alert-ai-tuner"
+    "outDir": "../../../dist-types/plugins/backend/agent-alert-tuner-backend"
   },
   "include": ["src/**/*"]
 }

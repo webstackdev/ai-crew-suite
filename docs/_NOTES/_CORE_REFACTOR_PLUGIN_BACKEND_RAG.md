@@ -300,7 +300,7 @@ export class VectorStoreRegistry {
     if (!def) {
       throw new Error(
         `No vector store registered for '${configuredId}'. ` +
-        `Import the matching @webstackbuilders/plugin-ai-core-backend-module-vector-storage-<provider> package.`,
+        `Import the matching @ai-crew-suite/agent-alert-tuner-backend-module-vector-storage-<provider> package.`,
       );
     }
     return def.store as VectorStore;

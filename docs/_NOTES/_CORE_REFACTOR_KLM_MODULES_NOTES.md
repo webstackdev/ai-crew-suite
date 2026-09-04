@@ -199,7 +199,7 @@ __Possible after the refactor — if we build the seam. It's three concrete piec
 
 The one unavoidable caveat: because rows record `serializerId`, plaintext and encrypted checkpoints can coexist and a store can be *migrated* (re-encrypt lazily on read, or via a one-shot re-encrypt job the enterprise runs themselves). That's what makes this a seam rather than a flag day.
 
-What we deliberately do __not__ ship: the `KmsEnvelopeCipher` itself, Vault integration, key rotation logic, or any cloud SDK dependency in our packages. Those are the enterprise's module to write (or a future `@webstackbuilders/plugin-ai-core-backend-module-encryption-aws-kms` companion package if you ever want a reference implementation — nice portfolio piece, but optional).
+What we deliberately do __not__ ship: the `KmsEnvelopeCipher` itself, Vault integration, key rotation logic, or any cloud SDK dependency in our packages. Those are the enterprise's module to write (or a future `@ai-crew-suite/agent-alert-tuner-backend-module-encryption-aws-kms` companion package if you ever want a reference implementation — nice portfolio piece, but optional).
 
 __Bottom line__: if we add items 1–3 to the refactor plan, the answer to "can an end user plug in their own KMS?" is *yes, on day one after the refactor, with zero core changes*. If we skip the seam, the answer is "not without forking the runtime-store module" — which is precisely the patched-core failure mode you asked to eliminate in the capability-category discussion. Given that, I'd promote C.2 from DEFER to __ADOPT the seam (items 1–3), DEFER the reference KMS implementation__ — the seam is ~125 lines and it closes a compliance-story hole that otherwise has no workaround.
 

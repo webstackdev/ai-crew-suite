@@ -34,7 +34,7 @@ Indexers connect the embedding model before writing documents. Retrievers use `s
 
 ### pgvector Module
 
-`@webstackbuilders/plugin-ai-core-backend-module-storage-pgvector` provides the `createPgVectorStore` factory, which applies migrations, reads vector-store config, and returns a `VectorStore` implementation. Agent runtime persistence is provided separately by `@webstackbuilders/plugin-ai-core-backend-module-runtime-store`.
+`@ai-crew-suite/agent-alert-tuner-backend-module-storage-pgvector` provides the `createPgVectorStore` factory, which applies migrations, reads vector-store config, and returns a `VectorStore` implementation. Agent runtime persistence is provided separately by `@ai-crew-suite/agent-alert-tuner-backend-module-runtime-store`.
 
 The module uses the Backstage database service and Knex. PostgreSQL must support the `vector` extension for embedding similarity search. The historical `uuid-ossp` requirement may still matter for existing deployments or migrations; verify the active migration before changing database extension assumptions.
 
@@ -52,7 +52,7 @@ ai:
 
 ### Runtime Persistence
 
-Agent runtime persistence is owned by `@webstackbuilders/plugin-ai-core-backend-module-runtime-store`, which registers stores with the core backend plugin through the `runtimeStoreExtensionPoint`. Its SQL implementation, `SqlAgentRuntimeStore`, runs on any database supplied by the Backstage database service (PostgreSQL, MySQL, or SQLite) and implements:
+Agent runtime persistence is owned by `@ai-crew-suite/agent-alert-tuner-backend-module-runtime-store`, which registers stores with the core backend plugin through the `runtimeStoreExtensionPoint`. Its SQL implementation, `SqlAgentRuntimeStore`, runs on any database supplied by the Backstage database service (PostgreSQL, MySQL, or SQLite) and implements:
 
 - `SessionStore` for conversation messages.
 - `CheckpointStore` for resumable orchestration state.
@@ -66,7 +66,7 @@ Message listing returns recent messages in chronological order after applying th
 
 ### Qdrant Module
 
-`@webstackbuilders/plugin-ai-core-backend-module-storage-qdrant` provides `createQdrantVectorStore`, an alternate `VectorStore` implementation backed by a Qdrant server instead of PostgreSQL. It covers vector storage and similarity search only; agent runtime persistence (sessions, checkpoints, runs, artifacts, approvals, and audit logs) remains owned by the pgvector storage module.
+`@ai-crew-suite/agent-alert-tuner-backend-module-storage-qdrant` provides `createQdrantVectorStore`, an alternate `VectorStore` implementation backed by a Qdrant server instead of PostgreSQL. It covers vector storage and similarity search only; agent runtime persistence (sessions, checkpoints, runs, artifacts, approvals, and audit logs) remains owned by the pgvector storage module.
 
 The store lazily creates the configured collection on first use, deriving the vector size from the first embedded batch and using cosine distance. Metadata filters translate to Qdrant `must` match clauses on `metadata.*` payload keys, and documents are stored as point payloads with `content` and `metadata` fields.
 
@@ -93,7 +93,7 @@ Embeddings providers register tools through `toolExtensionPoint`. Each tool expo
 
 #### AWS Bedrock
 
-`@webstackbuilders/plugin-ai-core-backend-module-llm-aws` creates a pgvector store, constructs `BedrockAugmenter`, creates the default retrieval pipeline, and registers `aws.bedrock.retrieval`.
+`@ai-crew-suite/agent-alert-tuner-backend-module-llm-aws` creates a pgvector store, constructs `BedrockAugmenter`, creates the default retrieval pipeline, and registers `aws.bedrock.retrieval`.
 
 Provider config lives at `ai.embeddings.bedrock`:
 
@@ -114,7 +114,7 @@ ai:
 
 #### OpenAI
 
-`@webstackbuilders/plugin-ai-core-backend-module-llm-openai` creates a pgvector store, constructs `OpenAiAugmenter`, creates the default retrieval pipeline, and registers `openai.embeddings.retrieval`.
+`@ai-crew-suite/agent-alert-tuner-backend-module-llm-openai` creates a pgvector store, constructs `OpenAiAugmenter`, creates the default retrieval pipeline, and registers `openai.embeddings.retrieval`.
 
 Provider config lives at `ai.embeddings.openai`:
 
