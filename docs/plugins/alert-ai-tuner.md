@@ -31,7 +31,7 @@ The tuning decision itself is **arithmetic, not inferential**. The statistical n
 
 The plugin follows the standard two-package Backstage agent layout:
 
-- **Backend module** (`@webstackbuilders/plugin-ai-agent-backend-alert-ai-tuner`, `role: backend-plugin-module`, `pluginId: ai-core`) — registers the `AlertTunerGraph` workflow runner, the `alert-ai-tuner` agent definition with a read-only tool allow-list, manual and scheduler triggers, and an optional weekly noise sweep
+- **Backend module** (`@ai-crew-suite/agent-alert-tuner-backend`, `role: backend-plugin-module`, `pluginId: ai-core`) — registers the `AlertTunerGraph` workflow runner, the `alert-ai-tuner` agent definition with a read-only tool allow-list, manual and scheduler triggers, and an optional weekly noise sweep
 - **Frontend plugin** (`@webstackbuilders/plugin-ai-agent-frontend-alert-ai-tuner`, `role: frontend-plugin`, `pluginId: alert-ai-tuner`) — provides a standalone page at `/alert-ai-tuner` with a typed SSE API client, an evaluation dialog, live workflow progress, noise evidence panels, an anchored diff preview, and future approval/publication UI
 
 The graph runs as a custom `WorkflowRunner` at ID `alert-tuning`, executing a fixed pipeline: `observe → analyze → correlate → locate → patch → alert-tuning-proposal`. The proposal artifact carries the complete evidence bundle so the reviewer sees every cited `fire-N`, `inc-N`, and `iac-N` reference behind the recommendation.
@@ -73,7 +73,7 @@ In `packages/backend/package.json`:
 
 ```json
 "dependencies": {
-  "@webstackbuilders/plugin-ai-agent-backend-alert-ai-tuner": "workspace:^"
+  "@ai-crew-suite/agent-alert-tuner-backend": "workspace:^"
 }
 ```
 
@@ -82,7 +82,7 @@ In `packages/backend/package.json`:
 In `packages/backend/src/index.ts`, add alongside the other `@webstackbuilders` module loads:
 
 ```ts
-import { alertAiTunerModule } from '@webstackbuilders/plugin-ai-agent-backend-alert-ai-tuner';
+import { alertAiTunerModule } from '@ai-crew-suite/agent-alert-tuner-backend';
 
 // Inside your backend builder:
 backend.add(alertAiTunerModule);

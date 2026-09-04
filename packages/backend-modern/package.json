@@ -46,7 +46,7 @@
     "@backstage/plugin-search-backend-node": "backstage:^",
     "@backstage/plugin-signals-backend": "backstage:^",
     "@backstage/plugin-techdocs-backend": "backstage:^",
-    "@webstackbuilders/plugin-ai-agent-backend-alert-ai-tuner": "workspace:^",
+    "@ai-crew-suite/agent-alert-tuner-backend": "workspace:^",
     "@webstackbuilders/plugin-ai-agent-backend-catalog-ai-insights": "workspace:^",
     "@webstackbuilders/plugin-ai-agent-backend-oncall-ai-handover-assistant": "workspace:^",
     "@webstackbuilders/plugin-ai-agent-backend-release-notes-ai-generator": "workspace:^",

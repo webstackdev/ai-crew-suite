@@ -1,5 +1,5 @@
 {
-  "name": "@webstackbuilders/plugin-ai-agent-backend-alert-ai-tuner",
+  "name": "@ai-crew-suite/agent-alert-tuner-backend",
   "description": "AI Core backend module that statistically isolates noisy alert definitions and proposes capped, anchored IaC threshold patches.",
   "version": "0.0.1",
   "main": "src/index.ts",

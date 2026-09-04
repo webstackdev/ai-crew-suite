@@ -9,7 +9,7 @@ This plugin analyzes alerting matrices to suppress noisy or redundant indicators
 
 ## Goal
 
-Implement `@webstackbuilders/plugin-ai-agent-backend-alert-ai-tuner` as an AI Core backend module that reduces alert fatigue. It reads a bounded window of alert firing history, statistically isolates alert definitions that fire repeatedly and clear themselves without human action, correlates each candidate against deploys/incidents to rule out real signal, locates the threshold expression in the owning Infrastructure-as-Code file, and computes a **capped** threshold/duration patch. The patch is published as a reviewable proposal artifact and — only after **explicit human approval** — opened as a pull request against the infrastructure repository. A paired frontend plugin drives the evaluation, renders the statistical evidence and exact diff, and owns the approve/reject gate.
+Implement `@ai-crew-suite/agent-alert-tuner-backend` as an AI Core backend module that reduces alert fatigue. It reads a bounded window of alert firing history, statistically isolates alert definitions that fire repeatedly and clear themselves without human action, correlates each candidate against deploys/incidents to rule out real signal, locates the threshold expression in the owning Infrastructure-as-Code file, and computes a **capped** threshold/duration patch. The patch is published as a reviewable proposal artifact and — only after **explicit human approval** — opened as a pull request against the infrastructure repository. A paired frontend plugin drives the evaluation, renders the statistical evidence and exact diff, and owns the approve/reject gate.
 
 Reuse the architecture proven by `plugin-ai-agent-backend-catalog-ai-insights` (its `_IMPLEMENTATION.md` is the source of truth for repository conventions, workflow-runner mechanics, event contracts, monorepo wiring, and test-layer definitions). This plan documents only what differs: **statistical noise scoring**, an **anchored IaC patch engine**, and an approval-gated write into an IaC repository.
 
@@ -98,7 +98,7 @@ plugins/backend/plugin-ai-agent-backend-alert-ai-tuner/
 
 Same delegated-but-verified steps as `catalog-ai-insights` (see that plan's "Monorepo And App Wiring"). Deltas:
 
-- **Backend load**: add `"@webstackbuilders/plugin-ai-agent-backend-alert-ai-tuner": "workspace:^"` to `packages/backend/package.json` and the matching `backend.add(loadBackendFeature(import(...)))` line in `packages/backend/src/index.ts`, grouped with the other `@webstackbuilders` module loads.
+- **Backend load**: add `"@ai-crew-suite/agent-alert-tuner-backend": "workspace:^"` to `packages/backend/package.json` and the matching `backend.add(loadBackendFeature(import(...)))` line in `packages/backend/src/index.ts`, grouped with the other `@webstackbuilders` module loads.
 - **VCS module gate**: publishing needs the new `vcs.pull_request.create` write tool in `plugin-ai-core-backend-module-vcs` plus a configured write-capable provider driver. Proposal-only runs (no PR) work today without it.
 - **App config**: the module throws at boot without `ai.agents.alertAiTuner.model`; add the config block (see Configuration) before enabling the load. Publishing additionally requires `ai.agents.alertAiTuner.publish.enabled: true`.
 - **Frontend registration**: add `"@webstackbuilders/plugin-ai-agent-frontend-alert-ai-tuner": "workspace:^"` to `packages/app/package.json`, import its `/alpha` default export in `packages/app/src/App.tsx`, and extend plugin-ID expectations in `packages/app/src/App.test.tsx`.
