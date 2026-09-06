@@ -3,5 +3,123 @@
   "compilerOptions": {
     "outDir": "../../dist-types/packages/backend"
   },
-  "include": ["src/**/*"]
+  "include": [
+    "src*"
+  ],
+  "references": [
+    {
+      "path": "../../plugins/agents/alert-tuner/backend"
+    },
+    {
+      "path": "../../plugins/agents/catalog-insights/backend"
+    },
+    {
+      "path": "../../plugins/agents/oncall-handover/backend"
+    },
+    {
+      "path": "../../plugins/agents/release-notes-generator/backend"
+    },
+    {
+      "path": "../../plugins/agents/rfc-adr-reviewer/backend"
+    },
+    {
+      "path": "../../plugins/agents/scaffolder-drift-detector/backend"
+    },
+    {
+      "path": "../../plugins/agents/scaffolder-guardrail/backend"
+    },
+    {
+      "path": "../../plugins/agents/scaffolder-infra/backend"
+    },
+    {
+      "path": "../../plugins/agents/scaffolder-intent/backend"
+    },
+    {
+      "path": "../../plugins/agents/scaffolder-prd/backend"
+    },
+    {
+      "path": "../../plugins/agents/scaffolder-shadow-detective/backend"
+    },
+    {
+      "path": "../../plugins/agents/search-archeology/backend"
+    },
+    {
+      "path": "../../plugins/agents/search-context/backend"
+    },
+    {
+      "path": "../../plugins/agents/tech-debt-scout/backend"
+    },
+    {
+      "path": "../../plugins/agents/tech-radar-manager/backend"
+    },
+    {
+      "path": "../../plugins/agents/techdocs-janitor/backend"
+    },
+    {
+      "path": "../../plugins/agents/techdocs-postmortem/backend"
+    },
+    {
+      "path": "../../plugins/core/backend"
+    },
+    {
+      "path": "../../plugins/core/infra/llm/aws"
+    },
+    {
+      "path": "../../plugins/core/infra/llm/openai"
+    },
+    {
+      "path": "../../plugins/core/infra/llm/openrouter"
+    },
+    {
+      "path": "../../plugins/core/infra/runtime-store"
+    },
+    {
+      "path": "../../plugins/core/infra/vector/pgvector"
+    },
+    {
+      "path": "../../plugins/core/node"
+    },
+    {
+      "path": "../../plugins/tools/cloud-providers/core"
+    },
+    {
+      "path": "../../plugins/tools/communication/core"
+    },
+    {
+      "path": "../../plugins/tools/communication/slack"
+    },
+    {
+      "path": "../../plugins/tools/compliance/core"
+    },
+    {
+      "path": "../../plugins/tools/compliance/opa"
+    },
+    {
+      "path": "../../plugins/tools/incident-management/core"
+    },
+    {
+      "path": "../../plugins/tools/incident-management/pagerduty"
+    },
+    {
+      "path": "../../plugins/tools/observability/core"
+    },
+    {
+      "path": "../../plugins/tools/observability/datadog"
+    },
+    {
+      "path": "../../plugins/tools/project-management/core"
+    },
+    {
+      "path": "../../plugins/tools/project-management/jira"
+    },
+    {
+      "path": "../../plugins/tools/quality-scorecards/core"
+    },
+    {
+      "path": "../../plugins/tools/vcs/core"
+    },
+    {
+      "path": "../app"
+    }
+  ]
 }

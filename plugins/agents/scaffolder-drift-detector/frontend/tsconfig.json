@@ -3,6 +3,16 @@
   "compilerOptions": {
     "outDir": "../../../dist-types/plugins/frontend/plugin-ai-agent-frontend-scaffolder-ai-drift-detector"
   },
-  "include": ["src/**/*"],
-  "exclude": ["src/**/*.test.*", "src/**/*.spec.*"]
+  "include": [
+    "src*"
+  ],
+  "exclude": [
+    "src*.test.*",
+    "src*.spec.*"
+  ],
+  "references": [
+    {
+      "path": "../../../../packages/storybook"
+    }
+  ]
 }

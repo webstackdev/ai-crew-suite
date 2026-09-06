@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// .eslintrc.cjs (Root)
 module.exports = {
-  root: true, // Crucial: Locks cascading searches to this root level
+  root: true,
   ignorePatterns: [
     '.yarn/**',
     '.pnp.*',
-    'sync-project-references.js',
     '**/node_modules/**',
     '**/dist/**',
     '**/dist-types/**',
@@ -27,12 +25,17 @@ module.exports = {
     '**/public/**',
   ],
   extends: ['plugin:storybook/recommended'],
+  plugins: ['header'],
+  rules: {
+    'header/header': [2, 'block', { pattern: 'Copyright \\d{4} Webstack Builders' }, { loadFromFile: 'copyright-header.txt' }]
+  },
   overrides: [
     {
-      files: ['scripts/**/*.js', 'test/vitest.setup.ts'],
+      files: ['packages/scripts/src/**/*.ts', 'test/vitest.setup.ts'],
       rules: {
         'no-console': 'off',
       },
     },
   ],
 };
+

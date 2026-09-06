@@ -4,10 +4,15 @@
     "outDir": "../../../dist-types/plugins/frontend/plugin-ai-agent-frontend-oncall-ai-handover-assistant"
   },
   "include": [
-    "src/**/*"
+    "src*"
   ],
   "exclude": [
-    "src/**/*.test.*",
-    "src/**/*.spec.*"
+    "src*.test.*",
+    "src*.spec.*"
+  ],
+  "references": [
+    {
+      "path": "../../../../packages/storybook"
+    }
   ]
 }

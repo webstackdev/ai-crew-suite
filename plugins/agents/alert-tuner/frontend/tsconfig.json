@@ -9,10 +9,13 @@
   },
   "references": [
     {
+      "path": "../../../../packages/storybook"
+    },
+    {
       "path": "../../frontend-core"
     }
   ],
   "include": [
-    "src/**/*"
+    "src*"
   ]
 }

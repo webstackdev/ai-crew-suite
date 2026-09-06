@@ -3,6 +3,67 @@
   "compilerOptions": {
     "outDir": "../../dist-types/packages/app"
   },
-  "include": ["src/**/*"],
-  "exclude": ["src/**/*.test.*", "src/**/*.spec.*"]
+  "include": [
+    "src*"
+  ],
+  "exclude": [
+    "src*.test.*",
+    "src*.spec.*"
+  ],
+  "references": [
+    {
+      "path": "../../plugins/agents/alert-tuner/frontend"
+    },
+    {
+      "path": "../../plugins/agents/catalog-insights/frontend"
+    },
+    {
+      "path": "../../plugins/agents/kubernetes-responder/frontend"
+    },
+    {
+      "path": "../../plugins/agents/oncall-handover/frontend"
+    },
+    {
+      "path": "../../plugins/agents/release-notes-generator/frontend"
+    },
+    {
+      "path": "../../plugins/agents/rfc-adr-reviewer/frontend"
+    },
+    {
+      "path": "../../plugins/agents/scaffolder-drift-detector/frontend"
+    },
+    {
+      "path": "../../plugins/agents/scaffolder-guardrail/frontend"
+    },
+    {
+      "path": "../../plugins/agents/scaffolder-infra/frontend"
+    },
+    {
+      "path": "../../plugins/agents/scaffolder-intent/frontend"
+    },
+    {
+      "path": "../../plugins/agents/scaffolder-prd/frontend"
+    },
+    {
+      "path": "../../plugins/agents/scaffolder-shadow-detective/frontend"
+    },
+    {
+      "path": "../../plugins/agents/search-archeology/frontend"
+    },
+    {
+      "path": "../../plugins/agents/search-context/frontend"
+    },
+    {
+      "path": "../../plugins/agents/tech-debt-scout/frontend"
+    },
+    {
+      "path": "../../plugins/agents/tech-radar-manager/frontend"
+    },
+    {
+      "path": "../../plugins/agents/techdocs-janitor/frontend"
+    },
+    {
+      "path": "../../plugins/agents/techdocs-postmortem/frontend"
+    }
+  ]
 }
