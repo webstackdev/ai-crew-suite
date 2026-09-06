@@ -13,6 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-const { createConfigForRole } = require('@backstage/cli/config/eslint-factory');
+import { defineConfig, UserConfig } from 'vitest/config';
 
-module.exports = createConfigForRole(__dirname, 'backend-plugin');
+export const baseBackendConfig: UserConfig = defineConfig({
+  test: {
+    environment: 'node',
+    passWithNoTests: true,
+  },
+});
+
+export const baseFrontendConfig: UserConfig = defineConfig({
+  test: {
+    environment: 'jsdom',
+    passWithNoTests: true,
+  },
+});

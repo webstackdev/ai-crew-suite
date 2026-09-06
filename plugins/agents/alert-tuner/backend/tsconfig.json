@@ -1,17 +1,11 @@
 {
-  "extends": "../../../tsconfig.base.json",
+  "extends": "../../../../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "../../../dist-types/plugins/backend/agent-alert-tuner-backend"
+    "composite": true,
+    "outDir": "../../../dist-types/plugins/agents/alert-tuner/backend"
   },
-  "include": [
-    "src/**/*"
-  ],
+  "include": ["src/**/*"],
   "references": [
-    {
-      "path": "../../../core/backend"
-    },
-    {
-      "path": "../../../core/node"
-    }
+    { "path": "../../frontend-core" } 
   ]
 }

@@ -1,0 +1,17 @@
+{
+  "name": "@ai-crew-suite/config-vitest",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "vitest": "^1.6.1"
+  },
+  "devDependencies": {
+    "typescript": "^6.0.3"
+  }
+}

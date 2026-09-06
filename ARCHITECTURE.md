@@ -20,14 +20,14 @@ All internal packages belong to the NPM organization scope `@ai-crew-suite`.
 
 ```json
 {
-  "extends": "../../../tsconfig.base.json",
+  "extends": "../../../../tsconfig.base.json",
   "compilerOptions": {
     "composite": true,
     "outDir": "../../../dist-types/plugins/agents/alert-tuner/backend"
   },
   "include": ["src/**/*"],
   "references": [
-    { "path": "../../core-frontend" } 
+    { "path": "../../frontend-core" } 
   ]
 }
 ```
@@ -44,6 +44,13 @@ All internal packages belong to the NPM organization scope `@ai-crew-suite`.
     "typecheck": "tsc --build",
     "lint": "backstage-cli package lint",
     "test:unit": "vitest run"
+  },
+  "devDependencies": {
+    "@ai-crew-suite/config-eslint": "workspace:*",
+    "@ai-crew-suite/config-vitest": "workspace:*",
+    "@backstage/backend-test-utils": "backstage:^",
+    "@backstage/cli": "backstage:^",
+    "vitest": "^4.1.11"
   }
 }
 ```
@@ -52,7 +59,7 @@ All internal packages belong to the NPM organization scope `@ai-crew-suite`.
 
 ```ts
 import { mergeConfig } from 'vitest/config';
-import baseConfig from '../../../vitest.config.base';
+import baseConfig from '@ai-crew-suite/config-vitest';
 
 export default mergeConfig(baseConfig, {
   test: {

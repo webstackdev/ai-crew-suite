@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2026 Webstack Builders, Inc.
  *
@@ -13,6 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-const { createConfigForRole } = require('@backstage/cli/config/eslint-factory');
+import { createConfigForRole } from '@backstage/cli/config/eslint-factory';
 
-module.exports = createConfigForRole(__dirname, 'backend-plugin');
+export function getBackendPluginConfig(dir: string): Record<string, any> {
+  return createConfigForRole(dir, 'backend-plugin');
+}
+
+export function getFrontendPluginConfig(dir: string): Record<string, any> {
+  return createConfigForRole(dir, 'frontend-plugin');
+}

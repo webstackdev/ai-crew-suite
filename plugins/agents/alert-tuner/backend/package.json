@@ -43,6 +43,8 @@
     "zod": "^4.5.4"
   },
   "devDependencies": {
+    "@ai-crew-suite/config-eslint": "workspace:*",
+    "@ai-crew-suite/config-vitest": "workspace:*",
     "@backstage/backend-test-utils": "backstage:^",
     "@backstage/cli": "backstage:^",
     "vitest": "^4.1.11"

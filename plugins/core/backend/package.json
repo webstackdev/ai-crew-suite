@@ -24,7 +24,7 @@
   },
   "backstage": {
     "role": "backend-plugin",
-    "pluginId": "ai-core"
+    "pluginId": "ai"
   },
   "bugs": {
     "url": "https://github.com/webstackdev/ai-crew-suite/issues",
@@ -33,7 +33,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/webstackdev/ai-crew-suite",
-    "directory": "packages/plugin-ai-core-backend"
+    "directory": "plugins/backend/plugin-ai-core-backend"
   },
   "files": [
     "dist",
@@ -42,7 +42,7 @@
   "configSchema": "config.d.ts",
   "scripts": {
     "start": "backstage-cli package start",
-    "build": "yarn --cwd ../../.. tsc -b plugins/backend/plugin-ai-core-backend/tsconfig.json --emitDeclarationOnly && backstage-cli package build",
+    "build": "backstage-cli package build",
     "clean": "backstage-cli package clean",
     "prepack": "backstage-cli package prepack",
     "postpack": "backstage-cli package postpack",
@@ -55,15 +55,15 @@
     "@backstage/backend-defaults": "backstage:^",
     "@backstage/backend-plugin-api": "backstage:^",
     "@backstage/config": "backstage:^",
-    "@jest/globals": "^30.5.0",
+    "@jest/globals": "^30.5.1",
     "@langchain/core": "^1.2.9",
-    "@langchain/langgraph": "^1.4.13",
+    "@langchain/langgraph": "^1.4.14",
     "@opentelemetry/api": "^1.9.1",
     "@types/express": "4.17.25",
     "@webstackbuilders/plugin-ai-core-node": "workspace:^",
     "express": "^4.22.2",
     "express-promise-router": "^4.1.1",
-    "i18next": "26.4.0",
+    "i18next": "26.4.2",
     "vitest": "^4.1.11"
   },
   "devDependencies": {

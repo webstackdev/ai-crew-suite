@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
     "composite": true,
-    "declaration": true,              // Emits local types (.d.ts) inside each plugin folder
-    "declarationMap": true,           // Maps go-to-definition clicks to raw .ts source code
+    "declaration": true,
+    "declarationMap": true,
+    "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
     "jsx": "react-jsx",
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
@@ -10,6 +11,7 @@
     "moduleResolution": "NodeNext",
     "skipLibCheck": true,
     "sourceMap": true,
+    "strict": true,
     "target": "ES2022"
   }
 }
