@@ -14,17 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { builtinModules } from 'node:module';
+import backstagePlugin from '@backstage/eslint-plugin';
+import eslintConfigPrettier from 'eslint-config-prettier';
+import globals from 'globals';
+import headerPlugin from 'eslint-plugin-header';
+import importPlugin from 'eslint-plugin-import-x';
+import jestPlugin from 'eslint-plugin-jest';
+import jsxA11yPlugin from 'eslint-plugin-jsx-a11y';
+import reactHooksPlugin from 'eslint-plugin-react-hooks';
+import reactPlugin from 'eslint-plugin-react';
+import storybookPlugin from 'eslint-plugin-storybook';
 import tsParser from '@typescript-eslint/parser';
 import tsPlugin from '@typescript-eslint/eslint-plugin';
-import backstagePlugin from '@backstage/eslint-plugin';
-import jestPlugin from 'eslint-plugin-jest';
-import reactPlugin from 'eslint-plugin-react';
-import reactHooksPlugin from 'eslint-plugin-react-hooks';
-import importPlugin from 'eslint-plugin-import-x';
 import unusedImportsPlugin from 'eslint-plugin-unused-imports';
-import jsxA11yPlugin from 'eslint-plugin-jsx-a11y';
-import globals from 'globals';
-import { builtinModules } from 'node:module';
 
 export type PackageRole =
   | 'common-library'
@@ -38,6 +41,20 @@ export type PackageRole =
   | 'node-library'
   | 'cli'
   | 'cli-module';
+
+const COPYRIGHT_HEADER_TEXT = `Copyright 2026 The AI Crew Suite Authors
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://apache.org
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.`;
 
 /**
  * 1. Global Base Ruleset applied across ALL packages in the monorepo
@@ -56,23 +73,27 @@ const getBaseConfigBlock = () => ({
   plugins: {
     '@typescript-eslint': tsPlugin,
     '@backstage': backstagePlugin,
+    'header': headerPlugin,
     'import': importPlugin,
     'unused-imports': unusedImportsPlugin,
   },
   rules: {
-    'no-shadow': 'off',
-    'no-redeclare': 'off',
-    '@typescript-eslint/no-shadow': 'error',
-    '@typescript-eslint/no-redeclare': 'error',
-    'no-undef': 'off',
-    'import/newline-after-import': 'error',
-    'no-unused-expressions': 'off',
-    '@typescript-eslint/no-unused-expressions': 'error',
     '@typescript-eslint/consistent-type-assertions': 'error',
+    '@typescript-eslint/no-redeclare': 'error',
+    '@typescript-eslint/no-shadow': 'error',
+    '@typescript-eslint/no-unused-expressions': 'error',
     '@typescript-eslint/no-unused-vars': [
       'error',
       { vars: 'all', args: 'after-used', ignoreRestSiblings: true, argsIgnorePattern: '^_' },
     ],
+    'header/header': [
+      2,
+      'block',
+      { pattern: 'Copyright \\d{4} The AI Crew Suite Authors' },
+      COPYRIGHT_HEADER_TEXT
+    ],
+    'import/newline-after-import': 'error',
+    'no-redeclare': 'off',
     'no-restricted-imports': [
       'error',
       {
@@ -81,6 +102,9 @@ const getBaseConfigBlock = () => ({
         ],
       },
     ],
+    'no-shadow': 'off',
+    'no-undef': 'off',
+    'no-unused-expressions': 'off',
   },
 });
 
@@ -116,29 +140,15 @@ export function createFlatConfigForRole(role: PackageRole, extraOverrides: any[]
         parserOptions: { ecmaFeatures: { jsx: true } },
       },
       plugins: {
-        'react': reactPlugin,
+        'jsx-a11y': jsxA11yPlugin,
         'react-hooks': reactHooksPlugin,
-        'jsx-a11y': jsxA11yPlugin, // 👈 Register the accessibility plugin token
+        'react': reactPlugin,
       },
       settings: {
         react: { version: 'detect' },
       },
       rules: {
         ...jsxA11yPlugin.flatConfigs.recommended.rules,
-        'react/react-in-jsx-scope': 'off',
-        'react-hooks/rules-of-hooks': 'error',
-        'react-hooks/exhaustive-deps': 'warn',
-        'no-restricted-syntax': [
-          'warn',
-          {
-            selector: "ImportDeclaration[source.value='react'][specifiers.0.type='ImportDefaultSpecifier']",
-            message: 'React default imports are deprecated. Follow the https://backstage.io migration guide for details.',
-          },
-          {
-            selector: "ImportDeclaration[source.value='react'] :matches(ImportDefaultSpecifier, ImportNamespaceSpecifier)",
-            message: 'React default imports are deprecated. Follow the https://backstage.io migration guide for details. If you need a global type that collides with a React named export (such as `MouseEvent`), try using `globalThis.MouseHandler`.',
-          },
-        ],
         'no-restricted-imports': [
           'error',
           {
@@ -151,6 +161,20 @@ export function createFlatConfigForRole(role: PackageRole, extraOverrides: any[]
             patterns: [{ group: ['@mui/*/*/*'] }],
           },
         ],
+        'no-restricted-syntax': [
+          'warn',
+          {
+            selector: "ImportDeclaration[source.value='react'][specifiers.0.type='ImportDefaultSpecifier']",
+            message: 'React default imports are deprecated. Follow the https://backstage.io migration guide for details.',
+          },
+          {
+            selector: "ImportDeclaration[source.value='react'] :matches(ImportDefaultSpecifier, ImportNamespaceSpecifier)",
+            message: 'React default imports are deprecated. Follow the https://backstage.io migration guide for details. If you need a global type that collides with a React named export (such as `MouseEvent`), try using `globalThis.MouseHandler`.',
+          },
+        ],
+        'react-hooks/exhaustive-deps': 'warn',
+        'react-hooks/rules-of-hooks': 'error',
+        'react/react-in-jsx-scope': 'off',
       },
     });
 
@@ -174,8 +198,8 @@ export function createFlatConfigForRole(role: PackageRole, extraOverrides: any[]
         },
       },
       rules: {
-        'no-console': 'off',
         'new-cap': ['error', { capIsNew: false }],
+        'no-console': 'off',
 
         'no-restricted-syntax': [
           'error',
@@ -206,10 +230,29 @@ export function createFlatConfigForRole(role: PackageRole, extraOverrides: any[]
   }
 
   // -------------------------------------------------------------
+  // Storybook Testing Isolation Configuration Block
+  // -------------------------------------------------------------
+  configs.push({
+    files: ['**/*.stories.@(ts|tsx|js|jsx)'],
+    plugins: {
+      'storybook': storybookPlugin,
+    },
+    rules: {
+      ...storybookPlugin.configs.recommended.rules,
+    },
+  });
+
+  // -------------------------------------------------------------
   // Test Environment Handling Mapping
   // -------------------------------------------------------------
   configs.push({
-    files: ['**/*.test.*', '**/*.spec.*', '**/__mocks__/**', '**/__testUtils__/**', 'src/setupTests.*'],
+    files: [
+      '**/*.test.*',
+      '**/*.spec.*',
+      '**/__mocks__/**',
+      '**/__testUtils__/**',
+      'src/setupTests.*',
+    ],
     plugins: { 'jest': jestPlugin },
     languageOptions: { globals: { ...globals.jest } },
     rules: {
@@ -229,5 +272,5 @@ export function createFlatConfigForRole(role: PackageRole, extraOverrides: any[]
     },
   });
 
-  return [...configs, ...extraOverrides];
+  return [...configs, ...extraOverrides, eslintConfigPrettier];
 }

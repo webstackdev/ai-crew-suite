@@ -12,7 +12,7 @@
       "path": "../../../../packages/storybook"
     },
     {
-      "path": "../../frontend-core"
+      "path": "../../../core/frontend"
     }
   ],
   "include": [

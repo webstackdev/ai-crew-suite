@@ -4,8 +4,21 @@
     "composite": true,
     "outDir": "../../../dist-types/plugins/agents/alert-tuner/backend"
   },
-  "include": ["src/**/*"],
+  "include": [
+    "src*"
+  ],
   "references": [
-    { "path": "../../frontend-core" } 
+    {
+      "path": "../../../../packages/config-eslint"
+    },
+    {
+      "path": "../../../../packages/config-vitest"
+    },
+    {
+      "path": "../../../core/backend"
+    },
+    {
+      "path": "../../../core/node"
+    }
   ]
 }

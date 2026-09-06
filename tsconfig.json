@@ -33,6 +33,12 @@
       "path": "./packages/backend-modern"
     },
     {
+      "path": "./packages/config-eslint"
+    },
+    {
+      "path": "./packages/config-vitest"
+    },
+    {
       "path": "./packages/scripts"
     },
     {
@@ -49,9 +55,6 @@
     },
     {
       "path": "./plugins/agents/catalog-insights/frontend"
-    },
-    {
-      "path": "./plugins/agents/frontend-core"
     },
     {
       "path": "./plugins/agents/kubernetes-responder/backend"
@@ -151,6 +154,9 @@
     },
     {
       "path": "./plugins/core/backend"
+    },
+    {
+      "path": "./plugins/core/frontend"
     },
     {
       "path": "./plugins/core/infra/llm/aws"

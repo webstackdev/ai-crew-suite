@@ -46,16 +46,21 @@ __metadata:
     "@backstage/eslint-plugin": "backstage:^"
     "@types/eslint-plugin-jsx-a11y": "npm:6.10.1"
     "@types/node": "npm:^22.20.1"
+    "@typescript-eslint/eslint-plugin": "npm:^8.69.0"
+    "@typescript-eslint/parser": "npm:^8.69.0"
     eslint: "npm:^10.10.0"
     eslint-config-prettier: "npm:^10.1.8"
+    eslint-plugin-header: "npm:3.1.1"
     eslint-plugin-import-x: "npm:^4.17.1"
     eslint-plugin-jest: "npm:^29.16.6"
     eslint-plugin-jsx-a11y: "npm:^6.10.2"
     eslint-plugin-react: "npm:^7.37.5"
     eslint-plugin-react-hooks: "npm:^7.1.1"
+    eslint-plugin-storybook: "npm:^10.6.0"
     eslint-plugin-unused-imports: "npm:^4.4.1"
     rimraf: "npm:^6.1.3"
     typescript: "npm:^6.0.3"
+    typescript-eslint: "npm:^8.69.0"
     vitest: "npm:^3.2.7"
   languageName: unknown
   linkType: soft
@@ -22291,7 +22296,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-header@npm:^3.1.1":
+"eslint-plugin-header@npm:3.1.1":
   version: 3.1.1
   resolution: "eslint-plugin-header@npm:3.1.1"
   peerDependencies:
@@ -22326,7 +22331,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-import@npm:^2.31.0, eslint-plugin-import@npm:^2.32.0":
+"eslint-plugin-import@npm:^2.31.0":
   version: 2.32.0
   resolution: "eslint-plugin-import@npm:2.32.0"
   dependencies:
@@ -22419,19 +22424,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-notice@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "eslint-plugin-notice@npm:1.0.0"
-  dependencies:
-    find-root: "npm:^1.1.0"
-    lodash: "npm:^4.17.21"
-    metric-lcs: "npm:^0.1.2"
-  peerDependencies:
-    eslint: ">=3.0.0"
-  checksum: 10c0/40b162fea014efad8e24c38f58c84729cf0ce0ee7a21fdb79ccfde9c2f5d219e4e74e7729679b6321400b34cc80c51beb00a46ba03a7c13265ceab573262f9ea
-  languageName: node
-  linkType: hard
-
 "eslint-plugin-react-hooks@npm:^5.0.0":
   version: 5.2.0
   resolution: "eslint-plugin-react-hooks@npm:5.2.0"
@@ -22493,6 +22485,18 @@ __metadata:
   peerDependencies:
     eslint: ">=8"
   checksum: 10c0/a70a4c9ab48e9a2fff3d51304951d91c32545ab52b15adf1f75e5056954415b9a9fc4de3fa9c820b7450c107985ce55689e6269867da4a787868ab462f292c9c
+  languageName: node
+  linkType: hard
+
+"eslint-plugin-storybook@npm:^10.6.0":
+  version: 10.6.0
+  resolution: "eslint-plugin-storybook@npm:10.6.0"
+  dependencies:
+    "@typescript-eslint/types": "npm:^8.60.0"
+    "@typescript-eslint/utils": "npm:^8.60.0"
+  peerDependencies:
+    eslint: ">=8"
+  checksum: 10c0/f9036605c63b2e30546ac5d5a65310e19c38fd52919ca34d26a64a007c7ec69cd39d5325aeb539ac3e37502fcd69ac374b7198b4b9eee756eddb913bbbcd78e8
   languageName: node
   linkType: hard
 
@@ -22648,7 +22652,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:^8.57.1, eslint@npm:^8.6.0":
+"eslint@npm:^8.6.0":
   version: 8.57.1
   resolution: "eslint@npm:8.57.1"
   dependencies:
@@ -29156,13 +29160,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"metric-lcs@npm:^0.1.2":
-  version: 0.1.2
-  resolution: "metric-lcs@npm:0.1.2"
-  checksum: 10c0/cf5e8987cb92b3f70ca9f277268f5b525ae02195906de3b5c612d6c58341b8686241dce07cde7867d1442481f3b06f150d1d2c9f5f2a5a8c91c021ae94675edb
-  languageName: node
-  linkType: hard
-
 "micromark-core-commonmark@npm:^1.0.0, micromark-core-commonmark@npm:^1.0.1":
   version: 1.1.0
   resolution: "micromark-core-commonmark@npm:1.1.0"
@@ -34754,30 +34751,13 @@ __metadata:
     "@backstage/cli-defaults": "backstage:^"
     "@backstage/cli-module-new": "backstage:^"
     "@backstage/config": "backstage:^"
-    "@backstage/eslint-plugin": "backstage:^"
     "@changesets/cli": "npm:^3.0.2"
     "@jest/environment-jsdom-abstract": "npm:^30.5.1"
     "@playwright/test": "npm:^1.63.0"
-    "@spotify/eslint-config-base": "npm:^15.0.0"
-    "@spotify/eslint-config-react": "npm:^15.0.0"
-    "@spotify/eslint-config-typescript": "npm:^15.0.0"
     "@types/jest": "npm:^30.0.0"
     "@types/node": "npm:^26.4.1"
-    "@typescript-eslint/eslint-plugin": "npm:^8.69.0"
-    "@typescript-eslint/parser": "npm:^8.69.0"
     "@vitest/coverage-v8": "npm:^4.1.11"
     concurrently: "npm:^10.0.5"
-    eslint: "npm:^8.57.1"
-    eslint-config-prettier: "npm:^10.1.8"
-    eslint-plugin-deprecation: "npm:^3.0.0"
-    eslint-plugin-header: "npm:^3.1.1"
-    eslint-plugin-import: "npm:^2.32.0"
-    eslint-plugin-jest: "npm:^29.16.6"
-    eslint-plugin-jsx-a11y: "npm:^6.10.2"
-    eslint-plugin-notice: "npm:^1.0.0"
-    eslint-plugin-react: "npm:^7.37.5"
-    eslint-plugin-react-hooks: "npm:^7.1.1"
-    eslint-plugin-unused-imports: "npm:^4.4.1"
     http-server: "npm:^14.1.1"
     husky: "npm:^9.1.7"
     i18next: "npm:26.4.2"
@@ -34791,7 +34771,6 @@ __metadata:
     storybook: "npm:^10.6.0"
     turbo: "npm:^2.10.12"
     typescript: "npm:6.0.3"
-    typescript-eslint: "npm:^8.69.0"
     vitest: "npm:^4.1.11"
     whatwg-fetch: "npm:^3.6.20"
   languageName: unknown

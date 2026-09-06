@@ -20,6 +20,26 @@ declare module '@backstage/eslint-plugin' {
   export default plugin;
 }
 
+declare module 'eslint-config-prettier' {
+  const config: any;
+  export default config;
+}
+
+declare module 'eslint-plugin-header' {
+  const plugin: any;
+  export default plugin;
+}
+
+declare module 'eslint-plugin-jsx-a11y' {
+  const plugin: any;
+  export default plugin;
+}
+
+declare module 'eslint-plugin-storybook' {
+  const plugin: any;
+  export default plugin;
+}
+
 declare module 'eslint-plugin-unused-imports' {
   const plugin: any;
   export default plugin;

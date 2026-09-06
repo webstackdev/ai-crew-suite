@@ -22,7 +22,6 @@ All internal packages belong to the NPM organization scope `@ai-crew-suite`.
 {
   "extends": "../../../../tsconfig.base.json",
   "compilerOptions": {
-    "composite": true,
     "outDir": "../../../dist-types/plugins/agents/alert-tuner/backend",
     "rootDir": "./src",
     "types": ["node"]
@@ -44,7 +43,7 @@ All internal packages belong to the NPM organization scope `@ai-crew-suite`.
     "build": "backstage-cli package build", 
     "clean": "backstage-cli package clean",
     "typecheck": "tsc --build",
-    "lint": "backstage-cli package lint",
+    "lint": "eslint . --max-warnings 0",
     "test:unit": "vitest run"
   },
   "devDependencies": {
@@ -82,6 +81,139 @@ export default mergeConfig(baseConfig, {
 
 ```bash
 yarn turbo run test:unit --filter=@ai-crew-suite/config-eslint
+```
+
+## ROUGH NOTES - DELETE
+
+Instead of forcing every single plugin to manage its own `scripts` and copy-paste `devDependencies`, **hoist the binaries to the root and let Turborepo handle execution parameters directly.**
+
+In a Yarn monorepo, dependencies installed at the root are available to root scripts. You can wipe out the local `scripts` block from your plugins entirely, change them to native `turbo` targets, and manage the tooling versions in exactly **one** place: the root `package.json`.
+
+```json
+{
+  "$schema": "https://turbo.build",
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", "dist-types/**", "build/**"]
+    },
+    "clean": {
+      "cache": false
+    },
+    "start": {
+      "dependsOn": ["^build"],
+      "command": "backstage-cli package start",
+      "persistent": true,
+      "cache": false
+    }
+    "typecheck": {
+      "dependsOn": ["^build"],
+      "command": "tsc --build",
+      "outputs": []
+    },
+    "lint": {
+      "dependsOn": ["^build"],
+      "command": "eslint . --max-warnings 0",
+      "outputs": []
+    },
+    "test:unit": {
+      "dependsOn": ["build"],
+      "command": "vitest run",
+      "outputs": []
+    }
+  }
+}
+```
+
+Notice the use of the `command` field. This tells Turborepo: "If a developer runs `turbo run lint`, go into the package directory and execute this raw binary syntax directly from the hoisted workspace layer."
+
+You can strip out the highly uniform scripts (`lint`, `typecheck`, `clean`) to let Turbo orchestrate them globally, while leaving package-specific runtime scripts inside the package file.
+
+If you adopt this alternative and completely strip the `scripts` blocks out of your 60+ leaf packages, running a targeted filter like:
+
+```bash
+yarn turbo run test:unit --filter=@ai-crew-suite/config-eslint
+```
+
+will work **perfectly**.
+
+**leaf-level `package.json` requirements**
+
+```json
+{
+  "name": "@ai-crew-suite/agent-alert-tuner-backend",
+  "version": "0.0.1",
+  "backstage": {
+    "role": "backend-plugin",
+    "pluginId": "ai"
+  },
+  "dependencies": {
+    "@backstage/backend-plugin-api": "backstage:^",
+    "yaml": "^2.9.0"
+  }
+}
+```
+
+**Yarn `catalog:` Protocol**
+
+If you prefer or need to keep your scripts declared explicitly inside your plugins (for instance, if local IDE macros require running `yarn lint` natively inside a specific child folder), you should use Yarn’s built-in **`catalog:` protocol**.
+
+This feature acts exactly like your `backstage.json` definition mapping, but works universally across your whole package tree for *any* dependency you specify.
+
+**Declare your catalogs in the root `package.json`**
+
+Define named catalogs containing the shared tooling version configurations at your repository root layer:
+
+```json
+{
+  "name": "ai-crew-suite-root",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "plugins/**/*"
+  ],
+  "dependenciesMeta": {
+    "catalog:toolchain": {
+      "@types/node": "^22.20.1",
+      "eslint": "^10.10.0",
+      "rimraf": "^6.1.3",
+      "typescript": "^6.0.3",
+      "vitest": "^3.2.7"
+    },
+    "catalog:typescript": {
+      "typescript": "^6.0.3"
+    },
+    "catalog:eslint": {
+      "eslint": "^10.10.0"
+    },
+    "catalog:vitest": {
+      "vitest": "^3.2.7"
+    },
+    "catalog:node-types": {
+      "@types/node": "^22.20.1"
+    },
+    "catalog:rimraf": {
+      "rimraf": "^6.1.3"
+    }
+  }
+}
+```
+
+**Leaf Plugin `package.json`**
+
+Down inside your 60+ plugins, you declare the dependency versions by pointing to your catalog token instead of writing raw strings:
+
+```json
+{
+  "name": "@ai-crew-suite/agent-alert-tuner-backend",
+  "devDependencies": {
+    "@types/node": "catalog:toolchain",
+    "eslint": "catalog:toolchain",
+    "rimraf": "catalog:toolchain",
+    "typescript": "catalog:toolchain",
+    "vitest": "catalog:toolchain"
+  }
+}
 ```
 
 ## 📁 Repository Directory Structure
