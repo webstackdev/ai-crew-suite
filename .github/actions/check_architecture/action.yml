@@ -3,6 +3,11 @@ description: 'Enforces directory layouts and @ai-crew-suite scope namespace stan
 runs:
   using: 'composite'
   steps:
+    - name: Set up Python environment
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+
     - name: Run Script Self-Tests
       shell: bash
       run: |
