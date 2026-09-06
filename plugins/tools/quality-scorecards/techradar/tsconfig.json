@@ -3,5 +3,12 @@
   "compilerOptions": {
     "outDir": "../../../dist-types/plugins/backend/plugin-ai-core-backend-module-quality-scorecards-techradar"
   },
-  "include": ["src/**/*"]
+  "include": [
+    "src/**/*"
+  ],
+  "references": [
+    {
+      "path": "../../../core/node"
+    }
+  ]
 }

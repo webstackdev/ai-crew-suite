@@ -1,15 +1,12 @@
 import { defineConfig, defineProject } from 'vitest/config';
 
 export default defineConfig({
-  // redirects cache out of node_modules
   cacheDir: '.vitest-cache',
   test: {
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
     },
-
-    // Modern replacement for defineWorkspace
     projects: [
       defineProject({
         test: {
@@ -17,8 +14,8 @@ export default defineConfig({
           globals: true,
           setupFiles: ['./test/vitest.setup.ts'],
           include: [
-            'packages/app/src/**/*.test.{ts,tsx}',
-            'plugins/frontend/**/*.test.{ts,tsx}',
+            'apps/backstage/src/**/*.test.{ts,tsx}',
+            'plugins/agents/**/frontend/**/*.test.{ts,tsx}',
           ],
           environment: 'jsdom',
         },
@@ -29,8 +26,9 @@ export default defineConfig({
           globals: true,
           setupFiles: ['./test/vitest.setup.ts'],
           include: [
-            'packages/backend/src/**/*.test.{ts,tsx}',
-            'plugins/backend/**/*.test.{ts,tsx}',
+            'plugins/agents/**/backend/**/*.test.{ts,tsx}',
+            'plugins/core/**/*.test.{ts,tsx}',
+            'plugins/tools/**/*.test.{ts,tsx}',
           ],
           environment: 'node',
         },

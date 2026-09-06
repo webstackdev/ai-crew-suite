@@ -3,6 +3,61 @@
   "compilerOptions": {
     "outDir": "../../../dist-types/plugins/frontend/plugin-ai-agent-frontend-catalog-ai-insights"
   },
-  "include": ["src/**/*"],
-  "exclude": ["src/**/*.test.*", "src/**/*.spec.*"]
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "src/**/*.test.*",
+    "src/**/*.spec.*"
+  ],
+  "references": [
+    {
+      "path": "../../kubernetes-responder/frontend"
+    },
+    {
+      "path": "../../oncall-handover/frontend"
+    },
+    {
+      "path": "../../release-notes-generator/frontend"
+    },
+    {
+      "path": "../../rfc-adr-reviewer/frontend"
+    },
+    {
+      "path": "../../scaffolder-drift-detector/frontend"
+    },
+    {
+      "path": "../../scaffolder-guardrail/frontend"
+    },
+    {
+      "path": "../../scaffolder-infra/frontend"
+    },
+    {
+      "path": "../../scaffolder-intent/frontend"
+    },
+    {
+      "path": "../../scaffolder-prd/frontend"
+    },
+    {
+      "path": "../../scaffolder-shadow-detective/frontend"
+    },
+    {
+      "path": "../../search-archeology/frontend"
+    },
+    {
+      "path": "../../search-context/frontend"
+    },
+    {
+      "path": "../../tech-debt-scout/frontend"
+    },
+    {
+      "path": "../../tech-radar-manager/frontend"
+    },
+    {
+      "path": "../../techdocs-janitor/frontend"
+    },
+    {
+      "path": "../../techdocs-postmortem/frontend"
+    }
+  ]
 }

@@ -3,5 +3,15 @@
   "compilerOptions": {
     "outDir": "../../../dist-types/plugins/backend/plugin-ai-core-backend-module-incident-management-pagerduty"
   },
-  "include": ["src/**/*"]
+  "include": [
+    "src/**/*"
+  ],
+  "references": [
+    {
+      "path": "../../../core/node"
+    },
+    {
+      "path": "../core"
+    }
+  ]
 }

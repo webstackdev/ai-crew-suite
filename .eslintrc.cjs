@@ -19,10 +19,12 @@ module.exports = {
   ignorePatterns: [
     '.yarn/**',
     '.pnp.*',
+    'sync-project-references.js',
     '**/node_modules/**',
     '**/dist/**',
     '**/dist-types/**',
     '**/coverage/**',
+    '**/public/**',
   ],
   extends: ['plugin:storybook/recommended'],
   overrides: [

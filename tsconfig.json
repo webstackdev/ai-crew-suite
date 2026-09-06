@@ -20,121 +20,97 @@
   "include": [],
   "references": [
     // ==========================================
-    // 1. Core Platform Infra & Packages
+    // 1. Core Platform Infra & Apps
     // ==========================================
-    { "path": "./packages/app" },
-    { "path": "./packages/backend" },
+    { "path": "./apps/backstage" },
     { "path": "./packages/storybook" },
     { "path": "./test" },
 
     // ==========================================
-    // 2. Foundation Core Backend & Nodes
+    // 2. Tier 1: Core Architecture & Infra
     // ==========================================
-    { "path": "./plugins/backend/plugin-ai-core-backend" },
-    { "path": "./plugins/backend/plugin-ai-core-node" },
-    { "path": "./plugins/backend/plugin-ai-core-backend-module-runtime-store" },
-    { "path": "./plugins/backend/plugin-ai-core-backend-module-retrieval-augmenter" },
-
-    // ==========================================
-    // 3. Core Backend Extension Modules
-    // ==========================================
-    // Cloud Providers
-    { "path": "./plugins/backend/plugin-ai-core-backend-module-cloud-providers" },
-    { "path": "./plugins/backend/plugin-ai-core-backend-module-cloud-providers-aws" },
-    { "path": "./plugins/backend/plugin-ai-core-backend-module-cloud-providers-azure" },
-    { "path": "./plugins/backend/plugin-ai-core-backend-module-cloud-providers-gcp" },
-
-    // Communication
-    { "path": "./plugins/backend/plugin-ai-core-backend-module-communication" },
-    { "path": "./plugins/backend/plugin-ai-core-backend-module-communication-slack" },
-
-    // Compliance
-    { "path": "./plugins/backend/plugin-ai-core-backend-module-compliance" },
-    { "path": "./plugins/backend/plugin-ai-core-backend-module-compliance-opa" },
-
-    // Embeddings & LLM Ecosystem
-    { "path": "./plugins/backend/plugin-ai-core-backend-module-llm-aws" },
-    { "path": "./plugins/backend/plugin-ai-core-backend-module-llm-openai" },
-    { "path": "./plugins/backend/plugin-ai-core-backend-module-llm-openrouter" },
-
-    // Incident Management
-    { "path": "./plugins/backend/plugin-ai-core-backend-module-incident-management" },
-    { "path": "./plugins/backend/plugin-ai-core-backend-module-incident-management-pagerduty" },
-
-    // Kubernetes
-    { "path": "./plugins/backend/plugin-ai-core-backend-module-kubernetes" },
-
-    // Observability
-    { "path": "./plugins/backend/plugin-ai-core-backend-module-observability" },
-    { "path": "./plugins/backend/plugin-ai-core-backend-module-observability-datadog" },
-
-    // Project Management
-    { "path": "./plugins/backend/plugin-ai-core-backend-module-project-management" },
-    { "path": "./plugins/backend/plugin-ai-core-backend-module-project-management-jira" },
-
-    // Quality Scorecards
-    { "path": "./plugins/backend/plugin-ai-core-backend-module-quality-scorecards" },
-    { "path": "./plugins/backend/plugin-ai-core-backend-module-quality-scorecards-scorecards" },
-    { "path": "./plugins/backend/plugin-ai-core-backend-module-quality-scorecards-soundcheck" },
-    { "path": "./plugins/backend/plugin-ai-core-backend-module-quality-scorecards-techradar" },
-
-    // Storage & Vector Connectors
-    { "path": "./plugins/backend/plugin-ai-core-backend-module-storage-pgvector" },
-    { "path": "./plugins/backend/plugin-ai-core-backend-module-storage-qdrant" },
-
-    // Version Control Systems (VCS)
-    { "path": "./plugins/backend/plugin-ai-core-backend-module-vcs" },
-    { "path": "./plugins/backend/plugin-ai-core-backend-module-vcs-aws-codecommit" },
-    { "path": "./plugins/backend/plugin-ai-core-backend-module-vcs-azure" },
-    { "path": "./plugins/backend/plugin-ai-core-backend-module-vcs-bitbucket" },
-    { "path": "./plugins/backend/plugin-ai-core-backend-module-vcs-gerrit" },
-    { "path": "./plugins/backend/plugin-ai-core-backend-module-vcs-git" },
-    { "path": "./plugins/backend/plugin-ai-core-backend-module-vcs-github" },
-    { "path": "./plugins/backend/plugin-ai-core-backend-module-vcs-gitlab" },
+    { "path": "./plugins/core/backend" },
+    { "path": "./plugins/core/node" },
+    { "path": "./plugins/core/infra/retrieval-augmenter" },
+    { "path": "./plugins/core/infra/runtime-store" },
+    { "path": "./plugins/core/infra/llm/core" },
+    { "path": "./plugins/core/infra/llm/aws" },
+    { "path": "./plugins/core/infra/llm/openai" },
+    { "path": "./plugins/core/infra/llm/openrouter" },
+    { "path": "./plugins/core/infra/vector/core" },
+    { "path": "./plugins/core/infra/vector/pgvector" },
+    { "path": "./plugins/core/infra/vector/qdrant" },
 
     // ==========================================
-    // 4. Dedicated Backend Agent Modules (18)
+    // 3. Tier 2: Agentic Workflow Pairs
     // ==========================================
-    { "path": "./plugins/backend/plugin-ai-agent-backend-alert-ai-tuner" },
-    { "path": "./plugins/backend/plugin-ai-agent-backend-catalog-ai-insights" },
-    { "path": "./plugins/backend/plugin-ai-agent-backend-kubernetes-ai-responder" },
-    { "path": "./plugins/backend/plugin-ai-agent-backend-oncall-ai-handover-assistant" },
-    { "path": "./plugins/backend/plugin-ai-agent-backend-release-notes-ai-generator" },
-    { "path": "./plugins/backend/plugin-ai-agent-backend-rfc-adr-ai-reviewer" },
-    { "path": "./plugins/backend/plugin-ai-agent-backend-scaffolder-ai-drift-detector" },
-    { "path": "./plugins/backend/plugin-ai-agent-backend-scaffolder-ai-guardrail-agent" },
-    { "path": "./plugins/backend/plugin-ai-agent-backend-scaffolder-ai-infra" },
-    { "path": "./plugins/backend/plugin-ai-agent-backend-scaffolder-ai-intent" },
-    { "path": "./plugins/backend/plugin-ai-agent-backend-scaffolder-ai-prd" },
-    { "path": "./plugins/backend/plugin-ai-agent-backend-scaffolder-ai-shadow-detective" },
-    { "path": "./plugins/backend/plugin-ai-agent-backend-search-ai-archeology" },
-    { "path": "./plugins/backend/plugin-ai-agent-backend-search-ai-context" },
-    { "path": "./plugins/backend/plugin-ai-agent-backend-tech-debt-ai-scout" },
-    { "path": "./plugins/backend/plugin-ai-agent-backend-tech-radar-ai-manager" },
-    { "path": "./plugins/backend/plugin-ai-agent-backend-techdocs-ai-janitor" },
-    { "path": "./plugins/backend/plugin-ai-agent-backend-techdocs-ai-postmortem" },
+    { "path": "./plugins/agents/core-frontend" },
+    { "path": "./plugins/agents/alert-tuner/backend" },
+    { "path": "./plugins/agents/alert-tuner/frontend" },
+    { "path": "./plugins/agents/catalog-insights/backend" },
+    { "path": "./plugins/agents/catalog-insights/frontend" },
+    { "path": "./plugins/agents/kubernetes-responder/backend" },
+    { "path": "./plugins/agents/kubernetes-responder/frontend" },
+    { "path": "./plugins/agents/oncall-handover/backend" },
+    { "path": "./plugins/agents/oncall-handover/frontend" },
+    { "path": "./plugins/agents/release-notes-generator/backend" },
+    { "path": "./plugins/agents/release-notes-generator/frontend" },
+    { "path": "./plugins/agents/rfc-adr-reviewer/backend" },
+    { "path": "./plugins/agents/rfc-adr-reviewer/frontend" },
+    { "path": "./plugins/agents/scaffolder-drift-detector/backend" },
+    { "path": "./plugins/agents/scaffolder-drift-detector/frontend" },
+    { "path": "./plugins/agents/scaffolder-guardrail/backend" },
+    { "path": "./plugins/agents/scaffolder-guardrail/frontend" },
+    { "path": "./plugins/agents/scaffolder-infra/backend" },
+    { "path": "./plugins/agents/scaffolder-infra/frontend" },
+    { "path": "./plugins/agents/scaffolder-intent/backend" },
+    { "path": "./plugins/agents/scaffolder-intent/frontend" },
+    { "path": "./plugins/agents/scaffolder-prd/backend" },
+    { "path": "./plugins/agents/scaffolder-prd/frontend" },
+    { "path": "./plugins/agents/scaffolder-shadow-detective/backend" },
+    { "path": "./plugins/agents/scaffolder-shadow-detective/frontend" },
+    { "path": "./plugins/agents/search-archeology/backend" },
+    { "path": "./plugins/agents/search-archeology/frontend" },
+    { "path": "./plugins/agents/search-context/backend" },
+    { "path": "./plugins/agents/search-context/frontend" },
+    { "path": "./plugins/agents/tech-debt-scout/backend" },
+    { "path": "./plugins/agents/tech-debt-scout/frontend" },
+    { "path": "./plugins/agents/techdocs-janitor/backend" },
+    { "path": "./plugins/agents/techdocs-janitor/frontend" },
+    { "path": "./plugins/agents/techdocs-postmortem/backend" },
+    { "path": "./plugins/agents/techdocs-postmortem/frontend" },
+    { "path": "./plugins/agents/tech-radar-manager/backend" },
+    { "path": "./plugins/agents/tech-radar-manager/frontend" },
 
     // ==========================================
-    // 5. Dedicated Frontend Agent Modules (18)
+    // 4. Tier 3: Third-Party Vendor Integration Tools
     // ==========================================
-    { "path": "./plugins/frontend/plugin-ai-agent-frontend-core" }, // Shared core module
-    { "path": "./plugins/frontend/plugin-ai-agent-frontend-alert-ai-tuner" },
-    { "path": "./plugins/frontend/plugin-ai-agent-frontend-catalog-ai-insights" },
-    { "path": "./plugins/frontend/plugin-ai-agent-frontend-kubernetes-ai-responder" },
-    { "path": "./plugins/frontend/plugin-ai-agent-frontend-oncall-ai-handover-assistant" },
-    { "path": "./plugins/frontend/plugin-ai-agent-frontend-release-notes-ai-generator" },
-    { "path": "./plugins/frontend/plugin-ai-agent-frontend-rfc-adr-ai-reviewer" },
-    { "path": "./plugins/frontend/plugin-ai-agent-frontend-scaffolder-ai-drift-detector" },
-    { "path": "./plugins/frontend/plugin-ai-agent-frontend-scaffolder-ai-guardrail-agent" },
-    { "path": "./plugins/frontend/plugin-ai-agent-frontend-scaffolder-ai-infra" },
-    { "path": "./plugins/frontend/plugin-ai-agent-frontend-scaffolder-ai-intent" },
-    { "path": "./plugins/frontend/plugin-ai-agent-frontend-scaffolder-ai-prd" },
-    { "path": "./plugins/frontend/plugin-ai-agent-frontend-scaffolder-ai-shadow-detective" },
-    { "path": "./plugins/frontend/plugin-ai-agent-frontend-search-ai-archeology" },
-    { "path": "./plugins/frontend/plugin-ai-agent-frontend-search-ai-context" },
-    { "path": "./plugins/frontend/plugin-ai-agent-frontend-tech-debt-ai-scout" },
-    { "path": "./plugins/frontend/plugin-ai-agent-frontend-tech-radar-ai-manager" },
-    { "path": "./plugins/frontend/plugin-ai-agent-frontend-techdocs-ai-janitor" },
-    { "path": "./plugins/frontend/plugin-ai-agent-frontend-techdocs-ai-postmortem" }
+    { "path": "./plugins/tools/kubernetes" },
+    { "path": "./plugins/tools/cloud-providers/core" },
+    { "path": "./plugins/tools/cloud-providers/aws" },
+    { "path": "./plugins/tools/cloud-providers/azure" },
+    { "path": "./plugins/tools/cloud-providers/gcp" },
+    { "path": "./plugins/tools/communication/core" },
+    { "path": "./plugins/tools/communication/slack" },
+    { "path": "./plugins/tools/compliance/core" },
+    { "path": "./plugins/tools/compliance/opa" },
+    { "path": "./plugins/tools/incident-management/core" },
+    { "path": "./plugins/tools/incident-management/pagerduty" },
+    { "path": "./plugins/tools/observability/core" },
+    { "path": "./plugins/tools/observability/datadog" },
+    { "path": "./plugins/tools/project-management/core" },
+    { "path": "./plugins/tools/project-management/jira" },
+    { "path": "./plugins/tools/quality-scorecards/core" },
+    { "path": "./plugins/tools/quality-scorecards/scorecards" },
+    { "path": "./plugins/tools/quality-scorecards/soundcheck" },
+    { "path": "./plugins/tools/quality-scorecards/techradar" },
+    { "path": "./plugins/tools/vcs/core" },
+    { "path": "./plugins/tools/vcs/aws-codecommit" },
+    { "path": "./plugins/tools/vcs/azure" },
+    { "path": "./plugins/tools/vcs/bitbucket" },
+    { "path": "./plugins/tools/vcs/gerrit" },
+    { "path": "./plugins/tools/vcs/git" },
+    { "path": "./plugins/tools/vcs/github" },
+    { "path": "./plugins/tools/vcs/gitlab" }
   ]
 }

@@ -1,14 +1,18 @@
 {
   "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
-    "composite": true,         // 1. Mandatory for TypeScript Project References to function
-    "declaration": true,       // 2. Instructs tsc to generate the required .d.ts files
-    "declarationMap": true,    // 3. Allows IDE "Go to Definition" shortcuts to jump to your source code
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
     "outDir": "../../../dist-types/plugins/frontend/plugin-ai-agent-frontend-alert-ai-tuner",
     "rootDir": "src"
   },
   "references": [
-    { "path": "../plugin-ai-agent-frontend-core" }
+    {
+      "path": "../../frontend-core"
+    }
   ],
-  "include": ["src/**/*"]
+  "include": [
+    "src/**/*"
+  ]
 }

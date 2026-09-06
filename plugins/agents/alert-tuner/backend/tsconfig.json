@@ -3,5 +3,15 @@
   "compilerOptions": {
     "outDir": "../../../dist-types/plugins/backend/agent-alert-tuner-backend"
   },
-  "include": ["src/**/*"]
+  "include": [
+    "src/**/*"
+  ],
+  "references": [
+    {
+      "path": "../../../core/backend"
+    },
+    {
+      "path": "../../../core/node"
+    }
+  ]
 }

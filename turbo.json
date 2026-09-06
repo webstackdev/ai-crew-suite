@@ -33,15 +33,10 @@
         ".eslintrc*"
       ]
     },
-    "test": {
+    "test:unit": {
       "cache": true,
       "dependsOn": ["^build"],
-      "inputs": [
-        "src/**/*.ts",
-        "src/**/*.tsx",
-        "src/**/*.test.ts",
-        "src/**/*.test.tsx"
-      ]
+      "inputs": ["src/**/*.ts", "src/**/*.test.ts", "vitest.config.ts"]
     },
     "typecheck": {
       "cache": true,

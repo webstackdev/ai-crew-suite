@@ -14,6 +14,53 @@ Our monorepo splits code into three isolated tiers:
 
 All internal packages belong to the NPM organization scope `@ai-crew-suite`.
 
+## Local Plugin Files
+
+### `tsconfig.json`
+
+```json
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "outDir": "../../../dist-types/plugins/agents/alert-tuner/backend"
+  },
+  "include": ["src/**/*"],
+  "references": [
+    { "path": "../../core-frontend" } 
+  ]
+}
+```
+
+### `package.json`
+
+```json
+{
+  "name": "@ai-crew-suite/agent-alert-tuner-backend",
+  "scripts": {
+    "start": "backstage-cli package start",
+    "build": "backstage-cli package build", 
+    "clean": "backstage-cli package clean",
+    "typecheck": "tsc --build",
+    "lint": "backstage-cli package lint",
+    "test:unit": "vitest run"
+  }
+}
+```
+
+### `vitest.config.ts`
+
+```ts
+import { mergeConfig } from 'vitest/config';
+import baseConfig from '../../../vitest.config.base';
+
+export default mergeConfig(baseConfig, {
+  test: {
+    environment: 'node',
+  },
+});
+```
+
 ## 📁 Repository Directory Structure
 
 ```text

@@ -17,6 +17,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@ai-crew-suite/agent-alert-tuner-backend": "workspace:^",
     "@backstage/backend-defaults": "backstage:^",
     "@backstage/backend-plugin-api": "backstage:^",
     "@backstage/config": "backstage:^",
@@ -46,7 +47,6 @@
     "@backstage/plugin-search-backend-node": "backstage:^",
     "@backstage/plugin-signals-backend": "backstage:^",
     "@backstage/plugin-techdocs-backend": "backstage:^",
-    "@ai-crew-suite/agent-alert-tuner-backend": "workspace:^",
     "@webstackbuilders/plugin-ai-agent-backend-catalog-ai-insights": "workspace:^",
     "@webstackbuilders/plugin-ai-agent-backend-oncall-ai-handover-assistant": "workspace:^",
     "@webstackbuilders/plugin-ai-agent-backend-release-notes-ai-generator": "workspace:^",

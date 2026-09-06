@@ -3,5 +3,21 @@
   "compilerOptions": {
     "outDir": "../../../dist-types/plugins/backend/plugin-ai-core-backend-module-llm-aws"
   },
-  "include": ["src/**/*"]
+  "include": [
+    "src/**/*"
+  ],
+  "references": [
+    {
+      "path": "../../../backend"
+    },
+    {
+      "path": "../../../node"
+    },
+    {
+      "path": "../../retrieval-augmenter"
+    },
+    {
+      "path": "../../vector/pgvector"
+    }
+  ]
 }

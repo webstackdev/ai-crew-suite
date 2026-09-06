@@ -3,5 +3,12 @@
   "compilerOptions": {
     "outDir": "../../../dist-types/plugins/backend/plugin-ai-core-backend-module-cloud-providers-azure"
   },
-  "include": ["src/**/*"]
+  "include": [
+    "src/**/*"
+  ],
+  "references": [
+    {
+      "path": "../../../core/node"
+    }
+  ]
 }

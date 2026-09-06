@@ -1,4 +1,29 @@
+/**
+ * Copyright 2026 Webstack Builders, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 import { vi, beforeEach, afterEach, beforeAll, afterAll } from 'vitest';
+
+// ----------------------------------------------------
+// TypeScript Type Declarations for globalThis Merging
+// ----------------------------------------------------
+declare global {
+  var jest: {
+    fn: (...args: any[]) => ReturnType<typeof vi.fn>;
+    spyOn: (...args: any[]) => any;
+  };
+}
 
 // ----------------------------------------------------
 // Jest Compatibility Polyfills (Required by Backstage Mock Services)
@@ -6,18 +31,16 @@ import { vi, beforeEach, afterEach, beforeAll, afterAll } from 'vitest';
 globalThis.jest = {
   fn: (...args: any[]) => vi.fn(...args),
   spyOn: (...args: any[]) => vi.spyOn(...(args as [any, any])),
-} as any;
+};
 
 // ----------------------------------------------------
 // 1. Environment Detection
 // ----------------------------------------------------
-
 const isBrowserEnv = typeof window !== 'undefined';
 
 // ----------------------------------------------------
 // 2. Global Frontend / JSDOM Mocks & Polyfills
 // ----------------------------------------------------
-
 if (isBrowserEnv) {
   // JSDOM exposes CSS.escape as an unbound Web IDL method, unlike browsers.
   Object.defineProperty(window.CSS, 'escape', {
@@ -33,7 +56,7 @@ if (isBrowserEnv) {
 
   // Mock HTMLCanvasElement.prototype.getContext (Required by many UI components)
   vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockImplementation(() => {
-    return {} as RenderingContext;
+    return {} as any; // Using any bypasses deep Canvas rendering context requirements
   });
 
   // Mock window.matchMedia (Commonly required by Material-UI / Backstage themes)
@@ -67,7 +90,6 @@ if (isBrowserEnv) {
 // ----------------------------------------------------
 // 3. Global Lifecycle Hooks (Cleaners and Resetters)
 // ----------------------------------------------------
-
 beforeAll(() => {
   // Silence specific console errors or warnings that pollute your test outputs
   vi.spyOn(console, 'error').mockImplementation((message) => {

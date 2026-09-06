@@ -93,7 +93,24 @@ Run the standard quality gates:
 ```bash
 yarn lint
 yarn typecheck:full
-yarn test
+```
+
+To run tests for the entire monorepo concurrently with cache optimization:
+
+```bash
+turbo run test:unit
+```
+
+To run tests for only the single alert tuner package:
+
+```bash
+turbo run test:unit --filter=@ai-crew-suite/agent-alert-tuner-backend
+```
+
+To target tests only on things that changed in your current git branch:
+
+```bash
+turbo run test:unit --filter=[HEAD~1]
 ```
 
 Build the workspace:

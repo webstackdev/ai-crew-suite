@@ -9,5 +9,10 @@
   "exclude": [
     "src/**/*.test.*",
     "src/**/*.spec.*"
+  ],
+  "references": [
+    {
+      "path": "../../../core/node"
+    }
   ]
 }
