@@ -3,9 +3,10 @@
   "compilerOptions": {
     "outDir": "./dist",
     "rootDir": "./src",
-    // Override the base configuration's NodeNext output to match standard ESLint requirements
-    "module": "CommonJS",
     "types": ["node"]
   },
-  "include": ["src/**/*"]
+  "include": [
+    "src/**/*",
+    "@types/**/*"
+  ]
 }

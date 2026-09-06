@@ -23,7 +23,9 @@ All internal packages belong to the NPM organization scope `@ai-crew-suite`.
   "extends": "../../../../tsconfig.base.json",
   "compilerOptions": {
     "composite": true,
-    "outDir": "../../../dist-types/plugins/agents/alert-tuner/backend"
+    "outDir": "../../../dist-types/plugins/agents/alert-tuner/backend",
+    "rootDir": "./src",
+    "types": ["node"]
   },
   "include": ["src/**/*"],
   "references": [
@@ -55,6 +57,14 @@ All internal packages belong to the NPM organization scope `@ai-crew-suite`.
 }
 ```
 
+### `.eslintrc.cjs`
+
+```javascript
+
+```
+
+
+
 ### `vitest.config.ts`
 
 ```ts
@@ -66,6 +76,12 @@ export default mergeConfig(baseConfig, {
     environment: 'node',
   },
 });
+```
+
+### Run Unit Tests in a Plugin
+
+```bash
+yarn turbo run test:unit --filter=@ai-crew-suite/config-eslint
 ```
 
 ## 📁 Repository Directory Structure

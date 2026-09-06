@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright 2026 Webstack Builders, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,18 +15,10 @@
  */
 import { defineConfig } from 'vitest/config';
 
-export type VitestConfigShape = ReturnType<typeof defineConfig>;
-
-export const baseBackendConfig: VitestConfigShape = defineConfig({
+export default defineConfig({
   test: {
     environment: 'node',
-    passWithNoTests: true,
-  },
-});
-
-export const baseFrontendConfig: VitestConfigShape = defineConfig({
-  test: {
-    environment: 'jsdom',
-    passWithNoTests: true,
+    include: ['src/__tests__/**/*.test.ts'],
+    watch: false,
   },
 });

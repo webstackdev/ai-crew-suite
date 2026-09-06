@@ -1,4 +1,5 @@
-/*
+
+/**
  * Copyright 2026 Webstack Builders, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,20 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { defineConfig } from 'vitest/config';
 
-export type VitestConfigShape = ReturnType<typeof defineConfig>;
+declare module '@backstage/eslint-plugin' {
+  const plugin: any;
+  export default plugin;
+}
 
-export const baseBackendConfig: VitestConfigShape = defineConfig({
-  test: {
-    environment: 'node',
-    passWithNoTests: true,
-  },
-});
-
-export const baseFrontendConfig: VitestConfigShape = defineConfig({
-  test: {
-    environment: 'jsdom',
-    passWithNoTests: true,
-  },
-});
+declare module 'eslint-plugin-unused-imports' {
+  const plugin: any;
+  export default plugin;
+}
