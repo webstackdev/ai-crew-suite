@@ -171,4 +171,4 @@ Maintainer-facing docs that should stay current are the non-underscore files in 
 
 ## License
 
-Copyright 2026 Webstack Builders, Inc. Licensed under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
+Copyright 2026 The AI Crew Suite Authors Licensed under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
