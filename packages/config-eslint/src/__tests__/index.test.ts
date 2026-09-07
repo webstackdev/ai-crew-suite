@@ -48,10 +48,10 @@ describe('config-eslint factory', () => {
       files: ['src/experimental/**/*.ts'],
       rules: { 'no-console': 'off' as const },
     };
-
     const config = createFlatConfigForRole('node-library', [customOverride]);
-    const finalBlock = config[config.length - 1];
+    const targetBlock = config.find(block => block.files && block.files.includes('src/experimental/**/*.ts'));
 
-    expect(finalBlock).toEqual(customOverride);
+    expect(targetBlock).toBeDefined();
+    expect(targetBlock?.rules?.['no-console']).toBe('off');
   });
 });

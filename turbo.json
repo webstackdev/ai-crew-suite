@@ -4,10 +4,8 @@
   "globalEnv": ["NODE_ENV", "CI", "BACKSTAGE_APP_CONFIG"],
   "tasks": {
     "build": {
-      "cache": true,
       "dependsOn": ["^build"],
-      "outputs": ["dist/**", "alpha/**"],
-      "env": ["APP_CONFIG_PATH", "PLAYWRIGHT_BASE_URL"]
+      "outputs": ["dist/**", "dist-types/**", "build/**"]
     },
     "start": {
       "cache": false,
@@ -20,28 +18,19 @@
       "dependsOn": ["^build"]
     },
     "clean": {
-      "cache": false,
-      "dependsOn": ["^clean"]
+      "cache": false
     },
     "lint": {
-      "cache": true,
-      "inputs": [
-        "src/**/*.ts",
-        "src/**/*.tsx",
-        "package.json",
-        "tsconfig.json",
-        ".eslintrc*"
-      ]
+      "dependsOn": ["^build"],
+      "outputs": []
     },
     "test:unit": {
-      "cache": true,
       "dependsOn": ["^build"],
-      "inputs": ["src/**/*.ts", "src/**/*.test.ts", "vitest.config.ts"]
+      "inputs": ["src/**/*", "src/**/*.test.ts", "src/**/*.test.tsx"],
+      "outputs": ["coverage/**"]
     },
     "typecheck": {
-      "cache": true,
-      "dependsOn": ["^typecheck"],
-      "inputs": ["src/**/*.ts", "src/**/*.tsx", "tsconfig.json"],
+      "dependsOn": ["^build"],
       "outputs": []
     },
     "storybook": {

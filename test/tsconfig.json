@@ -1,9 +1,0 @@
-{
-  "extends": "../tsconfig.base.json",
-  "compilerOptions": {
-    "outDir": "../dist-types/test",
-    // Injects the types strictly into this isolated folder scope
-    "types": ["vitest/globals"] 
-  },
-  "include": ["**/*.ts"]
-}
