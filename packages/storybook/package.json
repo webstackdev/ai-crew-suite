@@ -7,7 +7,7 @@
     "./src/utils/mockUtils": "./src/utils/mockUtils.ts"
   },
   "scripts": {
-    "lint": "yarn --cwd ../.. exec eslint packages/storybook/src --max-warnings 0",
+    "lint": "eslint --config ../config-eslint/eslint.package-web.config.ts src --max-warnings 0",
     "typecheck": "yarn --cwd ../.. exec tsc --noEmit -p packages/storybook/tsconfig.json",
     "storybook": "storybook dev -p 6006",
     "storybook:build": "storybook build"

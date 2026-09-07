@@ -13,11 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { mergeConfig } from 'vitest/config';
-import baseConfig from '@ai-crew-suite/config-vitest';
 
-export default mergeConfig(baseConfig, {
-  test: {
-    environment: 'node',
-  },
-});
+import { createFlatConfigForRole } from './src/index.ts';
+
+export default createFlatConfigForRole('node-library');

@@ -8,7 +8,7 @@
   "packageManager": "yarn@4.18.0",
   "lint-staged": {
     "*.{js,jsx,ts,tsx,mjs,cjs}": [
-      "eslint --fix"
+      "eslint --config packages/config-eslint/eslint.monorepo.config.ts --fix"
     ],
     "*.{json,md,css,scss}": [
       "prettier --write"
@@ -31,9 +31,6 @@
     "dev:ci:legacy": "concurrently \"http-server packages/app/dist -a localhost --port 3000 --gzip --proxy http://localhost:3000?\" \"turbo run start --filter=backend-legacy\"",
     "dev:legacy": "turbo run start --filter=backend-legacy --filter=app",
     "dev:modern": "turbo run start --filter=backend-modern --filter=app",
-    "lint": "turbo lint",
-    "lint:changed": "turbo lint --filter=[HEAD~1]",
-    "lint:actions": "FORCE_COLOR=1 npx node-actionlint",
     "install:actions": ".venv/bin/pip install -r requirements.txt",
     "install:app": "sh -c 'yarn workspace app add \"$@\"' --",
     "install:clean": "rm -f package-lock.json yarn.lock && yarn cache clean && yarn install",
@@ -45,6 +42,9 @@
     "install:setup": "husky",
     "install:upgrade:core": "yarn backstage-cli versions:bump --release main",
     "install:upgrade:third-party": "turbo clean && yarn up",
+    "lint": "turbo lint",
+    "lint:changed": "turbo lint --filter=[HEAD~1]",
+    "lint:actions": "FORCE_COLOR=1 npx node-actionlint",
     "plugin:create": "backstage-cli new --category plugin --scope @webstackbuilders",
     "plugin:new": "backstage-cli new --scope @webstackbuilders",
     "postinstall": "yarn python:setup",
@@ -81,7 +81,7 @@
     "@backstage/config": "backstage:^",
     "@changesets/cli": "^3.0.2",
     "@playwright/test": "^1.63.0",
-    "@types/node": "^26.4.1",
+    "@types/node": "^22.20.1",
     "concurrently": "^10.0.5",
     "http-server": "^14.1.1",
     "husky": "^9.1.7",

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-const { createConfigForRole } = require('@backstage/cli/config/eslint-factory');
 
-module.exports = createConfigForRole(__dirname, 'backend-plugin');
+import { createFlatConfigForRole } from './index.js';
+
+export default createFlatConfigForRole('node-library');

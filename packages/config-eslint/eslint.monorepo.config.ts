@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://apache.org
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,41 +14,39 @@
  * limitations under the License.
  */
 
-import { createFlatConfigForRole } from '@ai-crew-suite/config-eslint';
+import { createFlatConfigForRole } from './src/index.ts';
+
+const backendBaseConfig = createFlatConfigForRole('backend-plugin')[1];
+const frontendBaseConfig = createFlatConfigForRole('frontend-plugin')[1];
 
 export default [
-  /** Global Ignores Matrix */
   {
     ignores: [
       '**/node_modules/**',
       '**/dist/**',
       '**/dist-types/**',
       '**/coverage/**',
-      '.yarn/**'
-    ]
+      '.yarn/**',
+    ],
   },
-
-  /** Global Rule Block for Backend and Core Node Utility Code */
   {
     files: [
       'plugins/backend/**/*.ts',
       'plugins/core/**/*.ts',
       'plugins/tools/**/*.ts',
-      'packages/scripts/src/**/*.ts'
+      'packages/*/src/**/*.ts',
+      'packages/*/src/**/*.tsx',
+      'packages/scripts/src/**/*.ts',
     ],
-    /** Automatically applies standard 'backend-plugin' role parameters globally */
-    ...createFlatConfigForRole('backend-plugin')[0]
+    ...backendBaseConfig,
   },
-
-  /** Global Rule Block for Frontend UI Components & Web Libraries */
   {
     files: [
       'plugins/frontend/**/*.ts',
       'plugins/frontend/**/*.tsx',
       'apps/backstage/src/**/*.ts',
-      'apps/backstage/src/**/*.tsx'
+      'apps/backstage/src/**/*.tsx',
     ],
-    /** Automatically applies standard 'frontend-plugin' role parameters globally */
-    ...createFlatConfigForRole('frontend-plugin')[0]
-  }
+    ...frontendBaseConfig,
+  },
 ];

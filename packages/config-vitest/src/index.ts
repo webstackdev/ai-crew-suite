@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 import { defineConfig } from 'vitest/config';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -21,32 +20,45 @@ import { fileURLToPath } from 'node:url';
 export type VitestConfigShape = ReturnType<typeof defineConfig>;
 
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const moduleDir = path.dirname(__filename);
 
-const SETUP_FILE_PATH = path.resolve(__dirname, './setup.js');
+/** Resolve the setup file relative to this shared package's built output location */
+const SETUP_FILE_PATH = path.resolve(moduleDir, './setup.js');
 
-export const baseBackendConfig: VitestConfigShape = defineConfig({
-  test: {
-    globals: true,
-    environment: 'node',
-    passWithNoTests: true,
-    setupFiles: [SETUP_FILE_PATH],
-    coverage: {
-      provider: 'v8',
-      reporter: ['text', 'json', 'html'],
+/**
+ * Dynamically constructs a project configuration based on the relative folder path.
+ * Used by the root vitest.workspace.ts orchestrator.
+ */
+export function createWorkspaceProjectConfig(projectPath: string): VitestConfigShape {
+  /** Normalize windows backslashes to forward slashes */
+  const normalizedPath = projectPath.replace(/\\/g, '/');
+
+  /** Rules determining if the context belongs to a browser/frontend environment */
+  const isAppFrontend = normalizedPath.endsWith('packages/app');
+  const isAgentFrontend = normalizedPath.includes('plugins/agents/') && normalizedPath.endsWith('/frontend');
+
+  const environment = (isAppFrontend || isAgentFrontend) ? 'jsdom' : 'node';
+
+  /** Extract a clean project name from the path for the reporter UI (e.g., "plugins-agents-my-plugin-frontend") */
+  const projectName = normalizedPath.replace(/^\.\//, '').replace(/\//g, '-');
+
+  return defineConfig({
+    test: {
+      name: projectName,
+      globals: true,
+      environment,
+      passWithNoTests: true,
+      setupFiles: [SETUP_FILE_PATH],
+      /** Explicitly ignore any playwright test files contained inside e2e-tests paths */
+      exclude: [
+        '**/node_modules/**',
+        '**/dist/**',
+        '**/e2e-tests/**',
+      ],
+      coverage: {
+        provider: 'v8',
+        reporter: ['text', 'json', 'html'],
+      },
     },
-  },
-});
-
-export const baseFrontendConfig: VitestConfigShape = defineConfig({
-  test: {
-    globals: true,
-    environment: 'jsdom',
-    passWithNoTests: true,
-    setupFiles: [SETUP_FILE_PATH],
-    coverage: {
-      provider: 'v8',
-      reporter: ['text', 'json', 'html'],
-    },
-  },
-});
+  });
+}

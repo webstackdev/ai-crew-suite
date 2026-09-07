@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2026 The AI Crew Suite Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { defineConfig } from 'vitest/config';
 
-export default defineConfig({
-  test: {
-    environment: 'node',
-    include: ['src/__tests__/**/*.test.ts'],
-    watch: false,
-  },
-});
+import { createFlatConfigForRole, type PackageRole } from './index.js';
+
+const role = process.env.AI_CREW_SUITE_ESLINT_ROLE;
+
+if (!role) {
+  throw new Error('AI_CREW_SUITE_ESLINT_ROLE must be set to a valid package role.');
+}
+
+export default createFlatConfigForRole(role as PackageRole);
