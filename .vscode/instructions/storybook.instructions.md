@@ -45,7 +45,7 @@ applyTo:
 
 ## Generic, typed API mocks
 
-- Reuse `createMockApi` and `createMockFn` from `@webstackbuilders/storybook-workspace-infra/src/utils/mockUtils`.
+- Reuse `createMockApi` and `createMockFn` from `@ai-crew-suite/cli/storybook/mocks`.
 - Type each story API against the plugin's exported API interface. Supply all methods the rendered component can call:
 
   ```tsx
