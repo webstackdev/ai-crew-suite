@@ -40,16 +40,10 @@
       "path": "./packages/cli"
     },
     {
-      "path": "./packages/eslint"
-    },
-    {
       "path": "./packages/scripts"
     },
     {
       "path": "./packages/storybook"
-    },
-    {
-      "path": "./packages/vitest"
     },
     {
       "path": "./plugins/agents/alert-tuner/backend"

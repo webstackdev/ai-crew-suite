@@ -1,12 +1,25 @@
 {
   "$schema": "https://turbo.build",
   "concurrency": "75%",
-  "globalEnv": ["NODE_ENV", "CI", "BACKSTAGE_APP_CONFIG"],
+  "globalEnv": [
+    "NODE_ENV",
+    "CI",
+    "BACKSTAGE_APP_CONFIG",
+    "BACKSTAGE_USER_SECRET",
+    "POSTGRES_USER",
+    "POSTGRES_PASSWORD"
+  ],
   "tasks": {
     "build": {
       "dependsOn": ["^build", "sync"],
       "outputs": ["dist/**"],
-      "env": ["FORCE_COLOR"]
+      "env": [
+        "FORCE_COLOR",
+        "PLAYWRIGHT_APP_HOST",
+        "PLAYWRIGHT_APP_PORT",
+        "PLAYWRIGHT_BACKEND_HOST",
+        "PLAYWRIGHT_BACKEND_PORT"
+      ]
     },
     "start": {
       "cache": false,
@@ -30,7 +43,9 @@
       "persistent": true
     },
     "storybook:build": {
-      "outputs": ["storybook-static/**"]
+      "dependsOn": ["^build"],
+      "outputs": ["packages/storybook/storybook-static/**"],
+      "cache": true
     },
     "sync": {
       "inputs": [
@@ -43,6 +58,30 @@
         "packages/**/tsconfig.json",
         "plugins/**/tsconfig.json",
         "tsconfig.json"
+      ]
+    },
+    "test:e2e": {
+      "cache": true,
+      "dependsOn": ["^build"],
+      "inputs": [
+        "apps/**/*.ts",
+        "apps/**/*.tsx",
+        "plugins/**/*.ts",
+        "plugins/**/*.tsx",
+        "**/src/**/*.e2e.test.ts"
+      ],
+      "outputs": [
+        "playwright-report/**",
+        "test-results/**"
+      ],
+      "env": [
+        "PLAYWRIGHT_APP_HOST",
+        "PLAYWRIGHT_APP_PORT",
+        "PLAYWRIGHT_BACKEND_HOST",
+        "PLAYWRIGHT_BACKEND_PORT",
+        "PLAYWRIGHT_BASE_URL",
+        "PLAYWRIGHT_BACKEND_HEALTH_URL",
+        "CI"
       ]
     },
     "test:unit": {

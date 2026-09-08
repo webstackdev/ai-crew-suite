@@ -49,6 +49,8 @@ All internal packages belong to the NPM organization scope `@ai-crew-suite`.
     "build": "crew build",
     "clean": "crew clean",
     "lint": "crew lint",
+    "prepack": "backstage-cli package prepack",
+    "postpack": "backstage-cli package postpack",
     "publish": "crew publish",
     "test:unit": "crew test:unit",
     "typecheck": "crew typecheck"
@@ -58,6 +60,8 @@ All internal packages belong to the NPM organization scope `@ai-crew-suite`.
     "@backstage/backend-test-utils": "backstage:^",
     "@backstage/cli": "backstage:^",
     "@types/node": "catalog:node-types",
+    "react": "catalog:react",
+    "react-dom": "catalog:react-dom",
     "typescript": "catalog:typescript",
     "vitest": "catalog:vitest"
   }
@@ -67,16 +71,27 @@ All internal packages belong to the NPM organization scope `@ai-crew-suite`.
 ### Run Unit Tests in a Plugin
 
 ```bash
-yarn turbo run build --filter=@ai-crew-suite/config-eslint
-yarn turbo run lint --filter=@ai-crew-suite/config-eslint
-yarn turbo run test:unit --filter=@ai-crew-suite/config-eslint
+yarn turbo run build --filter=@ai-crew-suite/eslint
+yarn turbo run lint --filter=@ai-crew-suite/eslint
+yarn turbo run test:unit --filter=@ai-crew-suite/eslint
 ```
 
-### Lint
+@ai-crew-suite/cli/storybook/mocks
+
+When team members join or when you start creating new internal Backstage plugins, the workflow for a new feature branch will look like this:
 
 ```bash
-ai-crew-suite-eslint --role <role> src --max-warnings 0
+# 1. Create a dedicated task branch
+git checkout -b feature/my-new-backstage-plugin
+
+# 2. Write your code, tests, and run validations locally
+crew typecheck && crew test:unit && crew lint
+
+# 3. When you are ready to commit a release target intent, generate a changeset file
+yarn changeset
 ```
+
+Would you like to set up the **GitHub Actions setup file validation** for your `Changeset PRs` pull request creation workflow next?
 
 ## 📁 Repository Directory Structure
 

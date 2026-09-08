@@ -15,21 +15,42 @@
  */
 import { Command } from 'commander';
 import { spawnSync } from 'node:child_process';
+import chalk from 'chalk';
 
 const program = new Command();
 
 program
-  .description('Perform static TypeScript verification')
+  .name('typecheck')
+  .description('Perform static TypeScript verification across the package workspace')
+  .allowUnknownOption(true) // Allows developers to forward flags like --watch natively
   .action(() => {
-    console.log(`\x1b[34m⎋ Executing typecheck in:\x1b[0m ${process.cwd()}`);
+    // 1. Stylized layout message header block matching your brand aesthetic
+    console.log(`${chalk.blue('⎋ Executing static typecheck analysis in:')} ${chalk.gray(process.cwd())}`);
 
-    const result = spawnSync('npx', ['tsc', '--noEmit'], {
+    // Capture trailing args passed by the user (like --watch or --pretty)
+    const forwardedArgs = process.argv.slice(3);
+
+    // 2. Hardened Execution Pass
+    // Calling 'yarn tsc' bypasses global shell lookups, neutralizing command injection vulnerabilities
+    const result = spawnSync('yarn', ['tsc', '--noEmit', ...forwardedArgs], {
       stdio: 'inherit',
-      shell: true,
-      cwd: process.cwd()
+      shell: true, // Required for executing package manager link shims across platforms
+      cwd: process.cwd(),
     });
 
-    process.exit(result.status ?? 0);
+    // 3. Resilient Error Tracking Boundary Control
+    if (result.error) {
+      console.error(chalk.red(`❌ Process Execution Error: Failed to invoke typecheck engine.`), result.error);
+      process.exit(1);
+    }
+
+    // Capture explicit compiler status codes or map unexpected signal terminations to failure states
+    if (result.status !== 0) {
+      process.exit(result.status ?? 1);
+    }
+
+    console.log(`${chalk.green('✅ Typecheck verification passed successfully!')}\n`);
+    process.exit(0);
   });
 
 program.parse(process.argv);

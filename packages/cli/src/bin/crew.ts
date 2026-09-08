@@ -57,11 +57,50 @@ program.configureOutput({
 });
 
 program
-  .command('build', 'Compile all workspace targets', createCommandOpts('build'))
-  .command('clean', 'Wipe internal build caches and distribution directories', createCommandOpts('clean'))
-  .command('lint', 'Run structural ESLint validations', createCommandOpts('lint'))
-  .command('publish', 'Orchestrate npm release flow for modified targets', createCommandOpts('publish'))
-  .command('test:unit', 'Execute package testing matrix', createCommandOpts('test-unit'))
-  .command('typecheck', 'Perform static TypeScript verification', createCommandOpts('typecheck'));
+  .command(
+    'build',
+    'Compile all workspace targets',
+    createCommandOpts('build')
+  )
+  .command(
+    'clean',
+    'Wipe internal build caches and distribution directories',
+    createCommandOpts('clean')
+  )
+  .command(
+    'lint',
+    'Run structural ESLint validations',
+    createCommandOpts('lint')
+  )
+  .command(
+    'publish',
+    'Orchestrate npm release flow for modified targets',
+    createCommandOpts('publish')
+  )
+  .command(
+    'storybook',
+    'Boot up the localized interactive Storybook documentation server',
+    createCommandOpts('storybook')
+  )
+  .command(
+    'storybook:build',
+    'Compile a static distribution build of the workspace documentation stories',
+    createCommandOpts('storybook-build')
+  )
+  .command(
+    'test:e2e',
+    'Run end-to-end integration tests via Playwright',
+    createCommandOpts('test-e2e')
+  )
+  .command(
+    'test:unit',
+    'Execute package testing matrix',
+    createCommandOpts('test-unit')
+  )
+  .command(
+    'typecheck',
+    'Perform static TypeScript verification',
+    createCommandOpts('typecheck')
+  );
 
 program.parse(process.argv);

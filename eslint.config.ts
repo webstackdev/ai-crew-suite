@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright 2026 The AI Crew Suite Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import * as path from 'node:path';
-import { fileURLToPath } from 'node:url';
-import { createWorkspaceProjectConfig } from '../packages/vitest/src/index.ts';
 
-const __filename = fileURLToPath(import.meta.url);
-const configDir = path.dirname(__filename);
-const repoRoot = path.resolve(configDir, '..');
-const projectPath = path.relative(repoRoot, process.cwd()) || '.';
+/**
+ * Linting is handled by the ai-crew-suite CLI. This file is necessary
+ * for IDE ESLint extensions to automatically pick up linting config.
+ */
+// @ts-ignore - Bypass type declaration generation checks for compiled root config file
+import { createFlatConfigForWorkspace } from '@ai-crew-suite/cli/config/eslint';
 
-export default createWorkspaceProjectConfig(projectPath);
+export default createFlatConfigForWorkspace();

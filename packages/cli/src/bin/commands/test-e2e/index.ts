@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2026 The AI Crew Suite Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,37 +24,29 @@ const program = new Command();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 program
-  .name('test:unit')
-  .description('Execute package unit tests matrix via Vitest')
-  .allowUnknownOption(true) // Native flag forwarding protection
+  .name('test:e2e')
+  .description('Run end-to-end integration tests via Playwright')
+  .allowUnknownOption(true)
   .action(() => {
     const context = getWorkspaceContext();
 
-    console.log(`${chalk.blue('🧪 Executing Unit Tests for:')} ${chalk.bold(context.packageName)} ${chalk.gray(`(${context.role})`)}`);
+    console.log(`${chalk.magenta('🎭 AI CREW SUITE: Orchestrating Playwright E2E Runner matrix')}`);
 
-    // 1. Point directly to the compiled configuration file inside your OWN distribution folder
-    const internalConfigPath = path.resolve(__dirname, 'lib/vitest.config.js');
-
-    // 2. Extract trailing execution arguments (e.g., --watch, --coverage)
+    const internalConfigPath = path.resolve(__dirname, 'lib/playwright.config.js');
     const forwardedArgs = process.argv.slice(3);
 
-    // 3. Dispatch Vitest pointing directly to our internal hidden configuration file
-    const testResult = spawnSync(
-      'yarn',
-      ['vitest', 'run', '-c', internalConfigPath, ...forwardedArgs],
-      {
-        stdio: 'inherit',
-        shell: true,
-        cwd: context.packageDir,
-      }
-    );
+    const result = spawnSync('yarn', ['playwright', 'test', '--config', internalConfigPath, ...forwardedArgs], {
+      stdio: 'inherit',
+      shell: true,
+      cwd: context.repoRoot
+    });
 
-    if (testResult.error) {
-      console.error(chalk.red('❌ Process Execution Error: Failed to invoke Vitest engine.'), testResult.error);
+    if (result.error) {
+      console.error(chalk.red('❌ Process Execution Error: Failed to invoke Playwright engine.'), result.error);
       process.exit(1);
     }
 
-    process.exit(testResult.status ?? 0);
+    process.exit(result.status ?? 0);
   });
 
 program.parse(process.argv);

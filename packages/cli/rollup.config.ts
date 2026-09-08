@@ -24,7 +24,8 @@ const currentDir = import.meta.dirname;
 
 const entryPoints = globSync([
   path.resolve(currentDir, 'src/bin/crew.ts'),
-  path.resolve(currentDir, 'src/bin/commands/**/*.ts') // Matches commands/build/index.ts
+  path.resolve(currentDir, 'src/bin/commands/**/*.ts'),
+  path.resolve(currentDir, 'src/bin/utils/*.ts'),
 ]);
 
 const outputDir = path.resolve(currentDir, 'dist/bin');
@@ -41,7 +42,14 @@ export default defineConfig({
     /** Inject a shebang at the top of each subcommand file */
     banner: '#!/usr/bin/env node\n',
   },
-  external: ['commander', 'chalk', 'node:child_process', 'node:path', 'node:fs', 'url'],
+  external: (id) => {
+    // Keep relative imports and internal source files bundled/resolved correctly
+    if (id.startsWith('.') || path.isAbsolute(id)) {
+      return false;
+    }
+    // Force ALL node_modules packages, node built-ins, and third-party tools to be external
+    return true;
+  },
   plugins: [
     resolve(),
     typescript({
