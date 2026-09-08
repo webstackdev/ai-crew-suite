@@ -58,7 +58,6 @@ All internal packages belong to the NPM organization scope `@ai-crew-suite`.
     "@backstage/backend-test-utils": "backstage:^",
     "@backstage/cli": "backstage:^",
     "@types/node": "catalog:node-types",
-    "rimraf": "catalog:rimraf",
     "typescript": "catalog:typescript",
     "vitest": "catalog:vitest"
   }

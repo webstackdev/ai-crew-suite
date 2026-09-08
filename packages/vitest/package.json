@@ -27,7 +27,7 @@
   "devDependencies": {
     "@types/jest": "^29.5.14",
     "@types/node": "catalog:node-types",
-    "rimraf": "catalog:rimraf",
+    "rimraf": "6.1.3",
     "typescript": "catalog:typescript"
   }
 }

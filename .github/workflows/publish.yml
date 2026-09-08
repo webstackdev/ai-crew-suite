@@ -37,7 +37,7 @@ jobs:
           registry-url: https://npmjs.org
 
       - name: 📦 Install Workspace Dependencies
-        uses: backstage/actions/yarn-install@2cd6978b476cbdc39fec48346f8b6ca13199dd6a # v0.7.8
+        uses: backstage/actions/yarn-install@0d281eb2e96927466db49d4cd01d52b14809a66b # v0.7.10
         with:
           cache-prefix: ${{ runner.os }}-node-${{ matrix.node-version }}
 
@@ -57,20 +57,23 @@ jobs:
           SLACK_TITLE: "❌ Master Build Failed"
           SLACK_MESSAGE: "The main production compilation has failed. Review logs at: https://github.com{{ github.repository }}/actions/runs/${{ github.run_id }}"
 
+      - name: 🔐 Configure NPM Scope Registries & Provenance Flags
+        run: |
+          git config --global user.email "bot@ai-crew-suite.com"
+          git config --global user.name "ai-crew-suite-bot"
+          yarn config set npmScopes.ai-crew-suite.npmRegistryServer "https://registry.npmjs.org"
+          yarn config set npmScopes.ai-crew-suite.npmPublishRegistry "https://registry.npmjs.org"
+          yarn config set npmScopes.ai-crew-suite.npmAlwaysAuth true
+          yarn config set npmAuthToken "${{ secrets.NPM_AUTH_TOKEN }}"
+          echo "YARN_NPM_PUBLISH_PROVENANCE=true" >> $GITHUB_ENV
+
       - name: 🚀 Publish Packages & Create GitHub Release
         id: changesets
         uses: changesets/action@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2.1.2
         with:
-          publish: |
-            git config --global user.email "bot@webstackbuilders.com"
-            git config --global user.name "webstackbuilders-bot"
-            yarn config set npmScopes.webstackbuilders.npmRegistryServer "https://npmjs.org"
-            yarn config set npmScopes.webstackbuilders.npmPublishRegistry "https://npmjs.org"
-            yarn config set npmScopes.webstackbuilders.npmAlwaysAuth true
-            yarn config set npmAuthToken "${{ secrets.NPM_AUTH_TOKEN }}"
-            YARN_NPM_PUBLISH_PROVENANCE=true yarn changeset publish
+          publish-script: node packages/cli/dist/bin/crew.js publish
+          github-token: ${{ secrets.GITHUB_TOKEN }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
       - name: 📢 Slack Success Notification
