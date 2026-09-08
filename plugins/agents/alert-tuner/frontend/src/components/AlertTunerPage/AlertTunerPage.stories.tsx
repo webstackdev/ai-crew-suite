@@ -17,7 +17,7 @@ import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, screen, userEvent, waitFor, within } from 'storybook/test';
 import { AlertTunerPage } from './AlertTunerPage';
-import { createMockApi, createMockFn } from '@webstackbuilders/storybook-workspace-infra/src/utils/mockUtils';
+import { createMockApi, createMockFn } from '@ai-crew-suite/cli/storybook/mocks';
 import {
   alertTunerApiRef,
   type AlertTunerApi

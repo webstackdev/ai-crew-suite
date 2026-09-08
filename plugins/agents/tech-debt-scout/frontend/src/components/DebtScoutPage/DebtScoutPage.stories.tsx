@@ -15,7 +15,7 @@
  */
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, screen, userEvent, waitFor, within } from 'storybook/test';
-import { createMockApi, createMockFn } from '@webstackbuilders/storybook-workspace-infra/src/utils/mockUtils';
+import { createMockApi, createMockFn } from '@ai-crew-suite/cli/storybook/mocks';
 import { techDebtScoutApiRef, type TechDebtScoutApi } from '../../api';
 import { TECH_DEBT_REPORT_ARTIFACT } from '../../hooks/useDebtScoutRun';
 import type { AiRunEvent, DebtReport } from '../../@types';

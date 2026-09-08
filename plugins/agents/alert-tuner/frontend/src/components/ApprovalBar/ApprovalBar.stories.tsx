@@ -16,7 +16,7 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, userEvent, within } from 'storybook/test';
-import { createMockFn } from '@webstackbuilders/storybook-workspace-infra/src/utils/mockUtils';
+import { createMockFn } from '@ai-crew-suite/cli/storybook/mocks';
 import { ApprovalBar, type ApprovalBarProps } from './ApprovalBar';
 
 const meta: Meta<typeof ApprovalBar> = {

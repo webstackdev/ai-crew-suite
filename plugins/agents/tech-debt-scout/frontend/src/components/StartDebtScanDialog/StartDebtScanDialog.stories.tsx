@@ -15,7 +15,7 @@
  */
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, screen, userEvent, waitFor } from 'storybook/test';
-import { createMockFn } from '@webstackbuilders/storybook-workspace-infra/src/utils/mockUtils';
+import { createMockFn } from '@ai-crew-suite/cli/storybook/mocks';
 import { StartDebtScanDialog } from './StartDebtScanDialog';
 import type { StartDebtScanInput } from '../../@types';
 

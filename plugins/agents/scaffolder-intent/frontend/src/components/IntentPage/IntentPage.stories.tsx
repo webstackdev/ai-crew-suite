@@ -15,7 +15,7 @@
  */
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, screen, userEvent, within } from 'storybook/test';
-import { createMockApi, createMockFn } from '@webstackbuilders/storybook-workspace-infra/src/utils/mockUtils';
+import { createMockApi, createMockFn } from '@ai-crew-suite/cli/storybook/mocks';
 import { scaffolderIntentApiRef, type ScaffolderIntentApi } from '../../api';
 import { TEMPLATE_INTENT_PROPOSAL_ARTIFACT } from '../../hooks/useIntentProposalRun';
 import { IntentPage } from './IntentPage';
