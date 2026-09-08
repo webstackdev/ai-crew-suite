@@ -1,24 +1,3 @@
 {
   "extends": "../../../../tsconfig.base.json",
-  "compilerOptions": {
-    "composite": true,
-    "outDir": "../../../dist-types/plugins/agents/alert-tuner/backend"
-  },
-  "include": [
-    "src*"
-  ],
-  "references": [
-    {
-      "path": "../../../../packages/config-eslint"
-    },
-    {
-      "path": "../../../../packages/config-vitest"
-    },
-    {
-      "path": "../../../core/backend"
-    },
-    {
-      "path": "../../../core/node"
-    }
-  ]
 }

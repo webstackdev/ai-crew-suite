@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
@@ -23,33 +22,67 @@ import { fileURLToPath } from 'node:url';
 
 const require = createRequire(import.meta.url);
 
-const ROLE_ALIASES = new Map([
+/**
+ * A mapping of shorthand role names to their full role names.
+ */
+const ROLE_ALIASES = new Map<string, string>([
   ['node', 'node-library'],
   ['web', 'web-library'],
 ]);
 
-function printUsage() {
+/**
+ * CLI usage syntax and an example to standard error.
+ */
+function printUsage(): void {
   console.error(
-    'Usage: ai-crew-eslint --role <role> <eslint args...>\n' +
-      'Example: ai-crew-eslint --role node-library src --max-warnings 0',
+    'Usage: ai-crew-eslint --role  \n' +
+    'Example: ai-crew-eslint --role node-library src --max-warnings 0',
   );
 }
 
-function parseArgs(argv: string[]) {
+/**
+ * T{he p}arsed CLI arguments.
+ */
+interface ParsedArgs {
+  /** The fully resolved config role name, or undefined if none was supplied. */
+  role: string | undefined;
+  /** All arguments that should be passed through directly to ESLint. */
+  forwardedArgs: string[];
+}
+
+/**
+ * Parses the provided command-line arguments to extract the --role parameter
+ * and isolate remaining flags.
+ *
+ * @param argv - An array of raw command-line argument strings.
+ * @returns The extracted canonical role name and an array of remaining forwarded arguments.
+ */
+function parseArgs(argv: string[]): ParsedArgs {
   const forwardedArgs: string[] = [];
   let role: string | undefined;
 
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index];
 
+    // Guard against out-of-bounds or undefined array indices
+    if (arg === undefined) {
+      continue;
+    }
+
     if (arg === '--role') {
-      role = argv[index + 1];
-      index += 1;
+      const nextArg = argv[index + 1];
+
+      if (nextArg !== undefined) {
+        role = nextArg;
+        index += 1;
+      }
+
       continue;
     }
 
     if (arg.startsWith('--role=')) {
       role = arg.slice('--role='.length);
+
       continue;
     }
 
@@ -62,14 +95,30 @@ function parseArgs(argv: string[]) {
   };
 }
 
-function resolveEslintBinPath() {
+/**
+
+* Resolves the absolute path to the main binary file exported by the eslint package.
+*
+* @returns The full system file path to the ESLint binary wrapper.
+* @throws Error If the eslint package json file or its bin.eslint entry is missing.
+*/
+function resolveEslintBinPath(): string {
   const eslintPackageJsonPath = require.resolve('eslint/package.json');
   const eslintPackageJson = JSON.parse(readFileSync(eslintPackageJsonPath, 'utf8')) as {
-    bin: { eslint: string };
+    bin?: { eslint?: string };
   };
 
-  return path.resolve(path.dirname(eslintPackageJsonPath), eslintPackageJson.bin.eslint);
+  const binPath = eslintPackageJson.bin?.eslint;
+  if (!binPath) {
+    throw new Error("Could not find a valid 'bin.eslint' entry in 'eslint/package.json'.");
+  }
+
+  return path.resolve(path.dirname(eslintPackageJsonPath), binPath);
 }
+
+// ============================================================================
+// Execution Execution Entry Point
+// ============================================================================
 
 const { role, forwardedArgs } = parseArgs(process.argv.slice(2));
 

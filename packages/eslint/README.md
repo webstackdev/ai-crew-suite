@@ -12,9 +12,9 @@ Use the package-provided wrapper in the consumer package's `package.json`:
 
 ```json
 {
-	"scripts": {
-		"lint": "ai-crew-eslint --role node-library src --max-warnings 0"
-	}
+  "scripts": {
+    "lint": "ai-crew-eslint --role node-library src --max-warnings 0"
+  }
 }
 ```
 
@@ -45,17 +45,17 @@ In practice, the most common commands are:
 
 ```json
 {
-	"scripts": {
-		"lint": "ai-crew-eslint --role node-library src --max-warnings 0"
-	}
+  "scripts": {
+    "lint": "ai-crew-eslint --role node-library src --max-warnings 0"
+  }
 }
 ```
 
 ```json
 {
-	"scripts": {
-		"lint": "ai-crew-eslint --role web-library src --max-warnings 0"
-	}
+  "scripts": {
+    "lint": "ai-crew-eslint --role web-library src --max-warnings 0"
+  }
 }
 ```
 
@@ -87,7 +87,7 @@ yarn turbo run typecheck --filter=@ai-crew-suite/config-eslint
 To validate a consumer package against the shared config, run its lint target through Turbo. Example:
 
 ```bash
-yarn turbo run lint --filter=@ai-crew-suite/config-vitest
+yarn turbo run lint --filter=@ai-crew-suite/<my-package>
 ```
 
 If you change `bin`, `exports`, or dependency wiring in this package's `package.json`, run a workspace install so Yarn refreshes the linked binary metadata:

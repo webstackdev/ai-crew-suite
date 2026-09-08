@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright 2026 The AI Crew Suite Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,13 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { Command } from 'commander';
+import { spawnSync } from 'node:child_process';
 
-import { createFlatConfigForRole, type PackageRole } from './index.js';
+const program = new Command();
 
-const role = process.env.AI_CREW_SUITE_ESLINT_ROLE;
+program
+  .description('Perform static TypeScript verification')
+  .action(() => {
+    console.log(`\x1b[34m⎋ Executing typecheck in:\x1b[0m ${process.cwd()}`);
 
-if (!role) {
-  throw new Error('AI_CREW_SUITE_ESLINT_ROLE must be set to a valid package role.');
-}
+    const result = spawnSync('npx', ['tsc', '--noEmit'], {
+      stdio: 'inherit',
+      shell: true,
+      cwd: process.cwd()
+    });
 
-export default createFlatConfigForRole(role as PackageRole);
+    process.exit(result.status ?? 0);
+  });
+
+program.parse(process.argv);

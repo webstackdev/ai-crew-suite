@@ -13,7 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import * as path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { createWorkspaceProjectConfig } from '../packages/vitest/src/index.ts';
 
-import { createFlatConfigForRole } from './index.js';
+const __filename = fileURLToPath(import.meta.url);
+const configDir = path.dirname(__filename);
+const repoRoot = path.resolve(configDir, '..');
+const projectPath = path.relative(repoRoot, process.cwd()) || '.';
 
-export default createFlatConfigForRole('node-library');
+export default createWorkspaceProjectConfig(projectPath);

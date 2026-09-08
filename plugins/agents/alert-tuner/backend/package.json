@@ -30,7 +30,8 @@
     "postpack": "backstage-cli package postpack",
     "typecheck": "tsc --noEmit",
     "lint": "backstage-cli package lint --format stylish",
-    "test": "yarn --cwd ../../.. vitest run plugins/backend/plugin-ai-agent-backend-alert-ai-tuner/src --config test/vitest.config.ts"
+    "test": "yarn test:unit",
+    "test:unit": "vitest run src --config ../../../test/vitest.config.ts"
   },
   "dependencies": {
     "@backstage/backend-plugin-api": "backstage:^",
@@ -43,8 +44,6 @@
     "zod": "^4.5.4"
   },
   "devDependencies": {
-    "@ai-crew-suite/config-eslint": "workspace:*",
-    "@ai-crew-suite/config-vitest": "workspace:*",
     "@backstage/backend-test-utils": "backstage:^",
     "@backstage/cli": "backstage:^",
     "vitest": "^4.1.11"

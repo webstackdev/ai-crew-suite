@@ -59,9 +59,8 @@ jobs:
 
       - name: 🚀 Publish Packages & Create GitHub Release
         id: changesets
-        uses: changesets/action@v1
+        uses: changesets/action@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2.1.2
         with:
-          # Automatically runs your custom sequence to lock down the registry and publish
           publish: |
             git config --global user.email "bot@webstackbuilders.com"
             git config --global user.name "webstackbuilders-bot"
@@ -69,7 +68,7 @@ jobs:
             yarn config set npmScopes.webstackbuilders.npmPublishRegistry "https://npmjs.org"
             yarn config set npmScopes.webstackbuilders.npmAlwaysAuth true
             yarn config set npmAuthToken "${{ secrets.NPM_AUTH_TOKEN }}"
-            yarn changeset publish
+            YARN_NPM_PUBLISH_PROVENANCE=true yarn changeset publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}

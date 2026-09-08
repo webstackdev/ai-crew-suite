@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright 2026 The AI Crew Suite Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,7 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { Command } from 'commander';
 
-import { createFlatConfigForRole } from './src/index.ts';
+const program = new Command();
 
-export default createFlatConfigForRole('node-library');
+program
+  .description('Run tests on all workspace targets')
+  .action(() => {
+    console.log('🧪 Hello from the compiled unit test subcommand!');
+  });
+
+program.parse(process.argv);

@@ -29,15 +29,32 @@ All internal packages belong to the NPM organization scope `@ai-crew-suite`.
 ```json
 {
   "name": "@ai-crew-suite/agent-alert-tuner-backend",
+  "version": "1.0.0",
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "type": "module",
+  "bin": {
+    "ai-crew-eslint": "./dist/bin/ai-crew-eslint.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
   "scripts": {
-    "build": "tsc",
-    "clean": "rimraf dist",
-    "lint": "eslint src --max-warnings 0",
-    "typecheck": "tsc --noEmit"
+    "build": "crew build",
+    "clean": "crew clean",
+    "lint": "crew lint",
+    "publish": "crew publish",
+    "test:unit": "crew test:unit",
+    "typecheck": "crew typecheck"
   },
   "devDependencies": {
-    "@ai-crew-suite/config-eslint": "workspace:*",
-    "@ai-crew-suite/config-vitest": "workspace:*",
+    "@ai-crew-suite/cli": "workspace:*",
     "@backstage/backend-test-utils": "backstage:^",
     "@backstage/cli": "backstage:^",
     "@types/node": "catalog:node-types",
@@ -48,70 +65,6 @@ All internal packages belong to the NPM organization scope `@ai-crew-suite`.
 }
 ```
 
-Use this as the standard per-package lint script pattern during your refactor:
-
-Use one command shape everywhere:
-
-`"lint": "ai-crew-eslint --role <role> src --max-warnings 0"`
-
-The supported canonical `--role` values are defined in `index.ts`:
-
-- `node-library`
-  Use for server-side libraries, config packages, utility packages, and anything Node-only.
-- `web-library`
-  Use for browser/UI libraries that are not full Backstage plugins.
-- `backend`
-  Use for a backend app/package.
-- `backend-plugin`
-  Use for Backstage backend plugins.
-- `backend-plugin-module`
-  Use for backend plugin modules/extensions.
-- `frontend`
-  Use for a frontend app/package.
-- `frontend-plugin`
-  Use for Backstage frontend plugins.
-- `frontend-plugin-module`
-  Use for frontend plugin modules/extensions.
-- `cli`
-  Use for command-line packages.
-- `cli-module`
-  Use for CLI extension/module packages.
-- `common-library`
-  This exists, but I would not use it yet. In the current implementation it does not get the frontend/browser branch you’d probably expect, so it behaves like base TS-only config unless you fix that in `index.ts`.
-
-There are also two aliases in `ai-crew-eslint.mjs`:
-
-- `--role node` maps to `node-library`
-- `--role web` maps to `web-library`
-
-For consistency across 60+ packages, I would use the full canonical names, not the aliases.
-
-Practical repo mapping:
-
-- `packages/config-*`, `packages/backend-*`, `scripts`, Node-only shared libs: `node-library`
-- `app`: `frontend`
-- frontend plugin packages under `plugins/.../frontend`: `frontend-plugin`
-- backend plugin packages under `plugins/.../backend`: `backend-plugin`
-- browser-focused shared packages like Storybook helpers or UI libs: `web-library`
-
-One special case remains:
-
-`"lint": "node ./bin/ai-crew-eslint.mjs --role node-library src --max-warnings 0"`
-
-That one is only for `package.json`, because a package cannot reliably invoke its own workspace bin by name in its own script environment.
-
-The wrapper forwards the rest of the args straight to ESLint, so if a package doesn’t lint `src`, you can swap that part only:
-
-`"lint": "ai-crew-eslint --role frontend-plugin . --max-warnings 0"`
-
-If you want, I can also give you a short role-to-path cheat sheet for all the package/plugin directory patterns in this repo.
-
-If you manually roll this out elsewhere, the current model is:
-
-Consumers use `ai-crew-eslint --role <role> src --max-warnings 0`
-
-The shared package owns all config logic and emits runnable JS from src into dist
-
 ### Run Unit Tests in a Plugin
 
 ```bash
@@ -120,23 +73,10 @@ yarn turbo run lint --filter=@ai-crew-suite/config-eslint
 yarn turbo run test:unit --filter=@ai-crew-suite/config-eslint
 ```
 
-**Yarn `catalog:` Protocol**
+### Lint
 
-**Leaf Plugin `package.json`**
-
-Down inside your 60+ plugins, you declare the dependency versions by pointing to your catalog token instead of writing raw strings:
-
-```json
-{
-  "name": "@ai-crew-suite/agent-alert-tuner-backend",
-  "devDependencies": {
-    "@types/node": "catalog:toolchain",
-    "eslint": "catalog:toolchain",
-    "rimraf": "catalog:toolchain",
-    "typescript": "catalog:toolchain",
-    "vitest": "catalog:toolchain"
-  }
-}
+```bash
+ai-crew-suite-eslint --role <role> src --max-warnings 0
 ```
 
 ## 📁 Repository Directory Structure
@@ -306,3 +246,14 @@ Satellite folders represent the standalone vendor plugins. They handle credentia
 1. **No Circular Dependencies:** `tools` may never depend on `agents`. `infra` may never depend on tools.
 2. **Pure Providers:** Satellite driver modules (e.g., `tool-vcs-github`) should strictly register their implementation to their respective hub extension point and side-effect nothing else.
 3. **No Root Clutter:** Do not flatten domain integrations into the root of `plugins/tools/`. Keep them neatly grouped inside subdirectories (e.g., `plugins/tools/vcs/*`).
+
+## Fixing Build
+
+Right now we're mixing `tsc` and `tsc -b` for build scripts across the repo. The `-b` flag duplicates work that Turbo is doing (pushing dependency rebuilds into TypeScript's graph). We should be using `backstage-cli package build`. Backstage's CLI uses Rollup.
+
+However, it uses a global monorepo cache layer located at the root of the project in **`dist-types/`**. Because `backstage-cli package build` relies on the root `dist-types/` cache folder to generate your local type definitions, you must emit type declarations during type checking first. If you run `backstage-cli package build` on a package without running a type check across your monorepo beforehand, the build might fail, or it could bundle outdated type definitions because the global cache was not refreshed.
+
+To ensure your types are always completely synchronized and accurate, your Turborepo task runner should always enforce type emitting *prior* to a full build execution:
+
+1. Run **`yarn tsc`** (or your global typecheck script) at the root level. This compiles type safety across all 60+ packages and populates the root `dist-types/` directory.
+2. Run your **`turbo build`** task, which triggers `backstage-cli package build` safely, pulling the fresh types directly from the cached definitions.

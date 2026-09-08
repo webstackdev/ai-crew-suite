@@ -3,6 +3,7 @@
   "compilerOptions": {
     "composite": true,
     "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
     "incremental": true,
     "jsx": "react-jsx",
     "lib": [
@@ -10,15 +11,18 @@
       "DOM",
       "DOM.Iterable"
     ],
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "module": "esnext",
+    "moduleResolution": "bundler",
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
     "noUncheckedIndexedAccess": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
-    "target": "ES2022"
+    "target": "ES2022",
+    "types": [
+      "node"
+    ]
   },
   "files": [],
   "include": [],
@@ -33,16 +37,19 @@
       "path": "./packages/backend-modern"
     },
     {
-      "path": "./packages/config-eslint"
+      "path": "./packages/cli"
     },
     {
-      "path": "./packages/config-vitest"
+      "path": "./packages/eslint"
     },
     {
       "path": "./packages/scripts"
     },
     {
       "path": "./packages/storybook"
+    },
+    {
+      "path": "./packages/vitest"
     },
     {
       "path": "./plugins/agents/alert-tuner/backend"

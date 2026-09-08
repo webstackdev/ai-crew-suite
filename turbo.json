@@ -4,8 +4,9 @@
   "globalEnv": ["NODE_ENV", "CI", "BACKSTAGE_APP_CONFIG"],
   "tasks": {
     "build": {
-      "dependsOn": ["^build"],
-      "outputs": ["dist/**", "dist-types/**", "build/**"]
+      "dependsOn": ["^build", "sync"],
+      "outputs": ["dist/**"],
+      "env": ["FORCE_COLOR"]
     },
     "start": {
       "cache": false,
@@ -24,21 +25,38 @@
       "dependsOn": ["^build"],
       "outputs": []
     },
-    "test:unit": {
-      "dependsOn": ["^build"],
-      "inputs": ["src/**/*", "src/**/*.test.ts", "src/**/*.test.tsx"],
-      "outputs": ["coverage/**"]
-    },
-    "typecheck": {
-      "dependsOn": ["^build"],
-      "outputs": []
-    },
     "storybook": {
       "cache": false,
       "persistent": true
     },
     "storybook:build": {
       "outputs": ["storybook-static/**"]
+    },
+    "sync": {
+      "inputs": [
+        "apps/**/package.json",
+        "packages/**/package.json",
+        "plugins/**/package.json"
+      ],
+      "outputs": [
+        "apps/**/tsconfig.json",
+        "packages/**/tsconfig.json",
+        "plugins/**/tsconfig.json",
+        "tsconfig.json"
+      ]
+    },
+    "test:unit": {
+      "dependsOn": ["^build"],
+      "inputs": [
+        "src/**/*",
+        "src/**/*.test.ts",
+        "src/**/*.test.tsx"
+      ],
+      "outputs": ["coverage/**"]
+    },
+    "typecheck": {
+      "dependsOn": ["^build"],
+      "outputs": []
     }
   }
 }

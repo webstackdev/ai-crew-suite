@@ -20,7 +20,7 @@
     "plugins/**/*"
   ],
   "scripts": {
-    "build": "yarn sync && turbo build",
+    "build": "turbo build",
     "build:image": "yarn workspace backend build:image",
     "clean": "turbo clean",
     "clean:node_modules": "find plugins -name node_modules -type d -exec rm -rf {} +",
@@ -59,7 +59,7 @@
     "storybook": "turbo run storybook --filter=@webstackbuilders/storybook-workspace-infra",
     "storybook:build": "turbo run storybook:build --filter=@webstackbuilders/storybook-workspace-infra",
     "storybook:rebuild-types": "yarn tsc --build packages/storybook/tsconfig.json",
-    "sync": "yarn workspace @internal/scripts run run:sync-refs",
+    "sync": "yarn workspace @ai-crew-suite/scripts run run:sync-refs",
     "test": "yarn test:unit && yarn test:e2e && yarn test:unit:coverage",
     "test:e2e:show-report": "FORCE_COLOR=1 npx playwright show-report",
     "test:e2e:smoke": "FORCE_COLOR=1 CI=1 npx playwright test --grep \"@smoke\"",

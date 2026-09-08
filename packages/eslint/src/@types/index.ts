@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright 2026 The AI Crew Suite Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,7 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import { createFlatConfigForRole } from './index.js';
-
-export default createFlatConfigForRole('web-library');
+export type PackageRole =
+  | 'common-library'
+  | 'web-library'
+  | 'frontend'
+  | 'frontend-plugin'
+  | 'frontend-plugin-module'
+  | 'backend'
+  | 'backend-plugin'
+  | 'backend-plugin-module'
+  | 'node-library'
+  | 'cli'
+  | 'cli-module';

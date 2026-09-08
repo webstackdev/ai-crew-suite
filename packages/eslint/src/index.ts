@@ -1,5 +1,4 @@
 /**
- * Copyright 2020 The Backstage Authors
  * Copyright 2026 The AI Crew Suite Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,19 +26,8 @@ import storybookPlugin from 'eslint-plugin-storybook';
 import tsParser from '@typescript-eslint/parser';
 import tsPlugin from '@typescript-eslint/eslint-plugin';
 import unusedImportsPlugin from 'eslint-plugin-unused-imports';
+import type { PackageRole } from './@types';
 
-export type PackageRole =
-  | 'common-library'
-  | 'web-library'
-  | 'frontend'
-  | 'frontend-plugin'
-  | 'frontend-plugin-module'
-  | 'backend'
-  | 'backend-plugin'
-  | 'backend-plugin-module'
-  | 'node-library'
-  | 'cli'
-  | 'cli-module';
 
 /**
  * Global Base Ruleset applied across ALL packages in the monorepo

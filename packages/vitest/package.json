@@ -11,13 +11,14 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "tsc -b",
     "clean": "rimraf dist",
     "lint": "ai-crew-eslint --role node-library src --max-warnings 0",
+    "test": "yarn test:unit",
+    "test:unit": "vitest run src --config ../../test/vitest.config.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@ai-crew-suite/config-eslint": "workspace:*",
     "@vitest/coverage-v8": "^4.1.11",
     "eslint": "^10.10.0",
     "jsdom": "^30.0.1",

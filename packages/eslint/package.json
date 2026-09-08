@@ -1,37 +1,27 @@
 {
-  "name": "@ai-crew-suite/config-eslint",
+  "name": "@ai-crew-suite/eslint",
   "version": "1.0.0",
-  "publishConfig": {
-    "access": "public"
-  },
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "private": true,
   "type": "module",
   "bin": {
-    "ai-crew-eslint": "./dist/bin/ai-crew-eslint.js"
-  },
-  "exports": {
-    ".": "./dist/index.js",
-    "./node": "./dist/eslint.package-node.config.js",
-    "./web": "./dist/eslint.package-web.config.js",
-    "./monorepo": "./dist/eslint.monorepo.config.js",
-    "./role": "./dist/eslint.package-role.config.js"
+    "ai-crew-suite-eslint": "./dist/bin/index.js"
   },
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && npx chmod +x dist/bin/index.js",
     "clean": "rimraf dist",
-    "lint": "node ./dist/bin/ai-crew-eslint.js --role node-library src --max-warnings 0",
+    "lint": "node ./dist/bin/index.js --role node-library src --max-warnings 0",
+    "test": "yarn test:unit",
     "typecheck": "tsc --noEmit",
-    "test:unit": "vitest run"
+    "test:unit": "ai-crew-suite-vitest"
   },
   "dependencies": {
     "@backstage/eslint-plugin": "backstage:^",
     "@types/eslint-plugin-jsx-a11y": "6.10.1",
-    "@typescript-eslint/eslint-plugin": "^8.69.0",
-    "@typescript-eslint/parser": "^8.69.0",
+    "@typescript-eslint/eslint-plugin": "^8.70.0",
+    "@typescript-eslint/parser": "^8.70.0",
     "eslint": "^10.10.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-header": "3.1.1",
@@ -42,7 +32,7 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-storybook": "^10.6.0",
     "eslint-plugin-unused-imports": "^4.4.1",
-    "typescript-eslint": "^8.69.0"
+    "typescript-eslint": "^8.70.0"
   },
   "devDependencies": {
     "@types/node": "catalog:node-types",
