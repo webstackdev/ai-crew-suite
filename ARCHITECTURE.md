@@ -16,6 +16,10 @@ All internal packages belong to the NPM organization scope `@ai-crew-suite`.
 
 ## Leaf Plugin Files
 
+```bash
+find . -type f -exec sed -i 's|support@ai-crew-suite.dev|support@ai-crew-suite.dev|g' {} +
+```
+
 ### `tsconfig.json`
 
 ```json
@@ -30,29 +34,31 @@ All internal packages belong to the NPM organization scope `@ai-crew-suite`.
 {
   "name": "@ai-crew-suite/agent-alert-tuner-backend",
   "version": "1.0.0",
+  "keywords": [
+    "ai-core",
+    "ai-crew-suite",
+    "backend",
+    "backstage-plugin-module",
+    "backstage",
+    "cloud-providers"
+  ],
   "publishConfig": {
     "access": "public",
     "provenance": true
   },
-  "type": "module",
-  "bin": {
-    "ai-crew-eslint": "./dist/bin/ai-crew-eslint.js"
-  },
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
-    }
-  },
+  "type": "module", // frontend plugins only
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "backstage": {
+    "role": "frontend-plugin"
+  }
   "scripts": {
     "build": "crew build",
     "clean": "crew clean",
     "lint": "crew lint",
-    "prepack": "backstage-cli package prepack",
-    "postpack": "backstage-cli package postpack",
-    "publish": "crew publish",
+    "test:e2e": "crew test:e2e",
     "test:unit": "crew test:unit",
+    "test:unit:coverage": "crew test:unit:coverage",
     "typecheck": "crew typecheck"
   },
   "devDependencies": {
@@ -77,6 +83,8 @@ yarn turbo run test:unit --filter=@ai-crew-suite/eslint
 ```
 
 @ai-crew-suite/cli/storybook/mocks
+
+grep -rli 'old_string' * | xargs -I@ sed -i 's/old_string/new_string/g' @
 
 When team members join or when you start creating new internal Backstage plugins, the workflow for a new feature branch will look like this:
 

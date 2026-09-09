@@ -6,12 +6,12 @@
   "types": "src/index.ts",
   "license": "Apache-2.0",
   "keywords": [
-    "backstage",
-    "backstage-plugin-module",
-    "backend",
-    "webstack-builders",
+    "ai-core",
     "ai-crew-suite",
-    "ai-core"
+    "backend",
+    "backstage-plugin-module",
+    "backstage",
+    "cloud-providers"
   ],
   "publishConfig": {
     "access": "public",
@@ -27,7 +27,7 @@
   },
   "bugs": {
     "url": "https://github.com/webstackdev/ai-crew-suite/issues",
-    "email": "support@webstackbuilders.com"
+    "email": "support@ai-crew-suite.dev"
   },
   "repository": {
     "type": "git",

@@ -54,16 +54,16 @@ The important design rule is that core packages communicate through contracts, n
 
 ## Core Package Map
 
-| Package                                                               | Purpose                                                                                                                                              |
-| --------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `@webstackbuilders/plugin-ai-core-node`                               | Shared contracts and Backstage extension points for sources, tools, models, agents, triggers, orchestrators, vector stores, and runtime persistence. |
-| `@ai-crew-suite/agent-alert-tuner-backend`                            | Runtime backend plugin that assembles registries, validates wiring, creates the controller, runs orchestrators, and exposes HTTP/SSE routes.         |
-| `@ai-crew-suite/agent-alert-tuner-backend-module-retrieval-augmenter` | Default catalog/TechDocs indexing, vector retrieval, Backstage Search retrieval, source routing, and retrieval post-processing.                      |
-| `@ai-crew-suite/agent-alert-tuner-backend-module-storage-pgvector`    | PostgreSQL pgvector storage plus runtime persistence for sessions, runs, checkpoints, approvals, artifacts, and audit logs.                          |
-| `@ai-crew-suite/agent-alert-tuner-backend-module-storage-qdrant`      | Qdrant vector store module that persists embedding vectors and executes metadata-filtered similarity search.                                         |
-| `@ai-crew-suite/agent-alert-tuner-backend-module-llm-aws`             | AWS Bedrock embeddings module that contributes an embeddings-backed retrieval/indexing tool.                                                         |
-| `@ai-crew-suite/agent-alert-tuner-backend-module-llm-openai`          | OpenAI embeddings module that contributes an embeddings-backed retrieval/indexing tool.                                                              |
-| `@ai-crew-suite/agent-alert-tuner-backend-module-llm-openrouter`      | OpenRouter model provider module that contributes LangChain chat models to the model registry.                                                       |
+| Package | Purpose |
+| --- | --- |
+| `@webstackbuilders/plugin-ai-core-node` | Shared contracts and Backstage extension points for sources, tools, models, agents, triggers, orchestrators, vector stores, and runtime persistence. |
+| `@ai-crew-suite/agent-alert-tuner-backend` | Runtime backend plugin that assembles registries, validates wiring, creates the controller, runs orchestrators, and exposes HTTP/SSE routes. |
+| `@ai-crew-suite/agent-alert-tuner-backend-module-retrieval-augmenter` | Default catalog/TechDocs indexing, vector retrieval, Backstage Search retrieval, source routing, and retrieval post-processing. |
+| `@ai-crew-suite/agent-alert-tuner-backend-module-storage-pgvector` | PostgreSQL pgvector storage plus runtime persistence for sessions, runs, checkpoints, approvals, artifacts, and audit logs. |
+| `@ai-crew-suite/agent-alert-tuner-backend-module-storage-qdrant` | Qdrant vector store module that persists embedding vectors and executes metadata-filtered similarity search. |
+| `@ai-crew-suite/agent-alert-tuner-backend-module-llm-aws` | AWS Bedrock embeddings module that contributes an embeddings-backed retrieval/indexing tool. |
+| `@ai-crew-suite/agent-alert-tuner-backend-module-llm-openai` | OpenAI embeddings module that contributes an embeddings-backed retrieval/indexing tool. |
+| `@ai-crew-suite/agent-alert-tuner-backend-module-llm-openrouter` | OpenRouter model provider module that contributes LangChain chat models to the model registry. |
 
 See [docs/core-development/index.md](docs/core-development/index.md) for the deeper core development documentation.
 
@@ -151,6 +151,11 @@ When adding or changing a core backend module, update the matching package READM
 - [Ingestion Pipelines](docs/core-development/ingestion-pipelines.md)
 - [LLM Providers](docs/core-development/llm-providers.md)
 - [Embeddings & Vector Stores](docs/core-development/embeddings-vectorstores.md)
+
+## 🚀 Release & Publication Management (`crew publish`)
+
+- Proxies `yarn changeset publish` to orchestrate multi-package version increments.
+- Integrates seamlessly with the npm/Yarn lifecycle hooks (`prepack` / `postpack`) declared inside individual frontend and backend plugins, ensuring distribution tarballs carry fully compiled, production-ready path definitions during registry deployment passes.
 
 ## Design Principles
 
