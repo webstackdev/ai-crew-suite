@@ -20,7 +20,7 @@ import { fileURLToPath } from 'node:url';
 /**
  * This Vitest config is only for the @ai-crew-suite/cli package. It
  * avoids a chicken-and-egg problem of running tests on the test:unit
- * Commander task during development of that command.
+ * Commander task during development of that
  */
 const __filename = fileURLToPath(import.meta.url);
 const currentDir = path.dirname(__filename);
@@ -39,5 +39,10 @@ export default defineConfig({
       '../../utils/workspace.js': path.resolve(currentDir, 'src/bin/utils/workspace.ts'),
       '../utils/workspace.js': path.resolve(currentDir, 'src/bin/utils/workspace.ts'),
     },
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'json', 'html'],
+      reportsDirectory: './coverage'
+    }
   },
 });

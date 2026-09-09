@@ -30,12 +30,10 @@ const mockErrorApi: Partial<ErrorApi> = {
 };
 
 const backstageDecorator: DecoratorFunction<ReactRenderer> = (Story, context) => {
-  const selectedThemeKey = context.globals.theme || 'light';
-  // 2. Select the matching Backstage theme wrapper object
+  const selectedThemeKey = context['globals']['theme'] || 'light';
   const activeTheme = selectedThemeKey === 'dark' ? themes.dark : themes.light;
   const mockAlertApi = { post: () => {} };
-
-  const storyMockApis = context.loaded?.mockApis || [];
+  const storyMockApis = context['loaded']?.['mockApis'] || [];
 
   return (
     <TestApiProvider apis={[
@@ -45,7 +43,8 @@ const backstageDecorator: DecoratorFunction<ReactRenderer> = (Story, context) =>
     ]}>
       <UnifiedThemeProvider theme={activeTheme}>
         <CssBaseline />
-        {wrapInTestApp(<Story />, context.parameters.backstage)}
+        {/* 💡 FIXED: Access using bracket notation */}
+        {wrapInTestApp(<Story />, context['parameters']['backstage'])}
       </UnifiedThemeProvider>
     </TestApiProvider>
   );

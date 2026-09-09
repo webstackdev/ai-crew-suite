@@ -33,12 +33,12 @@
     "test": "yarn --cwd ../../.. vitest run plugins/frontend/plugin-ai-agent-frontend-alert-ai-tuner/src --config test/vitest.config.ts"
   },
   "dependencies": {
+    "@ai-crew-suite/cli": "workspace:*",
     "@backstage/core-components": "backstage:^",
     "@backstage/core-plugin-api": "backstage:^",
     "@backstage/frontend-plugin-api": "backstage:^",
     "@material-ui/core": "^4.12.4",
     "@webstackbuilders/plugin-ai-agent-frontend-core": "workspace:^",
-    "@ai-crew-suite/cli": "workspace:*",
     "eventsource-parser": "^2.0.1",
     "vitest": "^4.1.11"
   },

@@ -26,19 +26,15 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 program
   .name('test:unit')
   .description('Execute package unit tests matrix via Vitest')
-  .allowUnknownOption(true) // Native flag forwarding protection
+  .allowUnknownOption(true) 
   .action(() => {
     const context = getWorkspaceContext();
 
     console.log(`${chalk.blue('🧪 Executing Unit Tests for:')} ${chalk.bold(context.packageName)} ${chalk.gray(`(${context.role})`)}`);
 
-    // 1. Point directly to the compiled configuration file inside your OWN distribution folder
     const internalConfigPath = path.resolve(__dirname, 'lib/vitest.config.js');
-
-    // 2. Extract trailing execution arguments (e.g., --watch, --coverage)
     const forwardedArgs = process.argv.slice(3);
 
-    // 3. Dispatch Vitest pointing directly to our internal hidden configuration file
     const testResult = spawnSync(
       'yarn',
       ['vitest', 'run', '-c', internalConfigPath, ...forwardedArgs],

@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright 2026 The AI Crew Suite Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,27 +24,36 @@ const program = new Command();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 program
-  .name('storybook')
-  .description('Boot up the consolidated interactive Storybook documentation server')
+  .name('test:unit:coverage')
+  .description('Execute package unit tests matrix and write coverage metric distribution files')
   .allowUnknownOption(true)
   .action(() => {
     const context = getWorkspaceContext();
-    console.log(`${chalk.green('📖 AI CREW SUITE: Spinning up self-contained Storybook platform...')}`);
 
-    const internalConfigDir = path.resolve(__dirname, 'config');
+    console.log(`${chalk.blue('📊 Executing Unit Tests with Coverage for:')} ${chalk.bold(context.packageName)}`);
+
+    // 1. Point straight to the internal compiled configuration file inside your distribution folder
+    const internalConfigPath = path.resolve(__dirname, '../test-unit/lib/vitest.config.js');
+
     const forwardedArgs = process.argv.slice(3);
 
-    const result = spawnSync('yarn', ['storybook', 'dev', '-p', '6006', '--config-dir', internalConfigDir, ...forwardedArgs], {
-      stdio: 'inherit',
-      shell: true,
-      cwd: path.resolve(__dirname, '../../../../'), // packages/cli
-      env: {
-        ...process.env,
-        AI_CREW_SUITE_REPO_ROOT: context.repoRoot
+    // 2. Dispatch Vitest explicitly passing the compiler coverage collection parameters
+    const testResult = spawnSync(
+      'yarn',
+      ['vitest', 'run', '--coverage', '-c', internalConfigPath, ...forwardedArgs],
+      {
+        stdio: 'inherit',
+        shell: true,
+        cwd: context.packageDir,
       }
-    });
+    );
 
-    process.exit(result.status ?? 0);
+    if (testResult.error) {
+      console.error(chalk.red('❌ Process Execution Error: Failed to invoke Vitest coverage engine.'), testResult.error);
+      process.exit(1);
+    }
+
+    process.exit(testResult.status ?? 0);
   });
 
 program.parse(process.argv);

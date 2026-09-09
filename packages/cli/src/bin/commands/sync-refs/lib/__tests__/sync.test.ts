@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { vi, describe, it, expect, beforeEach } from 'vitest';
-import { parseCommentedJson, findPackages } from '../sync-project-references.js';
+import { parseCommentedJson, findPackages } from '../sync.js';
 import * as fs from 'fs';
 
 vi.mock('fs');
@@ -42,11 +42,12 @@ describe('sync-project-references utilities', () => {
 
   describe('findPackages', () => {
     it('should instantly parse package.json and skip deeper recursion if package.json is found', () => {
-      vi.mocked(fs.existsSync).mockReturnValue(true);
-      vi.mocked(fs.readdirSync).mockReturnValue(['package.json' as any, 'src' as any]);
-      vi.mocked(fs.readFileSync).mockReturnValue(JSON.stringify({ name: '@ai-crew-suite/core' }));
+      (fs.existsSync as any).mockReturnValue(true);
+      (fs.readdirSync as any).mockReturnValue(['package.json', 'src']);
+      (fs.readFileSync as any).mockReturnValue(JSON.stringify({ name: '@ai-crew-suite/core' }));
 
-      const packageMaps = findPackages('/root/packages/core');
+      const packageMaps = findPackages('/root/packages/core', '/root');
+
       expect(packageMaps.has('@ai-crew-suite/core')).toBe(true);
       expect(fs.readFileSync).toHaveBeenCalled();
     });

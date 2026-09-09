@@ -13,14 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { defineConfig } from 'vitest/config';
+import { Command } from 'commander';
+import chalk from 'chalk';
+import { syncProjectReferences } from './lib/sync.js';
 
-export default defineConfig({
-  test: {
-    // Isolate this test execution context completely from the other monorepo projects
-    environment: 'node',
-    include: ['src/__tests__/**/*.test.ts'],
-    watch: false,
-  },
-});
+const program = new Command();
 
+program
+  .name('sync:refs')
+  .description('Synchronize all TypeScript package project references and heal the root configuration')
+  .action(() => {
+    console.log(`\n${chalk.blue('🔄 AI CREW SUITE: Healing monorepo TypeScript project references...')}`);
+
+    syncProjectReferences();
+
+    console.log(`${chalk.green('✅ Project reference mappings aligned perfectly!')}\n`);
+    process.exit(0);
+  });
+
+program.parse(process.argv);

@@ -43,11 +43,11 @@ export default defineConfig({
     banner: '#!/usr/bin/env node\n',
   },
   external: (id) => {
-    // Keep relative imports and internal source files bundled/resolved correctly
+    /** Keep relative imports and internal source files bundled/resolved correctly */
     if (id.startsWith('.') || path.isAbsolute(id)) {
       return false;
     }
-    // Force ALL node_modules packages, node built-ins, and third-party tools to be external
+    /** Force ALL node_modules packages, node built-ins, and third-party tools to be external */
     return true;
   },
   plugins: [

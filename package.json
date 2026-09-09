@@ -58,7 +58,7 @@
     "start:ci": "concurrently \"yarn start\" \"yarn start-backend:ci\"",
     "storybook": "crew storybook",
     "storybook:build": "crew storybook:build",
-    "sync": "yarn workspace @ai-crew-suite/scripts run run:sync-refs",
+    "sync": "crew sync:refs",
     "test": "yarn test:unit && yarn test:e2e && yarn test:unit:coverage",
     "test:e2e:show-report": "FORCE_COLOR=1 npx playwright show-report",
     "test:e2e:smoke": "FORCE_COLOR=1 CI=1 npx playwright test --grep \"@smoke\"",

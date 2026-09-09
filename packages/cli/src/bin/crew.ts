@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Command, Help, Option, type ExecutableCommandOptions } from 'commander';
+import { Command, Option, type ExecutableCommandOptions } from 'commander';
 import chalk from 'chalk';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -60,47 +60,57 @@ program
   .command(
     'build',
     'Compile all workspace targets',
-    createCommandOpts('build')
+    createCommandOpts('build'),
   )
   .command(
     'clean',
     'Wipe internal build caches and distribution directories',
-    createCommandOpts('clean')
+    createCommandOpts('clean'),
   )
   .command(
     'lint',
     'Run structural ESLint validations',
-    createCommandOpts('lint')
+    createCommandOpts('lint'),
   )
   .command(
     'publish',
     'Orchestrate npm release flow for modified targets',
-    createCommandOpts('publish')
+    createCommandOpts('publish'),
   )
   .command(
     'storybook',
     'Boot up the localized interactive Storybook documentation server',
-    createCommandOpts('storybook')
+    createCommandOpts('storybook'),
   )
   .command(
     'storybook:build',
     'Compile a static distribution build of the workspace documentation stories',
-    createCommandOpts('storybook-build')
+    createCommandOpts('storybook-build'),
+  )
+  .command(
+    'sync:refs',
+    'Synchronize all TypeScript package project references and heal the root configuration',
+    createCommandOpts('sync-refs'),
   )
   .command(
     'test:e2e',
     'Run end-to-end integration tests via Playwright',
-    createCommandOpts('test-e2e')
+    createCommandOpts('test-e2e'),
   )
   .command(
     'test:unit',
     'Execute package testing matrix',
-    createCommandOpts('test-unit')
+    createCommandOpts('test-unit'),
+  )
+  .command(
+    'test:unit:coverage',
+    'Execute package unit tests matrix and write coverage metric distribution files',
+    createCommandOpts('test-unit-coverage'),
   )
   .command(
     'typecheck',
     'Perform static TypeScript verification',
-    createCommandOpts('typecheck')
+    createCommandOpts('typecheck'),
   );
 
 program.parse(process.argv);

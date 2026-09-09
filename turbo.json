@@ -44,7 +44,7 @@
     },
     "storybook:build": {
       "dependsOn": ["^build"],
-      "outputs": ["packages/storybook/storybook-static/**"],
+      "outputs": ["packages/cli/storybook-static/**"],
       "cache": true
     },
     "sync": {
@@ -86,12 +86,18 @@
     },
     "test:unit": {
       "dependsOn": ["^build"],
+      "outputs": [],
+      "cache": true
+    },
+    "test:unit:coverage": {
+      "dependsOn": ["^build"],
       "inputs": [
         "src/**/*",
         "src/**/*.test.ts",
         "src/**/*.test.tsx"
       ],
-      "outputs": ["coverage/**"]
+      "outputs": ["coverage/**"],
+      "cache": true
     },
     "typecheck": {
       "dependsOn": ["^build"],

@@ -40,12 +40,6 @@
       "path": "./packages/cli"
     },
     {
-      "path": "./packages/scripts"
-    },
-    {
-      "path": "./packages/storybook"
-    },
-    {
       "path": "./plugins/agents/alert-tuner/backend"
     },
     {

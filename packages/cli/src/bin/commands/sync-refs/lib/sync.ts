@@ -13,21 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import * as fs from 'fs';
-import * as path from 'path';
-import { fileURLToPath } from 'url';
+import fs from 'node:fs';
+import path from 'node:path';
+import { getWorkspaceContext } from '../../../utils/workspace.js';
 
-/*
- * Synchronizes TypeScript project references for all packages in the monorepo
- * to ensure that each package's tsconfig.json correctly references its
- * internal dependencies.
- */
 export interface PackageJson {
   name?: string;
   dependencies?: Record<string, string>;
   devDependencies?: Record<string, string>;
   peerDependencies?: Record<string, string>;
-  [key: string]: any;
+  [key: string]: unknown; // 💡 FIXED: Enforced type safety instead of using 'any'
 }
 
 export interface PackageInfo {
@@ -43,22 +38,16 @@ export interface TsConfigReference {
 
 export interface TsConfig {
   references?: TsConfigReference[];
-  [key: string]: any;
+  [key: string]: unknown; // 💡 FIXED: Enforced type safety
 }
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const ROOT_DIR = path.resolve(__dirname, '../../..');
 
 /**
  * Strips comments safely for strict JSON parsing
  */
-export function parseCommentedJson<T = any>(jsonString: string): T {
+export function parseCommentedJson<T = Record<string, unknown>>(jsonString: string): T {
   const cleanJson = jsonString
     .replace(/\/\*[\s\S]*?\*\//g, '') // Strip block comments /* ... */ safely
     .replace(/^(?:[^"\n]|"[^"\n]*")*?(\/\/.*)$/gm, (match, group1) => {
-      // Only strip the comment if it isn't part of an https:// URL match structure
       return match.replace(group1, '');
     });
   return JSON.parse(cleanJson) as T;
@@ -67,7 +56,11 @@ export function parseCommentedJson<T = any>(jsonString: string): T {
 /**
  * Recursively locates leaf packages containing package.json
  */
-export function findPackages(dir: string, packageMaps = new Map<string, PackageInfo>()): Map<string, PackageInfo> {
+export function findPackages(
+  dir: string, 
+  repoRoot: string, 
+  packageMaps = new Map<string, PackageInfo>()
+): Map<string, PackageInfo> {
   if (!fs.existsSync(dir)) return packageMaps;
   const files = fs.readdirSync(dir);
 
@@ -79,7 +72,7 @@ export function findPackages(dir: string, packageMaps = new Map<string, PackageI
         packageMaps.set(pkgJson.name, {
           name: pkgJson.name,
           dirPath: dir,
-          relativeFromRoot: path.relative(ROOT_DIR, dir).replace(/\\/g, '/'),
+          relativeFromRoot: path.relative(repoRoot, dir).replace(/\\/g, '/'),
           pkgJson
         });
       }
@@ -92,7 +85,7 @@ export function findPackages(dir: string, packageMaps = new Map<string, PackageI
   for (const file of files) {
     const fullPath = path.join(dir, file);
     if (fs.statSync(fullPath).isDirectory() && !file.startsWith('.') && file !== 'node_modules' && file !== 'dist') {
-      findPackages(fullPath, packageMaps);
+      findPackages(fullPath, repoRoot, packageMaps);
     }
   }
   return packageMaps;
@@ -102,11 +95,15 @@ export function findPackages(dir: string, packageMaps = new Map<string, PackageI
  * Iterates through all internal packages to align child-level references and root map targets
  */
 export function syncProjectReferences(): void {
+  // 💡 FIXED: Read the absolute repo root path dynamically using your shared workspace context
+  const context = getWorkspaceContext();
+  const repoRoot = context.repoRoot;
+
   const allPackages = new Map<string, PackageInfo>();
 
-  findPackages(path.join(ROOT_DIR, 'packages'), allPackages);
-  findPackages(path.join(ROOT_DIR, 'apps'), allPackages);
-  findPackages(path.join(ROOT_DIR, 'plugins'), allPackages);
+  findPackages(path.join(repoRoot, 'packages'), repoRoot, allPackages);
+  findPackages(path.join(repoRoot, 'apps'), repoRoot, allPackages);
+  findPackages(path.join(repoRoot, 'plugins'), repoRoot, allPackages);
 
   console.log(`Analyzing internal dependency graphs for ${allPackages.size} packages...`);
 
@@ -149,12 +146,13 @@ export function syncProjectReferences(): void {
         fs.writeFileSync(tsconfigPath, JSON.stringify(tsconfigData, null, 2), 'utf8');
         console.log(`✅ Synced references for: ${pkgInfo.relativeFromRoot}`);
       }
-    } catch (err: any) {
-      console.error(`❌ Error writing tsconfig for ${pkgInfo.relativeFromRoot}:`, err?.message);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
+      console.error(`❌ Error writing tsconfig for ${pkgInfo.relativeFromRoot}:`, message);
     }
   });
 
-  const ROOT_TSCONFIG_PATH = path.join(ROOT_DIR, 'tsconfig.json');
+  const ROOT_TSCONFIG_PATH = path.join(repoRoot, 'tsconfig.json');
 
   if (fs.existsSync(ROOT_TSCONFIG_PATH)) {
     try {
@@ -169,14 +167,9 @@ export function syncProjectReferences(): void {
 
       fs.writeFileSync(ROOT_TSCONFIG_PATH, JSON.stringify(rootData, null, 2), 'utf8');
       console.log(`✨ Automatically healed root tsconfig.json with ${rootReferences.length} paths!`);
-    } catch (err: any) {
-      console.error('❌ Failed to auto-update root tsconfig.json:', err?.message);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
+      console.error('❌ Failed to auto-update root tsconfig.json:', message);
     }
   }
-}
-
-const isMainModule = process.argv[1] ? fs.realpathSync(process.argv[1]) === fs.realpathSync(__filename) : false;
-
-if (isMainModule) {
-  syncProjectReferences();
 }
