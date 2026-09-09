@@ -1,62 +1,105 @@
-# AI Crew Suite Typecheck Utility
+# 🧰 AI Crew Suite CLI & Developer Toolbelt (@ai-crew-suite/cli)
 
-This plugin exists to provide a centralized typecheck tool so it can be developed without updating the "typecheck" script across all monorepo packages.
+This package is the centralized developer toolbelt and workspace orchestrator for the AI Crew Suite monorepo. It consolidates all building, cleaning, linting, typechecking, and testing workflows into a single, high-performance binary utility.
 
-## Consuming this package
+By managing tooling constraints centrally within this package, we can upgrade, patch, or alter repo-wide build steps without touching or changing individual package script blocks across our 60+ workspaces.
 
-Use the package-provided wrapper in the consumer package's `package.json`:
+## 🚀 Consuming this Toolbelt
+
+Every package in the monorepo utilizes the uniform crew binary interface. To configure a child workspace, simply link the tool and expose its sub-commands within the package's local package.json:
 
 ```json
 {
+  "name": "@ai-crew-suite/my-frontend-plugin",
   "scripts": {
-    "typecheck": "ai-crew-suite-typecheck
+    "build": "crew build",
+    "clean": "crew clean",
+    "lint": "crew lint",
+    "typecheck": "crew typecheck",
+    "test:unit": "crew test:unit",
+    "test:unit:coverage": "crew test:unit:coverage"
+  },
+  "devDependencies": {
+    "@ai-crew-suite/cli": "workspace:*"
   }
 }
 ```
 
-## Development notes
+## 🏛️ Core Features & Architecture
 
-This is a TypeScript package. Source files live under `src`, and the build emits runnable JavaScript into `dist`. Since the `packages` directory is configured as a workspace in the root `package.json`, Yarn will automatically symlink the `dist` folder into the root `node_modules` file, and do the same with the `bin` key in this package's `package.json` file.
+The CLI uses a smart tree-climbing utility (getWorkspaceContext()) that reads the executing folder's package.json and evaluates Spotify Backstage metadata parameters natively to understand its exact environment constraints.
 
-## Local workflow
-
-Useful commands while developing on this package:
-
-```bash
-yarn turbo run build --filter=@ai-crew-suite/typecheck
-yarn turbo run lint --filter=@ai-crew-suite/typecheck
-yarn turbo run test:unit --filter=@ai-crew-suite/typecheck
-yarn turbo run typecheck --filter=@ai-crew-suite/typecheck
+```json
+"backstage": {
+  "role": "frontend-plugin"
+}
 ```
 
-To validate a consumer package against the shared config, run its typecheck target through Turbo. Example:
+### 🧠 Semantic Environment Routing
+
+The tool maps the active workspace's roles into clear semantic runtime boundaries on the fly. This prevents developers from having to configure boilerplate environment scripts:
+
+* **isBrowser Core Targets:** Mapped automatically for frontend, frontend-plugin, frontend-plugin-module, and web-library. Automatically sets Vitest to boot in a **JSDOM** sandbox and pulls down browser-specific lint rulesets.
+* **isServer Core Targets:** Mapped automatically for backend, backend-plugin, backend-plugin-module, node-library, cli, and cli-module. Sets Vitest to a native, high-speed **Node** execution loop and enables server-side runtime validations.
+
+## 🛠️ The Global Command Matrix
+
+Run any command using crew `<command>` from within a package folder, or target it globally through Turborepo:
+
+| Sub-command | Purpose | Cache Policy |
+| --- | --- | --- |
+| **crew clean** | Clears local caching matrices and dist/ folders. | Cache Bypass |
+| **crew build** | Wraps backstage-cli package compilation rules. | Cacheable (dist/**) |
+| **crew lint** | Performs zero-config ESLint Flat rules evaluations. | Cacheable |
+| **crew typecheck** | Forces local tsc --noEmit compiler checks. | Cacheable |
+| **crew sync:refs** | Synchronizes TypeScript Project References and heals roots. | Cache Bypass |
+| **crew test:unit** | Fast, local, in-memory unit test matrix runner via Vitest. | Cacheable |
+| **crew test:unit:coverage** | Comprehensive V8 block-coverage metric collection run. | Cacheable (coverage/**) |
+| **crew test:e2e** | Enterprise Playwright integration test suite browser pipeline. | Cacheable |
+| **crew storybook** | Launches a self-contained Vite development documentation hub. | Live Watch |
+| **crew storybook:build** | Bundles static distribution UI document artifacts. | Cacheable |
+
+## 💻 Local CLI Development Workflow
+
+When actively refactoring or changing the CLI package itself, a dedicated development configuration bypasses the dist/ compilation loop to let you validate source files instantly from the raw src/ tree:
+
+bash
+
+### Execute unit and integration tests against local raw TypeScript source files
 
 ```bash
-yarn turbo run typecheck --filter=@ai-crew-suite/<my-package>
+yarn turbo run test:unit --filter=@ai-crew-suite/cli
 ```
 
-If you change `bin`, `exports`, or dependency wiring in this package's `package.json`, run a workspace install so Yarn refreshes the linked binary metadata:
+### Run local code-coverage metric scans against the CLI package
 
 ```bash
-yarn install --mode=skip-build
+yarn turbo run test:unit:coverage --filter=@ai-crew-suite/cli
 ```
 
-## ESLint
+### Compile changes fresh using Rollup
 
-Supported canonical `--role` values:
+```bash
+yarn turbo run build --filter=@ai-crew-suite/cli
+```
 
-- `node-library`:   Use for server-side libraries, config packages, utility packages, and anything Node-only. Has alias `node`.
-- `web-library`:   Use for browser/UI libraries that are not full Backstage plugins. Has alias `web`.
-- `backend`:  Use for a backend app/package.
-- `backend-plugin`:   Use for Backstage backend plugins.
-- `backend-plugin-module`:   Use for backend plugin modules/extensions.
-- `frontend`:   Use for a frontend app/package.
-- `frontend-plugin`:   Use for Backstage frontend plugins.
-- `frontend-plugin-module`:   Use for frontend plugin modules/extensions.
-- `cli`:   Use for command-line packages.
-- `cli-module`:   Use for CLI extension/module packages.
-- `common-library`:   This exists, but I would not use it yet. In the current implementation it does not get the frontend/browser branch you’d probably expect, so it behaves like base TS-only config unless you fix that in `index.ts`.
+## 🧩 Shared Config Subpath Exports
 
-One special case remains for `packages/config-eslint/package.json`, because a package cannot reliably invoke its own workspace bin by name in its own script environment:
+This toolkit exposes zero-boilerplate configuration hooks directly to the monorepo ecosystem. For example, your master root-level configuration maps straight to the CLI's internal compiled code vectors using Yarn Workspaces link aliases:
 
-`"lint": "node ./bin/ai-crew-eslint.mjs --role node-library src --max-warnings 0"`
+```typescript
+// eslint.config.js (At Monorepo Root)
+import { createFlatConfigForWorkspace } from '@ai-crew-suite/cli/config/eslint';
+
+export default createFlatConfigForWorkspace();
+```
+
+## 🛟 Self-Linting Special Exception
+
+Because a node package cannot safely invoke its own uncompiled workspace binary hook while running clean cycles on its own files, the CLI uses a localized direct file pointer to trigger its code validation passes:
+
+```json
+"scripts": {
+  "lint": "node ./dist/bin/crew.js lint"
+}
+```
