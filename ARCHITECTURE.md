@@ -29,7 +29,7 @@ find . -type f -exec sed -i 's|https://github.com/ai-crew-suite|https://github.c
 ```
 
 ```bash
-@ai-crew-suite/core-node
+@ai-crew-suite/plugin-core-node
 ```
 
 ### `package.json`
@@ -87,7 +87,7 @@ find . -type f -exec sed -i 's|https://github.com/ai-crew-suite|https://github.c
     "typecheck": "crew typecheck"
   },
   "dependencies": {
-    "@ai-crew-suite/core-node": "workspace:^",
+    "@ai-crew-suite/plugin-core-node": "workspace:^",
   },
   "devDependencies": {
     "@ai-crew-suite/cli": "workspace:*",
@@ -140,8 +140,8 @@ ai-crew-suite/
 │   └── ARCHITECTURE.md                     # Monorepo architecture standards file
 ├── plugins/
 │   ├── core/                               # TIER 1: CORE ARCHITECTURE & INFRASTRUCTURE
-│   │   ├── backend/                        # @ai-crew-suite/core-backend
-│   │   ├── node/                           # @ai-crew-suite/core-node
+│   │   ├── backend/                        # @ai-crew-suite/plugin-core-backend
+│   │   ├── node/                           # @ai-crew-suite/plugin-core-nodere-node
 │   │   └── infra/                          # Foundational LangGraph framework engine pieces
 │   │       ├── llm/
 │   │       │   ├── core/                   # @ai-crew-suite/infra-llm-core

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { coreServices, createBackendModule } from '@backstage/backend-plugin-api';
-import { incidentManagementDriversExtensionPoint } from '@ai-crew-suite/core-node';
+import { incidentManagementDriversExtensionPoint } from '@ai-crew-suite/plugin-core-node';
 import { PagerDutyDriver } from './providers/PagerDutyDriver';
 import { readPagerDutyConfig } from './config';
 

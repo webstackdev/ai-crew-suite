@@ -17,7 +17,7 @@ import { mockServices } from '@backstage/backend-test-utils';
 import {
   ObservabilityDriver,
   ToolContext,
-} from '@ai-crew-suite/core-node';
+} from '@ai-crew-suite/plugin-core-node';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createObservabilityTools } from '../registerTools';
 

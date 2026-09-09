@@ -52,7 +52,7 @@
     "typecheck": "crew typecheck"
   },
   "dependencies": {
-    "@ai-crew-suite/core-node": "workspace:^",
+    "@ai-crew-suite/plugin-core-node": "workspace:^",
     "@azure/arm-resources": "^8.0.0",
     "@azure/identity": "^4.13.2",
     "@backstage/backend-plugin-api": "backstage:^",

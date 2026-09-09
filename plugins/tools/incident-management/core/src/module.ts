@@ -18,7 +18,7 @@ import {
   IncidentManagementDriver,
   incidentManagementDriversExtensionPoint,
   toolExtensionPoint,
-} from '@ai-crew-suite/core-node';
+} from '@ai-crew-suite/plugin-core-node';
 import { readIncidentManagementConfig } from './config';
 import { createIncidentManagementTools } from './tools';
 

@@ -21,7 +21,7 @@ import {
   ObservabilityDriver,
   ToolDefinition,
   TraceQuery,
-} from '@ai-crew-suite/core-node';
+} from '@ai-crew-suite/plugin-core-node';
 
 export interface CreateObservabilityToolsOptions {
   driver: ObservabilityDriver;

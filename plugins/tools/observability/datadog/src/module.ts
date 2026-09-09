@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { coreServices, createBackendModule } from '@backstage/backend-plugin-api';
-import { observabilityDriversExtensionPoint } from '@ai-crew-suite/core-node';
+import { observabilityDriversExtensionPoint } from '@ai-crew-suite/plugin-core-node';
 import { DatadogDriver } from './providers/DatadogDriver';
 import { readDatadogConfig } from './config';
 

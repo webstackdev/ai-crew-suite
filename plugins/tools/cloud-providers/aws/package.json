@@ -52,7 +52,7 @@
     "typecheck": "crew typecheck"
   },
   "dependencies": {
-    "@ai-crew-suite/core-node": "workspace:*",
+    "@ai-crew-suite/plugin-core-node": "workspace:*",
     "@aws-sdk/client-resource-groups-tagging-api": "^3.1128.0",
     "@aws-sdk/client-sts": "^3.1128.0",
     "@backstage/backend-plugin-api": "backstage:^",

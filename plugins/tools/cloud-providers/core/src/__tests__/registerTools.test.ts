@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { CloudProviderDriver } from '@ai-crew-suite/core-node';
+import { CloudProviderDriver } from '@ai-crew-suite/plugin-core-node';
 import { createCloudProviderTools } from '../registerTools';
 
 const createLogger = () => ({

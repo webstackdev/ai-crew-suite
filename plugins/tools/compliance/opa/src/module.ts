@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { coreServices, createBackendModule } from '@backstage/backend-plugin-api';
-import { complianceDriversExtensionPoint } from '@ai-crew-suite/core-node';
+import { complianceDriversExtensionPoint } from '@ai-crew-suite/plugin-core-node';
 import { readOpaConfig } from './config';
 import { OpaDriver } from './providers/OpaDriver';
 

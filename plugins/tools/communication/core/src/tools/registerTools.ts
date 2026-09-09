@@ -19,7 +19,7 @@ import {
   MessageHistoryQuery,
   PostMessageInput,
   ToolDefinition,
-} from '@ai-crew-suite/core-node';
+} from '@ai-crew-suite/plugin-core-node';
 
 export interface CreateCommunicationToolsOptions {
   driver: CommunicationDriver;

@@ -19,7 +19,7 @@ import {
   ToolExtensionPoint,
   incidentManagementDriversExtensionPoint,
   toolExtensionPoint,
-} from '@ai-crew-suite/core-node';
+} from '@ai-crew-suite/plugin-core-node';
 import { describe, expect, it, vi } from 'vitest';
 import { aiCoreBackendModuleIncidentManagement } from '../module';
 

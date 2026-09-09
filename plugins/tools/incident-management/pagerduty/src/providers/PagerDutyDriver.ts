@@ -27,7 +27,7 @@ import {
   OnCallQuery,
   OnCallShift,
   ServiceActor,
-} from '@ai-crew-suite/core-node';
+} from '@ai-crew-suite/plugin-core-node';
 
 /**
  * Connection settings for the PagerDuty incident management driver.

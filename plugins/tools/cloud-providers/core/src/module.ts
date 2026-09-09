@@ -21,7 +21,7 @@ import {
   toolExtensionPoint,
   cloudDriversExtensionPoint,
   CloudProviderDriver,
-} from '@ai-crew-suite/core-node';
+} from '@ai-crew-suite/plugin-core-node';
 import { readCloudProvidersConfig } from './config';
 import { createCloudProviderTools } from './registerTools';
 

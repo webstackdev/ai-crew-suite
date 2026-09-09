@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { describe, expect, it, vi } from 'vitest';
-import { ComplianceDriver } from '@ai-crew-suite/core-node';
+import { ComplianceDriver } from '@ai-crew-suite/plugin-core-node';
 import { createComplianceTools } from '../registerTools';
 
 const createMockDriver = (overrides: Partial<ComplianceDriver> = {}): ComplianceDriver => ({

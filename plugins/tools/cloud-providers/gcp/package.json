@@ -52,7 +52,7 @@
     "typecheck": "crew typecheck"
   },
   "dependencies": {
-    "@ai-crew-suite/core-node": "workspace:^",
+    "@ai-crew-suite/plugin-core-node": "workspace:^",
     "@backstage/backend-plugin-api": "backstage:^",
     "@backstage/config": "backstage:^",
     "@google-cloud/resource-manager": "^7.1.0"

@@ -18,4 +18,4 @@ export {
   observabilityDriversExtensionPoint,
   type ObservabilityDriver,
   type ObservabilityDriversExtensionPoint,
-} from '@ai-crew-suite/core-node';
+} from '@ai-crew-suite/plugin-core-node';

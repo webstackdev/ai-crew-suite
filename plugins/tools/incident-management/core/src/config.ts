@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { Config } from '@backstage/config';
-import { IntegrationProviderConfig } from '@ai-crew-suite/core-node';
+import { IntegrationProviderConfig } from '@ai-crew-suite/plugin-core-node';
 
 /**
  * Reads the driver selector from `ai.integrations.incidentManagement`.
