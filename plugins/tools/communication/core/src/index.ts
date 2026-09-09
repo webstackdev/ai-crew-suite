@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 export { aiCoreBackendModuleCommunication as default } from './module';
-export { communicationDriversExtensionPoint } from '@webstackbuilders/plugin-ai-core-node';
-export type {
-  CommunicationDriver,
-  CommunicationDriversExtensionPoint,
-} from '@webstackbuilders/plugin-ai-core-node';
+export {
+  communicationDriversExtensionPoint,
+  type CommunicationDriver,
+  type CommunicationDriversExtensionPoint,
+} from '@ai-crew-suite/plugin-ai-core-node';

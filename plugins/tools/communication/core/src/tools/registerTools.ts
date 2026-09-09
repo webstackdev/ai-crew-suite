@@ -19,7 +19,7 @@ import {
   MessageHistoryQuery,
   PostMessageInput,
   ToolDefinition,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-ai-core-node';
 
 export interface CreateCommunicationToolsOptions {
   driver: CommunicationDriver;

@@ -17,7 +17,7 @@ import { mockServices } from '@backstage/backend-test-utils';
 import {
   CommunicationDriver,
   ToolContext,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-ai-core-node';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createCommunicationTools } from '../registerTools';
 

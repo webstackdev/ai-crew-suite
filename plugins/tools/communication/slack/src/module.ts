@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { coreServices, createBackendModule } from '@backstage/backend-plugin-api';
-import { communicationDriversExtensionPoint } from '@webstackbuilders/plugin-ai-core-node';
+import { communicationDriversExtensionPoint } from '@ai-crew-suite/plugin-ai-core-node';
 import { SlackDriver } from './providers/SlackDriver';
 import { readSlackConfig } from './config';
 

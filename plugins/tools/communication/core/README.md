@@ -1,4 +1,4 @@
-# @webstackbuilders/plugin-ai-core-backend-module-communication
+# @ai-crew-suite/tool-communication-core
 
 > Core Developer Documentation for the AI Crew Suite platform.
 

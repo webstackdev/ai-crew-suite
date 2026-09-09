@@ -1,15 +1,21 @@
-# @webstackbuilders/plugin-ai-core-backend-module-communication-slack
+# @ai-crew-suite/tool-communication-slack
 
-> Core Developer Documentation for the AI Crew Suite platform.
+Slack Extension Module for the AI Crew Suite platform.
 
 ## Overview
 
-Registers a Slack `CommunicationDriver` with
-`@webstackbuilders/plugin-ai-core-backend-module-communication` through the
-`communicationDriversExtensionPoint`. This package owns Slack Web API access and
-response mapping; the core module owns the tool surface.
+This package registers a Slack `CommunicationDriver` implementation with the core `@ai-crew-suite/tool-communication-core` engine through its `communicationDriversExtensionPoint`. This package exclusively owns the Slack Web API connections, credential processing, and payload response mapping, while the core module manages the universal tool execution layer.
+
+### Core Responsibilities
+
+- **Backend module extension**: Wires cleanly into the core communication backend extension points.
+- **Slack client coordination**: Manages active connections utilizing official Slack Web Client APIs.
+- **Message and history mapping**: Translates Slack-specific channel history blocks and message threads into normalized, provider-neutral outputs.
+- **Scope validation**: Safely processes configuration parameters and ensures runtime tokens map to operational boundaries.
 
 ## Configuration
+
+Ensure your `app-config.yaml` includes the structural parameters required to authenticate your Slack App:
 
 ```yaml
 ai:
@@ -17,26 +23,31 @@ ai:
     communication:
       provider: slack
       slack:
-        token: ${SLACK_BOT_TOKEN}
+        token: \${SLACK_BOT_TOKEN}
         workspaceDomain: my-org.slack.com
 ```
 
-Required bot token scopes: `channels:read`, `groups:read`, `channels:history`,
-`groups:history`, and `chat:write`.
+### Required Bot Token Scopes
+
+Your registered Slack App must be provisioned with the following explicit scopes to perform lookups and message posting:
+
+- `channels:read` & `groups:read`
+- `channels:history` & `groups:history`
+- `chat:write`
 
 ## Installation
 
+Add the extension module directly to your modern Backstage backend system container:
+
 ```ts
-backend.add(
-  loadBackendFeature(
-    import('@webstackbuilders/plugin-ai-core-backend-module-communication-slack'),
-  ),
-);
+backend.add(import('@ai-crew-suite/tool-communication-slack'));
 ```
 
 ## Local Development Workflow
 
 ```bash
-yarn workspace @webstackbuilders/plugin-ai-core-backend-module-communication-slack build
-yarn workspace @webstackbuilders/plugin-ai-core-backend-module-communication-slack test
+yarn install --refresh
+yarn turbo run build --filter=@ai-crew-suite/tool-communication-slack
+yarn turbo run lint --filter=@ai-crew-suite/tool-communication-slack
+yarn turbo run test --filter=@ai-crew-suite/tool-communication-slack
 ```

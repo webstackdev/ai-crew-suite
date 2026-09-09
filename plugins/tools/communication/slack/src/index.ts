@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 export { aiCoreBackendModuleCommunicationSlack as default } from './module';
-export { SlackDriver } from './providers/SlackDriver';
-export type {
-  SlackDriverConfig,
-  SlackDriverOptions,
+export {
+  SlackDriver,
+  type SlackDriverConfig,
+  type SlackDriverOptions,
 } from './providers/SlackDriver';

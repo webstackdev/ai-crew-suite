@@ -18,7 +18,7 @@ import {
   CommunicationDriver,
   communicationDriversExtensionPoint,
   toolExtensionPoint,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-ai-core-node';
 import { readCommunicationConfig } from './config';
 import { createCommunicationTools } from './tools';
 

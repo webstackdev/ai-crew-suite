@@ -49,7 +49,7 @@ find . -type f -exec sed -i 's|https://github.com/ai-crew-suite|https://github.c
     "backend",
     "backstage-plugin-module",
     "backstage",
-    "cloud-providers"
+    "communication"
   ],
   "publishConfig": {
     "access": "public",
@@ -57,12 +57,10 @@ find . -type f -exec sed -i 's|https://github.com/ai-crew-suite|https://github.c
   },
   "backstage": {
     "role": "backend-plugin-module",
-    "pluginId": "tool-cloud-providers",
+    "pluginId": "tool-communication",
     "pluginPackages": [
-      "@ai-crew-suite/tool-cloud-providers-core",
-      "@ai-crew-suite/tool-cloud-providers-aws",
-      "@ai-crew-suite/tool-cloud-providers-azure",
-      "@ai-crew-suite/tool-cloud-providers-gcp"
+      "@ai-crew-suite/tool-communication-core",
+      "@ai-crew-suite/tool-communication-slack"
     ]
   },
   "bugs": {
