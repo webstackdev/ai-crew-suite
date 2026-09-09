@@ -25,7 +25,7 @@ import {
   ObservabilityDriver,
   TraceQuery,
   TraceSpan,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/core-node';
 
 /**
  * Connection settings for the Datadog observability driver.

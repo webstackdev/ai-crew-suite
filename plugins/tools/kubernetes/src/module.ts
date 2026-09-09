@@ -18,7 +18,7 @@ import {
   KubernetesDiagnosticsDriver,
   kubernetesDiagnosticsDriversExtensionPoint,
   toolExtensionPoint,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/core-node';
 import { readKubernetesConfig } from './config';
 import { createKubernetesDiagnosticsTools } from './tools';
 

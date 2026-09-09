@@ -27,7 +27,7 @@ import {
   OnCallQuery,
   OnCallShift,
   ServiceActor,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/core-node';
 
 /**
  * Connection settings for the PagerDuty incident management driver.
@@ -206,8 +206,8 @@ export class PagerDutyDriver implements IncidentManagementDriver {
     };
     if (policyIds.length) params['escalation_policy_ids[]'] = policyIds;
     if (query.at) {
-      params.since = [query.at];
-      params.until = [query.at];
+      params['since'] = [query.at];
+      params['until'] = [query.at];
     }
 
     const response = await this.get<{ oncalls?: PagerDutyOnCall[] }>(
@@ -293,8 +293,8 @@ export class PagerDutyDriver implements IncidentManagementDriver {
       'sort_by[]': ['created_at:desc'],
     };
 
-    if (query.since) params.since = [query.since];
-    if (query.until) params.until = [query.until];
+    if (query['since']) params['since'] = [query.since];
+    if (query['until']) params['until'] = [query.until];
     if (query.states?.length) {
       params['statuses[]'] = query.states.map(state => STATE_TO_STATUS[state]);
     }

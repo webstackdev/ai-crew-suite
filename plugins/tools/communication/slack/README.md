@@ -1,6 +1,6 @@
 # @ai-crew-suite/tool-communication-slack
 
-Slack Extension Module for the AI Crew Suite platform.
+> Slack Extension Module for the AI Crew Suite platform.
 
 ## Overview
 

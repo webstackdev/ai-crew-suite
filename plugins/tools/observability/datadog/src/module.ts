@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 import { coreServices, createBackendModule } from '@backstage/backend-plugin-api';
-import { observabilityDriversExtensionPoint } from '@webstackbuilders/plugin-ai-core-node';
+import { observabilityDriversExtensionPoint } from '@ai-crew-suite/core-node';
 import { DatadogDriver } from './providers/DatadogDriver';
 import { readDatadogConfig } from './config';
 
 /**
- * Datadog driver backend module for the AI Core observability group.
+ * Datadog driver backend module for the AI Crew Suite observability group.
  */
 export const aiCoreBackendModuleObservabilityDatadog = createBackendModule({
-  pluginId: 'ai-core',
+  pluginId: 'tool-observability',
   moduleId: 'observability-datadog',
   register(env) {
     env.registerInit({

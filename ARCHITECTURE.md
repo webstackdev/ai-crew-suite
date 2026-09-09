@@ -49,7 +49,7 @@ find . -type f -exec sed -i 's|https://github.com/ai-crew-suite|https://github.c
     "backend",
     "backstage-plugin-module",
     "backstage",
-    "communication"
+    "observability"
   ],
   "publishConfig": {
     "access": "public",
@@ -57,10 +57,10 @@ find . -type f -exec sed -i 's|https://github.com/ai-crew-suite|https://github.c
   },
   "backstage": {
     "role": "backend-plugin-module",
-    "pluginId": "tool-communication",
+    "pluginId": "tool-observability",
     "pluginPackages": [
-      "@ai-crew-suite/tool-communication-core",
-      "@ai-crew-suite/tool-communication-slack"
+      "@ai-crew-suite/tool-observability-core",
+        "@ai-crew-suite/tool-observability-datadog"
     ]
   },
   "bugs": {
@@ -87,7 +87,7 @@ find . -type f -exec sed -i 's|https://github.com/ai-crew-suite|https://github.c
     "typecheck": "crew typecheck"
   },
   "dependencies": {
-    "@ai-crew-suite/plugin-ai-core-node": "workspace:^",
+    "@ai-crew-suite/core-node": "workspace:^",
   },
   "devDependencies": {
     "@ai-crew-suite/cli": "workspace:*",

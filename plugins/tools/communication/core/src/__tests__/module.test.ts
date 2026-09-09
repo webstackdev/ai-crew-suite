@@ -19,7 +19,7 @@ import {
   ToolExtensionPoint,
   communicationDriversExtensionPoint,
   toolExtensionPoint,
-} from '@ai-crew-suite/plugin-ai-core-node';
+} from '@ai-crew-suite/core-node';
 import { describe, expect, it, vi } from 'vitest';
 import { aiCoreBackendModuleCommunication } from '../module';
 

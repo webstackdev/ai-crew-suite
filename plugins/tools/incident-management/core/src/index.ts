@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 export { aiCoreBackendModuleIncidentManagement as default } from './module';
-export { incidentManagementDriversExtensionPoint } from '@webstackbuilders/plugin-ai-core-node';
-export type {
-  IncidentManagementDriver,
-  IncidentManagementDriversExtensionPoint,
-} from '@webstackbuilders/plugin-ai-core-node';
+export {
+  incidentManagementDriversExtensionPoint,
+  type IncidentManagementDriver,
+  type IncidentManagementDriversExtensionPoint,
+} from '@ai-crew-suite/core-node';

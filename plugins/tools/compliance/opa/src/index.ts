@@ -14,5 +14,8 @@
  * limitations under the License.
  */
 export { aiCoreBackendModuleComplianceOpa as default } from './module';
-export { OpaDriver } from './providers/OpaDriver';
-export type { OpaDriverConfig, OpaDriverOptions } from './providers/OpaDriver';
+export {
+  OpaDriver,
+  type OpaDriverConfig,
+  type OpaDriverOptions,
+} from './providers/OpaDriver';

@@ -231,8 +231,8 @@ describe('PagerDutyDriver', () => {
     await createDriver(fetchApi, 'bot@acme.io').annotateIncident('PINC1', 'note');
 
     const [, init] = fetchApi.mock.calls[0];
-    expect((init.headers as Record<string, string>).From).toBe('bot@acme.io');
-    expect((init.headers as Record<string, string>).Authorization).toBe(
+    expect((init.headers as Record<string, string>)['From']).toBe('bot@acme.io');
+    expect((init.headers as Record<string, string>)['Authorization']).toBe(
       'Token token=pd-secret',
     );
     expect(JSON.parse(init.body as string)).toEqual({

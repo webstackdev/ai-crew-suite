@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 export { aiCoreBackendModuleIncidentManagementPagerduty as default } from './module';
-export { PagerDutyDriver } from './providers/PagerDutyDriver';
-export type {
-  PagerDutyDriverConfig,
-  PagerDutyDriverOptions,
+export {
+  PagerDutyDriver,
+  type PagerDutyDriverConfig,
+  type PagerDutyDriverOptions,
 } from './providers/PagerDutyDriver';

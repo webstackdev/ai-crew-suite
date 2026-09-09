@@ -18,4 +18,4 @@ export {
   communicationDriversExtensionPoint,
   type CommunicationDriver,
   type CommunicationDriversExtensionPoint,
-} from '@ai-crew-suite/plugin-ai-core-node';
+} from '@ai-crew-suite/core-node';

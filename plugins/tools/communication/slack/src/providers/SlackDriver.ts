@@ -20,7 +20,7 @@ import {
   CommunicationMessage,
   CommunicationDriver,
   PostMessageInput,
-} from '@ai-crew-suite/plugin-ai-core-node';
+} from '@ai-crew-suite/core-node';
 
 /**
  * Connection settings for the Slack messaging driver.

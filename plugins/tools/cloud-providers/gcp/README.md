@@ -1,6 +1,6 @@
 # @ai-crew-suite/tool-cloud-providers-gcp
 
-GCP Extension Module for the AI Crew Suite platform.
+> GCP Extension Module for the AI Crew Suite platform.
 
 ## Overview
 

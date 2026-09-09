@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { coreServices, createBackendModule } from '@backstage/backend-plugin-api';
-import { cloudDriversExtensionPoint } from '@ai-crew-suite/plugin-ai-core-node';
+import { cloudDriversExtensionPoint } from '@ai-crew-suite/core-node';
 import { AzureDriver } from './providers/AzureDriver';
 
 export const aiCoreBackendModuleCloudProvidersAzure = createBackendModule({

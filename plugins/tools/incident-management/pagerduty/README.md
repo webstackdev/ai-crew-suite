@@ -1,15 +1,21 @@
-# @webstackbuilders/plugin-ai-core-backend-module-incident-management-pagerduty
+# @ai-crew-suite/tool-incident-management-pagerduty
 
-> Core Developer Documentation for the AI Crew Suite platform.
+> PagerDuty Extension Module for the AI Crew Suite platform.
 
 ## Overview
 
-Registers a PagerDuty `IncidentManagementDriver` with
-`@webstackbuilders/plugin-ai-core-backend-module-incident-management` through the
-`incidentManagementDriversExtensionPoint`. This package owns PagerDuty REST API
-v2 access and response mapping; the core module owns the tool surface.
+This package registers a PagerDuty `IncidentManagementDriver` implementation with the core `@ai-crew-suite/tool-incident-management-core` engine through its `incidentManagementDriversExtensionPoint`. This package exclusively owns PagerDuty REST API v2 interactions, payload mapping, and header injection, while the core module manages the universal tool execution layer.
+
+### Core Responsibilities
+
+- **Backend module extension**: Wires cleanly into the core incident management backend extension points.
+- **PagerDuty client coordination**: Manages active HTTPS communication using the official REST API v2 endpoints.
+- **Dynamic filter resolution**: Intercepts high-level human-readable service filters and maps them to structural PagerDuty IDs prior to querying incidents.
+- **Operation attribution**: Manages custom request context formatting, ensuring write operations conform to required user matching boundaries.
 
 ## Configuration
+
+Ensure your `app-config.yaml` includes the structural parameters required to authenticate your PagerDuty engine:
 
 ```yaml
 ai:
@@ -17,35 +23,29 @@ ai:
     incidentManagement:
       provider: pagerduty
       pagerduty:
-        apiToken: ${PAGERDUTY_API_TOKEN}
+        apiToken: \${PAGERDUTY_API_TOKEN}
         fromEmail: ai-crew-suite@my-org.com
 ```
 
-`fromEmail` must be a valid PagerDuty user. PagerDuty requires the `From` header
-to attribute write operations, so `incident.incident.annotate` fails with a clear
-error when it is not configured. Read-only tools work without it.
+### Authentication & Filters
 
-A read-only API key is sufficient unless you intend to use the annotate tool.
-
-### Service and team filters
-
-`service` and `team` filters accept a service name and a team ID respectively.
-Service names are resolved to PagerDuty service IDs with a lookup call before the
-incident query runs, because the PagerDuty API filters on IDs rather than names.
+- **Write Operations**: The `fromEmail` configuration must resolve to a valid user account. PagerDuty enforces the usage of a `From` header for change mutation logging; write tools like `incident.incident.annotate` fail immediately if this parameters file is absent.
+- **Read Operations**: A read-only API key is sufficient for read-only tracking features.
+- **Metadata Filters**: Both `service` and `team` parameters are supported. Service context uses an implicit metadata lookup hook to extract exact identifier hashes since the API filters on keys rather than string descriptions.
 
 ## Installation
 
+Add the extension module directly to your modern Backstage backend system container:
+
 ```ts
-backend.add(
-  loadBackendFeature(
-    import('@webstackbuilders/plugin-ai-core-backend-module-incident-management-pagerduty'),
-  ),
-);
+backend.add(import('@ai-crew-suite/tool-incident-management-pagerduty'));
 ```
 
 ## Local Development Workflow
 
 ```bash
-yarn workspace @webstackbuilders/plugin-ai-core-backend-module-incident-management-pagerduty build
-yarn workspace @webstackbuilders/plugin-ai-core-backend-module-incident-management-pagerduty test
+yarn install --refresh
+yarn turbo run build --filter=@ai-crew-suite/tool-incident-management-pagerduty
+yarn turbo run lint --filter=@ai-crew-suite/tool-incident-management-pagerduty
+yarn turbo run test --filter=@ai-crew-suite/tool-incident-management-pagerduty
 ```

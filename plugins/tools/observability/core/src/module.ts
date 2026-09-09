@@ -18,7 +18,7 @@ import {
   ObservabilityDriver,
   observabilityDriversExtensionPoint,
   toolExtensionPoint,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/core-node';
 import { readObservabilityConfig } from './config';
 import { createObservabilityTools } from './tools';
 

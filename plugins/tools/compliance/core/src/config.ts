@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { Config } from '@backstage/config';
-import { IntegrationProviderConfig } from '@webstackbuilders/plugin-ai-core-node';
+import { IntegrationProviderConfig } from '@ai-crew-suite/core-node';
 
 /**
  * Reads the driver selector from `ai.integrations.compliance`.

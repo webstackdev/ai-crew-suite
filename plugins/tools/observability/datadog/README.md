@@ -1,15 +1,14 @@
-# @webstackbuilders/plugin-ai-core-backend-module-observability-datadog
+# @ai-crew-suite/tool-observability-datadog
 
-> Core Developer Documentation for the AI Crew Suite platform.
+> Datadog Extension Module for the AI Crew Suite platform.
 
 ## Overview
 
-Registers a Datadog `ObservabilityDriver` with
-`@webstackbuilders/plugin-ai-core-backend-module-observability` through the
-`observabilityDriversExtensionPoint`. This package owns Datadog API access and
-response mapping; the core module owns the tool surface.
+This package registers a Datadog `ObservabilityDriver` implementation with the core `@ai-crew-suite/tool-observability-core` engine through its `observabilityDriversExtensionPoint`. This package exclusively owns the Datadog API communication boundaries, credential handling, and structural data conversion workflows, while the core module manages the universal tool execution layer.
 
-| Contract method | Datadog endpoint |
+### Endpoint Mapping
+
+| Contract Method | Datadog Endpoint Target |
 | --- | --- |
 | `queryMetrics` | `GET /api/v1/query` |
 | `searchLogs` | `POST /api/v2/logs/events/search` |
@@ -18,46 +17,48 @@ response mapping; the core module owns the tool surface.
 
 ## Configuration
 
+Ensure your `app-config.yaml` includes the structural parameters required to authenticate your Datadog workspace endpoints:
+
 ```yaml
 ai:
   integrations:
     observability:
       provider: datadog
       datadog:
-        apiKey: ${DATADOG_API_KEY}
-        applicationKey: ${DATADOG_APP_KEY}
-        # Set for non-US1 sites, for example the EU site:
+        apiKey: \${DATADOG_API_KEY}
+        applicationKey: \${DATADOG_APP_KEY}
+        # Set for non-US1 environments (e.g., the EU region site):
         # apiBaseUrl: https://api.datadoghq.eu
         # appBaseUrl: https://app.datadoghq.eu
 ```
 
-Both keys are required. Datadog read endpoints reject requests carrying only an
-API key. Scope the application key to `logs_read_data`, `apm_read`, and
-`dashboards_read`.
+Both keys are strictly required. Datadog analytical read configurations reject connections carrying an API token alone. Ensure your application key is scoped to include the following explicit permissions:
 
-## Query Windows
+* `logs_read_data`
+* `apm_read`
+* `dashboards_read`
 
-Every query is bounded. When `since` and `until` are omitted the driver applies a
-one hour lookback rather than issuing an open-ended request against a metered
-API. Invalid or inverted ranges are rejected before the request is sent.
+## Query Windows & Normalization
 
-Datadog reports span durations in nanoseconds and metric timestamps in
-milliseconds; both are normalized to the shared contract's milliseconds and
-ISO-8601 strings.
+To prevent unbounded resource consumption over metered APIs, every query window is restricted:
+
+* **Default Window:** When `since` and `until` boundaries are omitted, the driver applies a strict 1-hour lookback constraint.
+* **Validation:** Inverted or logically flawed ranges are caught and rejected prior to downstream transmission.
+* **Timestamp Alignment:** Datadog returns metrics via millisecond epochs and trace span durations via nanosecond metrics. The driver normalizes both types down to the core platform's metric contract requirements (milliseconds and ISO-8601 strings).
 
 ## Installation
 
+Add the extension module directly to your modern Backstage backend system container:
+
 ```ts
-backend.add(
-  loadBackendFeature(
-    import('@webstackbuilders/plugin-ai-core-backend-module-observability-datadog'),
-  ),
-);
+backend.add(import('@ai-crew-suite/tool-observability-datadog'));
 ```
 
 ## Local Development Workflow
 
 ```bash
-yarn workspace @webstackbuilders/plugin-ai-core-backend-module-observability-datadog build
-yarn workspace @webstackbuilders/plugin-ai-core-backend-module-observability-datadog test
+yarn install --refresh
+yarn turbo run build --filter=@ai-crew-suite/tool-observability-datadog
+yarn turbo run lint --filter=@ai-crew-suite/tool-observability-datadog
+yarn turbo run test --filter=@ai-crew-suite/tool-observability-datadog
 ```

@@ -19,7 +19,7 @@ import {
   ToolExtensionPoint,
   observabilityDriversExtensionPoint,
   toolExtensionPoint,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/core-node';
 import { describe, expect, it, vi } from 'vitest';
 import { aiCoreBackendModuleObservability } from '../module';
 

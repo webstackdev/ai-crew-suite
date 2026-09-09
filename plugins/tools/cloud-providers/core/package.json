@@ -50,7 +50,7 @@
     "typecheck": "crew typecheck"
   },
   "dependencies": {
-    "@ai-crew-suite/plugin-ai-core-node": "workspace:^",
+    "@ai-crew-suite/core-node": "workspace:^",
     "@backstage/backend-plugin-api": "backstage:^",
     "@backstage/config": "backstage:^",
     "vitest": "catalog:vitest"

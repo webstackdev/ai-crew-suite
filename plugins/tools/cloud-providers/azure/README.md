@@ -1,6 +1,6 @@
 # @ai-crew-suite/tool-cloud-providers-azure
 
-Azure Extension Module for the AI Crew Suite platform.
+> Azure Extension Module for the AI Crew Suite platform.
 
 ## Overview
 

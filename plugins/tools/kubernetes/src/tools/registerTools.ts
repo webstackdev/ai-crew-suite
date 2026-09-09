@@ -22,7 +22,7 @@ import {
   KubernetesTimelineQuery,
   KubernetesWorkloadQuery,
   ToolDefinition,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/core-node';
 
 export interface CreateKubernetesDiagnosticsToolsOptions {
   driver: KubernetesDiagnosticsDriver;

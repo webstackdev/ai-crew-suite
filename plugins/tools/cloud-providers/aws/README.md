@@ -1,6 +1,6 @@
 # @ai-crew-suite/tool-cloud-providers-aws
 
-AWS Extension Module for the AI Crew Suite platform.
+> AWS Extension Module for the AI Crew Suite platform.
 
 ## Overview
 

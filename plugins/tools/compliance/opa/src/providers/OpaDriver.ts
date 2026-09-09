@@ -20,7 +20,7 @@ import {
   CostEstimateResult,
   PermissionCheckResult,
   PolicyEvaluationResult,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/core-node';
 
 export type OpaDriverConfig = {
   baseUrl: string;

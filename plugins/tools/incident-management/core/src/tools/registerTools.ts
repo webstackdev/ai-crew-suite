@@ -20,7 +20,7 @@ import {
   IncidentSearchQuery,
   OnCallQuery,
   ToolDefinition,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/core-node';
 
 export interface CreateIncidentManagementToolsOptions {
   driver: IncidentManagementDriver;

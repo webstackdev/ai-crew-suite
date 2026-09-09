@@ -1,48 +1,31 @@
-# @webstackbuilders/plugin-ai-core-backend-module-observability
+# @ai-crew-suite/tool-observability-core
 
 > Core Developer Documentation for the AI Crew Suite platform.
 
 ## Overview
 
-This package is the **core module for the observability integration group**. It
-owns the provider-neutral telemetry contract and tool surface, and resolves a
-concrete vendor driver that a sibling `-<provider>` package registers through an
-extension point at boot time. It contains no vendor code and no vendor
-dependencies.
+This package is the **core module for the observability integration group**. It owns the provider-neutral telemetry contract and tool surface, and resolves a concrete vendor driver that a sibling extension package registers through an extension point at boot time. It contains no vendor code and no vendor dependencies.
 
-Telemetry is deliberately separate from paging. On-call schedules, alert routing,
-and incident lifecycles live in
-`plugin-ai-core-backend-module-incident-management`.
+Telemetry is deliberately separate from paging. On-call schedules, alert routing, and incident lifecycles live in `@ai-crew-suite/tool-incident-management-core`.
 
 ### Core Responsibilities
 
-- **Backend module registration**: Registers `aiCoreBackendModuleObservability`
-  as an `ai-core` backend module using `createBackendModule`.
-- **Extension point**: Exposes `observabilityDriversExtensionPoint` so sibling
-  modules can register `ObservabilityDriver` implementations.
-- **Driver resolution**: Selects the active driver from the runtime registry
-  using `ai.integrations.observability.provider`.
-- **Stable tool registration**: Registers `observability.metrics.query`,
-  `observability.logs.search`, `observability.traces.search`, and
-  `observability.dashboard.list` through `toolExtensionPoint`.
+- **Backend module registration**: Registers `aiCoreBackendModuleObservability` as an `ai-core` backend module using `createBackendModule`.
+- **Extension point**: Exposes `observabilityDriversExtensionPoint` so sibling modules can register `ObservabilityDriver` implementations.
+- **Driver resolution**: Selects the active driver from the runtime registry using `ai.integrations.observability.provider`.
+- **Stable tool registration**: Registers `observability.metrics.query`, `observability.logs.search`, `observability.traces.search`, and `observability.dashboard.list` through the system tool extension points.
 
-Every tool in this group is `effect: 'read'`. Telemetry platforms are a source of
-evidence for agents, never a target for autonomous writes.
-
----
+Every tool in this group is explicitly configured with `effect: 'read'`. Telemetry platforms act solely as a source of evidence for agents and are never targets for autonomous mutations or write operations.
 
 ## Available Driver Modules
 
 | Package | Driver ID |
 | --- | --- |
-| `@webstackbuilders/plugin-ai-core-backend-module-observability-datadog` | `datadog` |
-
----
+| `@ai-crew-suite/tool-observability-datadog` | `datadog` |
 
 ## Configuration
 
-This package owns only the driver selector. Connection details are owned by the
-sibling driver packages.
+This package owns only the driver selector. Connection details are owned by the sibling driver packages.
 
 ```yaml
 ai:
@@ -54,52 +37,26 @@ ai:
 Install the core module alongside the driver module you selected:
 
 ```ts
-backend.add(
-  loadBackendFeature(
-    import('@webstackbuilders/plugin-ai-core-backend-module-observability'),
-  ),
-);
-backend.add(
-  loadBackendFeature(
-    import('@webstackbuilders/plugin-ai-core-backend-module-observability-datadog'),
-  ),
-);
+backend.add(import('@ai-crew-suite/tool-observability-core'));
+backend.add(import('@ai-crew-suite/tool-observability-datadog'));
 ```
 
-Boot fails with an explicit error when the selected identifier has no registered
-driver.
-
----
+Boot fails with an explicit error when the selected identifier has no registered driver.
 
 ## Authoring a New Driver Module
 
-1. Create `plugin-ai-core-backend-module-observability-<provider>`.
-2. Implement `ObservabilityDriver` from `@webstackbuilders/plugin-ai-core-node`.
-3. Depend on `observabilityDriversExtensionPoint` in `createBackendModule` and
-   call `registerDriver` during `init`.
+1. Create a workspace directory under `plugins/tools/observability/<provider>`.
+2. Implement `ObservabilityDriver` from `@ai-crew-suite/tool-observability-core` (or its shared node types).
+3. Depend on `observabilityDriversExtensionPoint` in `createBackendModule` and call `registerDriver` during initialization.
 4. Own `ai.integrations.observability.<provider>` in your package's `config.d.ts`.
 
-A driver that only serves part of the contract, for example a Prometheus driver
-with no dashboard API, should return an empty result rather than throwing, so
-agents degrade gracefully.
-
----
+Drivers that only fulfill partial aspects of the contract—such as a Prometheus driver lacking dashboard schemas—should return empty query results instead of throwing errors. This allows AI agents to degrade gracefully at execution time.
 
 ## Local Development Workflow
 
-### 1. Prerequisites & Context
-
-This workspace relies on the monorepo's shared **Yarn Plug'n'Play (PnP)** caching layout.
-
-### 2. Installation & Builds
-
 ```bash
 yarn install --refresh
-yarn workspace @webstackbuilders/plugin-ai-core-backend-module-observability build
-```
-
-### 3. Running Unit & Integration Tests
-
-```bash
-yarn workspace @webstackbuilders/plugin-ai-core-backend-module-observability test
+yarn turbo run build --filter=@ai-crew-suite/tool-observability-core
+yarn turbo run lint --filter=@ai-crew-suite/tool-observability-core
+yarn turbo run test --filter=@ai-crew-suite/tool-observability-core
 ```

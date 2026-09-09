@@ -21,7 +21,7 @@ import {
   ObservabilityDriver,
   ToolDefinition,
   TraceQuery,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/core-node';
 
 export interface CreateObservabilityToolsOptions {
   driver: ObservabilityDriver;

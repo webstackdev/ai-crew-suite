@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 export { aiCoreBackendModuleObservability as default } from './module';
-export { observabilityDriversExtensionPoint } from '@webstackbuilders/plugin-ai-core-node';
-export type {
-  ObservabilityDriver,
-  ObservabilityDriversExtensionPoint,
-} from '@webstackbuilders/plugin-ai-core-node';
+export {
+  observabilityDriversExtensionPoint,
+  type ObservabilityDriver,
+  type ObservabilityDriversExtensionPoint,
+} from '@ai-crew-suite/core-node';

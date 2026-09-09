@@ -21,7 +21,7 @@ import {
   ComplianceDriver,
   complianceDriversExtensionPoint,
   toolExtensionPoint,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/core-node';
 import { readComplianceConfig } from './config';
 import { createComplianceTools } from './tools';
 

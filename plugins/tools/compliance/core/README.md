@@ -1,41 +1,27 @@
-# @webstackbuilders/plugin-ai-core-backend-module-compliance
+# @ai-crew-suite/tool-compliance-core
 
 > Core Developer Documentation for the AI Crew Suite platform.
 
 ## Overview
 
-This package is the **core module for the compliance integration group**. It owns
-the provider-neutral compliance contract and tool surface, and resolves a
-concrete vendor driver that a sibling `-<provider>` package registers through an
-extension point at boot time. It contains no vendor code and no vendor
-dependencies.
+This package is the **core module for the compliance integration group**. It owns the provider-neutral compliance contract and tool surface, and resolves a concrete vendor driver that a sibling extension package registers through an extension point at boot time. It contains no vendor code and no vendor dependencies.
 
 ### Core Responsibilities
 
-- **Backend module registration**: Registers `aiCoreBackendModuleCompliance` as
-  an `ai-core` backend module using `createBackendModule`.
-- **Extension point**: Exposes `complianceDriversExtensionPoint` so sibling
-  modules can register `ComplianceDriver` implementations.
-- **Driver resolution**: Selects the active driver from the runtime registry
-  using `ai.integrations.compliance.provider`.
-- **Stable tool registration**: Registers `compliance.policy.evaluate`,
-  `compliance.permission.check`, `compliance.architecture.validate`, and
-  `compliance.cost.estimate` through `toolExtensionPoint`.
-
----
+- **Backend module registration**: Registers `aiCoreBackendModuleCompliance` as an `ai-core` backend module using `createBackendModule`.
+- **Extension point**: Exposes `complianceDriversExtensionPoint` so sibling modules can register `ComplianceDriver` implementations.
+- **Driver resolution**: Selects the active driver from the runtime registry using `ai.integrations.compliance.provider`.
+- **Stable tool registration**: Registers `compliance.policy.evaluate`, `compliance.permission.check`, `compliance.architecture.validate`, and `compliance.cost.estimate` through the system tool extension points.
 
 ## Available Driver Modules
 
-| Package                                                          | Driver ID |
-| ---------------------------------------------------------------- | --------- |
-| `@webstackbuilders/plugin-ai-core-backend-module-compliance-opa` | `opa`     |
-
----
+| Package | Driver ID |
+| --- | --- |
+| `@ai-crew-suite/tool-compliance-opa` | `opa` |
 
 ## Configuration
 
-This package owns only the driver selector. Connection details and policy paths
-are owned by the sibling driver packages.
+This package owns only the driver selector. Connection details and policy paths are owned by the sibling driver packages.
 
 ```yaml
 ai:
@@ -47,29 +33,17 @@ ai:
 Install the core module alongside the driver module you selected:
 
 ```ts
-backend.add(
-  loadBackendFeature(
-    import('@webstackbuilders/plugin-ai-core-backend-module-compliance'),
-  ),
-);
-backend.add(
-  loadBackendFeature(
-    import('@webstackbuilders/plugin-ai-core-backend-module-compliance-opa'),
-  ),
-);
+backend.add(import('@ai-crew-suite/tool-compliance-core'));
+backend.add(import('@ai-crew-suite/tool-compliance-opa'));
 ```
 
-Boot fails with an explicit error when the selected identifier has no registered
-driver.
-
----
+Boot fails with an explicit error when the selected identifier has no registered driver.
 
 ## Authoring a New Driver Module
 
-1. Create `plugin-ai-core-backend-module-compliance-<provider>`.
-2. Implement `ComplianceDriver` from `@webstackbuilders/plugin-ai-core-node`.
-3. Depend on `complianceDriversExtensionPoint` in `createBackendModule` and call
-   `registerDriver` during `init`.
+1. Create a workspace directory under `plugins/tools/compliance/<provider>`.
+2. Implement `ComplianceDriver` from `@ai-crew-suite/tool-compliance-core` (or its shared node types).
+3. Depend on `complianceDriversExtensionPoint` in `createBackendModule` and call `registerDriver` during initialization.
 4. Own `ai.integrations.compliance.<provider>` in your package's `config.d.ts`.
 
 ---
@@ -77,6 +51,8 @@ driver.
 ## Local Development Workflow
 
 ```bash
-yarn workspace @webstackbuilders/plugin-ai-core-backend-module-compliance build
-yarn workspace @webstackbuilders/plugin-ai-core-backend-module-compliance test
+yarn install --refresh
+yarn turbo run build --filter=@ai-crew-suite/tool-compliance-core
+yarn turbo run lint --filter=@ai-crew-suite/tool-compliance-core
+yarn turbo run test --filter=@ai-crew-suite/tool-compliance-core
 ```

@@ -18,7 +18,7 @@ import {
   IncidentManagementDriver,
   incidentManagementDriversExtensionPoint,
   toolExtensionPoint,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/core-node';
 import { readIncidentManagementConfig } from './config';
 import { createIncidentManagementTools } from './tools';
 
