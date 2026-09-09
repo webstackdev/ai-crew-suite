@@ -21,7 +21,7 @@ const createMockDriver = (overrides: Partial<VcsDriver> = {}): VcsDriver => ({
   providerId: 'github',
   getRepositoryMetadata: vi
     .fn()
-    .mockResolvedValue({ owner: 'webstackdev', name: 'ai-crew-suite', defaultBranch: 'main', provider: 'github', url: 'https://github.com/webstackdev/ai-crew-suite' }),
+    .mockResolvedValue({ owner: 'webstackdev', name: 'ai-crew-suite', defaultBranch: 'main', provider: 'github', url: 'https://github.com/ai-crew-suite/ai-crew-suite' }),
   readFile: vi.fn().mockResolvedValue('file contents'),
   searchRepository: vi.fn().mockResolvedValue([]),
   listPullRequests: vi.fn().mockResolvedValue([]),
@@ -76,7 +76,7 @@ describe('createVcsTools', () => {
     });
     const readFileTool = tools.find(t => t.id === 'vcs.repository.read_file');
     const result = await readFileTool!.invoke(
-      { repoUrl: 'https://github.com/webstackdev/ai-crew-suite', path: 'README.md', ref: 'main' },
+      { repoUrl: 'https://github.com/ai-crew-suite/ai-crew-suite', path: 'README.md', ref: 'main' },
       ctx,
     );
     expect(result).toEqual({
@@ -85,7 +85,7 @@ describe('createVcsTools', () => {
       content: 'file contents',
     });
     expect(driver.readFile).toHaveBeenCalledWith(
-      'https://github.com/webstackdev/ai-crew-suite',
+      'https://github.com/ai-crew-suite/ai-crew-suite',
       'README.md',
       'main',
     );
@@ -99,7 +99,7 @@ describe('createVcsTools', () => {
     });
     const tool = tools.find(t => t.id === 'vcs.repository.get_metadata');
     const result = await tool!.invoke(
-      { repoUrl: 'https://github.com/webstackdev/ai-crew-suite' },
+      { repoUrl: 'https://github.com/ai-crew-suite/ai-crew-suite' },
       ctx,
     );
     expect(result).toMatchObject({

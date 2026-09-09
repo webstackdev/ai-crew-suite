@@ -33,12 +33,12 @@
     "role": "web-library"
   },
   "bugs": {
-    "url": "https://github.com/webstackdev/ai-crew-suite/issues",
+    "url": "https://github.com/ai-crew-suite/ai-crew-suite/issues",
     "email": "support@ai-crew-suite.dev"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/webstackdev/ai-crew-suite",
+    "url": "https://github.com/ai-crew-suite/ai-crew-suite",
     "directory": "plugins/frontend/plugin-ai-agent-frontend-core"
   },
   "files": [

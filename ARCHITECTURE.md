@@ -17,7 +17,7 @@ All internal packages belong to the NPM organization scope `@ai-crew-suite`.
 ## Leaf Plugin Files
 
 ```bash
-find . -type f -exec sed -i 's|support@ai-crew-suite.dev|support@ai-crew-suite.dev|g' {} +
+find . -type f -exec sed -i 's|https://github.com/ai-crew-suite|https://github.com/ai-crew-suite|g' {} +
 ```
 
 ### `tsconfig.json`

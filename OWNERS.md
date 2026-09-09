@@ -2,4 +2,4 @@
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for general contribution guidelines.
 
-- Kevin Brown ([WebstackDev](https://github.com/webstackdev))
+- Kevin Brown ([WebstackDev](https://github.com/ai-crew-suite))
