@@ -139,12 +139,12 @@ ai-crew-suite/
 ├── docs/
 │   └── ARCHITECTURE.md                     # Monorepo architecture standards file
 ├── plugins/
-│   ├── core/                               # TIER 1: CORE ARCHITECTURE & INFRASTRUCTURE
+│   ├── kernel/                               # TIER 1: CORE ARCHITECTURE & INFRASTRUCTURE
 │   │   ├── backend/                        # @ai-crew-suite/plugin-core-backend
-│   │   ├── node/                           # @ai-crew-suite/plugin-core-nodere-node
+│   │   ├── node/                           # @ai-crew-suite/plugin-core-node
 │   │   └── infra/                          # Foundational LangGraph framework engine pieces
 │   │       ├── llm/
-│   │       │   ├── core/                   # @ai-crew-suite/infra-llm-core
+│   │       │   ├── core/                   # @ai-crew-suite/plugin-infra-llm-backend
 │   │       │   ├── aws/                    # @ai-crew-suite/infra-llm-aws
 │   │       │   ├── openai/                 # @ai-crew-suite/infra-llm-openai
 │   │       │   └── openrouter/             # @ai-crew-suite/infra-llm-openrouter

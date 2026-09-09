@@ -21,7 +21,7 @@ import {
   toolExtensionPoint,
   cloudDriversExtensionPoint,
   CloudProviderDriver,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '../../../../../kernel/node/src';
 import { aiCoreBackendModuleCloudProviders } from '../module';
 
 describe('aiCoreBackendModuleCloudProviders', () => {

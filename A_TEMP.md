@@ -1,35 +1,19 @@
-Tier 1: Core Architecture & Infrastructure
-
 Core Platform Tools
 
-- `core/backend` \(\rightarrow \) **`@ai-crew-suite/plugin-core-backend`** (Main core backend plugin)
-- `core/node` \(\rightarrow \) **`@ai-crew-suite/plugin-core-node`** (Shared Node.js library for core plugin extension points)
-
-Infrastructure Engine Plugins (Core + Modules)
-
-For infrastructure, the `*-core` package acts as the host backend plugin (`plugin-infra-llm-backend`), and each specific vendor directory becomes a **Backend Module** targeting that plugin.
-
-- `infra/llm/core` \(\rightarrow \) **`@ai-crew-suite/plugin-infra-llm-backend`**
-- `infra/llm/aws` \(\rightarrow \) **`@ai-crew-suite/plugin-infra-llm-backend-module-aws`**
-- `infra/llm/openai` \(\rightarrow \) **`@ai-crew-suite/plugin-infra-llm-backend-module-openai`**
-- `infra/llm/openrouter` \(\rightarrow \) **`@ai-crew-suite/plugin-infra-llm-backend-module-openrouter`**
-- `infra/vector/core` \(\rightarrow \) **`@ai-crew-suite/plugin-infra-vector-backend`**
-- `infra/vector/pgvector` \(\rightarrow \) **`@ai-crew-suite/plugin-infra-vector-backend-module-pgvector`**
-- `infra/vector/qdrant` \(\rightarrow \) **`@ai-crew-suite/plugin-infra-vector-backend-module-qdrant`**
-- `infra/retrieval-augmenter` \(\rightarrow \) **`@ai-crew-suite/plugin-infra-retrieval-augmenter-backend`**
-- `infra/runtime-store` \(\rightarrow \) **`@ai-crew-suite/plugin-infra-runtime-store-backend`**
-
-------
+- `kernel/backend` \(\rightarrow \) **`@ai-crew-suite/plugin-kernel-backend`**
+- `kernel/node` \(\rightarrow \) **`@ai-crew-suite/plugin-kernel-node`**
+- `kernel/react` \(\rightarrow \) **`@ai-crew-suite/plugin-kernel-react`**
+- `kernel/llm/backend` \(\rightarrow \) **`@ai-crew-suite/plugin-llm-backend`**
+- `kernel/llm/aws` \(\rightarrow \) **`@ai-crew-suite/plugin-llm-backend-module-aws`**
+- `kernel/llm/openai` \(\rightarrow \) **`@ai-crew-suite/plugin-llm-backend-module-openai`**
+- `kernel/llm/openrouter` \(\rightarrow \) **`@ai-crew-suite/plugin-llm-backend-module-openrouter`**
+- `kernel/vector-store/backend` \(\rightarrow \) **`@ai-crew-suite/plugin-vector-store-backend`**
+- `kernel/vector-store/pgvector` \(\rightarrow \) **`@ai-crew-suite/plugin-vector-store-backend-module-pgvector`**
+- `kernel/vector-store/qdrant` \(\rightarrow \) **`@ai-crew-suite/plugin-vector-store-backend-module-qdrant`**
+- `kernel/retrieval-augmenter` \(\rightarrow \) **`@ai-crew-suite/plugin-retrieval-augmenter-backend`**
+- `kernel/runtime-store` \(\rightarrow \) **`@ai-crew-suite/plugin-runtime-store-backend`**
 
 Tier 2: Agentic Workflow Pairs
-
-Frontend Library
-
-- `core-frontend` \(\rightarrow \) **`@ai-crew-suite/plugin-agent-core-react`** (Or `-frontend`. Backstage standard leans heavily toward `-react` or `-node` for shared library utilities).
-
-Feature-Pair Plugins
-
-Every individual feature split cleanly into frontend/backend code gets explicitly isolated naming.
 
 - `alert-tuner/backend` \(\rightarrow \) **`@ai-crew-suite/plugin-agent-alert-tuner-backend`**
 - `alert-tuner/frontend` \(\rightarrow \) **`@ai-crew-suite/plugin-agent-alert-tuner`**
@@ -76,24 +60,24 @@ Because your tools are strictly backend plugins, the `core` package hosts the pl
 
 Cloud Providers
 
-- `cloud-providers/core` \(\rightarrow \) **`@ai-crew-suite/plugin-tool-cloud-providers-backend`**
+- `cloud-providers/backend` \(\rightarrow \) **`@ai-crew-suite/plugin-tool-cloud-providers-backend`**
 - `cloud-providers/aws` \(\rightarrow \) **`@ai-crew-suite/plugin-tool-cloud-providers-backend-module-aws`**
 - `cloud-providers/azure` \(\rightarrow \) **`@ai-crew-suite/plugin-tool-cloud-providers-backend-module-azure`**
 - `cloud-providers/gcp` \(\rightarrow \) **`@ai-crew-suite/plugin-tool-cloud-providers-backend-module-gcp`**
 
 Communication
 
-- `communication/core` \(\rightarrow \) **`@ai-crew-suite/plugin-tool-communication-backend`**
+- `communication/backend` \(\rightarrow \) **`@ai-crew-suite/plugin-tool-communication-backend`**
 - `communication/slack` \(\rightarrow \) **`@ai-crew-suite/plugin-tool-communication-backend-module-slack`**
 
 Compliance
 
-- `compliance/core` \(\rightarrow \) **`@ai-crew-suite/plugin-tool-compliance-backend`**
+- `compliance/backend` \(\rightarrow \) **`@ai-crew-suite/plugin-tool-compliance-backend`**
 - `compliance/opa` \(\rightarrow \) **`@ai-crew-suite/plugin-tool-compliance-backend-module-opa`**
 
 Incident Management
 
-- `incident-management/core` \(\rightarrow \) **`@ai-crew-suite/plugin-tool-incident-management-backend`**
+- `incident-management/backend` \(\rightarrow \) **`@ai-crew-suite/plugin-tool-incident-management-backend`**
 - `incident-management/pagerduty` \(\rightarrow \) **`@ai-crew-suite/plugin-tool-incident-management-backend-module-pagerduty`**
 
 Kubernetes (Self-Contained)
@@ -102,24 +86,24 @@ Kubernetes (Self-Contained)
 
 Observability
 
-- `observability/core` \(\rightarrow \) **`@ai-crew-suite/plugin-tool-observability-backend`**
+- `observability/backend` \(\rightarrow \) **`@ai-crew-suite/plugin-tool-observability-backend`**
 - `observability/datadog` \(\rightarrow \) **`@ai-crew-suite/plugin-tool-observability-backend-module-datadog`**
 
 Project Management
 
-- `project-management/core` \(\rightarrow \) **`@ai-crew-suite/plugin-tool-project-management-backend`**
+- `project-management/backend` \(\rightarrow \) **`@ai-crew-suite/plugin-tool-project-management-backend`**
 - `project-management/jira` \(\rightarrow \) **`@ai-crew-suite/plugin-tool-project-management-backend-module-jira`**
 
 Quality Scorecards
 
-- `quality-scorecards/core` \(\rightarrow \) **`@ai-crew-suite/plugin-tool-quality-scorecards-backend`**
+- `quality-scorecards/backend` \(\rightarrow \) **`@ai-crew-suite/plugin-tool-quality-scorecards-backend`**
 - `quality-scorecards/scorecards` \(\rightarrow \) **`@ai-crew-suite/plugin-tool-quality-scorecards-backend-module-scorecards`**
 - `quality-scorecards/soundcheck` \(\rightarrow \) **`@ai-crew-suite/plugin-tool-quality-scorecards-backend-module-soundcheck`**
 - `quality-scorecards/techradar` \(\rightarrow \) **`@ai-crew-suite/plugin-tool-quality-scorecards-backend-module-techradar`**
 
 VCS (Version Control Systems)
 
-- `vcs/core` \(\rightarrow \) **`@ai-crew-suite/plugin-tool-vcs-backend`**
+- `vcs/backend` \(\rightarrow \) **`@ai-crew-suite/plugin-tool-vcs-backend`**
 - `vcs/aws-codecommit` \(\rightarrow \) **`@ai-crew-suite/plugin-tool-vcs-backend-module-aws-codecommit`**
 - `vcs/azure` \(\rightarrow \) **`@ai-crew-suite/plugin-tool-vcs-backend-module-azure`**
 - `vcs/bitbucket` \(\rightarrow \) **`@ai-crew-suite/plugin-tool-vcs-backend-module-bitbucket`**

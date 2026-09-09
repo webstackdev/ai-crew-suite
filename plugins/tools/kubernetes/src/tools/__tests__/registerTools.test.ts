@@ -2,7 +2,7 @@ import { mockServices } from '@backstage/backend-test-utils';
 import {
   KubernetesDiagnosticsDriver,
   ToolContext,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '../../../../../kernel/node/src';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createKubernetesDiagnosticsTools } from '../registerTools';
 

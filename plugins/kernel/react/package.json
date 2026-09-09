@@ -1,21 +1,10 @@
 {
   "name": "@webstackbuilders/plugin-ai-agent-frontend-core",
+  "description": "Core TypeScript definitions and type-safe SSE event models for the AI Crew Suite platform layer.",
   "version": "0.0.1",
   "main": "dist/index.esm.js",
   "types": "dist/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.esm.js",
-      "default": "./src/index.ts"
-    },
-    "./alpha": {
-      "types": "./dist/alpha.d.ts",
-      "default": "./src/alpha.ts"
-    }
-  },
   "license": "Apache-2.0",
-  "description": "Common library and base classes for use in AI Crew Suite frontend plugins.",
   "keywords": [
     "backstage",
     "backstage-plugin",
@@ -59,7 +48,7 @@
     "@backstage/core-components": "backstage:^",
     "@backstage/core-plugin-api": "backstage:^",
     "@backstage/frontend-plugin-api": "backstage:^",
-    "eventsource-parser": "^2.0.1",
+    "eventsource-parser": "^4.1.0",
     "vitest": "^4.1.11"
   },
   "devDependencies": {
