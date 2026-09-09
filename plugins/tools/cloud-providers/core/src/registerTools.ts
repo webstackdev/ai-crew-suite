@@ -16,7 +16,7 @@
 import {
   CreateCloudProviderToolsOptions,
   ToolDefinition,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/core-node';
 
 /** Creates typed, read-only AI Core tools that delegate to the active cloud driver. */
 export const createCloudProviderTools = (

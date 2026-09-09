@@ -24,7 +24,7 @@ import {
   CloudAccountSummary,
   CloudResourceSummary,
   CloudDependencySummary
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/core-node';
 
 export interface AwsDriverOptions {
   logger: any;

@@ -16,12 +16,12 @@
 import { DefaultAzureCredential } from '@azure/identity';
 import { ResourceManagementClient } from '@azure/arm-resources';
 import { Config } from '@backstage/config';
-import { 
-  CloudProviderDriver, 
-  CloudAccountSummary, 
-  CloudResourceSummary, 
+import {
+  CloudProviderDriver,
+  CloudAccountSummary,
+  CloudResourceSummary,
   CloudDependencySummary
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-ai-core-node';
 
 export interface AzureDriverOptions {
   logger: any;

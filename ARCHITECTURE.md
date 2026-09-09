@@ -28,12 +28,21 @@ find . -type f -exec sed -i 's|https://github.com/ai-crew-suite|https://github.c
 }
 ```
 
+```bash
+@ai-crew-suite/core-node
+```
+
 ### `package.json`
 
 ```json
 {
   "name": "@ai-crew-suite/agent-alert-tuner-backend",
+  "description": "",
   "version": "1.0.0",
+  "type": "module", // frontend plugins only
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "license": "Apache-2.0",
   "keywords": [
     "ai-core",
     "ai-crew-suite",
@@ -46,12 +55,30 @@ find . -type f -exec sed -i 's|https://github.com/ai-crew-suite|https://github.c
     "access": "public",
     "provenance": true
   },
-  "type": "module", // frontend plugins only
-  "main": "src/index.ts",
-  "types": "src/index.ts",
   "backstage": {
-    "role": "frontend-plugin"
-  }
+    "role": "backend-plugin-module",
+    "pluginId": "tool-cloud-providers",
+    "pluginPackages": [
+      "@ai-crew-suite/tool-cloud-providers-core",
+      "@ai-crew-suite/tool-cloud-providers-aws",
+      "@ai-crew-suite/tool-cloud-providers-azure",
+      "@ai-crew-suite/tool-cloud-providers-gcp"
+    ]
+  },
+  "bugs": {
+    "url": "https://github.com/ai-crew-suite/ai-crew-suite/issues",
+    "email": "support@ai-crew-suite.dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ai-crew-suite/ai-crew-suite",
+    "directory": "plugins/tools/cloud-providers/core"
+  },
+  "files": [
+    "dist/",
+    "config.d.ts"
+  ],
+  "configSchema": "config.d.ts",
   "scripts": {
     "build": "crew build",
     "clean": "crew clean",
@@ -61,10 +88,12 @@ find . -type f -exec sed -i 's|https://github.com/ai-crew-suite|https://github.c
     "test:unit:coverage": "crew test:unit:coverage",
     "typecheck": "crew typecheck"
   },
+  "dependencies": {
+    "@ai-crew-suite/plugin-ai-core-node": "workspace:^",
+  },
   "devDependencies": {
     "@ai-crew-suite/cli": "workspace:*",
     "@backstage/backend-test-utils": "backstage:^",
-    "@backstage/cli": "backstage:^",
     "@types/node": "catalog:node-types",
     "react": "catalog:react",
     "react-dom": "catalog:react-dom",
@@ -81,10 +110,6 @@ yarn turbo run build --filter=@ai-crew-suite/eslint
 yarn turbo run lint --filter=@ai-crew-suite/eslint
 yarn turbo run test:unit --filter=@ai-crew-suite/eslint
 ```
-
-@ai-crew-suite/cli/storybook/mocks
-
-grep -rli 'old_string' * | xargs -I@ sed -i 's/old_string/new_string/g' @
 
 When team members join or when you start creating new internal Backstage plugins, the workflow for a new feature branch will look like this:
 

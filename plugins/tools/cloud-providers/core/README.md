@@ -1,4 +1,4 @@
-# @webstackbuilders/plugin-ai-core-backend-module-cloud-providers
+# @ai-crew-suite/tool-cloud-providers-core
 
 > Core Developer Documentation for the AI Crew Suite platform.
 
@@ -34,6 +34,7 @@ Supported providers: `aws`, `azure`, `gcp`.
 
 ```bash
 yarn install --refresh
-yarn workspace @webstackbuilders/plugin-ai-core-backend-module-cloud-providers build
-yarn workspace @webstackbuilders/plugin-ai-core-backend-module-cloud-providers test
+yarn turbo run build --filter=@ai-crew-suite/tool-cloud-providers-core
+yarn turbo run lint --filter=@ai-crew-suite/tool-cloud-providers-core
+yarn turbo run test --filter=@ai-crew-suite/tool-cloud-providers-core
 ```

@@ -1,6 +1,6 @@
 {
-  "name": "@webstackbuilders/plugin-ai-core-backend-module-cloud-providers",
-  "description": "The cloud providers backend module for the ai-core plugin.",
+  "name": "@ai-crew-suite/tool-cloud-providers-core",
+  "description": "Core backend plugin for the AI Crew Suite platform that establishes extensible cloud infrastructure tools and defines the extension points for vendor-specific drivers.",
   "version": "0.0.1",
   "main": "src/index.ts",
   "types": "src/index.ts",
@@ -15,14 +15,16 @@
   ],
   "publishConfig": {
     "access": "public",
-    "main": "dist/index.cjs.js",
-    "types": "dist/index.d.ts"
+    "provenance": true
   },
   "backstage": {
-    "role": "backend-plugin",
-    "pluginId": "ai-core",
-    "pluginPackage": [
-      "@webstackbuilders/plugin-ai-core-backend"
+    "role": "backend-plugin-module",
+    "pluginId": "tool-cloud-providers",
+    "pluginPackages": [
+      "@ai-crew-suite/tool-cloud-providers-core",
+      "@ai-crew-suite/tool-cloud-providers-aws",
+      "@ai-crew-suite/tool-cloud-providers-azure",
+      "@ai-crew-suite/tool-cloud-providers-gcp"
     ]
   },
   "bugs": {
@@ -32,7 +34,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/ai-crew-suite/ai-crew-suite",
-    "directory": "plugins/backend/ai-core-backend-module-cloud-providers"
+    "directory": "plugins/tools/cloud-providers/core"
   },
   "files": [
     "dist",
@@ -40,22 +42,21 @@
   ],
   "configSchema": "config.d.ts",
   "scripts": {
-    "start": "backstage-cli package start",
-    "build": "yarn --cwd ../../.. tsc -b plugins/backend/plugin-ai-core-backend-module-cloud-providers/tsconfig.json --emitDeclarationOnly && backstage-cli package build",
-    "clean": "backstage-cli package clean",
-    "prepack": "backstage-cli package prepack",
-    "postpack": "backstage-cli package postpack",
-    "typecheck": "tsc --noEmit",
-    "lint": "backstage-cli package lint --format stylish",
-    "test": "vitest run src --exclude 'dist-types/**' --passWithNoTests --config ../../../test/vitest.config.ts"
+    "build": "crew build",
+    "clean": "crew clean",
+    "lint": "crew lint",
+    "test:unit": "crew test:unit",
+    "test:unit:coverage": "crew test:unit:coverage",
+    "typecheck": "crew typecheck"
   },
   "dependencies": {
+    "@ai-crew-suite/plugin-ai-core-node": "workspace:^",
     "@backstage/backend-plugin-api": "backstage:^",
     "@backstage/config": "backstage:^",
-    "@webstackbuilders/plugin-ai-core-node": "workspace:^",
-    "vitest": "^4.1.10"
+    "vitest": "catalog:vitest"
   },
   "devDependencies": {
+    "@ai-crew-suite/cli": "workspace:*",
     "@backstage/backend-test-utils": "backstage:^",
     "@backstage/cli": "backstage:^"
   }

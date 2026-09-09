@@ -18,7 +18,6 @@ import { mockServices } from '@backstage/backend-test-utils';
 import { AzureDriver } from '../AzureDriver';
 import { ResourceManagementClient } from '@azure/arm-resources';
 
-// Automatically intercept and mock the Azure ARM Resource management SDK layer
 vi.mock('@azure/arm-resources', () => {
   return {
     ResourceManagementClient: vi.fn().mockImplementation(() => ({
@@ -29,14 +28,13 @@ vi.mock('@azure/arm-resources', () => {
   };
 });
 
-// Mock DefaultAzureCredential to prevent authentication environmental initialization crashes
 vi.mock('@azure/identity', () => ({
   DefaultAzureCredential: vi.fn().mockImplementation(() => ({})),
 }));
 
 describe('AzureDriver Integration Evaluation', () => {
   const mockLogger = { debug: vi.fn(), error: vi.fn() };
-  
+
   const mockRootConfig = mockServices.rootConfig({ data: {
     integrations: {
       azure: {

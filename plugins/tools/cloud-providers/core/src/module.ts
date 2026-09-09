@@ -21,7 +21,7 @@ import {
   toolExtensionPoint,
   cloudDriversExtensionPoint,
   CloudProviderDriver,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/core-node';
 import { readCloudProvidersConfig } from './config';
 import { createCloudProviderTools } from './registerTools';
 

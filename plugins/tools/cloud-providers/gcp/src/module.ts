@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { coreServices, createBackendModule } from '@backstage/backend-plugin-api';
-import { cloudDriversExtensionPoint } from '@webstackbuilders/plugin-ai-core-node';
+import { cloudDriversExtensionPoint } from '@ai-crew-suite/plugin-ai-core-node';
 import { GcpDriver } from './providers/GcpDriver';
 
 export const aiCoreBackendModuleCloudProvidersGcp = createBackendModule({
