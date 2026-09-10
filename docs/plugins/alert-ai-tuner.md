@@ -79,7 +79,7 @@ In `packages/backend/package.json`:
 
 ### 2. Wire the module into the backend
 
-In `packages/backend/src/index.ts`, add alongside the other `@webstackbuilders` module loads:
+In `packages/backend/src/index.ts`, add alongside the other `@ai-crew-suite` module loads:
 
 ```ts
 import { alertAiTunerModule } from '@ai-crew-suite/agent-alert-tuner-backend';

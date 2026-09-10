@@ -85,7 +85,7 @@ In `packages/backend/package.json`:
 
 #### 2. Wire the module into the backend
 
-In `packages/backend/src/index.ts`, add alongside other `@webstackbuilders` module loads:
+In `packages/backend/src/index.ts`, add alongside other `@ai-crew-suite` module loads:
 
 ```ts
 import { kubernetesAiResponderModule } from '@ai-crew-suite/plugin-agent-kubernetes-responder-backend';

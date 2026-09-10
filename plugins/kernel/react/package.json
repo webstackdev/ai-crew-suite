@@ -1,5 +1,5 @@
 {
-  "name": "@webstackbuilders/plugin-ai-agent-frontend-core",
+  "name": "@ai-crew-suite/plugin-kernel-react",
   "description": "Core TypeScript definitions and type-safe SSE event models for the AI Crew Suite platform layer.",
   "version": "0.0.1",
   "main": "dist/index.esm.js",

@@ -113,10 +113,10 @@ backend.add(loadBackendFeature(import('@ai-crew-suite/plugin-agent-scaffolder-in
 backend.add(loadBackendFeature(import('@ai-crew-suite/plugin-agent-scaffolder-shadow-detective-backend')));
 backend.add(loadBackendFeature(import('@ai-crew-suite/plugin-agent-scaffolder-prd-backend')));
 backend.add(loadBackendFeature(import('@ai-crew-suite/plugin-agent-search-archeology-backend')));
-backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-agent-backend-search-ai-context')));
-backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-agent-backend-tech-debt-ai-scout')));
-backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-agent-backend-tech-radar-ai-manager')));
-backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-agent-backend-techdocs-ai-janitor')));
-backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-agent-backend-techdocs-ai-postmortem')));
+backend.add(loadBackendFeature(import('@ai-crew-suite/plugin-agent-search-context-backend')));
+backend.add(loadBackendFeature(import('@ai-crew-suite/plugin-agent-tech-debt-scout-backend')));
+backend.add(loadBackendFeature(import('@ai-crew-suite/plugin-agent-tech-radar-manager-backend')));
+backend.add(loadBackendFeature(import('@ai-crew-suite/plugin-agent-techdocs-janitor-backend')));
+backend.add(loadBackendFeature(import('@ai-crew-suite/plugin-agent-techdocs-postmortem-backend')));
 
 backend.start();
