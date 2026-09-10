@@ -1,5 +1,5 @@
 {
-  "name": "@webstackbuilders/plugin-ai-core-backend-module-retrieval-augmenter",
+  "name": "@ai-crew-suite/plugin-retrieval-augmenter-backend",
   "version": "0.0.1",
   "main": "src/index.ts",
   "types": "src/index.ts",
@@ -13,14 +13,16 @@
   ],
   "publishConfig": {
     "access": "public",
-    "main": "dist/index.cjs.js",
-    "types": "dist/index.d.ts"
+    "provenance": true
   },
   "backstage": {
     "role": "backend-plugin",
-    "pluginId": "ai-core",
+    "pluginId": "kernel",
     "pluginPackage": [
-      "@webstackbuilders/plugin-ai-core-backend"
+      "@ai-crew-suite/plugin-kernel-backend",
+      "@ai-crew-suite/plugin-kernel-node",
+      "@ai-crew-suite/plugin-retrieval-augmenter-backend",
+      "@ai-crew-suite/plugin-runtime-store-backend"
     ]
   },
   "bugs": {
@@ -30,36 +32,35 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/ai-crew-suite/ai-crew-suite",
-    "directory": "plugins/backend/plugin-ai-core-backend-module-retrieval-augmenter"
-  },
-  "devDependencies": {
-    "@backstage/cli": "backstage:^",
-    "vitest": "^4.1.10"
+    "directory": "plugins/kernel/retrieval-augmenter"
   },
   "files": [
     "dist"
   ],
   "scripts": {
-    "start": "backstage-cli package start",
-    "build": "yarn --cwd ../../.. tsc -b plugins/backend/plugin-ai-core-backend-module-retrieval-augmenter/tsconfig.json --emitDeclarationOnly && backstage-cli package build",
-    "clean": "backstage-cli package clean",
-    "prepack": "backstage-cli package prepack",
-    "postpack": "backstage-cli package postpack",
-    "typecheck": "tsc --noEmit",
-    "lint": "backstage-cli package lint --format stylish",
-    "test": "vitest run src --exclude 'dist-types/**' --passWithNoTests --config ../../../test/vitest.config.ts"
+    "build": "crew build",
+    "clean": "crew clean",
+    "lint": "crew lint",
+    "test:e2e": "crew test:e2e",
+    "test:unit": "crew test:unit",
+    "test:unit:coverage": "crew test:unit:coverage",
+    "typecheck": "crew typecheck"
   },
   "dependencies": {
-    "@backstage/backend-common": "^0.25.0",
+    "@ai-crew-suite/plugin-kernel-node": "workspace:^",
+    "@backstage/backend-common": "catalog:backstage-backend-common",
     "@backstage/backend-plugin-api": "backstage:^",
     "@backstage/catalog-client": "backstage:^",
     "@backstage/catalog-model": "backstage:^",
     "@backstage/errors": "backstage:^",
     "@backstage/plugin-search-common": "backstage:^",
-    "@langchain/core": "^1.2.6",
+    "@langchain/core": "catalog:langchain-core",
     "@langchain/textsplitters": "^1.0.1",
-    "@ai-crew-suite/plugin-kernel-node": "workspace:^",
-    "i18next": "26.3.6",
+    "i18next": "catalog:i18next",
     "p-limit": "^3.1.0"
+  },
+  "devDependencies": {
+    "@ai-crew-suite/cli": "workspace:*",
+    "vitest": "catalog:vitest"
   }
 }

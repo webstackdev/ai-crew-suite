@@ -8,26 +8,33 @@ We also have a plugins/backend/plugin-ai-core-backend and its associated plugins
 
 I'm working through improving the code quality of plugins. Implementation code should be enterprise-quality and highly robust. Unit test coverage should be robust.
 
-## Production code issues
+## Backend Production Code Issues
 
-------
-Deleted unused imports in `workflow/AlertTunerGraph.ts`:
+### LLM and Vector Store as Stand-Alone Groups
 
-- `AlertTuningRequestValidationError` from `request.ts`
-- `AlertTuningRequest` from `state.ts`
-------
+These two plugin groups are not set up as backstage plugins, and so there is no `engine` plugin for them. I think the reason is because the vector stores are using langgraph as a direct import - and the LLM are all dependent on importing `pgvector`.
 
-3. Untyped Integration Payloads (`toSuppressionWindows`)
+### Runtime Store is Conflating Multiple Store
+
+`runtime-store` is handling Redis and SQL-backed stores, so pulling in unnecessary dependencies. It should be refactored to the `engine` pattern as a backstage plugin group also.
+
+## Investigate `@ai-crew-suite/plugin-retrieval-augmenter-backend`
+
+Why is the retrieval augment importing `@langchain/core`?
+
+## Frontend Production Code Issues
+
+### Finish refactor of React
+
+We started refactoring `plugins/kernel/react` to be a common class for frontend plugins but broke off for the renaming refactor mid-way as it became clear that was necessary to avoid extra work.
+
+### Untyped Integration Payloads (`toSuppressionWindows`)
 
 In `correlate.ts`, `toSuppressionWindows` consumes raw output rows with a loose structural check:
 
-typescript
-
-```
+```typescript
 const rows = Array.isArray(records) ? records : [];
 ```
-
-Use code with caution.
 
 The method then manually loops through strings like `triggeredAt`, `startedAt`, `observedAt`, and `timestamp` to guess which field contains the timestamp.
 
@@ -35,33 +42,23 @@ The method then manually loops through strings like `triggeredAt`, `startedAt`, 
 - **The Risk:** If a downstream module upgrades its dependency framework and renames its output payload layout fields (e.g., from `startedAt` to `createdAt` or `time`), the loop will silently ignore the entire row dataset. It returns an empty list instead of failing explicitly, which blinds your automated tuning graphs to real ongoing production incident signals.
 - **The Fix:** Instead of passing an unverified array down-funnel, use strict Zod validation schemas right at the output boundary of your tool modules (the Slack and GitHub wrappers) to normalize payloads into a standard type before they reach the workflow layer.
 
-------
-
-4. Direct, Unguarded Network Calls in Schedulers
+### Direct, Unguarded Network Calls in Schedulers
 
 In `weeklySweep.ts`, the background task fires native `fetch` requests inside a loop directly to the engine's REST paths:
 
-typescript
-
-```
+```typescript
 const response = await fetch(`${base}/agents/${ALERT_AI_TUNER_AGENT_ID}/runs`, { ... });
 ```
-
-Use code with caution.
 
 - **The Problem:** This completely bypasses the Backstage plugin communication layers, requiring manual management of headers, authorization tokens, content types, and error states.
 - **The Risk:** If the core engine URL shifts slightly due to sub-route base mapping flags, or if the payload wrapper structures mutate during a framework upgrade, the scheduler will fail silently, logging basic warnings rather than leveraging a centralized API bridge client interface.
 - **The Fix:** Abstract this communication layer. The scheduler should use the centralized **`AiAgentClientFactory`** we designed to trigger runs typesafely over an explicit interface hook rather than manually executing raw `fetch` string concatenations.
 
-------
-
-5. Silent Degradation via `try/catch` Swallowing
+### Silent Degradation via `try/catch` Swallowing
 
 In `TunerToolRunner.ts`, the `invoke` method wraps its execution block in a generic catch-all trap:
 
-typescript
-
-```
+```typescript
 } catch (error) {
   // ... logs warning and returns undefined
   return undefined;
@@ -73,4 +70,3 @@ Use code with caution.
 - **The Problem:** While fault isolation is good, treating *all* errors identically obscures critical runtime infrastructure problems.
 - **The Risk:** If a network call fails due to a temporary network blip, returning `undefined` is appropriate. However, if it fails due to a **database connection failure**, an **expired authorization token**, or an **out-of-memory fatal crash**, swallowing the exception and returning `undefined` misleads the orchestration engine into thinking the tool completed with "empty data," rather than failing due to platform issues.
 - **The Fix:** Differentiate your errors. Catch and handle transient operational errors safely, but explicitly re-throw system-level anomalies (such as authentication failures or memory exhaustion tokens) to allow the orchestration runtime to halt the execution immediately.
-

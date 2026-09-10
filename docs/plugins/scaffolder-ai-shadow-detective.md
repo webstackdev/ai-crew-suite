@@ -34,8 +34,8 @@ The pipeline is **entirely deterministic and read-only**: registered-vs-orphan p
 
 The plugin follows the standard two-package Backstage agent layout:
 
-- **Backend module** (`@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-shadow-detective`, `role: backend-plugin-module`, `pluginId: ai-core`) — registers the `ReconciliationGraph` workflow runner (ID `shadow-reconciliation`), the `scaffolder-ai-shadow-detective` agent with a single read-only tool (`cloud.resource.lookup`), and a manual trigger (`shadow-reconciliation-on-demand`)
-- **Frontend plugin** (`@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-shadow-detective`, `role: frontend-plugin`, `pluginId: scaffolder-ai-shadow-detective`) — provides a standalone page at `/scaffolder-ai-shadow-detective` that starts scans, streams live SSE events, renders the orphan inventory and owner evidence, and replays saved runs via `?run=<id>`
+- **Backend module** (`@ai-crew-suite/plugin-agent-scaffolder-shadow-detective-backend`, `role: backend-plugin-module`, `pluginId: ai-core`) — registers the `ReconciliationGraph` workflow runner (ID `shadow-reconciliation`), the `scaffolder-ai-shadow-detective` agent with a single read-only tool (`cloud.resource.lookup`), and a manual trigger (`shadow-reconciliation-on-demand`)
+- **Frontend plugin** (`@ai-crew-suite/plugin-agent-scaffolder-shadow-detective`, `role: frontend-plugin`, `pluginId: scaffolder-ai-shadow-detective`) — provides a standalone page at `/scaffolder-ai-shadow-detective` that starts scans, streams live SSE events, renders the orphan inventory and owner evidence, and replays saved runs via `?run=<id>`
 
 The graph runs a three-node pipeline — `inventory` → `reconcile` → `infer` — and emits the `shadow-resource-report` artifact.
 
@@ -70,7 +70,7 @@ In `packages/backend-modern/package.json`:
 
 ```json
 "dependencies": {
-  "@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-shadow-detective": "workspace:^"
+  "@ai-crew-suite/plugin-agent-scaffolder-shadow-detective-backend": "workspace:^"
 }
 ```
 
@@ -81,7 +81,7 @@ In `packages/backend-modern/src/index.ts` (the legacy `packages/backend-legacy` 
 ```ts
 backend.add(
   loadBackendFeature(
-    import('@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-shadow-detective'),
+    import('@ai-crew-suite/plugin-agent-scaffolder-shadow-detective-backend'),
   ),
 );
 ```
@@ -119,7 +119,7 @@ In `packages/app/package.json`:
 
 ```json
 "dependencies": {
-  "@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-shadow-detective": "workspace:^"
+  "@ai-crew-suite/plugin-agent-scaffolder-shadow-detective": "workspace:^"
 }
 ```
 
@@ -128,7 +128,7 @@ In `packages/app/package.json`:
 In `packages/app/src/App.tsx`:
 
 ```ts
-import shadowDetectivePlugin from '@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-shadow-detective/alpha';
+import shadowDetectivePlugin from '@ai-crew-suite/plugin-agent-scaffolder-shadow-detective/alpha';
 
 const app = createApp({
   features: [

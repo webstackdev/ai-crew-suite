@@ -1,20 +1,3 @@
 {
-  "extends": "../../../tsconfig.base.json",
-  "compilerOptions": {
-    "outDir": "../../../dist-types/plugins/backend/plugin-ai-core-backend-module-llm-openai"
-  },
-  "include": [
-    "src/**/*"
-  ],
-  "references": [
-    {
-      "path": "../../../node"
-    },
-    {
-      "path": "../../retrieval-augmenter"
-    },
-    {
-      "path": "../../vector/pgvector"
-    }
-  ]
+  "extends": "../../../../tsconfig.base.json",
 }

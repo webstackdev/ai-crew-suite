@@ -9,7 +9,7 @@ This plugin acts as a semantic search engine across deprecated spaces, legacy wi
 
 ## Goal
 
-Implement `@webstackbuilders/plugin-ai-agent-backend-search-ai-archeology` as an AI Core backend module that answers *"who actually knows this legacy system?"* It runs a **hybrid** research workflow rather than embedding millions of diffs: `knowledge.retrieve` over TechDocs/ADRs isolates the relevant files and components, deterministic time-bounded VCS and ticket queries surface the humans who wrote, reviewed, and triaged that code, and the Backstage Org Graph translates stale commit identities into **currently active** teams. The output is a cited `ExpertiseMatrix` that ranks living experts and explicitly labels offboarded contributors rather than dropping or fabricating them. A paired frontend plugin renders the research timeline, the matrix, and its citations.
+Implement `@ai-crew-suite/plugin-agent-search-archeology-backend` as an AI Core backend module that answers *"who actually knows this legacy system?"* It runs a **hybrid** research workflow rather than embedding millions of diffs: `knowledge.retrieve` over TechDocs/ADRs isolates the relevant files and components, deterministic time-bounded VCS and ticket queries surface the humans who wrote, reviewed, and triaged that code, and the Backstage Org Graph translates stale commit identities into **currently active** teams. The output is a cited `ExpertiseMatrix` that ranks living experts and explicitly labels offboarded contributors rather than dropping or fabricating them. A paired frontend plugin renders the research timeline, the matrix, and its citations.
 
 Reuse the architecture proven by `plugin-ai-agent-backend-catalog-ai-insights` (its `_IMPLEMENTATION.md` is the source of truth for repository conventions, workflow-runner mechanics, event contracts, monorepo wiring, and test-layer definitions). This plan documents only what differs: **hybrid retrieval-then-history research**, **historical identity resolution**, **deterministic expertise ranking**, and **rate-limit-resilient resumable deep runs**.
 
@@ -105,7 +105,7 @@ plugins/backend/plugin-ai-agent-backend-search-ai-archeology/
 
 Same delegated-but-verified steps as `catalog-ai-insights` (see that plan's "Monorepo And App Wiring"). Deltas:
 
-- **Backend load**: add `"@webstackbuilders/plugin-ai-agent-backend-search-ai-archeology": "workspace:^"` to `packages/backend/package.json` and the matching `backend.add(loadBackendFeature(import(...)))` line in `packages/backend/src/index.ts`.
+- **Backend load**: add `"@ai-crew-suite/plugin-agent-search-archeology-backend": "workspace:^"` to `packages/backend/package.json` and the matching `backend.add(loadBackendFeature(import(...)))` line in `packages/backend/src/index.ts`.
 - **Driver gates, all soft**: retrieval needs the retrieval-augmenter + a vector store; ticket evidence needs `plugin-ai-core-backend-module-project-management` plus its Jira driver; VCS evidence needs the VCS module plus a provider driver. Every absence degrades the matrix with a named limitation instead of failing the run — this agent is useful even on retrieval alone, which is why no gate is hard.
 - **Core edits touch shared packages**: adding `list_commits` to `VcsDriver`, `reviewers` to `PullRequestSummary`, `TimeRange` to `TicketSearchQuery`, and `findUserByEmail` to `CatalogEntityResolver` all modify `plugin-ai-core-node`. Run `yarn typecheck --force` / `yarn lint --force` afterward, and keep each addition optional/additive so existing drivers still compile.
 - **App config**: the module throws at boot without `ai.agents.searchArcheology.model`; add the config block (see Configuration) before enabling the load.
@@ -369,7 +369,7 @@ plugins/frontend/plugin-ai-agent-frontend-search-ai-archeology/
 
 Frontend deltas vs `catalog-ai-insights`:
 
-- `backstage.pluginId: 'search-ai-archeology'`; package `@webstackbuilders/plugin-ai-agent-frontend-search-ai-archeology`.
+- `backstage.pluginId: 'search-ai-archeology'`; package `@ai-crew-suite/plugin-agent-search-archeology`.
 - Primary surface is a **standalone research page** via `PageBlueprint`, with a secondary **`EntityCardBlueprint`** card ("who knows this component?") — the one plugin in this series where an entity card is genuinely apt, since the subject is an existing catalog component.
 - **`IdentityStatusBadge` is the defining detail.** `offboarded` must read as *"historical contributor — no longer reachable"*, never as a normal expert entry, and `moved_team` must show the current team so a reader knows where to look. Getting this wrong sends people to ex-employees.
 - `SignalBreakdown` exposes the authored/reviewed/triaged counts behind every score, so a ranking is auditable in the UI rather than an opaque number. This is also the guard against the matrix being read as a performance metric — the UI shows *evidence*, not judgment.

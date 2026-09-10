@@ -1,8 +1,3 @@
 {
   "extends": "../../../tsconfig.base.json",
-  "compilerOptions": {
-    "outDir": "../../../dist-types/plugins/frontend/plugin-ai-agent-frontend-core"
-  },
-  "include": ["src/**/*"],
-  "exclude": ["src/**/*.test.*", "src/**/*.spec.*"]
 }

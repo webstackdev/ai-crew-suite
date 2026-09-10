@@ -34,8 +34,8 @@ The pipeline is **entirely deterministic and read-only**: evidence extraction, i
 
 The plugin follows the standard two-package Backstage agent layout:
 
-- **Backend module** (`@webstackbuilders/plugin-ai-agent-backend-search-ai-archeology`, `role: backend-plugin-module`, `pluginId: ai-core`) — registers the `ArcheologyGraph` workflow runner (ID `knowledge-archeology`), the `search-ai-archeology` agent with a read-only allow-list of two ticket tools, and a manual trigger (`archeology-research-on-demand`)
-- **Frontend plugin** (`@webstackbuilders/plugin-ai-agent-frontend-search-ai-archeology`, `role: frontend-plugin`, `pluginId: search-ai-archeology`) — provides a standalone page at `/search-ai-archeology` with a research dialog, an expertise-matrix panel, and replay via `?run=<id>`
+- **Backend module** (`@ai-crew-suite/plugin-agent-search-archeology-backend`, `role: backend-plugin-module`, `pluginId: ai-core`) — registers the `ArcheologyGraph` workflow runner (ID `knowledge-archeology`), the `search-ai-archeology` agent with a read-only allow-list of two ticket tools, and a manual trigger (`archeology-research-on-demand`)
+- **Frontend plugin** (`@ai-crew-suite/plugin-agent-search-archeology`, `role: frontend-plugin`, `pluginId: search-ai-archeology`) — provides a standalone page at `/search-ai-archeology` with a research dialog, an expertise-matrix panel, and replay via `?run=<id>`
 
 The graph runs a single node — `history.ticket-search` — and emits the `expertise-matrix` artifact.
 
@@ -70,7 +70,7 @@ In `packages/backend-modern/package.json`:
 
 ```json
 "dependencies": {
-  "@webstackbuilders/plugin-ai-agent-backend-search-ai-archeology": "workspace:^"
+  "@ai-crew-suite/plugin-agent-search-archeology-backend": "workspace:^"
 }
 ```
 
@@ -81,7 +81,7 @@ In `packages/backend-modern/src/index.ts` (the legacy `packages/backend-legacy` 
 ```ts
 backend.add(
   loadBackendFeature(
-    import('@webstackbuilders/plugin-ai-agent-backend-search-ai-archeology'),
+    import('@ai-crew-suite/plugin-agent-search-archeology-backend'),
   ),
 );
 ```
@@ -115,7 +115,7 @@ In `packages/app/package.json`:
 
 ```json
 "dependencies": {
-  "@webstackbuilders/plugin-ai-agent-frontend-search-ai-archeology": "workspace:^"
+  "@ai-crew-suite/plugin-agent-search-archeology": "workspace:^"
 }
 ```
 
@@ -124,7 +124,7 @@ In `packages/app/package.json`:
 In `packages/app/src/App.tsx`:
 
 ```ts
-import searchArcheologyPlugin from '@webstackbuilders/plugin-ai-agent-frontend-search-ai-archeology/alpha';
+import searchArcheologyPlugin from '@ai-crew-suite/plugin-agent-search-archeology/alpha';
 
 const app = createApp({
   features: [

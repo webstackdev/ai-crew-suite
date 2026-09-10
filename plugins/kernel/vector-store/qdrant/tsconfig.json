@@ -1,14 +1,3 @@
 {
-  "extends": "../../../tsconfig.base.json",
-  "compilerOptions": {
-    "outDir": "../../../dist-types/plugins/backend/plugin-ai-core-backend-module-storage-qdrant"
-  },
-  "include": [
-    "src/**/*"
-  ],
-  "references": [
-    {
-      "path": "../../../node"
-    }
-  ]
+  "extends": "../../../../tsconfig.base.json",
 }

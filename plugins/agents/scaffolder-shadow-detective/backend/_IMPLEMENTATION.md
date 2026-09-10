@@ -9,7 +9,7 @@ This plugin audits deployed infrastructure assets against the Software Catalog, 
 
 ## Goal
 
-Implement `@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-shadow-detective` as an AI Core backend module that closes the loop between live cloud infrastructure and the Software Catalog. A scheduled reconciliation run inventories cloud resources, deterministically filters out everything already bound to a catalog `Resource` via an infrastructure annotation, and for each genuine orphan infers likely ownership from tags, creator identity, and billing codes — resolving a creator email through the Backstage org graph to a current team. Each finding becomes a `ShadowResource` carrying a **pre-populated Scaffolder claim URL**, and — only after approval — an outreach message to the inferred owning team. A paired frontend plugin renders the shadow inventory, ownership confidence, and one-click claim links.
+Implement `@ai-crew-suite/plugin-agent-scaffolder-shadow-detective-backend` as an AI Core backend module that closes the loop between live cloud infrastructure and the Software Catalog. A scheduled reconciliation run inventories cloud resources, deterministically filters out everything already bound to a catalog `Resource` via an infrastructure annotation, and for each genuine orphan infers likely ownership from tags, creator identity, and billing codes — resolving a creator email through the Backstage org graph to a current team. Each finding becomes a `ShadowResource` carrying a **pre-populated Scaffolder claim URL**, and — only after approval — an outreach message to the inferred owning team. A paired frontend plugin renders the shadow inventory, ownership confidence, and one-click claim links.
 
 Reuse the architecture proven by `plugin-ai-agent-backend-catalog-ai-insights` (its `_IMPLEMENTATION.md` is the source of truth for repository conventions, workflow-runner mechanics, event contracts, monorepo wiring, and test-layer definitions). This plan documents only what differs: **cloud-vs-catalog reconciliation**, **evidence-ranked ownership inference**, **cursor-resumable long scans**, and a **dedupe ledger** that prevents repeat outreach.
 
@@ -108,7 +108,7 @@ plugins/backend/plugin-ai-agent-backend-scaffolder-ai-shadow-detective/
 
 Same delegated-but-verified steps as `catalog-ai-insights` (see that plan's "Monorepo And App Wiring"). Deltas:
 
-- **Backend load**: add `"@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-shadow-detective": "workspace:^"` to `packages/backend/package.json` and the matching `backend.add(loadBackendFeature(import(...)))` line in `packages/backend/src/index.ts`.
+- **Backend load**: add `"@ai-crew-suite/plugin-agent-scaffolder-shadow-detective-backend": "workspace:^"` to `packages/backend/package.json` and the matching `backend.add(loadBackendFeature(import(...)))` line in `packages/backend/src/index.ts`.
 - **Cloud module gate (blocking)**: `plugin-ai-core-backend-module-cloud-providers` must be normalized to `ToolDefinition` **and** loaded with a provider driver module (`-aws` / `-gcp` / `-azure`) before this plugin does anything useful. Without it the agent's `cloud.*` allow-list entries fail to resolve at boot — which is the correct fail-fast behavior, not something to paper over.
 - **Communication module gate**: outreach needs `plugin-ai-core-backend-module-communication` plus `-slack`. Absent, the report still generates and outreach targets are `skipped`.
 - **App config**: the module throws at boot without `ai.agents.shadowDetective.model` and `claim.templateRef`; add the config block (see Configuration). Scans need `scan.enabled: true`; outreach needs `outreach.enabled: true`.
@@ -372,7 +372,7 @@ plugins/frontend/plugin-ai-agent-frontend-scaffolder-ai-shadow-detective/
 
 Frontend deltas vs `catalog-ai-insights`:
 
-- `backstage.pluginId: 'scaffolder-ai-shadow-detective'`; package `@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-shadow-detective`.
+- `backstage.pluginId: 'scaffolder-ai-shadow-detective'`; package `@ai-crew-suite/plugin-agent-scaffolder-shadow-detective`.
 - Primary surface is a **standalone inventory page** (nav item) via `PageBlueprint`, since shadow resources have no catalog entity to attach a card to — that absence *is* the finding.
 - **`ClaimLinkButton` is the payoff**: it navigates to the pre-populated Scaffolder template so the one-click resolution the foundation doc promises actually lands in the portal. It must be present even when ownership is `unknown`, so anyone can claim a resource.
 - `OwnershipEvidencePanel` shows ranked hypotheses with `basis` and citations, never a bare team name — a suggested owner without visible reasoning is exactly the CSPM failure mode this plugin exists to fix.

@@ -1,6 +1,6 @@
 {
-  "name": "@webstackbuilders/plugin-ai-core-backend-module-llm-openrouter",
-  "description": "The OpenRouter model backend module for the @webstackbuilders/plugin-ai-core plugin.",
+  "name": "@ai-crew-suite/plugin-llm-backend-module-openrouter",
+  "description": "The OpenRouter model backend module for the @ai-crew-suite/plugin-kernel plugin.",
   "version": "0.0.1",
   "main": "src/index.ts",
   "types": "src/index.ts",
@@ -9,7 +9,6 @@
     "backstage",
     "backstage-plugin-module",
     "backend",
-    "webstack-builders",
     "ai-crew-suite",
     "ai-core",
     "openrouter",
@@ -19,15 +18,7 @@
   ],
   "publishConfig": {
     "access": "public",
-    "main": "dist/index.cjs.js",
-    "types": "dist/index.d.ts"
-  },
-  "backstage": {
-    "role": "backend-plugin",
-    "pluginId": "ai-core",
-    "pluginPackage": [
-      "@webstackbuilders/plugin-ai-core-backend"
-    ]
+    "provenance": true
   },
   "bugs": {
     "url": "https://github.com/ai-crew-suite/ai-crew-suite",
@@ -36,7 +27,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/ai-crew-suite/ai-crew-suite",
-    "directory": "plugins/backend/plugin-ai-core-backend-module-llm-openrouter"
+    "directory": "plugins/kernel/llm/openrouter"
   },
   "files": [
     "dist",
@@ -44,25 +35,24 @@
   ],
   "configSchema": "config.d.ts",
   "scripts": {
-    "start": "backstage-cli package start",
-    "build": "yarn --cwd ../../.. tsc -b plugins/backend/plugin-ai-core-backend-module-llm-openrouter/tsconfig.json --emitDeclarationOnly && backstage-cli package build",
-    "clean": "backstage-cli package clean",
-    "prepack": "backstage-cli package prepack",
-    "postpack": "backstage-cli package postpack",
-    "typecheck": "tsc --noEmit",
-    "lint": "backstage-cli package lint --format stylish",
-    "test": "vitest run src --exclude 'dist-types/**' --passWithNoTests --config ../../../test/vitest.config.ts"
+    "build": "crew build",
+    "clean": "crew clean",
+    "lint": "crew lint",
+    "test:e2e": "crew test:e2e",
+    "test:unit": "crew test:unit",
+    "test:unit:coverage": "crew test:unit:coverage",
+    "typecheck": "crew typecheck"
   },
   "dependencies": {
     "@backstage/backend-plugin-api": "backstage:^",
     "@backstage/config": "backstage:^",
-    "@langchain/core": "^1.2.6",
-    "@langchain/openrouter": "^0.4.6",
+    "@langchain/core": "catalog:langchain-core",
+    "@langchain/openrouter": "^0.4.12",
     "@ai-crew-suite/plugin-kernel-node": "workspace:^",
-    "i18next": "26.3.6",
-    "vitest": "^4.1.10"
+    "i18next": "catalog:i18next"
   },
   "devDependencies": {
-    "@backstage/cli": "backstage:^"
+    "@ai-crew-suite/cli": "workspace:*",
+    "vitest": "catalog:vitest"
   }
 }

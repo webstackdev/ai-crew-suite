@@ -1,4 +1,4 @@
-# @webstackbuilders/plugin-ai-core-backend-module-storage-pgvector
+# @ai-crew-suite/plugin-vector-store-backend-module-pgvector
 
 > Core Developer Documentation for the AI Crew Suite platform.
 

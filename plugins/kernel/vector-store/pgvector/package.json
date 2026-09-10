@@ -1,31 +1,29 @@
 {
-  "name": "@webstackbuilders/plugin-ai-core-backend-module-storage-pgvector",
+  "name": "@ai-crew-suite/plugin-vector-store-pgvector",
+  "description": "PostgreSQL pgvector vector store for the AI Crew Suite, providing embedding persistence and metadata-filtered similarity search.",
   "version": "0.0.1",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "license": "Apache-2.0",
-  "description": "PostgreSQL pgvector vector store for the AI Crew Suite, providing embedding persistence and metadata-filtered similarity search.",
   "keywords": [
-    "backstage",
-    "backstage-plugin-module",
-    "backend",
-    "webstack-builders",
+    "kernel",
     "ai-crew-suite",
-    "ai-core",
-    "postgresql",
+    "backend-plugin",
+    "backstage",
     "pgvector",
     "vector-storage"
   ],
   "publishConfig": {
     "access": "public",
-    "main": "dist/index.cjs.js",
-    "types": "dist/index.d.ts"
+    "provenance": true
   },
   "backstage": {
     "role": "backend-plugin",
-    "pluginId": "ai-core",
+    "pluginId": "vector-store",
+    "moduleId": "pgvector",
     "pluginPackage": [
-      "@webstackbuilders/plugin-ai-core-backend"
+      "@ai-crew-suite/plugin-vector-store-pgvector",
+      "@ai-crew-suite/plugin-vector-store-qdrant-backend"
     ]
   },
   "bugs": {
@@ -35,7 +33,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/ai-crew-suite/ai-crew-suite",
-    "directory": "plugins/backend/plugin-ai-core-backend-module-storage-pgvector"
+    "directory": "plugins/kernel/vector-store/pgvector"
   },
   "files": [
     "dist",
@@ -44,25 +42,24 @@
   ],
   "configSchema": "config.d.ts",
   "scripts": {
-    "start": "backstage-cli package start",
-    "build": "yarn --cwd ../../.. tsc -b plugins/backend/plugin-ai-core-backend-module-storage-pgvector/tsconfig.json --emitDeclarationOnly && backstage-cli package build",
-    "clean": "backstage-cli package clean",
-    "prepack": "backstage-cli package prepack",
-    "postpack": "backstage-cli package postpack",
-    "typecheck": "tsc --noEmit",
-    "lint": "backstage-cli package lint --format stylish",
-    "test": "vitest run src --exclude 'dist-types/**' --passWithNoTests --config ../../../test/vitest.config.ts"
+    "build": "crew build",
+    "clean": "crew clean",
+    "lint": "crew lint",
+    "test:e2e": "crew test:e2e",
+    "test:unit": "crew test:unit",
+    "test:unit:coverage": "crew test:unit:coverage",
+    "typecheck": "crew typecheck"
   },
   "dependencies": {
+    "@ai-crew-suite/plugin-kernel-node": "workspace:^",
     "@backstage/backend-plugin-api": "backstage:^",
     "@backstage/config": "backstage:^",
-    "@langchain/core": "^1.2.6",
-    "@ai-crew-suite/plugin-kernel-node": "workspace:^",
-    "i18next": "26.3.6",
-    "knex": "^3.3.0",
-    "vitest": "^4.1.10"
+    "@langchain/core": "catalog:langchain-core",
+    "i18next": "catalog:i18next",
+    "knex": "^3.3.0"
   },
   "devDependencies": {
-    "@backstage/cli": "backstage:^"
+    "@ai-crew-suite/cli": "workspace:*",
+    "vitest": "catalog:vitest"
   }
 }

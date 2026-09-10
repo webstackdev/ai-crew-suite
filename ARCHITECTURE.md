@@ -142,32 +142,11 @@ find . -type f -exec sed -i 's|https://github.com/ai-crew-suite|https://github.c
   },
   "dependencies": {
     "@ai-crew-suite/plugin-kernel-node": "workspace:^",
-    "@ai-crew-suite/plugin-kernel-react": "workspace:^",
-    "@backstage/catalog-model": "backstage:^",
-    "@backstage/core-components": "backstage:^",
-    "@backstage/core-plugin-api": "backstage:^",
-    "@backstage/frontend-plugin-api": "backstage:^",
-    "@backstage/plugin-catalog-react": "backstage:^",
-    "@material-ui/core": "catalog:material-ui-core",
-    "eventsource-parser": "catalog:eventsource-parser",
-    "react": "catalog:react",
-    "react-dom": "catalog:react-dom",
-    "react-router-dom": "catalog:react-router-dom"
-  },
-  "peerDependencies": {
-    "react": "catalog:react",
-    "react-router-dom": "catalog:react-router-dom"
+    "@backstage/backend-plugin-api": "backstage:^",
+    "@backstage/config": "backstage:^",
   },
   "devDependencies": {
     "@ai-crew-suite/cli": "workspace:*",
-    "@backstage/dev-utils": "backstage:^",
-    "@backstage/test-utils": "backstage:^",
-    "@testing-library/jest-dom": "catalog:testing-library-jest-dom",
-    "@testing-library/react": "catalog:testing-library-react",
-    "@testing-library/user-event": "catalog:testing-library-user-event",
-    "@types/react": "*",
-    "@types/react-dom": "*",
-    "storybook": "catalog:storybook",
     "vitest": "catalog:vitest"
   }
 }
@@ -205,14 +184,12 @@ ai-crew-suite/
 │   │   ├── backend/                        # @ai-crew-suite/plugin-kernel-backend
 │   │   ├── node/                           # @ai-crew-suite/plugin-kernel-node
 │   │   ├── llm/
-│   │   │   ├── backend/                    # @ai-crew-suite/plugin-llm-backend
 │   │   │   ├── aws/                        # @ai-crew-suite/plugin-llm-backend-module-aws
 │   │   │   ├── openai/                     # @ai-crew-suite/plugin-llm-backend-module-openai
 │   │   │   └── openrouter/                 # @ai-crew-suite/plugin-llm-backend-module-openrouter
 │   │   ├── vector-store/
-│   │   │   ├── backend/                    # @ai-crew-suite/plugin-vector-store-backend
-│   │   │   ├── pgvector/                   # @ai-crew-suite/plugin-vector-store-backend-module-pgvector
-│   │   │   └── qdrant/                     # @ai-crew-suite/plugin-vector-store-backend-module-qdrant
+│   │   │   ├── pgvector/                   # @ai-crew-suite/plugin-vector-store-pgvector
+│   │   │   └── qdrant/                     # @ai-crew-suite/plugin-vector-store-qdrant
 │   │   ├── react/                          # @ai-crew-suite/plugin-kernel-react
 │   │   ├── retrieval-augmenter/            # @ai-crew-suite/plugin-retrieval-augmenter-backend
 │   │   └── runtime-store/                  # @ai-crew-suite/plugin-runtime-store-backend

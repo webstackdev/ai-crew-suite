@@ -110,7 +110,7 @@ Same delegated-but-verified steps as `catalog-ai-insights` (see that plan's "Mon
 - **Backend load**: add `"@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-prd": "workspace:^"` to `packages/backend/package.json` and the matching `backend.add(loadBackendFeature(import(...)))` line in `packages/backend/src/index.ts`. It must load **after** `@backstage/plugin-scaffolder-backend` so `scaffolderServiceRef` resolves.
 - **Driver gates**: ticket commits need `plugin-ai-core-backend-module-project-management` plus its Jira driver loaded and configured. With no driver the blueprint still generates, the ticket section is marked unavailable with a limitation, and the commit skips tickets rather than failing the run.
 - **App config**: the module throws at boot without `ai.agents.scaffolderPrd.model` and a non-empty `templates.allowed`; add the config block (see Configuration). Commits additionally require `execute.enabled: true`.
-- **Frontend registration**: `plugins/frontend/plugin-ai-agent-frontend-scaffolder-ai-prd/` exists but is **empty** — it must be scaffolded from scratch. Add `"@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-prd": "workspace:^"` to `packages/app/package.json`, import its `/alpha` default export in `packages/app/src/App.tsx`, and extend plugin-ID expectations in `packages/app/src/App.test.tsx`.
+- **Frontend registration**: `plugins/frontend/plugin-ai-agent-frontend-scaffolder-ai-prd/` exists but is **empty** — it must be scaffolded from scratch. Add `"@ai-crew-suite/plugin-agent-scaffolder-prd-backend": "workspace:^"` to `packages/app/package.json`, import its `/alpha` default export in `packages/app/src/App.tsx`, and extend plugin-ID expectations in `packages/app/src/App.test.tsx`.
 - **Optional core edit**: adding `node?` to the `token` event in `plugin-ai-core-node/src/@types/run.ts` touches a root-shared package — run `yarn typecheck --force` / `yarn lint --force` afterward.
 - **Yarn PnP refresh**: `yarn install` after any `package.json` edit.
 
@@ -362,7 +362,7 @@ plugins/frontend/plugin-ai-agent-frontend-scaffolder-ai-prd/
 
 Frontend deltas vs `catalog-ai-insights`:
 
-- `backstage.pluginId: 'scaffolder-ai-prd'`; package `@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-prd`.
+- `backstage.pluginId: 'scaffolder-ai-prd'`; package `@ai-crew-suite/plugin-agent-scaffolder-prd-backend`.
 - Primary surface is a **standalone translator page** (nav item) via `PageBlueprint`. No `EntityCardBlueprint` — the component does not exist yet at PRD time.
 - **`ChannelProgressPanel` is the defining surface**: three side-by-side lanes driven by node-tagged `step` events, so a user sees the PM, Engineer, and Writer working concurrently. If the `token.node` field lands, each lane also streams its own text; otherwise lanes show phase and status only.
 - Approval is **all-or-nothing over the whole blueprint**, matching the backend's single gate. Per-item approval is deliberately not offered, because partial approval would fracture the `blueprintHash` idempotency contract.

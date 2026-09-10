@@ -72,15 +72,15 @@ vi.mock(
   () => ({ default: 'scaffolder-ai-intent' })
 );
 vi.mock(
-  '@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-shadow-detective/alpha',
+  '@ai-crew-suite/plugin-agent-scaffolder-shadow-detective/alpha',
   () => ({ default: 'scaffolder-ai-shadow-detective' })
 );
 vi.mock(
-  '@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-prd/alpha',
+  '@ai-crew-suite/plugin-agent-scaffolder-prd-backend/alpha',
   () => ({ default: 'scaffolder-ai-prd' })
 );
 vi.mock(
-  '@webstackbuilders/plugin-ai-agent-frontend-search-ai-archeology/alpha',
+  '@ai-crew-suite/plugin-agent-search-archeology/alpha',
   () => ({ default: 'search-ai-archeology' })
 );
 vi.mock(
