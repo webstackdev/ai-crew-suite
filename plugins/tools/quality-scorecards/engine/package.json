@@ -1,5 +1,5 @@
 {
-  "name": "@webstackbuilders/plugin-ai-core-backend-module-quality-scorecards",
+  "name": "@ai-crew-suite/plugin-kernel-backend-module-quality-scorecards",
   "description": "Host backend integration plugin for vendor-neutral engineering standards, maturity checks, and scorecards within the AI Crew Suite platform.",
   "version": "0.0.1",
   "main": "src/index.ts",

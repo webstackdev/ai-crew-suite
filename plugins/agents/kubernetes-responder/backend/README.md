@@ -1,6 +1,6 @@
 # @ai-crew-suite/plugin-agent-kubernetes-responder-backend
 
-Backend module for `@webstackbuilders/plugin-ai-core-backend` that turns an authenticated incident trigger into a bounded, auditable, **read-only**
+Backend module for `@ai-crew-suite/plugin-kernel-backend` that turns an authenticated incident trigger into a bounded, auditable, **read-only**
 Kubernetes investigation. It produces a cited likely-cause report and
 recommended next steps. It never mutates Kubernetes, repositories, or
 third-party systems.
@@ -82,7 +82,7 @@ A trigger must supply either `entityRef` or `cluster` + `namespace` +
 ## Prerequisites
 
 The read-only `kubernetes.*` tools are provided by
-`@webstackbuilders/plugin-ai-core-backend-module-kubernetes`, which must be
+`@ai-crew-suite/plugin-kernel-backend-module-kubernetes`, which must be
 loaded in the backend with a working Backstage Kubernetes integration before
 responder runs can collect real diagnostics.
 

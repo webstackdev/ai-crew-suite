@@ -1,4 +1,4 @@
-# @webstackbuilders/plugin-ai-core-backend-module-storage-qdrant
+# @ai-crew-suite/plugin-kernel-backend-module-storage-qdrant
 
 > Core Developer Documentation for the AI Crew Suite platform.
 
@@ -37,7 +37,7 @@ Run installation routines and build compilation tracks directly from the monorep
 yarn install --refresh
 
 # Compile TypeScript declarations into /dist targets
-yarn workspace @webstackbuilders/plugin-ai-core-backend-module-storage-qdrant build
+yarn workspace @ai-crew-suite/plugin-kernel-backend-module-storage-qdrant build
 ```
 
 ### 3. Running Unit & Integration Tests
@@ -45,7 +45,7 @@ yarn workspace @webstackbuilders/plugin-ai-core-backend-module-storage-qdrant bu
 Test files are located inline next to the modules they validate (`*.test.ts`). Execute them via:
 
 ```bash
-yarn workspace @webstackbuilders/plugin-ai-core-backend-module-storage-qdrant test
+yarn workspace @ai-crew-suite/plugin-kernel-backend-module-storage-qdrant test
 ```
 
 ## Technical Extension Checklist

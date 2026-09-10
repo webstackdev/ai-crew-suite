@@ -26,8 +26,8 @@ Register the module with the AI core backend plugin:
 
 ```ts
 // packages/backend/src/index.ts
-backend.add(import('@webstackbuilders/plugin-ai-core-backend'));
-backend.add(import('@webstackbuilders/plugin-ai-core-backend-module-runtime-store'));
+backend.add(import('@ai-crew-suite/plugin-kernel-backend'));
+backend.add(import('@ai-crew-suite/plugin-kernel-backend-module-runtime-store'));
 ```
 
 With no configuration, every store uses the Backstage core database service.

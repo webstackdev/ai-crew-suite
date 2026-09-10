@@ -57,7 +57,7 @@ export const toolCloudProvidersPlugin = createBackendPlugin({
         if (!driver) {
           throw new Error(
             `No cloud driver registered for identifier '${cloudConfig.defaultProvider}'. ` +
-              `Ensure the matching plugin package '@webstackbuilders/plugin-ai-core-backend-module-cloud-providers-${cloudConfig.defaultProvider}' ` +
+              `Ensure the matching plugin package '@ai-crew-suite/plugin-kernel-backend-module-cloud-providers-${cloudConfig.defaultProvider}' ` +
               `is fully imported in your backend index.ts bootstrap initialization file.`,
           );
         }

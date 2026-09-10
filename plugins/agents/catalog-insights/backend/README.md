@@ -1,6 +1,6 @@
 # @ai-crew-suite/plugin-agent-catalog-insights-backend
 
-Backend module for `@webstackbuilders/plugin-ai-core-backend` that answers
+Backend module for `@ai-crew-suite/plugin-kernel-backend` that answers
 contextual operational questions about any Software Catalog entity ("Who is
 the on-call?", "Where are the logs?", "Why did this service fail its last
 deployment?") through an intent-routed, RAG-backed, **read-only** workflow.

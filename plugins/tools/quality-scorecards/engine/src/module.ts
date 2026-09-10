@@ -50,7 +50,7 @@ export const toolQualityScorecardsPlugin = createBackendPlugin({
         if (!driver) {
           throw new Error(
             `No compliance driver registered for identifier '${qualityConfig.provider}'. ` +
-            `Ensure the matching plugin bundle package '@webstackbuilders/plugin-ai-core-backend-module-quality-scorecards-${qualityConfig.provider}' is fully imported.`
+            `Ensure the matching plugin bundle package '@ai-crew-suite/plugin-kernel-backend-module-quality-scorecards-${qualityConfig.provider}' is fully imported.`
           );
         }
 

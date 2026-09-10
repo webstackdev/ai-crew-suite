@@ -18,11 +18,11 @@ import {
   createBackendModule,
 } from '@backstage/backend-plugin-api';
 import { CatalogClient } from '@backstage/catalog-client';
-import { createPgVectorStore } from '@webstackbuilders/plugin-ai-core-backend-module-storage-pgvector';
+import { createPgVectorStore } from '@ai-crew-suite/plugin-kernel-backend-module-storage-pgvector';
 import {
   AugmentationOptions,
   createDefaultRetrievalPipeline,
-} from '@webstackbuilders/plugin-ai-core-backend-module-retrieval-augmenter';
+} from '@ai-crew-suite/plugin-kernel-backend-module-retrieval-augmenter';
 import { toolExtensionPoint } from '@ai-crew-suite/plugin-kernel-node';
 import { OpenAiAugmenter, OpenAiConfig } from './OpenAiAugmenter';
 

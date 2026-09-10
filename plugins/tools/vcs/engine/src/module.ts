@@ -57,7 +57,7 @@ export const aiCoreBackendModuleVcs = createBackendPlugin({
 
         if (!driver) {
           throw new Error(
-            `No driver registered for VCS identifier '${vcsConfig.provider}'. Ensure the matching @webstackbuilders/plugin-ai-core-backend-module-vcs-<provider> package is imported in your backend index.ts file.`
+            `No driver registered for VCS identifier '${vcsConfig.provider}'. Ensure the matching @ai-crew-suite/plugin-kernel-backend-module-vcs-<provider> package is imported in your backend index.ts file.`
           );
         }
         logger.info(

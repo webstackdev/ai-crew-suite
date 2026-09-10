@@ -56,7 +56,7 @@ export const toolObservabilityPlugin = createBackendPlugin({
         if (!driver) {
           throw new Error(
             `No observability driver registered for identifier '${provider}'. ` +
-              `Ensure the matching @webstackbuilders/plugin-ai-core-backend-module-observability-${provider} package is imported in your backend index.ts file.`,
+              `Ensure the matching @ai-crew-suite/plugin-kernel-backend-module-observability-${provider} package is imported in your backend index.ts file.`,
           );
         }
 

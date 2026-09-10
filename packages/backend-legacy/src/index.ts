@@ -84,20 +84,20 @@ backend.add(loadBackendFeature(import('@backstage/plugin-signals-backend')));
 // mcp actions plugin
 backend.add(loadBackendFeature(import('@backstage/plugin-mcp-actions-backend')));
 
-backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-core-backend-module-vcs')));
-backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-core-backend-module-observability')));
-backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-core-backend-module-observability-datadog')));
-backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-core-backend-module-incident-management')));
-backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-core-backend-module-incident-management-pagerduty')));
-backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-core-backend-module-compliance')));
-backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-core-backend-module-compliance-opa')));
-backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-core-backend-module-cloud-providers')));
-backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-core-backend-module-project-management')));
-backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-core-backend-module-project-management-jira')));
-backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-core-backend-module-communication')));
-backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-core-backend-module-communication-slack')));
-backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-core-backend-module-quality-scorecards')));
-backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-core-backend-module-runtime-store')));
+backend.add(loadBackendFeature(import('@ai-crew-suite/plugin-kernel-backend-module-vcs')));
+backend.add(loadBackendFeature(import('@ai-crew-suite/plugin-kernel-backend-module-observability')));
+backend.add(loadBackendFeature(import('@ai-crew-suite/plugin-kernel-backend-module-observability-datadog')));
+backend.add(loadBackendFeature(import('@ai-crew-suite/plugin-kernel-backend-module-incident-management')));
+backend.add(loadBackendFeature(import('@ai-crew-suite/plugin-kernel-backend-module-incident-management-pagerduty')));
+backend.add(loadBackendFeature(import('@ai-crew-suite/plugin-kernel-backend-module-compliance')));
+backend.add(loadBackendFeature(import('@ai-crew-suite/plugin-kernel-backend-module-compliance-opa')));
+backend.add(loadBackendFeature(import('@ai-crew-suite/plugin-kernel-backend-module-cloud-providers')));
+backend.add(loadBackendFeature(import('@ai-crew-suite/plugin-kernel-backend-module-project-management')));
+backend.add(loadBackendFeature(import('@ai-crew-suite/plugin-kernel-backend-module-project-management-jira')));
+backend.add(loadBackendFeature(import('@ai-crew-suite/plugin-kernel-backend-module-communication')));
+backend.add(loadBackendFeature(import('@ai-crew-suite/plugin-kernel-backend-module-communication-slack')));
+backend.add(loadBackendFeature(import('@ai-crew-suite/plugin-kernel-backend-module-quality-scorecards')));
+backend.add(loadBackendFeature(import('@ai-crew-suite/plugin-kernel-backend-module-runtime-store')));
 
 // agent workflow modules (AI Core agents)
 backend.add(loadBackendFeature(import('@ai-crew-suite/plugin-agent-catalog-insights-backend')));

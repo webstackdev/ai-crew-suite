@@ -1,4 +1,4 @@
-# @webstackbuilders/plugin-ai-core-backend-embeddings-aws
+# @ai-crew-suite/plugin-kernel-backend-embeddings-aws
 
 ## 0.0.1
 

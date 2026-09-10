@@ -1,4 +1,4 @@
-# @webstackbuilders/plugin-ai-core-backend-module-pgvector
+# @ai-crew-suite/plugin-kernel-backend-module-pgvector
 
 ## 0.0.1
 

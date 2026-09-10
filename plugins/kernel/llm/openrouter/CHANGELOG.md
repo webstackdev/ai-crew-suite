@@ -1,4 +1,4 @@
-# @webstackbuilders/plugin-ai-core-backend-embeddings-openai
+# @ai-crew-suite/plugin-kernel-backend-embeddings-openai
 
 ## 0.0.1
 
@@ -11,5 +11,5 @@
 ### Patch Changes
 
 - Updated dependencies [8ed88c3]
-  - @webstackbuilders/plugin-ai-core-backend-retrieval-augmenter@2.0.0
+  - @ai-crew-suite/plugin-kernel-backend-retrieval-augmenter@2.0.0
   - @ai-crew-suite/plugin-kernel-node@0.4.0

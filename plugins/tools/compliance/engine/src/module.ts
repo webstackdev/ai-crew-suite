@@ -48,7 +48,7 @@ export const aiCoreBackendModuleCompliance = createBackendPlugin({
         if (!driver) {
           throw new Error(
             `No compliance driver registered for identifier '${provider}'. ` +
-              `Ensure the matching @webstackbuilders/plugin-ai-core-backend-module-compliance-${provider} package is imported in your backend index.ts file.`,
+              `Ensure the matching @ai-crew-suite/plugin-kernel-backend-module-compliance-${provider} package is imported in your backend index.ts file.`,
           );
         }
 

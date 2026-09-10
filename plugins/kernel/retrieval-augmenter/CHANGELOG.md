@@ -1,4 +1,4 @@
-# @webstackbuilders/plugin-ai-core-backend-retrieval-augmenter
+# @ai-crew-suite/plugin-kernel-backend-retrieval-augmenter
 
 ## 0.0.1
 

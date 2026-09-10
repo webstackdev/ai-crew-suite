@@ -18,7 +18,7 @@ import { OpenAIEmbeddings } from '@langchain/openai';
 import {
   DefaultVectorAugmentationIndexer,
   EmbeddingsConfig,
-} from '@webstackbuilders/plugin-ai-core-backend-module-retrieval-augmenter';
+} from '@ai-crew-suite/plugin-kernel-backend-module-retrieval-augmenter';
 
 const DEFAULT_OPENAI_EMBEDDINGS_MODEL = 'text-embedding-3-small';
 
