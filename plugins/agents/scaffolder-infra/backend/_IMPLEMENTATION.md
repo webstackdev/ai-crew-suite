@@ -129,7 +129,7 @@ Same delegated-but-verified steps as `catalog-ai-insights` (see that plan's "Mon
 - **Action availability**: the action only appears to templates once its module is loaded; a template referencing `ai:infra:generate` before that fails at task execution. Document the action ID and input schema in the package README.
 - **Compliance module gate**: post-generation policy validation requires `plugin-ai-core-backend-module-compliance` plus a driver. With no driver configured, validation degrades to syntax-only and the report carries an explicit limitation — the write still proceeds only if syntax passes, and the limitation must be surfaced.
 - **App config**: the module throws at boot without `ai.agents.scaffolderInfra.model` and at least one entry under `blueprints.sources`; add the config block (see Configuration) before enabling the loads.
-- **Frontend registration**: add `"@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-infra": "workspace:^"` to `packages/app/package.json`, import its `/alpha` default export in `packages/app/src/App.tsx`, and extend plugin-ID expectations in `packages/app/src/App.test.tsx`.
+- **Frontend registration**: add `"@ai-crew-suite/plugin-agent-scaffolder-infra": "workspace:^"` to `packages/app/package.json`, import its `/alpha` default export in `packages/app/src/App.tsx`, and extend plugin-ID expectations in `packages/app/src/App.test.tsx`.
 - **Yarn PnP refresh**: `yarn install` after any `package.json` edit, then `yarn typecheck --force` / `yarn lint --force`.
 
 ## Agent Definition
@@ -359,7 +359,7 @@ plugins/frontend/plugin-ai-agent-frontend-scaffolder-ai-infra/
 
 Frontend deltas vs `catalog-ai-insights`:
 
-- `backstage.pluginId: 'scaffolder-ai-infra'`; package `@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-infra`.
+- `backstage.pluginId: 'scaffolder-ai-infra'`; package `@ai-crew-suite/plugin-agent-scaffolder-infra`.
 - Primary surface is a **standalone preview page** (nav item) via `PageBlueprint`. No `EntityCardBlueprint` — the subject is a template run, not a catalog entity.
 - **Preview only.** `previewGeneration()` POSTs `/agents/scaffolder-ai-infra/runs`, which is the runner path and therefore **never writes to a workspace**; the write happens exclusively inside a real Scaffolder task. The UI must label this clearly so a preview is not mistaken for provisioning.
 - `CorrectionTimeline` is the distinguishing surface: it makes the self-correction loop visible (round → findings fixed → residual), the main debugging aid when a model repeatedly fails validation.
@@ -457,7 +457,7 @@ Implemented the contract-matched preview frontend at:
 
 ### Implemented surface
 
-- Package `@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-infra` with
+- Package `@ai-crew-suite/plugin-agent-scaffolder-infra` with
   legacy and `./alpha` entrypoints; standalone `/scaffolder-ai-infra` page with
   `?run=<id>` replay.
 - Typed preview/replay client for `scaffolder-ai-infra` AI Core runs.

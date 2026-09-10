@@ -33,7 +33,7 @@ The comparison is **entirely deterministic**: `computeDrift()` in `delta.ts` is 
 The plugin follows the standard two-package Backstage agent layout:
 
 - **Backend module** (`@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-drift-detector`, `role: backend-plugin-module`, `pluginId: ai-core`) — registers the `DriftGraph` workflow runner (ID `scaffolder-drift`), the `scaffolder-ai-drift-detector` agent definition with a read-only allow-list of 3 tools, and manual/scheduler triggers
-- **Frontend plugin** (`@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-drift-detector`, `role: frontend-plugin`, `pluginId: scaffolder-ai-drift-detector`) — provides a standalone page at `/scaffolder-ai-drift-detector` with a drift-check dialog (entity ref + blueprint form), a drift item list with expected-vs-actual comparisons, and replay via `?run=<id>`
+- **Frontend plugin** (`@ai-crew-suite/plugin-agent-scaffolder-drift-detector`, `role: frontend-plugin`, `pluginId: scaffolder-ai-drift-detector`) — provides a standalone page at `/scaffolder-ai-drift-detector` with a drift-check dialog (entity ref + blueprint form), a drift item list with expected-vs-actual comparisons, and replay via `?run=<id>`
 
 The graph runs three nodes: `livestate.ingest` resolves the workload and fetches a snapshot, then `delta.compute` performs the deterministic comparison. The artifact kind is `drift-report`.
 
@@ -112,7 +112,7 @@ In `packages/app/package.json`:
 
 ```json
 "dependencies": {
-  "@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-drift-detector": "workspace:^"
+  "@ai-crew-suite/plugin-agent-scaffolder-drift-detector": "workspace:^"
 }
 ```
 
@@ -121,7 +121,7 @@ In `packages/app/package.json`:
 In `packages/app/src/App.tsx`:
 
 ```ts
-import driftDetectorExtensions from '@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-drift-detector/alpha';
+import driftDetectorExtensions from '@ai-crew-suite/plugin-agent-scaffolder-drift-detector/alpha';
 
 const app = createApp({
   features: [

@@ -28,47 +28,47 @@ vi.mock('@backstage/plugin-notifications/alpha', () => ({
 }));
 vi.mock('@backstage/plugin-search/alpha', () => ({ default: 'search' }));
 vi.mock(
-  '@webstackbuilders/plugin-ai-agent-frontend-kubernetes-ai-responder/alpha',
+  '@ai-crew-suite/plugin-agent-kubernetes-responder/alpha',
   () => ({
     default: 'kubernetes-ai-responder',
   }),
 );
 vi.mock(
-  '@webstackbuilders/plugin-ai-agent-frontend-catalog-ai-insights/alpha',
+  '@ai-crew-suite/plugin-agent-catalog-insights/alpha',
   () => ({
     default: 'catalog-ai-insights',
   }),
 );
 vi.mock(
-  '@webstackbuilders/plugin-ai-agent-frontend-oncall-ai-handover-assistant/alpha',
+  '@ai-crew-suite/plugin-agent-oncall-handover/alpha',
   () => ({ default: 'oncall-handover-assistant' })
 );
 vi.mock(
-  '@webstackbuilders/plugin-ai-agent-frontend-release-notes-ai-generator/alpha',
+  '@ai-crew-suite/plugin-agent-release-notes-generator/alpha',
   () => ({ default: 'release-notes-ai-generator' })
 );
 vi.mock(
-  '@webstackbuilders/plugin-ai-agent-frontend-rfc-adr-ai-reviewer/alpha',
+  '@ai-crew-suite/plugin-agent-rfc-adr-reviewer/alpha',
   () => ({ default: 'rfc-adr-ai-reviewer' })
 );
 vi.mock(
-  '@webstackbuilders/plugin-ai-agent-frontend-alert-ai-tuner/alpha',
+  '@ai-crew-suite/plugin-agent-alert-tuner/alpha',
   () => ({ default: 'alert-ai-tuner' })
 );
 vi.mock(
-  '@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-drift-detector/alpha',
+  '@ai-crew-suite/plugin-agent-scaffolder-drift-detector/alpha',
   () => ({ default: 'scaffolder-ai-drift-detector' })
 );
 vi.mock(
-  '@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-guardrail-agent/alpha',
+  '@ai-crew-suite/plugin-agent-scaffolder-guardrail/alpha',
   () => ({ default: 'scaffolder-ai-guardrail-agent' })
 );
 vi.mock(
-  '@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-infra/alpha',
+  '@ai-crew-suite/plugin-agent-scaffolder-infra/alpha',
   () => ({ default: 'scaffolder-ai-infra' })
 );
 vi.mock(
-  '@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-intent/alpha',
+  '@ai-crew-suite/plugin-agent-scaffolder-intent/alpha',
   () => ({ default: 'scaffolder-ai-intent' })
 );
 vi.mock(
@@ -84,23 +84,23 @@ vi.mock(
   () => ({ default: 'search-ai-archeology' })
 );
 vi.mock(
-  '@webstackbuilders/plugin-ai-agent-frontend-search-ai-context/alpha',
+  '@ai-crew-suite/plugin-agent-search-context/alpha',
   () => ({ default: 'search-ai-context' })
 );
 vi.mock(
-  '@webstackbuilders/plugin-ai-agent-frontend-tech-debt-ai-scout/alpha',
+  '@ai-crew-suite/plugin-agent-tech-debt-scout/alpha',
   () => ({ default: 'tech-debt-ai-scout' })
 );
 vi.mock(
-  '@webstackbuilders/plugin-ai-agent-frontend-tech-radar-ai-manager/alpha',
+  '@ai-crew-suite/plugin-agent-tech-radar-manager/alpha',
   () => ({ default: 'tech-radar-ai-manager' })
 );
 vi.mock(
-  '@webstackbuilders/plugin-ai-agent-frontend-techdocs-ai-janitor/alpha',
+  '@ai-crew-suite/plugin-agent-techdocs-janitor/alpha',
   () => ({ default: 'techdocs-ai-janitor' })
 );
 vi.mock(
-  '@webstackbuilders/plugin-ai-agent-frontend-techdocs-ai-postmortem/alpha',
+  '@ai-crew-suite/plugin-agent-techdocs-postmortem/alpha',
   () => ({ default: 'techdocs-ai-postmortem' })
 );
 vi.mock('./modules/nav', () => ({ navModule: 'navigation' }));

@@ -413,7 +413,7 @@ plugins/frontend/plugin-ai-agent-frontend-techdocs-ai-postmortem/
 
 Frontend deltas vs `catalog-ai-insights`:
 
-- `backstage.pluginId: 'techdocs-ai-postmortem'`; package `@webstackbuilders/plugin-ai-agent-frontend-techdocs-ai-postmortem`.
+- `backstage.pluginId: 'techdocs-ai-postmortem'`; package `@ai-crew-suite/plugin-agent-techdocs-postmortem`.
 - Primary surface is a **standalone postmortem page** via `PageBlueprint`, plus an **`EntityCardBlueprint`** card listing a component's recent postmortems — apt since incidents attach to real catalog entities.
 - **`CoveragePanel` is a correctness surface, not decoration.** It must distinguish `unavailable` from `empty`: "we could not read Slack" and "nobody spoke" produce very different readings of the same timeline, and conflating them would mislead a review meeting.
 - **`DraftPreview` citations must be clickable**, resolving each `ev-N` to its timeline entry and deep link. A postmortem's value in review is that any claim can be checked in one click; an uncited sentence must not render as fact.

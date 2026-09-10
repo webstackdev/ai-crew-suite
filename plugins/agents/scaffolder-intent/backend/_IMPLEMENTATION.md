@@ -109,7 +109,7 @@ Same delegated-but-verified steps as `catalog-ai-insights` (see that plan's "Mon
 - **Backend load**: add `"@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-intent": "workspace:^"` to `packages/backend/package.json` and the matching `backend.add(loadBackendFeature(import(...)))` line in `packages/backend/src/index.ts`, grouped with the other `@webstackbuilders` module loads.
 - **Scaffolder dependency**: add `@backstage/plugin-scaffolder-node` to this package's `dependencies` for `scaffolderServiceRef`. The module must load **after** `@backstage/plugin-scaffolder-backend` so the service is registered; `scaffolderServiceRef` is `scope: 'plugin'`, so it resolves through normal service injection with no extension point needed.
 - **App config**: the module throws at boot without `ai.agents.scaffolderIntent.model` and a non-empty `templates.allowed`; add the config block (see Configuration) before enabling the load. Task creation additionally requires `execute.enabled: true`.
-- **Frontend registration**: add `"@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-intent": "workspace:^"` to `packages/app/package.json`, import its `/alpha` default export in `packages/app/src/App.tsx`, and extend plugin-ID expectations in `packages/app/src/App.test.tsx`.
+- **Frontend registration**: add `"@ai-crew-suite/plugin-agent-scaffolder-intent": "workspace:^"` to `packages/app/package.json`, import its `/alpha` default export in `packages/app/src/App.tsx`, and extend plugin-ID expectations in `packages/app/src/App.test.tsx`.
 - **Yarn PnP refresh**: `yarn install` after any `package.json` edit, then `yarn typecheck --force` / `yarn lint --force`.
 
 ## Agent Definition
@@ -359,7 +359,7 @@ plugins/frontend/plugin-ai-agent-frontend-scaffolder-ai-intent/
 
 Frontend deltas vs `catalog-ai-insights`:
 
-- `backstage.pluginId: 'scaffolder-ai-intent'`; package `@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-intent`.
+- `backstage.pluginId: 'scaffolder-ai-intent'`; package `@ai-crew-suite/plugin-agent-scaffolder-intent`.
 - Primary surface is a **standalone intent page** (nav item) via `PageBlueprint`. No `EntityCardBlueprint` — nothing exists in the catalog yet at request time, which is the whole point.
 - **The conversational loop is the defining UX.** `CorrectionPrompt` renders exactly one question per turn with the offending field highlighted in `ParameterReviewTable`; answering it calls `sendCorrection()` with the same `sessionId` so the backend continues rather than restarts.
 - `ConfirmationGate` shows the complete final parameter set (not a summary) plus `parameterHash`, because this is the last checkpoint before real resources are provisioned. It must be visually distinct from the correction turns.

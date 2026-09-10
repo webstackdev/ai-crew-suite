@@ -95,7 +95,7 @@ Same delegated-but-verified steps as catalog-ai-insights (see that plan's "Monor
 
 - **Backend load**: add `"@webstackbuilders/plugin-ai-agent-backend-oncall-ai-handover-assistant": "workspace:^"` to `packages/backend/package.json` and `backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-agent-backend-oncall-ai-handover-assistant')))` in `packages/backend/src/index.ts`. If catalog-ai-insights has already landed there, copy that line as the template; otherwise follow the `@webstackbuilders` module-load grouping.
 - **App config**: the module throws at boot without `ai.agents.oncallHandover.model`; add the config block (see Configuration) before enabling the load.
-- **Frontend registration**: add `"@webstackbuilders/plugin-ai-agent-frontend-oncall-ai-handover-assistant": "workspace:^"` to `packages/app/package.json`, import its `/alpha` default export in `packages/app/src/App.tsx`, and extend plugin-ID expectations in `packages/app/src/App.test.tsx` — copy the `kubernetes-ai-responder` / `catalog-ai-insights` wiring.
+- **Frontend registration**: add `"@ai-crew-suite/plugin-agent-oncall-handover": "workspace:^"` to `packages/app/package.json`, import its `/alpha` default export in `packages/app/src/App.tsx`, and extend plugin-ID expectations in `packages/app/src/App.test.tsx` — copy the `kubernetes-ai-responder` / `catalog-ai-insights` wiring.
 - **Yarn PnP refresh**: `yarn install` after dependency edits, then `yarn typecheck --force` / `yarn lint --force`.
 
 ## Agent Definition
@@ -289,7 +289,7 @@ plugins/frontend/plugin-ai-agent-frontend-oncall-ai-handover-assistant/
 
 Frontend deltas vs catalog-ai-insights:
 
-- `backstage.pluginId: 'oncall-handover-assistant'`; package `@webstackbuilders/plugin-ai-agent-frontend-oncall-ai-handover-assistant`.
+- `backstage.pluginId: 'oncall-handover-assistant'`; package `@ai-crew-suite/plugin-agent-oncall-handover`.
 - Primary surface is a **standalone handover page** (nav item), not a catalog entity-page card — a handover spans the whole rotation, not one entity. Optionally add a homepage card for "your next shift brief".
 - `compileBrief()` POSTs `/agents/oncall-handover-assistant/runs` with the JSON `HandoverRequest` as the query; the brief renders from the `oncall-handover-brief` artifact event.
 - `BriefHistoryList` reads recent scheduled runs via the runs API so a pre-compiled brief loads instantly at shift change.

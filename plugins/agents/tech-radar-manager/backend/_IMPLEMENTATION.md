@@ -432,7 +432,7 @@ plugins/frontend/plugin-ai-agent-frontend-tech-radar-ai-manager/
 
 Frontend deltas vs `catalog-ai-insights`:
 
-- `backstage.pluginId: 'tech-radar-ai-manager'`; package `@webstackbuilders/plugin-ai-agent-frontend-tech-radar-ai-manager`.
+- `backstage.pluginId: 'tech-radar-ai-manager'`; package `@ai-crew-suite/plugin-agent-tech-radar-manager`.
 - Primary surface is a **standalone proposal dashboard** via `PageBlueprint`. No `EntityCardBlueprint` — the subject is an organization-wide technology, not one catalog entity.
 - **`CoverageBanner` is a correctness surface.** Every ratio must be shown against its sample size and unscanned count; "30% adoption" from 8 of 200 repositories is not a promotion case, and the UI must make that visible rather than letting a percentage stand alone.
 - **`SubmissionOutcomePanel` must surface the durability flag.** When `durable: false`, it reads *"queued for review — not persisted to the radar source"*, never a bare success. This is the UI half of the stub-driver finding, and getting it wrong would misinform the review board.

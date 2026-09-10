@@ -108,7 +108,7 @@ Same delegated-but-verified steps as `catalog-ai-insights` (see that plan's "Mon
 - **Backend load**: add `"@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-guardrail-agent": "workspace:^"` to `packages/backend/package.json` and the matching `backend.add(loadBackendFeature(import(...)))` line in `packages/backend/src/index.ts`, grouped with the other `@webstackbuilders` module loads.
 - **Compliance module gate**: adjudication requires `plugin-ai-core-backend-module-compliance` plus a driver (`-opa`) to be loaded and configured. With no driver the module still boots, but every run terminates `undetermined` — this is a deliberate fail-closed posture, not a bug.
 - **App config**: the module throws at boot without `ai.agents.scaffolderGuardrail.model`; add the config block (see Configuration) before enabling the load.
-- **Frontend registration**: add `"@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-guardrail-agent": "workspace:^"` to `packages/app/package.json`, import its `/alpha` default export in `packages/app/src/App.tsx`, and extend plugin-ID expectations in `packages/app/src/App.test.tsx`.
+- **Frontend registration**: add `"@ai-crew-suite/plugin-agent-scaffolder-guardrail": "workspace:^"` to `packages/app/package.json`, import its `/alpha` default export in `packages/app/src/App.tsx`, and extend plugin-ID expectations in `packages/app/src/App.test.tsx`.
 - **Yarn PnP refresh**: `yarn install` after any `package.json` edit, then `yarn typecheck --force` / `yarn lint --force`.
 
 ## Agent Definition
@@ -369,7 +369,7 @@ plugins/frontend/plugin-ai-agent-frontend-scaffolder-ai-guardrail-agent/
 
 Frontend deltas vs `catalog-ai-insights`:
 
-- `backstage.pluginId: 'scaffolder-ai-guardrail-agent'`; package `@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-guardrail-agent`.
+- `backstage.pluginId: 'scaffolder-ai-guardrail-agent'`; package `@ai-crew-suite/plugin-agent-scaffolder-guardrail`.
 - Primary surface is a **standalone review page** (nav item) via `PageBlueprint`, listing assessments and their negotiation state. No `EntityCardBlueprint` extension — the subject is a template request, not a catalog entity.
 - `evaluateRequest()` POSTs `/agents/scaffolder-ai-guardrail-agent/runs` with the JSON `GuardrailRequest`; the assessment renders from the `guardrail-assessment` artifact; `ResolutionBanner` renders `guardrail-resolution`.
 - **Negotiation UX** is the distinguishing surface: `MutationOfferPanel` shows each offer as an explicit `from → to` parameter diff with its re-priced amount, and `ApprovalBar` offers *accept the mutation* (for `negotiable`) or *request an exception* (for `escalate`) — the two paths are visually distinct because they carry different authorization requirements.
@@ -515,7 +515,7 @@ Implemented the contract-matched advisory frontend at:
 
 ### Implemented surface
 
-- Package `@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-guardrail-agent`
+- Package `@ai-crew-suite/plugin-agent-scaffolder-guardrail`
   with legacy and `./alpha` entrypoints; standalone page at
   `/scaffolder-ai-guardrail-agent` with `?run=<id>` replay.
 - Typed API client for request evaluation, SSE replay with `Last-Event-ID`, and

@@ -34,7 +34,7 @@ The review is **entirely deterministic and read-only**: the graph reads the docu
 The plugin follows the standard two-package Backstage agent layout:
 
 - **Backend module** (`@webstackbuilders/plugin-ai-agent-backend-rfc-adr-ai-reviewer`, `role: backend-plugin-module`, `pluginId: ai-core`) — registers the `ReviewGraph` workflow runner (ID `rfc-adr-review`), the `rfc-adr-ai-reviewer` agent definition with a read-only allow-list of 5 tools, and a single manual trigger
-- **Frontend plugin** (`@webstackbuilders/plugin-ai-agent-frontend-rfc-adr-ai-reviewer`, `role: frontend-plugin`, `pluginId: rfc-adr-ai-reviewer`) — provides a standalone page at `/rfc-adr-ai-reviewer` with a start-review dialog, a debate view showing per-channel activity, a critique panel with severity-ordered findings, and future approval/publication controls
+- **Frontend plugin** (`@ai-crew-suite/plugin-agent-rfc-adr-reviewer`, `role: frontend-plugin`, `pluginId: rfc-adr-ai-reviewer`) — provides a standalone page at `/rfc-adr-ai-reviewer` with a start-review dialog, a debate view showing per-channel activity, a critique panel with severity-ordered findings, and future approval/publication controls
 
 The graph runs with three paired-step phases: `document.read` validates and redacts the document, then `senior-architect` and `security-lead` execute concurrently via `Promise.all` (yielding per-channel enter/exit events), and finally `compilation` merges the results and derives the verdict. The artifact kind is `design-critique`.
 
@@ -113,7 +113,7 @@ In `packages/app/package.json`:
 
 ```json
 "dependencies": {
-  "@webstackbuilders/plugin-ai-agent-frontend-rfc-adr-ai-reviewer": "workspace:^"
+  "@ai-crew-suite/plugin-agent-rfc-adr-reviewer": "workspace:^"
 }
 ```
 
@@ -122,7 +122,7 @@ In `packages/app/package.json`:
 In `packages/app/src/App.tsx`, import the alpha entry point:
 
 ```ts
-import rfcAdrReviewerExtensions from '@webstackbuilders/plugin-ai-agent-frontend-rfc-adr-ai-reviewer/alpha';
+import rfcAdrReviewerExtensions from '@ai-crew-suite/plugin-agent-rfc-adr-reviewer/alpha';
 
 const app = createApp({
   features: [

@@ -129,7 +129,7 @@ In `packages/app/package.json`:
 
 ```json
 "dependencies": {
-  "@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-infra": "workspace:^"
+  "@ai-crew-suite/plugin-agent-scaffolder-infra": "workspace:^"
 }
 ```
 
@@ -138,7 +138,7 @@ In `packages/app/package.json`:
 In `packages/app/src/App.tsx`:
 
 ```ts
-import scaffolderInfraExtensions from '@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-infra/alpha';
+import scaffolderInfraExtensions from '@ai-crew-suite/plugin-agent-scaffolder-infra/alpha';
 
 const app = createApp({
   features: [scaffolderInfraExtensions],

@@ -121,7 +121,7 @@ Same delegated-but-verified steps as catalog-ai-insights (see that plan's "Monor
 - **Backend load**: add `"@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-drift-detector": "workspace:^"` to `packages/backend/package.json` and the matching `backend.add(loadBackendFeature(import(...)))` in `packages/backend/src/index.ts`.
 - **Cloud + VCS module gates**: reconciliation needs the normalized `cloud.*` tools; remediation needs the new `vcs.pull_request.create` write tool. Both modules must be extended and loaded before those milestones are enabled. Drift-detection-only runs (read path, no PR) work without the VCS write.
 - **App config**: throws at boot without `ai.agents.driftDetector.model`; add the config block (see Configuration). Remediation additionally requires `ai.agents.driftDetector.remediate.enabled: true`.
-- **Frontend registration**: add `"@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-drift-detector": "workspace:^"` to `packages/app/package.json`, import its `/alpha` default export in `packages/app/src/App.tsx`, and extend plugin-ID expectations in `packages/app/src/App.test.tsx`.
+- **Frontend registration**: add `"@ai-crew-suite/plugin-agent-scaffolder-drift-detector": "workspace:^"` to `packages/app/package.json`, import its `/alpha` default export in `packages/app/src/App.tsx`, and extend plugin-ID expectations in `packages/app/src/App.test.tsx`.
 - **Yarn PnP refresh**: `yarn install`, then `yarn typecheck --force` / `yarn lint --force`.
 
 ## Agent Definition
@@ -321,7 +321,7 @@ plugins/frontend/plugin-ai-agent-frontend-scaffolder-ai-drift-detector/
 
 Frontend deltas vs catalog-ai-insights:
 
-- `backstage.pluginId: 'scaffolder-ai-drift-detector'`; package `@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-drift-detector`.
+- `backstage.pluginId: 'scaffolder-ai-drift-detector'`; package `@ai-crew-suite/plugin-agent-scaffolder-drift-detector`.
 - Primary surface is a **fleet dashboard page** (nav item) listing component drift status; a per-entity card links the component's own drift record.
 - `checkDrift()` POSTs `/agents/scaffolder-ai-drift-detector/runs` with the JSON `DriftCheckRequest`; the report renders from the `drift-report` artifact; `PatchPreview` renders `remediation-patch` diffs.
 - **Approval UX**: on `approval_request`, `ApprovalBar` approves/rejects; `submitApproval()` posts an `ApprovalDecision`; on approve `RemediationBanner` links the opened sync PR; on reject the drift shows as `acknowledged`.
@@ -410,7 +410,7 @@ Implemented the contract-matched frontend at:
 
 ### Implemented surface
 
-- Package `@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-drift-detector`
+- Package `@ai-crew-suite/plugin-agent-scaffolder-drift-detector`
   with `frontend-plugin` role, legacy entrypoint, and `./alpha` entrypoint.
 - Standalone `/scaffolder-ai-drift-detector` page with `?run=<id>` replay.
 - Typed AI Core client: start drift check, replay run events with

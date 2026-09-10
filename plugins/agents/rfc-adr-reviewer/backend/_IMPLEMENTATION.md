@@ -105,7 +105,7 @@ Same delegated-but-verified steps as catalog-ai-insights (see that plan's "Monor
 - **VCS module gate**: PR-comment posting requires the new `vcs.pull_request.comment` write tool (see Prerequisites); the VCS module must be extended and loaded before the write milestone. Draft-only runs work without it.
 - **Events wiring**: the module subscribes to `coreServices.events`; ensure whatever repo/scaffolder event source is configured publishes onto the Backstage event bus. No new HTTP webhook endpoint is added by this plugin.
 - **App config**: throws at boot without `ai.agents.rfcAdrReviewer.model`; add the config block (see Configuration). Posting additionally requires `ai.agents.rfcAdrReviewer.publish.enabled: true`.
-- **Frontend registration**: add `"@webstackbuilders/plugin-ai-agent-frontend-rfc-adr-ai-reviewer": "workspace:^"` to `packages/app/package.json`, import its `/alpha` default export in `packages/app/src/App.tsx`, and extend plugin-ID expectations in `packages/app/src/App.test.tsx`.
+- **Frontend registration**: add `"@ai-crew-suite/plugin-agent-rfc-adr-reviewer": "workspace:^"` to `packages/app/package.json`, import its `/alpha` default export in `packages/app/src/App.tsx`, and extend plugin-ID expectations in `packages/app/src/App.test.tsx`.
 - **Yarn PnP refresh**: `yarn install`, then `yarn typecheck --force` / `yarn lint --force`.
 
 ## Agent Definition
@@ -289,7 +289,7 @@ plugins/frontend/plugin-ai-agent-frontend-rfc-adr-ai-reviewer/
 
 Frontend deltas vs catalog-ai-insights:
 
-- `backstage.pluginId: 'rfc-adr-ai-reviewer'`; package `@webstackbuilders/plugin-ai-agent-frontend-rfc-adr-ai-reviewer`.
+- `backstage.pluginId: 'rfc-adr-ai-reviewer'`; package `@ai-crew-suite/plugin-agent-rfc-adr-reviewer`.
 - Primary surface is a **standalone page**; optionally a catalog entity-page tab for the design repo.
 - `useReviewRun` **demultiplexes the SSE stream by the `token.node` tag**, feeding two live columns in `DebateView` — the headline UX from the foundation doc. Falls back to a single column if `node` is absent.
 - `startReview()` POSTs `/agents/rfc-adr-ai-reviewer/runs` with the JSON `ReviewRequest`; critique renders from the `design-critique` artifact; `verdict` shows as a badge (`block`/`comment`/`approve`).
@@ -380,7 +380,7 @@ Implemented the RFC/ADR reviewer frontend plugin at:
 
 ### Package shape
 
-- Package: `@webstackbuilders/plugin-ai-agent-frontend-rfc-adr-ai-reviewer`
+- Package: `@ai-crew-suite/plugin-agent-rfc-adr-reviewer`
 - `backstage.role: frontend-plugin`, `backstage.pluginId: rfc-adr-ai-reviewer`
 - Exports `.` (legacy plugin) and `./alpha` (new frontend system)
 - One folder per component under `src/components/`, each with its own barrel and

@@ -377,7 +377,7 @@ plugins/frontend/plugin-ai-agent-frontend-search-ai-context/
 
 Frontend deltas vs `catalog-ai-insights`:
 
-- `backstage.pluginId: 'search-ai-context'`; package `@webstackbuilders/plugin-ai-agent-frontend-search-ai-context`.
+- `backstage.pluginId: 'search-ai-context'`; package `@ai-crew-suite/plugin-agent-search-context`.
 - Primary surface is a **standalone analysis page** via `PageBlueprint`, plus an **`EntityCardBlueprint`** card on the API/component page — apt here because the subject is an existing catalog entity.
 - **`ClassificationBadge` carries the plugin's core risk.** `unknown` must never render like `unaffected`: it needs a distinct treatment and a tooltip naming the reason (`no_repository`, `search_unsupported`, `search_failed`). A reader who mistakes "unverifiable" for "safe" ships the breakage this plugin exists to prevent.
 - `CodeMatchList` deep-links every match to `path:line` in the provider, so an impacted claim is one click from proof. A consumer marked `impacted` with no clickable match must not render.

@@ -34,7 +34,7 @@ Categorization and inclusion decisions are **entirely deterministic** — the ta
 The plugin follows the standard two-package Backstage agent layout:
 
 - **Backend module** (`@webstackbuilders/plugin-ai-agent-backend-release-notes-ai-generator`, `role: backend-plugin-module`, `pluginId: ai-core`) — registers the `ReleaseNotesGraph` workflow runner (ID `release-notes`), the `release-notes-ai-generator` agent definition with a read-only allow-list of 4 tools, and manual/scheduler triggers
-- **Frontend plugin** (`@webstackbuilders/plugin-ai-agent-frontend-release-notes-ai-generator`, `role: frontend-plugin`, `pluginId: release-notes-ai-generator`) — provides a standalone page at `/release-notes-ai-generator` with a generation dialog, live run progress, categorized draft preview with markdown output, internal-chore filtering panel, and future approval/publication controls
+- **Frontend plugin** (`@ai-crew-suite/plugin-agent-release-notes-generator`, `role: frontend-plugin`, `pluginId: release-notes-ai-generator`) — provides a standalone page at `/release-notes-ai-generator` with a generation dialog, live run progress, categorized draft preview with markdown output, internal-chore filtering panel, and future approval/publication controls
 
 The graph runs four deterministic nodes: `request.validate → changes.collect → changes.categorize → draft.summarize → draft.finalize`. The artifact kind is `release-notes-draft`. The graph is **draft-only and entirely deterministic** — the model is not invoked, and approval/publish are deferred until the shared VCS write contract is available.
 
@@ -116,7 +116,7 @@ In `packages/app/package.json`:
 
 ```json
 "dependencies": {
-  "@webstackbuilders/plugin-ai-agent-frontend-release-notes-ai-generator": "workspace:^"
+  "@ai-crew-suite/plugin-agent-release-notes-generator": "workspace:^"
 }
 ```
 
@@ -125,7 +125,7 @@ In `packages/app/package.json`:
 In `packages/app/src/App.tsx`, import the alpha entry point:
 
 ```ts
-import releaseNotesExtensions from '@webstackbuilders/plugin-ai-agent-frontend-release-notes-ai-generator/alpha';
+import releaseNotesExtensions from '@ai-crew-suite/plugin-agent-release-notes-generator/alpha';
 
 const app = createApp({
   features: [

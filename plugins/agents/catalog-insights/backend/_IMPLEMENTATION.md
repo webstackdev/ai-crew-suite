@@ -95,7 +95,7 @@ Steps not covered by `plugin-registration.md` or any checked-in responder exampl
 
 - **Backend module load**: add `"@webstackbuilders/plugin-ai-agent-backend-catalog-ai-insights": "workspace:^"` to `packages/backend/package.json` and `backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-agent-backend-catalog-ai-insights')))` in `packages/backend/src/index.ts`, grouped with the other `@webstackbuilders` module loads. Note: the responder backend module is intentionally **not** loaded there yet (gated on the Kubernetes diagnostics milestone) — there is no existing agent-module load line to copy. This module can load independently because absent tools degrade to report limitations.
 - **App config**: the backend module throws at boot without `ai.agents.catalogAiInsights.model`; add the config block (see Configuration) to the active `app-config*.yaml` before enabling the load, with `model` pointing at an installation-registered model ID.
-- **Frontend app registration**: add `"@webstackbuilders/plugin-ai-agent-frontend-catalog-ai-insights": "workspace:^"` to `packages/app/package.json`, import the default export from `.../plugin-ai-agent-frontend-catalog-ai-insights/alpha` in `packages/app/src/App.tsx`, and extend the plugin-ID expectations in `packages/app/src/App.test.tsx` — copy the existing `kubernetes-ai-responder` wiring in all three files.
+- **Frontend app registration**: add `"@ai-crew-suite/plugin-agent-catalog-insights": "workspace:^"` to `packages/app/package.json`, import the default export from `.../plugin-ai-agent-frontend-catalog-ai-insights/alpha` in `packages/app/src/App.tsx`, and extend the plugin-ID expectations in `packages/app/src/App.test.tsx` — copy the existing `kubernetes-ai-responder` wiring in all three files.
 - **Yarn PnP refresh**: run `yarn install` after any `package.json` dependency edits, then `yarn typecheck --force` and `yarn lint --force` per `plugin-registration.md`.
 
 ## Agent Definition
@@ -270,7 +270,7 @@ plugins/frontend/plugin-ai-agent-frontend-catalog-ai-insights/
 
 Frontend deltas vs the responder (everything else is identical):
 
-- `backstage.pluginId: 'catalog-ai-insights'`; package `@webstackbuilders/plugin-ai-agent-frontend-catalog-ai-insights`.
+- `backstage.pluginId: 'catalog-ai-insights'`; package `@ai-crew-suite/plugin-agent-catalog-insights`.
 - Primary surface is the **catalog entity page card** (attached via entity content extension), not a standalone incident page; the standalone route is secondary, for deep links to run IDs.
 - `askQuestion()` POSTs `/agents/catalog-ai-insights/runs` with the JSON `CatalogInsightRequest` as the query; the report renders from the `catalog-insight-report` artifact event.
 - Preserve `sessionId` across questions on the same entity so follow-ups reuse session memory.
@@ -349,7 +349,7 @@ Exit criteria: staged rollout with scans disabled by default, bounded costs, and
 
 ## Frontend Completed
 
-Implemented `@webstackbuilders/plugin-ai-agent-frontend-catalog-ai-insights`.
+Implemented `@ai-crew-suite/plugin-agent-catalog-insights`.
 
 ### Delivered
 

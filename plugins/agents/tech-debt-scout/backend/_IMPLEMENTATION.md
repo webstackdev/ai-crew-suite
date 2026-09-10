@@ -398,7 +398,7 @@ plugins/frontend/plugin-ai-agent-frontend-tech-debt-ai-scout/
 
 Frontend deltas vs `catalog-ai-insights`:
 
-- `backstage.pluginId: 'tech-debt-ai-scout'`; package `@webstackbuilders/plugin-ai-agent-frontend-tech-debt-ai-scout`.
+- `backstage.pluginId: 'tech-debt-ai-scout'`; package `@ai-crew-suite/plugin-agent-tech-debt-scout`.
 - Primary surface is a **standalone fleet dashboard** via `PageBlueprint`, plus an **`EntityCardBlueprint`** card showing one component's debt — apt here since findings attach to real catalog entities.
 - **`RepoCoveragePanel` is a correctness surface, not decoration.** It must distinguish `scanned`, `search_unsupported`, and `scan_failed`, because a dashboard reading "0 findings" across an unscannable estate is a false clean bill of health.
 - `SeverityRationalePanel` shows the `reasons` that fired for each finding, so a `high` severity is explainable rather than an opaque label — and so operators can tune `escalateKeywords` from evidence.

@@ -100,7 +100,7 @@ Same delegated-but-verified steps as catalog-ai-insights (see that plan's "Monor
 - **Backend load**: add `"@webstackbuilders/plugin-ai-agent-backend-release-notes-ai-generator": "workspace:^"` to `packages/backend/package.json` and `backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-agent-backend-release-notes-ai-generator')))` in `packages/backend/src/index.ts`, grouped with the other `@webstackbuilders` module loads.
 - **VCS module gate**: because publish requires the new `vcs.release.publish` write tool (see Prerequisites), the VCS module (`plugin-ai-core-backend-module-vcs`) must be extended and loaded before the publish milestone is enabled. Draft-only runs work without it.
 - **App config**: the module throws at boot without `ai.agents.releaseNotes.model`; add the config block (see Configuration) before enabling the load. Publishing additionally requires `ai.agents.releaseNotes.publish.enabled: true`.
-- **Frontend registration**: add `"@webstackbuilders/plugin-ai-agent-frontend-release-notes-ai-generator": "workspace:^"` to `packages/app/package.json`, import its `/alpha` default export in `packages/app/src/App.tsx`, and extend plugin-ID expectations in `packages/app/src/App.test.tsx` — copy the `catalog-ai-insights` wiring.
+- **Frontend registration**: add `"@ai-crew-suite/plugin-agent-release-notes-generator": "workspace:^"` to `packages/app/package.json`, import its `/alpha` default export in `packages/app/src/App.tsx`, and extend plugin-ID expectations in `packages/app/src/App.test.tsx` — copy the `catalog-ai-insights` wiring.
 - **Yarn PnP refresh**: `yarn install` after dependency edits, then `yarn typecheck --force` / `yarn lint --force`.
 
 ## Agent Definition
@@ -310,7 +310,7 @@ plugins/frontend/plugin-ai-agent-frontend-release-notes-ai-generator/
 
 Frontend deltas vs catalog-ai-insights:
 
-- `backstage.pluginId: 'release-notes-ai-generator'`; package `@webstackbuilders/plugin-ai-agent-frontend-release-notes-ai-generator`.
+- `backstage.pluginId: 'release-notes-ai-generator'`; package `@ai-crew-suite/plugin-agent-release-notes-generator`.
 - Primary surface is a **standalone page** (nav item); optionally a catalog entity-page tab scoped to that component's repo.
 - `generate()` POSTs `/agents/release-notes-ai-generator/runs` with the JSON `ReleaseNotesRequest`; the draft renders from the `release-notes-draft` artifact event.
 - **Approval UX is the distinguishing feature**: when an `approval_request` event arrives, render `ApprovalBar` with approve/reject + note; `submitApproval()` calls the AI Core resume/approval route with an `ApprovalDecision`. On approve, show `PublicationBanner` from the `release-notes-publication` artifact; on reject, show the draft as final-unpublished.

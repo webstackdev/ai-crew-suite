@@ -34,7 +34,7 @@ Every decision in the pipeline is **pure code**: utterance parsing, template sel
 The plugin follows the standard two-package Backstage agent layout:
 
 - **Backend module** (`@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-intent`, `role: backend-plugin-module`, `pluginId: ai-core`) — registers the `IntentGraph` workflow runner (ID `scaffolder-intent`) with a `TemplateResolver` backed by the real `scaffolderServiceRef` and a `NameAvailabilityChecker` backed by `CatalogClient`; the agent definition has 4 read-only tools and a single manual trigger
-- **Frontend plugin** (`@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-intent`, `role: frontend-plugin`, `pluginId: scaffoldinger-ai-intent`) — provides a standalone page at `/scaffolder-ai-intent` with an `IntentInputForm` for natural-language input and an `IntentProposalPanel` showing template candidates, parameters, and validation issues
+- **Frontend plugin** (`@ai-crew-suite/plugin-agent-scaffolder-intent`, `role: frontend-plugin`, `pluginId: scaffoldinger-ai-intent`) — provides a standalone page at `/scaffolder-ai-intent` with an `IntentInputForm` for natural-language input and an `IntentProposalPanel` showing template candidates, parameters, and validation issues
 
 The graph runs four deterministic nodes: `select` (template ranking against the allow-list) → `coerce` (schema-flattening and parameter filling) → `validate` (catalog name-availability check) → `proposal` (artifact emission). The artifact kind is `template-intent-proposal`.
 
@@ -118,7 +118,7 @@ In `packages/app/package.json`:
 
 ```json
 "dependencies": {
-  "@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-intent": "workspace:^"
+  "@ai-crew-suite/plugin-agent-scaffolder-intent": "workspace:^"
 }
 ```
 
@@ -127,7 +127,7 @@ In `packages/app/package.json`:
 In `packages/app/src/App.tsx`:
 
 ```ts
-import scaffolderIntentExtensions from '@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-intent/alpha';
+import scaffolderIntentExtensions from '@ai-crew-suite/plugin-agent-scaffolder-intent/alpha';
 
 const app = createApp({
   features: [scaffolderIntentExtensions],

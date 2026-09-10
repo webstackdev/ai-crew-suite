@@ -101,7 +101,7 @@ Same delegated-but-verified steps as `catalog-ai-insights` (see that plan's "Mon
 - **Backend load**: add `"@ai-crew-suite/agent-alert-tuner-backend": "workspace:^"` to `packages/backend/package.json` and the matching `backend.add(loadBackendFeature(import(...)))` line in `packages/backend/src/index.ts`, grouped with the other `@webstackbuilders` module loads.
 - **VCS module gate**: publishing needs the new `vcs.pull_request.create` write tool in `plugin-ai-core-backend-module-vcs` plus a configured write-capable provider driver. Proposal-only runs (no PR) work today without it.
 - **App config**: the module throws at boot without `ai.agents.alertAiTuner.model`; add the config block (see Configuration) before enabling the load. Publishing additionally requires `ai.agents.alertAiTuner.publish.enabled: true`.
-- **Frontend registration**: add `"@webstackbuilders/plugin-ai-agent-frontend-alert-ai-tuner": "workspace:^"` to `packages/app/package.json`, import its `/alpha` default export in `packages/app/src/App.tsx`, and extend plugin-ID expectations in `packages/app/src/App.test.tsx`.
+- **Frontend registration**: add `"@ai-crew-suite/plugin-agent-alert-tuner": "workspace:^"` to `packages/app/package.json`, import its `/alpha` default export in `packages/app/src/App.tsx`, and extend plugin-ID expectations in `packages/app/src/App.test.tsx`.
 - **Yarn PnP refresh**: `yarn install` after any `package.json` edit, then `yarn typecheck --force` / `yarn lint --force`.
 
 ## Agent Definition
@@ -366,7 +366,7 @@ plugins/frontend/plugin-ai-agent-frontend-alert-ai-tuner/
 
 Frontend deltas vs `catalog-ai-insights`:
 
-- `backstage.pluginId: 'alert-ai-tuner'`; package `@webstackbuilders/plugin-ai-agent-frontend-alert-ai-tuner`.
+- `backstage.pluginId: 'alert-ai-tuner'`; package `@ai-crew-suite/plugin-agent-alert-tuner`.
 - Primary surface is a **standalone tuning page** (nav item) listing proposals; a secondary entity card shows the owning component's open tuning proposals.
 - `evaluateAlert()` POSTs `/agents/alert-ai-tuner/runs` with the JSON `AlertTuningRequest`; the proposal renders from the `alert-tuning-proposal` artifact; `ThresholdDiffPreview` renders `patch.diff`.
 - **Approval UX**: on `approval_request`, `ApprovalBar` shows the exact diff, target repo/path, and `patchHash`, then posts an `ApprovalDecision`; on approve `PublicationBanner` links the PR; on reject the proposal renders as `declined`.
@@ -578,7 +578,7 @@ Implemented the alert fatigue tuner frontend plugin at:
 
 ### Implemented surface
 
-- Package: `@webstackbuilders/plugin-ai-agent-frontend-alert-ai-tuner`
+- Package: `@ai-crew-suite/plugin-agent-alert-tuner`
 - `backstage.role: frontend-plugin`, `backstage.pluginId: alert-ai-tuner`
 - Legacy (`.`) and new frontend-system (`./alpha`) entry points
 - Standalone page at `/alert-ai-tuner`, with `?run=<id>` replay

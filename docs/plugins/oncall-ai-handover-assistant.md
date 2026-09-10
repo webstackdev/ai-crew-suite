@@ -34,7 +34,7 @@ The entire process is **deterministic and model-free**: the graph collects data,
 The plugin follows the standard two-package Backstage agent layout:
 
 - **Backend module** (`@webstackbuilders/plugin-ai-agent-backend-oncall-ai-handover-assistant`, `role: backend-plugin-module`, `pluginId: ai-core`) — registers the `HandoverGraph` workflow runner (ID `oncall-handover`), the `oncall-handover-assistant` agent definition with a read-only allow-list of 11 tools, manual and scheduler triggers, and optional shift-boundary scheduling
-- **Frontend plugin** (`@webstackbuilders/plugin-ai-agent-frontend-oncall-ai-handover-assistant`, `role: frontend-plugin`, `pluginId: oncall-handover-assistant`) — provides a standalone page at `/oncall-handover-assistant` with a compile dialog, live SSE run view, clustered-incident/deployment/ticket panels, status banner, and deep-linked replay
+- **Frontend plugin** (`@ai-crew-suite/plugin-agent-oncall-handover`, `role: frontend-plugin`, `pluginId: oncall-handover-assistant`) — provides a standalone page at `/oncall-handover-assistant` with a compile dialog, live SSE run view, clustered-incident/deployment/ticket panels, status banner, and deep-linked replay
 
 The graph runs six deterministic nodes: `window.resolve → collect.parallel → cluster.analyze → context.enrich → brief.summarize → brief.finalize`. The artifact kind is `oncall-handover-brief`. The agent has `memory: 'none'` — each run is a fresh window with no conversational continuity.
 
@@ -114,7 +114,7 @@ In `packages/app/package.json`:
 
 ```json
 "dependencies": {
-  "@webstackbuilders/plugin-ai-agent-frontend-oncall-ai-handover-assistant": "workspace:^"
+  "@ai-crew-suite/plugin-agent-oncall-handover": "workspace:^"
 }
 ```
 
@@ -123,7 +123,7 @@ In `packages/app/package.json`:
 In `packages/app/src/App.tsx`, import the alpha entry point:
 
 ```ts
-import oncallHandoverExtensions from '@webstackbuilders/plugin-ai-agent-frontend-oncall-ai-handover-assistant/alpha';
+import oncallHandoverExtensions from '@ai-crew-suite/plugin-agent-oncall-handover/alpha';
 
 const app = createApp({
   features: [

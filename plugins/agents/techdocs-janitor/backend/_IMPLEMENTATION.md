@@ -445,7 +445,7 @@ plugins/frontend/plugin-ai-agent-frontend-techdocs-ai-janitor/
 
 Frontend deltas vs `catalog-ai-insights`:
 
-- `backstage.pluginId: 'techdocs-ai-janitor'`; package `@webstackbuilders/plugin-ai-agent-frontend-techdocs-ai-janitor`.
+- `backstage.pluginId: 'techdocs-ai-janitor'`; package `@ai-crew-suite/plugin-agent-techdocs-janitor`.
 - Primary surface is a **standalone findings queue** via `PageBlueprint`, plus an **`EntityCardBlueprint`** doc-health card — apt here since discrepancies attach to a real catalog component.
 - **`PatchDiffPreview` must show the anchored range**, not just the diff, so a reviewer can see the edit is confined to one span. This is the UI expression of the anchoring guarantee, and it is what makes approving a docs patch quick.
 - **`RecommendationList` is as important as the patch list.** Findings with no confident replacement (API drift, ambiguous dead links) are where human judgment is required; burying them under auto-patchable items would hide the harder problems.

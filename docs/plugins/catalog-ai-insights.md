@@ -35,7 +35,7 @@ Unlike plugins where the model drives decision-making, the insights agent treats
 The plugin follows the standard two-package Backstage agent layout:
 
 - **Backend module** (`@webstackbuilders/plugin-ai-agent-backend-catalog-ai-insights`, `role: backend-plugin-module`, `pluginId: ai-core`) — registers the `CatalogInsightsGraph` workflow runner (ID `catalog-insights`), the `catalog-ai-insights` agent definition with a read-only tool allow-list of 11 tools, manual and scheduler triggers, and an optional nightly scan task
-- **Frontend plugin** (`@webstackbuilders/plugin-ai-agent-frontend-catalog-ai-insights`, `role: frontend-plugin`, `pluginId: catalog-ai-insights`) — provides an entity page card (`EntityInsightsCard` / `EntityContextInsightsCard`), a standalone page at `/catalog-ai-insights`, a typed SSE API client, a live run progress view, and cited-answer/context panels
+- **Frontend plugin** (`@ai-crew-suite/plugin-agent-catalog-insights`, `role: frontend-plugin`, `pluginId: catalog-ai-insights`) — provides an entity page card (`EntityInsightsCard` / `EntityContextInsightsCard`), a standalone page at `/catalog-ai-insights`, a typed SSE API client, a live run progress view, and cited-answer/context panels
 
 The graph runs through seven deterministic nodes: `request.validate → intent.classify → entity.resolve → context.gather → context.normalize → insight.synthesize → insight.finalize`. The artifact kind is `catalog-insight-report`. The agent's memory mode is `session`, enabling conversational follow-up across multiple questions about the same entity.
 
@@ -118,7 +118,7 @@ In `packages/app/package.json`:
 
 ```json
 "dependencies": {
-  "@webstackbuilders/plugin-ai-agent-frontend-catalog-ai-insights": "workspace:^"
+  "@ai-crew-suite/plugin-agent-catalog-insights": "workspace:^"
 }
 ```
 
@@ -127,7 +127,7 @@ In `packages/app/package.json`:
 In `packages/app/src/App.tsx`, import the alpha entry point:
 
 ```ts
-import catalogAiInsightsExtensions from '@webstackbuilders/plugin-ai-agent-frontend-catalog-ai-insights/alpha';
+import catalogAiInsightsExtensions from '@ai-crew-suite/plugin-agent-catalog-insights/alpha';
 
 const app = createApp({
   features: [

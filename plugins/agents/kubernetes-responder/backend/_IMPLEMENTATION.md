@@ -744,7 +744,7 @@ The responder is complete only when:
 
 All validated and green. The two extra untracked files (`copilot-instructions.md`, `frontend-app.instructions.md`) are __empty placeholders__ — not mine, and not part of this task. My earlier `plugin-registration.md` is confirmed tracked/committed.
 
-I implemented `@webstackbuilders/plugin-ai-agent-frontend-kubernetes-ai-responder` per the Frontend Plan, fully registered and green.
+I implemented `@ai-crew-suite/plugin-agent-kubernetes-responder` per the Frontend Plan, fully registered and green.
 
 ### New plugin: `plugins/frontend/plugin-ai-agent-frontend-kubernetes-ai-responder/` (26 files)
 

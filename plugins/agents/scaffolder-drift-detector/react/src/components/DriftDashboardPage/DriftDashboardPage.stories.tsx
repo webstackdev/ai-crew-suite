@@ -20,7 +20,7 @@ import {
   driftDetectorApiRef,
   DRIFT_REPORT_ARTIFACT,
   type DriftDetectorApi
-} from '@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-drift-detector';
+} from '@ai-crew-suite/plugin-agent-scaffolder-drift-detector';
 import { DriftDashboardPage } from './DriftDashboardPage';
 import type { AiRunEvent, DriftReport } from '../../@types';
 
