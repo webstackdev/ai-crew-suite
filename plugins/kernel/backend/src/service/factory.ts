@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import type { SourceRegistry } from '@webstackbuilders/plugin-ai-core-node';
+import type { SourceRegistry } from '@ai-crew-suite/plugin-kernel-node';
 import type {
   AiBackendConfig,
   AiBackendServiceOptions,

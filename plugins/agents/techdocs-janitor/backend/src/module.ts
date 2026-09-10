@@ -22,7 +22,7 @@ import {
   agentExtensionPoint,
   triggerExtensionPoint,
   workflowRunnerExtensionPoint,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 import { createTechdocsJanitorAgent } from './agent';
 import { readTechdocsJanitorConfig } from './config';
 import { CatalogResolver } from './services/CatalogResolver';

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { describe, expect, it, vi } from 'vitest';
-import type { Tool } from '@webstackbuilders/plugin-ai-core-node';
+import type { Tool } from '@ai-crew-suite/plugin-kernel-node';
 import { InMemoryToolRegistry } from '../ToolRegistry';
 
 const createTool = (id: string, description = `${id} tool`): Tool => ({

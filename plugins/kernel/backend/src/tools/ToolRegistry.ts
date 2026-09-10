@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Tool, ToolRegistry } from '@webstackbuilders/plugin-ai-core-node';
+import { Tool, ToolRegistry } from '@ai-crew-suite/plugin-kernel-node';
 
 /**
  * Simple in-memory implementation of the tool registry extension point.

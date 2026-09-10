@@ -40,7 +40,7 @@
     "@backstage/backend-plugin-api": "backstage:^",
     "@backstage/config": "backstage:^",
     "@backstage/plugin-scaffolder-node": "^0.13.6",
-    "@webstackbuilders/plugin-ai-core-node": "workspace:*"
+    "@ai-crew-suite/plugin-kernel-node": "workspace:*"
   },
   "devDependencies": {
     "@backstage/backend-test-utils": "backstage:^",

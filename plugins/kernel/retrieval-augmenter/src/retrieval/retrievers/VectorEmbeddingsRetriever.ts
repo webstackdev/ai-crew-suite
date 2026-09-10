@@ -22,7 +22,7 @@ import {
   EntityFilterShape,
   EmbeddingDocMetadata,
   VectorStore,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 
 /**
  * Retriever backed by the configured vector store.

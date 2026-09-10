@@ -1,4 +1,4 @@
-# @ai-crew-suite/tool-cloud-providers-azure
+# @ai-crew-suite/plugin-tool-cloud-providers-backend-module-azure
 
 > Azure Extension Module for the AI Crew Suite platform.
 
@@ -8,7 +8,7 @@ This package implements the Azure specific integration module for the AI Crew Su
 
 ### Core Responsibilities
 
-- **Backend module extension**: Wires into the `@ai-crew-suite/tool-cloud-providers-core` extension points.
+- **Backend module extension**: Wires into the `@ai-crew-suite/plugin-tool-cloud-providers-backend` extension points.
 - **Azure driver implementation**: Implements the `CloudProviderDriver` interface to communicate directly with Azure APIs (Azure Resource Graph, Subscription client, etc.).
 - **Dynamic asset mapping**: Translates Azure Resource IDs, subscriptions, and management group tags into normalized entities.
 - **Config integration**: Resolves authentication and regional settings via the global configuration.
@@ -30,13 +30,16 @@ ai:
 
 This extension activates automatically when `defaultProvider` matches `azure`, or when explicit Azure asset lookups are routed through the orchestration layers.
 
----
-
 ## Local Development Workflow
 
 ```bash
 yarn install --refresh
-yarn turbo run build --filter=@ai-crew-suite/tool-cloud-providers-azure
-yarn turbo run lint --filter=@ai-crew-suite/tool-cloud-providers-azure
-yarn turbo run test --filter=@ai-crew-suite/tool-cloud-providers-azure
+yarn turbo run build --filter=@ai-crew-suite/plugin-tool-cloud-providers-backend-module-azure
+yarn turbo run lint --filter=@ai-crew-suite/plugin-tool-cloud-providers-backend-module-azure
+yarn turbo run test --filter=@ai-crew-suite/plugin-tool-cloud-providers-backend-module-azure
 ```
+
+## Compliance and Licensing
+
+Copyright © 2026 The AI Crew Suite Authors.
+Licensed under the **Apache License, Version 2.0**.

@@ -23,7 +23,7 @@ import {
   EntityFilterShape,
   RetrievalPipeline,
   RetrievalRouter,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 import { CombiningPostProcessor } from './postProcessors/CombiningPostProcessor';
 
 /**

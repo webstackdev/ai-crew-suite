@@ -18,7 +18,7 @@ import type {
   AgentRunInput,
   WorkflowContext,
   WorkflowRunner,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 import type { ScaffolderPrdConfig } from '../config';
 import { deliveryBlueprintArtifact } from '../services/PrdArtifactWriter';
 import { mergeBlueprint } from './merge';

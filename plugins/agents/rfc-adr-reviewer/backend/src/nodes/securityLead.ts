@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { ArchitectureValidationResult, PolicyEvaluationResult } from '@webstackbuilders/plugin-ai-core-node';
+import type { ArchitectureValidationResult, PolicyEvaluationResult } from '@ai-crew-suite/plugin-kernel-node';
 import type { ReviewToolRunner } from '../services/ReviewToolRunner';
 import type { ReviewEvidence, ReviewFinding, ReviewRequest } from '../workflow/state';
 

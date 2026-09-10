@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 import { LoggerService } from '@backstage/backend-plugin-api';
-import { Tool } from '@webstackbuilders/plugin-ai-core-node';
+import { Tool } from '@ai-crew-suite/plugin-kernel-node';
 
 /**
  * Builds a normalized mock payload for default tool-pack stub responses.

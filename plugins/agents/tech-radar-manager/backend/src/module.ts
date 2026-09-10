@@ -14,7 +14,7 @@ import {
   agentExtensionPoint,
   triggerExtensionPoint,
   workflowRunnerExtensionPoint,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 import { createTechRadarAgent } from './agent';
 import { readTechRadarConfig } from './config';
 import { RadarGraph } from './workflow/RadarGraph';

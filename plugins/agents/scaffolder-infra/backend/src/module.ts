@@ -18,7 +18,7 @@ import {
   agentExtensionPoint,
   triggerExtensionPoint,
   workflowRunnerExtensionPoint
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 import { createScaffolderInfraAgent } from './agent';
 import { readScaffolderInfraConfig } from './config';
 import { BlueprintResolver } from './services/BlueprintResolver';

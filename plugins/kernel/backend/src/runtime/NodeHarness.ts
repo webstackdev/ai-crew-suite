@@ -15,8 +15,8 @@
  */
 
 import { trace } from '@opentelemetry/api';
-import type { AgentEvent, WorkflowNode, WorkflowNodeInput } from '@webstackbuilders/plugin-ai-core-node';
-import { NodeError } from '@webstackbuilders/plugin-ai-core-node';
+import type { AgentEvent, WorkflowNode, WorkflowNodeInput } from '@ai-crew-suite/plugin-kernel-node';
+import { NodeError } from '@ai-crew-suite/plugin-kernel-node';
 import type { EventMapper } from './EventMapper';
 import type { Redactor } from './Redactor';
 

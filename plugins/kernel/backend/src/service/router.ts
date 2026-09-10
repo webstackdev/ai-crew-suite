@@ -17,7 +17,7 @@
 import express, { type NextFunction, type Request, type Response } from 'express';
 import Router from 'express-promise-router';
 import { MiddlewareFactory } from '@backstage/backend-defaults/rootHttpRouter';
-import { SourceRegistry } from '@webstackbuilders/plugin-ai-core-node';
+import { SourceRegistry } from '@ai-crew-suite/plugin-kernel-node';
 import type { CreateRouterOptions, RouteController } from '../@types';
 
 /**

@@ -18,7 +18,7 @@ import {
   agentExtensionPoint,
   triggerExtensionPoint,
   workflowRunnerExtensionPoint,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 import { createKubernetesAiResponderAgent } from './agent';
 import { readKubernetesAiResponderConfig } from './config';
 import { IncidentTriageGraph } from './workflow/IncidentTriageGraph';

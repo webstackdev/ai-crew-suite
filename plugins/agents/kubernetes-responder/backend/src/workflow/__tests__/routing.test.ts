@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { describe, expect, it } from 'vitest';
-import type { KubernetesWorkloadSnapshot } from '@webstackbuilders/plugin-ai-core-node';
+import type { KubernetesWorkloadSnapshot } from '@ai-crew-suite/plugin-kernel-node';
 import {
   classifyFailure,
   deterministicCausesFor,

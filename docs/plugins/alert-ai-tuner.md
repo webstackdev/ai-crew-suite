@@ -40,7 +40,7 @@ The graph runs as a custom `WorkflowRunner` at ID `alert-tuning`, executing a fi
 
 ## Backstage Version
 
-- Requires a Backstage backend running the `ai-core` plugin and its extension-point system (`agentExtensionPoint`, `triggerExtensionPoint`, `workflowRunnerExtensionPoint` from `@webstackbuilders/plugin-ai-core-node`)
+- Requires a Backstage backend running the `ai-core` plugin and its extension-point system (`agentExtensionPoint`, `triggerExtensionPoint`, `workflowRunnerExtensionPoint` from `@ai-crew-suite/plugin-kernel-node`)
 
 ## Agentic Requirements
 
@@ -396,9 +396,9 @@ Guardrails: per-sweep cap, sequential dispatch with delay, in-flight mutex, per-
 
 ## Turbo Workspace Resolution
 
-**Symptom**: `yarn typecheck --force` fails with missing exports from `@webstackbuilders/plugin-ai-core-node`.
+**Symptom**: `yarn typecheck --force` fails with missing exports from `@ai-crew-suite/plugin-kernel-node`.
 
-**Fix**: Ensure `@webstackbuilders/plugin-ai-core-node` is listed as a dependency in both the backend module and the root workspace. After adding, run:
+**Fix**: Ensure `@ai-crew-suite/plugin-kernel-node` is listed as a dependency in both the backend module and the root workspace. After adding, run:
 
 ```bash
 yarn install
@@ -407,7 +407,7 @@ yarn typecheck --force
 
 **Symptom**: TypeScript errors on `AgentDefinition`, `WorkflowRunner`, or the extension point types.
 
-**Fix**: These types are exported by `@webstackbuilders/plugin-ai-core-node`; verify you're importing from the workspace-scoped package (`workspace:*`) and not a transitive copy. If the build was recently added, run `yarn typecheck --force` to bust turbo caches.
+**Fix**: These types are exported by `@ai-crew-suite/plugin-kernel-node`; verify you're importing from the workspace-scoped package (`workspace:*`) and not a transitive copy. If the build was recently added, run `yarn typecheck --force` to bust turbo caches.
 
 ## Agent Execution Failures
 
@@ -484,7 +484,7 @@ Gated on `kubernetes.workload.get_timeline` in `plugin-ai-core-backend-module-ku
 
 ### Catalog-Annotation-Based IaC Discovery
 
-Gated on `CatalogEntityResolver` in `@webstackbuilders/plugin-ai-core-node`. When available, the tuner will:
+Gated on `CatalogEntityResolver` in `@ai-crew-suite/plugin-kernel-node`. When available, the tuner will:
 
 - Resolve the infrastructure repository URL from a Backstage catalog entity reference (`entityRef`) instead of requiring an explicit `repoUrl`
 - Read custom catalog annotations (e.g., `backstage.io/iac-repo`) to automatically discover the owning IaC file

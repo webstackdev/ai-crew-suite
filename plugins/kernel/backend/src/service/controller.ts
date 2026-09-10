@@ -33,7 +33,7 @@ import {
   SessionStore,
   ToolRegistry,
   TriggerBinding,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 import { AgentRuntime } from '../runtime/AgentRuntime';
 import type { HardeningOptions } from '../@types';
 

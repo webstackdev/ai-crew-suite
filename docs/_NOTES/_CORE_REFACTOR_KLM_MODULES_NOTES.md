@@ -98,7 +98,7 @@ import {
   type StateSerializer,
   type CheckpointRecord,
   type PersistedCheckpoint,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 // wraps @aws-sdk/client-kms
 import { KmsEnvelopeCipher } from './KmsEnvelopeCipher';
 

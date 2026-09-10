@@ -1,16 +1,17 @@
 {
-  "name": "@ai-crew-suite/tool-kubernetes",
+  "name": "@ai-crew-suite/plugin-tool-kubernetes-backend",
   "description": "Kubernetes diagnostics module that extends the AI Crew Suite platform with secure, cluster-native observability and workload lookup tools.",
   "version": "0.0.1",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "license": "Apache-2.0",
   "keywords": [
-    "ai-core",
+    "agentic workflow",
     "ai-crew-suite",
-    "backend",
+    "backend-plugin",
     "backstage-plugin-module",
     "backstage",
+    "llm",
     "kubernetes"
   ],
   "publishConfig": {
@@ -18,10 +19,10 @@
     "provenance": true
   },
   "backstage": {
-    "role": "backend-plugin-module",
+    "role": "backend-plugin",
     "pluginId": "tool-kubernetes",
     "pluginPackages": [
-      "@ai-crew-suite/tool-kubernetes"
+      "@ai-crew-suite/plugin-tool-kubernetes-backend"
     ]
   },
   "bugs": {
@@ -48,7 +49,7 @@
     "typecheck": "crew typecheck"
   },
   "dependencies": {
-    "@ai-crew-suite/plugin-core-node": "workspace:^",
+    "@ai-crew-suite/plugin-kernel-node": "workspace:^",
     "@backstage/backend-plugin-api": "backstage:^",
     "@backstage/config": "backstage:^"
   },

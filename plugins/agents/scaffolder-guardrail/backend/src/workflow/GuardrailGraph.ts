@@ -22,7 +22,7 @@ import type {
   PolicyEvaluationResult,
   WorkflowContext,
   WorkflowRunner
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 import type { ScaffolderGuardrailConfig } from '../config';
 import { assessmentArtifact, resolutionArtifact } from '../services/GuardrailArtifactWriter';
 import { GuardrailToolRunner } from '../services/GuardrailToolRunner';

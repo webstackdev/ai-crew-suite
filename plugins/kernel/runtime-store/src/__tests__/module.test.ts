@@ -21,7 +21,7 @@ import {
 } from '@backstage/backend-plugin-api';
 import type { DatabaseService } from '@backstage/backend-plugin-api';
 import type { Knex } from 'knex';
-import { runtimeStoreExtensionPoint } from '@webstackbuilders/plugin-ai-core-node';
+import { runtimeStoreExtensionPoint } from '@ai-crew-suite/plugin-kernel-node';
 import { describe, expect, it, vi } from 'vitest';
 import { applyDatabaseMigrations } from '../database/migrations';
 import { aiCoreBackendModuleRuntimeStore } from '../module';

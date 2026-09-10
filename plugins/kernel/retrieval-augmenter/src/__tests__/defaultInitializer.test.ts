@@ -19,7 +19,7 @@ import type {
   DiscoveryService,
   LoggerService,
 } from '@backstage/backend-plugin-api';
-import type { VectorStore } from '@webstackbuilders/plugin-ai-core-node';
+import type { VectorStore } from '@ai-crew-suite/plugin-kernel-node';
 import { createDefaultRetrievalPipeline } from '../defaultInitializer';
 
 const createLogger = () => ({

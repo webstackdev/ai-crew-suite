@@ -53,7 +53,7 @@ The core runtime stays blind to vendor SDKs. Agents depend on stable tool IDs. P
 Integration tools use the existing AI Core `Tool` contract from `plugin-ai-core-node`:
 
 ```typescript
-import type { Tool } from '@webstackbuilders/plugin-ai-core-node';
+import type { Tool } from '@ai-crew-suite/plugin-kernel-node';
 
 export const exampleTool: Tool = {
   id: 'vcs.pull_request.open',
@@ -102,7 +102,7 @@ plugin-ai-core-backend-module-<group>-<provider>/   # sibling
   config.d.ts
 ```
 
-Driver interfaces and their extension points live in `@webstackbuilders/plugin-ai-core-node` so both sides of the boundary import the same contract without a circular dependency.
+Driver interfaces and their extension points live in `@ai-crew-suite/plugin-kernel-node` so both sides of the boundary import the same contract without a circular dependency.
 
 The core module boot sequence reads config, resolves the driver registered under that identifier, and registers tools. Boot fails with an explicit error when the selected identifier has no registered driver. Tools are intentionally thin wrappers around the driver so agent definitions can depend on stable tool IDs while provider selection stays in configuration.
 
@@ -225,7 +225,7 @@ The GitHub driver delegates file reads to the Backstage `UrlReaderService` so cr
 
 ### Adding a VCS Provider
 
-Create `plugin-ai-core-backend-module-vcs-<provider>`, implement the `VcsDriver` interface from `@webstackbuilders/plugin-ai-core-node`, depend on `vcsDriversExtensionPoint` in `createBackendModule`, and call `registerDriver` during `init`. The driver should normalize provider-specific responses into the shared `RepositoryMetadata`, `PullRequestSummary`, and `RepositorySearchResult` types.
+Create `plugin-ai-core-backend-module-vcs-<provider>`, implement the `VcsDriver` interface from `@ai-crew-suite/plugin-kernel-node`, depend on `vcsDriversExtensionPoint` in `createBackendModule`, and call `registerDriver` during `init`. The driver should normalize provider-specific responses into the shared `RepositoryMetadata`, `PullRequestSummary`, and `RepositorySearchResult` types.
 
 ---
 
@@ -263,7 +263,7 @@ ai:
 
 ### Adding a Provider
 
-Create `plugin-ai-core-backend-module-project-management-<provider>`, implement `ProjectManagementDriver` from `@webstackbuilders/plugin-ai-core-node`, depend on `projectManagementDriversExtensionPoint` in `createBackendModule`, call `registerDriver` during `init`, and own `ai.integrations.projectManagement.<provider>` in the package's `config.d.ts`.
+Create `plugin-ai-core-backend-module-project-management-<provider>`, implement `ProjectManagementDriver` from `@ai-crew-suite/plugin-kernel-node`, depend on `projectManagementDriversExtensionPoint` in `createBackendModule`, call `registerDriver` during `init`, and own `ai.integrations.projectManagement.<provider>` in the package's `config.d.ts`.
 
 ---
 
@@ -298,7 +298,7 @@ ai:
 
 ### Adding a Provider
 
-Create `plugin-ai-core-backend-module-communication-<provider>`, implement `CommunicationDriver` from `@webstackbuilders/plugin-ai-core-node`, depend on `communicationDriversExtensionPoint` in `createBackendModule`, call `registerDriver` during `init`, and own `ai.integrations.communication.<provider>` in the package's `config.d.ts`.
+Create `plugin-ai-core-backend-module-communication-<provider>`, implement `CommunicationDriver` from `@ai-crew-suite/plugin-kernel-node`, depend on `communicationDriversExtensionPoint` in `createBackendModule`, call `registerDriver` during `init`, and own `ai.integrations.communication.<provider>` in the package's `config.d.ts`.
 
 ---
 
@@ -335,7 +335,7 @@ ai:
 
 ### Adding a Provider
 
-Create `plugin-ai-core-backend-module-incident-management-<provider>`, implement `IncidentManagementDriver` from `@webstackbuilders/plugin-ai-core-node`, depend on `incidentManagementDriversExtensionPoint` in `createBackendModule`, call `registerDriver` during `init`, and own `ai.integrations.incidentManagement.<provider>` in the package's `config.d.ts`.
+Create `plugin-ai-core-backend-module-incident-management-<provider>`, implement `IncidentManagementDriver` from `@ai-crew-suite/plugin-kernel-node`, depend on `incidentManagementDriversExtensionPoint` in `createBackendModule`, call `registerDriver` during `init`, and own `ai.integrations.incidentManagement.<provider>` in the package's `config.d.ts`.
 
 ---
 
@@ -373,7 +373,7 @@ ai:
 
 ### Adding a Provider
 
-Create `plugin-ai-core-backend-module-observability-<provider>`, implement `ObservabilityDriver` from `@webstackbuilders/plugin-ai-core-node`, depend on `observabilityDriversExtensionPoint` in `createBackendModule`, call `registerDriver` during `init`, and own `ai.integrations.observability.<provider>` in the package's `config.d.ts`. A driver that only serves part of the contract, for example a Prometheus driver with no dashboard API, should return an empty result rather than throwing, so agents degrade gracefully.
+Create `plugin-ai-core-backend-module-observability-<provider>`, implement `ObservabilityDriver` from `@ai-crew-suite/plugin-kernel-node`, depend on `observabilityDriversExtensionPoint` in `createBackendModule`, call `registerDriver` during `init`, and own `ai.integrations.observability.<provider>` in the package's `config.d.ts`. A driver that only serves part of the contract, for example a Prometheus driver with no dashboard API, should return an empty result rather than throwing, so agents degrade gracefully.
 
 ---
 
@@ -425,7 +425,7 @@ registered itself through `complianceDriversExtensionPoint`.
 ### Adding a Provider
 
 Create `plugin-ai-core-backend-module-compliance-<provider>`, implement
-`ComplianceDriver` from `@webstackbuilders/plugin-ai-core-node`, depend on
+`ComplianceDriver` from `@ai-crew-suite/plugin-kernel-node`, depend on
 `complianceDriversExtensionPoint` in `createBackendModule`, call `registerDriver`
 during `init`, and own `ai.integrations.compliance.<provider>` in the package's
 `config.d.ts`.
@@ -562,7 +562,7 @@ Do not scaffold additional modules until a real workflow forces a capability tha
 When a new capability boundary is justified:
 
 1. Create a backend module with `pluginId: 'ai-core'` and a descriptive `moduleId`.
-2. Add a direct dependency on `@webstackbuilders/plugin-ai-core-node`.
+2. Add a direct dependency on `@ai-crew-suite/plugin-kernel-node`.
 3. Define a provider-neutral driver interface in `providers/types.ts`.
 4. Add a `config.ts` helper for provider selection and validation.
 5. Add `tools/registerTools.ts` to keep module boot thin.

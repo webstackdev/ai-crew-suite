@@ -21,7 +21,7 @@ import type {
   EmbeddingDocMetadata,
   EmbeddingDoc,
   VectorStore,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 import type { QdrantVectorStoreConfig } from '../@types';
 
 /**

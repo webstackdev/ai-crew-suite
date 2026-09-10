@@ -15,7 +15,7 @@
  */
 import { createBackendModule, coreServices } from '@backstage/backend-plugin-api';
 import { ScmIntegrations } from '@backstage/integration';
-import { vcsDriversExtensionPoint } from '@webstackbuilders/plugin-ai-core-node';
+import { vcsDriversExtensionPoint } from '@ai-crew-suite/plugin-kernel-node';
 import { GerritDriver } from './providers/gerrit';
 
 /**

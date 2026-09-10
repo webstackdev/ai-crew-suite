@@ -13,8 +13,6 @@ This package implements the PostgreSQL pgvector storage layer for AI Crew Suite.
 - **Database lifecycle**: Applies packaged migrations before returning vector or runtime store instances.
 - **Retrieval support**: Provides metadata-filtered similarity search for source-specific and cross-source RAG queries.
 
----
-
 ## Architectural Dependency Tree
 
 This package acts as the persistence module within the broader AI Crew Suite ecosystem:
@@ -23,8 +21,6 @@ This package acts as the persistence module within the broader AI Crew Suite eco
 - **Platform Services**: Uses Backstage's database service and Knex clients supplied by the backend runtime.
 - **Downstream Consumer**: Directly ingested by `plugin-ai-core-backend` for runtime persistence and by embeddings modules for vector storage.
 - **Database Dependency**: Requires PostgreSQL with pgvector support for embedding similarity search.
-
----
 
 ## Local Development Workflow
 
@@ -52,8 +48,6 @@ Test files are located inline next to the modules they validate (`*.test.ts`). E
 yarn workspace @webstackbuilders/plugin-ai-core-backend-module-storage-pgvector test
 ```
 
----
-
 ## Technical Extension Checklist
 
 When modifying or extending code inside this workspace, ensure you update the corresponding global documentation indexes located at `/docs/core-development/` if you alter any of the following operational layers:
@@ -63,3 +57,8 @@ When modifying or extending code inside this workspace, ensure you update the co
 - [ ] Introducing brand-new model adapter configurations.
 - [ ] Altering backend ingestion worker pipelines.
 - [ ] Updating runtime persistence schema, migrations, approval storage, or audit-log serialization.
+
+## Compliance and Licensing
+
+Copyright © 2026 The AI Crew Suite Authors.
+Licensed under the **Apache License, Version 2.0**.

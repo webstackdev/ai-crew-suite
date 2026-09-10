@@ -56,7 +56,7 @@ The important design rule is that core packages communicate through contracts, n
 
 | Package | Purpose |
 | --- | --- |
-| `@webstackbuilders/plugin-ai-core-node` | Shared contracts and Backstage extension points for sources, tools, models, agents, triggers, orchestrators, vector stores, and runtime persistence. |
+| `@ai-crew-suite/plugin-kernel-node` | Shared contracts and Backstage extension points for sources, tools, models, agents, triggers, orchestrators, vector stores, and runtime persistence. |
 | `@ai-crew-suite/agent-alert-tuner-backend` | Runtime backend plugin that assembles registries, validates wiring, creates the controller, runs orchestrators, and exposes HTTP/SSE routes. |
 | `@ai-crew-suite/agent-alert-tuner-backend-module-retrieval-augmenter` | Default catalog/TechDocs indexing, vector retrieval, Backstage Search retrieval, source routing, and retrieval post-processing. |
 | `@ai-crew-suite/agent-alert-tuner-backend-module-storage-pgvector` | PostgreSQL pgvector storage plus runtime persistence for sessions, runs, checkpoints, approvals, artifacts, and audit logs. |

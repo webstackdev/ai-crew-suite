@@ -62,7 +62,7 @@
     "@langchain/openai": "^1.5.7",
     "@webstackbuilders/plugin-ai-core-backend-module-retrieval-augmenter": "workspace:^",
     "@webstackbuilders/plugin-ai-core-backend-module-storage-pgvector": "workspace:^",
-    "@webstackbuilders/plugin-ai-core-node": "workspace:^",
+    "@ai-crew-suite/plugin-kernel-node": "workspace:^",
     "i18next": "26.3.6",
     "vitest": "^4.1.10"
   },

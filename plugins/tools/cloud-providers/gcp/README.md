@@ -1,4 +1,4 @@
-# @ai-crew-suite/tool-cloud-providers-gcp
+# @ai-crew-suite/plugin-tool-cloud-providers-backend-module-gcp
 
 > GCP Extension Module for the AI Crew Suite platform.
 
@@ -8,12 +8,10 @@ This package implements the GCP specific integration module for the AI Crew Suit
 
 ### Core Responsibilities
 
-- **Backend module extension**: Wires into the `@ai-crew-suite/tool-cloud-providers-core` extension points.
+- **Backend module extension**: Wires into the `@ai-crew-suite/plugin-tool-cloud-providers-backend` extension points.
 - **GCP driver implementation**: Implements the `CloudProviderDriver` interface to communicate directly with Google Cloud APIs (Cloud Asset Inventory, Resource Manager, etc.).
 - **Dynamic asset mapping**: Translates GCP Asset Names, project hierarchies, and label metadata into normalized entities.
 - **Config integration**: Resolves authentication and project settings via the global configuration.
-
----
 
 ## Configuration
 
@@ -31,13 +29,16 @@ ai:
 
 This extension activates automatically when `defaultProvider` matches `gcp`, or when explicit GCP asset lookups are routed through the orchestration layers.
 
----
-
 ## Local Development Workflow
 
 ```bash
 yarn install --refresh
-yarn turbo run build --filter=@ai-crew-suite/tool-cloud-providers-gcp
-yarn turbo run lint --filter=@ai-crew-suite/tool-cloud-providers-gcp
-yarn turbo run test --filter=@ai-crew-suite/tool-cloud-providers-gcp
+yarn turbo run build --filter=@ai-crew-suite/plugin-tool-cloud-providers-backend-module-gcp
+yarn turbo run lint --filter=@ai-crew-suite/plugin-tool-cloud-providers-backend-module-gcp
+yarn turbo run test --filter=@ai-crew-suite/plugin-tool-cloud-providers-backend-module-gcp
 ```
+
+## Compliance and Licensing
+
+Copyright © 2026 The AI Crew Suite Authors.
+Licensed under the **Apache License, Version 2.0**.

@@ -22,7 +22,7 @@ import type {
 } from '@backstage/backend-plugin-api';
 import type { Entity } from '@backstage/catalog-model';
 import type { Embeddings } from '@langchain/core/embeddings';
-import type { VectorStore } from '@webstackbuilders/plugin-ai-core-node';
+import type { VectorStore } from '@ai-crew-suite/plugin-kernel-node';
 import type { AugmentationOptions } from '../../@types';
 import { DefaultVectorAugmentationIndexer } from '../DefaultVectorAugmentationIndexer';
 

@@ -19,12 +19,12 @@ import type {
   CatalogEntitySummary,
   CatalogIntegrationReferences,
   CatalogRelationGraph,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 import {
   extractIntegrationReferences,
   toCatalogEntityRelations,
   toCatalogEntitySummary,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 
 /** Minimal catalog client surface retained locally to avoid private sibling imports. */
 export type CatalogClientLike = {

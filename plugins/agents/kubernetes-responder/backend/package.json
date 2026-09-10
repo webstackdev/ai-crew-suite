@@ -50,7 +50,7 @@
   "dependencies": {
     "@backstage/backend-plugin-api": "backstage:^",
     "@backstage/config": "backstage:^",
-    "@webstackbuilders/plugin-ai-core-node": "workspace:*"
+    "@ai-crew-suite/plugin-kernel-node": "workspace:*"
   },
   "devDependencies": {
     "@backstage/backend-test-utils": "backstage:^",

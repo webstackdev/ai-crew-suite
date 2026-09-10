@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import type { AgentEvent, ErrorCode } from '@webstackbuilders/plugin-ai-core-node';
+import type { AgentEvent, ErrorCode } from '@ai-crew-suite/plugin-kernel-node';
 
 /**
  * Single owner of LangGraph stream -> AgentEvent v2 translation. Converts

@@ -16,7 +16,7 @@
 import type {
   ArchitectureValidationResult,
   PolicyEvaluationResult
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 import type { EvidenceRef, PolicyViolation } from './state';
 
 interface AdjudicateInput {

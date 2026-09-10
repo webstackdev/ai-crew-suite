@@ -22,7 +22,7 @@ import {
   agentExtensionPoint,
   triggerExtensionPoint,
   workflowRunnerExtensionPoint,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 import { createShadowDetectiveAgent } from './agent';
 import { readShadowDetectiveConfig } from './config';
 import { CatalogBindingIndex } from './services/CatalogBindingIndex';

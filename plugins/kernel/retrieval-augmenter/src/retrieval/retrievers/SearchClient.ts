@@ -24,7 +24,7 @@ import { SearchResultSet } from '@backstage/plugin-search-common';
 import {
   EmbeddingDoc,
   EmbeddingsSource,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 
 /**
  * Query sent to the Backstage search API for augmentation documents.

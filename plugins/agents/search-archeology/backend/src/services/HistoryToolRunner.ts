@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { ToolInvocationResult, WorkflowContext } from '@webstackbuilders/plugin-ai-core-node';
+import type { ToolInvocationResult, WorkflowContext } from '@ai-crew-suite/plugin-kernel-node';
 
 /** Bounded ticket-research tool facade that turns unavailable sources into limitations. */
 export class HistoryToolRunner {

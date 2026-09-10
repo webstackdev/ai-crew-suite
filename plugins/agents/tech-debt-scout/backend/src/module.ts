@@ -21,7 +21,7 @@ import {
   agentExtensionPoint,
   triggerExtensionPoint,
   workflowRunnerExtensionPoint,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 import { createTechDebtScoutAgent } from './agent';
 import { readTechDebtScoutConfig } from './config';
 import { ScoutGraph } from './workflow/ScoutGraph';

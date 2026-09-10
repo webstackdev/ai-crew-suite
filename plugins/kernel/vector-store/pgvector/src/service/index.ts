@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { VectorStore } from '@webstackbuilders/plugin-ai-core-node';
+import type { VectorStore } from '@ai-crew-suite/plugin-kernel-node';
 import { applyDatabaseMigrations } from '../database/migrations';
 import { PgVectorStore } from './PgVectorStore';
 import type { PgVectorStoreInitConfig, PgVectorStoreOptions } from '../@types';

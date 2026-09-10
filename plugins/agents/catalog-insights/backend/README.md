@@ -98,7 +98,7 @@ persisted and replayable like manual runs.
   modules (retrieval-augmenter, incident-management, observability,
   kubernetes, vcs). Unconfigured tools degrade to report limitations.
 - The shared `CatalogEntityResolver` contract and mapping helpers live in
-  `@webstackbuilders/plugin-ai-core-node` (`src/catalog/`); this module
+  `@ai-crew-suite/plugin-kernel-node` (`src/catalog/`); this module
   provides the catalog-client adapter.
 
 ## Out of scope for v1

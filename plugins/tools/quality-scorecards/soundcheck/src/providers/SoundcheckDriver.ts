@@ -18,7 +18,7 @@ import {
   EntityScorecardSummary,
   ScorecardCheckResult,
   TechRadarProposalResponse,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 import { SoundcheckBackendApi } from '@spotify/backstage-plugin-soundcheck-node';
 
 export interface SoundcheckDriverOptions {

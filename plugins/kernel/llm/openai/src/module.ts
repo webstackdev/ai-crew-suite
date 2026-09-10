@@ -23,7 +23,7 @@ import {
   AugmentationOptions,
   createDefaultRetrievalPipeline,
 } from '@webstackbuilders/plugin-ai-core-backend-module-retrieval-augmenter';
-import { toolExtensionPoint } from '@webstackbuilders/plugin-ai-core-node';
+import { toolExtensionPoint } from '@ai-crew-suite/plugin-kernel-node';
 import { OpenAiAugmenter, OpenAiConfig } from './OpenAiAugmenter';
 
 /**

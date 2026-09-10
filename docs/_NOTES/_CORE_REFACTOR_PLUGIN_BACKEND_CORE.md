@@ -1,6 +1,6 @@
 # `plugin-ai-core-backend` — Refactor Implementation Steps
 
-Greenfield execution engine for AI Core, built on `@langchain/langgraph`. This plugin owns the **single execution engine** (`GraphExecutor`), the runtime lifecycle (`AgentRuntime`), the HTTP/SSE surface (router/controller), the shared executors (`ToolExecutor`, `ModelExecutor`, `EventMapper`), and the checkpoint adapter. It consumes all contracts from `@webstackbuilders/plugin-ai-core-node`.
+Greenfield execution engine for AI Core, built on `@langchain/langgraph`. This plugin owns the **single execution engine** (`GraphExecutor`), the runtime lifecycle (`AgentRuntime`), the HTTP/SSE surface (router/controller), the shared executors (`ToolExecutor`, `ModelExecutor`, `EventMapper`), and the checkpoint adapter. It consumes all contracts from `@ai-crew-suite/plugin-kernel-node`.
 
 **Self-contained**: assume `plugin-ai-core-node` is fully refactored per `_CORE_REFACTOR_PLUGIN_BACKEND_NODE.md` and all extension module plugins (VCS, LLM, storage, drivers) already implement their side. This document fully specifies the refactor of this package independent of any other.
 

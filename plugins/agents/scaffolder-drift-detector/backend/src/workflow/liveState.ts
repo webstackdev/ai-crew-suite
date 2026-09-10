@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { KubernetesWorkloadSnapshot } from '@webstackbuilders/plugin-ai-core-node';
+import type { KubernetesWorkloadSnapshot } from '@ai-crew-suite/plugin-kernel-node';
 import type { EvidenceRef, InfraSnapshot } from './state';
 
 /** Extracts bounded comparable values from the normalized Kubernetes snapshot. */

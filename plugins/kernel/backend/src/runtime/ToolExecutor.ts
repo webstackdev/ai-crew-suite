@@ -22,8 +22,8 @@ import type {
   ToolInvocationLimits,
   ToolInvocationResult,
   ToolRegistry,
-} from '@webstackbuilders/plugin-ai-core-node';
-import { NodeError } from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
+import { NodeError } from '@ai-crew-suite/plugin-kernel-node';
 import { Redactor } from './Redactor';
 import { EventMapper } from './EventMapper';
 

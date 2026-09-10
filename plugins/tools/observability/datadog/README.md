@@ -1,10 +1,10 @@
-# @ai-crew-suite/tool-observability-datadog
+# @ai-crew-suite/plugin-tool-observability-backend-module-datadog
 
 > Datadog Extension Module for the AI Crew Suite platform.
 
 ## Overview
 
-This package registers a Datadog `ObservabilityDriver` implementation with the core `@ai-crew-suite/tool-observability-core` engine through its `observabilityDriversExtensionPoint`. This package exclusively owns the Datadog API communication boundaries, credential handling, and structural data conversion workflows, while the core module manages the universal tool execution layer.
+This package registers a Datadog `ObservabilityDriver` implementation with the core `@ai-crew-suite/plugin-tool-observability-backend` engine through its `observabilityDriversExtensionPoint`. This package exclusively owns the Datadog API communication boundaries, credential handling, and structural data conversion workflows, while the core module manages the universal tool execution layer.
 
 ### Endpoint Mapping
 
@@ -51,14 +51,19 @@ To prevent unbounded resource consumption over metered APIs, every query window 
 Add the extension module directly to your modern Backstage backend system container:
 
 ```ts
-backend.add(import('@ai-crew-suite/tool-observability-datadog'));
+backend.add(import('@ai-crew-suite/plugin-tool-observability-backend-module-datadog'));
 ```
 
 ## Local Development Workflow
 
 ```bash
 yarn install --refresh
-yarn turbo run build --filter=@ai-crew-suite/tool-observability-datadog
-yarn turbo run lint --filter=@ai-crew-suite/tool-observability-datadog
-yarn turbo run test --filter=@ai-crew-suite/tool-observability-datadog
+yarn turbo run build --filter=@ai-crew-suite/plugin-tool-observability-backend-module-datadog
+yarn turbo run lint --filter=@ai-crew-suite/plugin-tool-observability-backend-module-datadog
+yarn turbo run test --filter=@ai-crew-suite/plugin-tool-observability-backend-module-datadog
 ```
+
+## Compliance and Licensing
+
+Copyright © 2026 The AI Crew Suite Authors.
+Licensed under the **Apache License, Version 2.0**.

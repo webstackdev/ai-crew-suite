@@ -24,7 +24,7 @@ import {
   TicketSearchQuery,
   TicketState,
   TicketSummary,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 
 /**
  * Connection settings for the Jira ticket driver.

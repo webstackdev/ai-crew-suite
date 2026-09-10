@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import type { Redis } from 'ioredis';
-import type { CheckpointStore } from '@webstackbuilders/plugin-ai-core-node';
+import type { CheckpointStore } from '@ai-crew-suite/plugin-kernel-node';
 
 /**
  * Options controlling Redis-backed checkpoint persistence.

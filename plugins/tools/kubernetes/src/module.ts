@@ -13,21 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { coreServices, createBackendModule } from '@backstage/backend-plugin-api';
+import { coreServices, createBackendPlugin } from '@backstage/backend-plugin-api';
 import {
   KubernetesDiagnosticsDriver,
   kubernetesDiagnosticsDriversExtensionPoint,
   toolExtensionPoint,
-} from '@ai-crew-suite/plugin-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 import { readKubernetesConfig } from './config';
 import { createKubernetesDiagnosticsTools } from './tools';
 
 /**
  * Kubernetes diagnostics backend module for the AI Core backend plugin.
  */
-export const aiCoreBackendModuleKubernetes = createBackendModule({
-  pluginId: 'ai-core',
-  moduleId: 'kubernetes',
+export const aiCoreBackendModuleKubernetes = createBackendPlugin({
+  pluginId: 'tool-kubernetes',
   register(env) {
     const drivers = new Map<string, KubernetesDiagnosticsDriver>();
 

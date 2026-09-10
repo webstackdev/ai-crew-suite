@@ -16,7 +16,7 @@
 import type {
   ToolInvocationResult,
   WorkflowContext,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 
 export type InvestigationToolRunnerOptions = {
   /** Hard cap on tool invocations for a single investigation run. */

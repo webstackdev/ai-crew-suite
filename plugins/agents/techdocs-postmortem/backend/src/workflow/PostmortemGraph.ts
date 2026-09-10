@@ -20,7 +20,7 @@ import type {
   IncidentDetail,
   WorkflowContext,
   WorkflowRunner,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 import type { PostmortemConfig } from '../config';
 import { postmortemDraftArtifact } from '../services/PostmortemArtifactWriter';
 import { mergeTimeline } from './merge';

@@ -1,30 +1,30 @@
 {
-  "name": "@webstackbuilders/plugin-ai-core-backend-module-quality-scorecards-soundcheck",
-  "description": "The Soundcheck extension for the quality scorecards backend module for the ai-core plugin.",
+  "name": "@ai-crew-suite/plugin-tool-quality-scorecards-backend-module-soundcheck",
+  "description": "Soundcheck integration module for the quality-scorecards host backend plugin within the AI Crew Suite platform.",
   "version": "0.0.1",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "license": "Apache-2.0",
   "keywords": [
-    "backstage",
-    "backstage-plugin-module",
-    "backend",
-    "webstack-builders",
+    "agentic workflow",
     "ai-crew-suite",
-    "ai-core",
-    "quality scorecards",
+    "backend-plugin",
+    "backstage-plugin-module",
+    "backstage",
+    "llm",
+    "quality-scorecards",
     "soundcheck"
   ],
   "publishConfig": {
     "access": "public",
-    "main": "dist/index.cjs.js",
-    "types": "dist/index.d.ts"
+    "provenance": true
   },
   "backstage": {
-    "role": "backend-plugin",
-    "pluginId": "ai-core",
-    "pluginPackage": [
-      "@webstackbuilders/plugin-ai-core-backend"
+    "role": "backend-plugin-module",
+    "pluginId": "tool-quality-scorecards",
+    "pluginPackages": [
+      "@ai-crew-suite/plugin-tool-quality-scorecards-backend",
+      "@ai-crew-suite/plugin-tool-quality-scorecards-backend-module-scorecards"
     ]
   },
   "bugs": {
@@ -34,7 +34,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/ai-crew-suite/ai-crew-suite",
-    "directory": "plugins/backend/plugin-ai-core-backend-module-quality-scorecards-soundcheck"
+    "directory": "plugins/tools/quality-scorecards/soundcheck"
   },
   "files": [
     "dist",
@@ -42,23 +42,23 @@
   ],
   "configSchema": "config.d.ts",
   "scripts": {
-    "start": "backstage-cli package start",
-    "build": "yarn --cwd ../../.. tsc -b plugins/backend/plugin-ai-core-backend-module-quality-scorecards-soundcheck/tsconfig.json --emitDeclarationOnly && backstage-cli package build",
-    "clean": "backstage-cli package clean",
-    "prepack": "backstage-cli package prepack",
-    "postpack": "backstage-cli package postpack",
-    "typecheck": "tsc --noEmit",
-    "lint": "backstage-cli package lint --format stylish",
-    "test": "vitest run src --exclude 'dist-types/**' --passWithNoTests --config ../../../test/vitest.config.ts"
+    "build": "crew build",
+    "clean": "crew clean",
+    "lint": "crew lint",
+    "test:e2e": "crew test:e2e",
+    "test:unit": "crew test:unit",
+    "test:unit:coverage": "crew test:unit:coverage",
+    "typecheck": "crew typecheck"
   },
   "dependencies": {
+    "@ai-crew-suite/plugin-kernel-node": "workspace:^",
     "@backstage/backend-plugin-api": "backstage:^",
-    "@spotify/backstage-plugin-soundcheck-backend": "0.29.0",
-    "@spotify/backstage-plugin-soundcheck-node": "^0.15.1",
-    "@webstackbuilders/plugin-ai-core-node": "workspace:*"
+    "@spotify/backstage-plugin-soundcheck-backend": "0.31.1",
+    "@spotify/backstage-plugin-soundcheck-node": "^0.16.0"
   },
   "devDependencies": {
+    "@ai-crew-suite/cli": "workspace:*",
     "@backstage/backend-test-utils": "backstage:^",
-    "vitest": "^4.1.10"
+    "vitest": "catalog:vitest"
   }
 }

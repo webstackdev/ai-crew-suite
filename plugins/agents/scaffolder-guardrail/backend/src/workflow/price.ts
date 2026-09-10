@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { CostEstimateResult } from '@webstackbuilders/plugin-ai-core-node';
+import type { CostEstimateResult } from '@ai-crew-suite/plugin-kernel-node';
 import type { BudgetVerdict, EvidenceRef } from './state';
 
 interface PriceOutput {

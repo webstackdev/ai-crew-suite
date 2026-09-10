@@ -14,6 +14,61 @@ Our monorepo splits code into three isolated tiers:
 
 All internal packages belong to the NPM organization scope `@ai-crew-suite`.
 
+## `role` Key Values in `package.json` `backstage` block
+
+- **`backend-plugin`**: An isolated backend plugin that registers entirely new API routes and logic controllers (e.g., your primary observability plugin system).
+- **`backend-plugin-module`**: An extension package targeting an existing backend plugin (e.g., adding Datadog capability to your observability plugin).
+- **`frontend-plugin`**: A UI plugin delivering cards, pages, or components to the Backstage UI.
+- **`frontend-plugin-module`**: An extension targeting a frontend plugin (e.g., adding a specific widget variant to a catalog dashboard).
+- **`node-library`**: Shared backend code/utilities that use Node APIs (but aren't standalone plugins).
+- **`web-library`**: Shared frontend utilities (components, hooks, helpers).
+- **`common-library`**: Completely platform-agnostic code (like shared TypeScript types) used by both frontend and backend.
+
+## Correcting Your Architectural Drift
+
+### The `web-library` with `api/index.ts`
+
+- **The Verdict:** **It is organized correctly.**
+- **Why:** A `web-library` is strictly for frontend/browser code (React components, frontend utility hooks). It should *never* import from `@backstage/backend-plugin-api`. If it needs Backstage types, it should import from `@backstage/core-plugin-api` or `@backstage/core-components`.
+
+### The Vector Store/Retrieval Augmenter Plugins
+
+- **The Verdict:** **Change their role to `node-library`.**
+- **Why:** If a backend package doesn't use `createBackendPlugin` or expose its own API routes directly to the Backstage router, it isn't a standalone `backend-plugin`. It is an infrastructure utility layer. Changing their role to `node-library` ensures they bundle cleanly as a backend dependency for other plugins.
+
+### The Runtime Store Plugin
+
+- **The Verdict:** **Change its role to `backend-plugin-module` OR switch its code to `createBackendPlugin`.**
+- **Why:** This is a direct mismatch. If it uses `createBackendModule`, its role *must* be `backend-plugin-module`, and it must hook into a target `pluginId`. If it is meant to stand alone as its own independent service, its code must be refactored to use `createBackendPlugin`.
+
+### The 8 "Engine + Provider" Hubs (e.g., Jira, GitHub)
+
+- **The Verdict:** **The Engine must be a `backend-plugin` (using `createBackendPlugin`). The Providers are correct as `backend-plugin-module` (using `createBackendModule`).**
+- **Why:** The Engine is the central brain. It must initialize the main plugin and expose an `ExtensionPoint` (via `createExtensionPoint`). The Provider modules then depend on that Engine and register themselves *into* that engine's extension point. The engine should **never** use `createBackendModule`.
+
+### The 18 Feature Pairs
+
+- **The Verdict:** **The Backends are misconfigured. Change them to use `createBackendPlugin`.**
+- **Why:** If they have a role of `backend-plugin`, they must use `createBackendPlugin` so they can stand alone. Using `createBackendModule` means they are trying to attach themselves to a different plugin, which defeats the purpose of them being independent feature backends.
+
+## How Roles Affect `moduleId` Standards
+
+The role you choose dramatically impacts how Backstage expects you to structure your code, and directly mandates the standards for your `moduleId`.
+
+### Only `*-module` Roles Allow a `moduleId`
+
+If a package's role is `backend-plugin`, **it cannot have a `moduleId`**. Only `backend-plugin-module` packages can expose a `moduleId`. If you are creating a package that houses 4 different drivers (Datadog, New Relic, Prometheus) inside one single package, that package's role is `backend-plugin`, and you will instantiate each module internally without the package tracking individual `moduleIds`.
+
+## Match the Export Variable Name to the `moduleId` IDs
+
+`backend-plugin-module` role:
+
+> `<pluginId>Module<moduleId>` (in camelCase)
+
+`backend-plugin` role:
+
+> ``<pluginId>Plugin` (converted to camelCase)
+
 ## Leaf Plugin Files
 
 ```bash
@@ -29,7 +84,7 @@ find . -type f -exec sed -i 's|https://github.com/ai-crew-suite|https://github.c
 ```
 
 ```bash
-@ai-crew-suite/plugin-core-node
+@ai-crew-suite/plugin-kernel-node
 ```
 
 ### `package.json`
@@ -44,12 +99,13 @@ find . -type f -exec sed -i 's|https://github.com/ai-crew-suite|https://github.c
   "types": "src/index.ts",
   "license": "Apache-2.0",
   "keywords": [
-    "ai-core",
+    "agentic workflow",
     "ai-crew-suite",
-    "backend",
+    "backend-plugin",
     "backstage-plugin-module",
     "backstage",
-    "observability"
+    "llm",
+    "version control systems"
   ],
   "publishConfig": {
     "access": "public",
@@ -57,10 +113,16 @@ find . -type f -exec sed -i 's|https://github.com/ai-crew-suite|https://github.c
   },
   "backstage": {
     "role": "backend-plugin-module",
-    "pluginId": "tool-observability",
+    "pluginId": "tool-vcs",
     "pluginPackages": [
-      "@ai-crew-suite/tool-observability-core",
-        "@ai-crew-suite/tool-observability-datadog"
+      "@ai-crew-suite/plugin-tool-vcs-backend",
+      "@ai-crew-suite/plugin-tool-vcs-backend-module-aws-codecommit",
+      "@ai-crew-suite/plugin-tool-vcs-backend-module-azure",
+      "@ai-crew-suite/plugin-tool-vcs-backend-module-bitbucket",
+      "@ai-crew-suite/plugin-tool-vcs-backend-module-gerrit",
+      "@ai-crew-suite/plugin-tool-vcs-backend-module-git",
+      "@ai-crew-suite/plugin-tool-vcs-backend-module-github",
+      "@ai-crew-suite/plugin-tool-vcs-backend-module-gitlab",
     ]
   },
   "bugs": {
@@ -87,7 +149,7 @@ find . -type f -exec sed -i 's|https://github.com/ai-crew-suite|https://github.c
     "typecheck": "crew typecheck"
   },
   "dependencies": {
-    "@ai-crew-suite/plugin-core-node": "workspace:^",
+    "@ai-crew-suite/plugin-kernel-node": "workspace:^",
   },
   "devDependencies": {
     "@ai-crew-suite/cli": "workspace:*",
@@ -128,126 +190,115 @@ Would you like to set up the **GitHub Actions setup file validation** for your `
 
 ```text
 ai-crew-suite/
-├── .github/
-│   ├── actions/
-│   │   ├── require-playwright-success/
-│   │   └── validate-monorepo-architecture/ # Your custom Python linting action
-│   └── workflows/
-│       └── lint-architecture.yml
-├── apps/
-│   └── backstage/                          # Main Backstage app instance
-├── docs/
-│   └── ARCHITECTURE.md                     # Monorepo architecture standards file
 ├── plugins/
-│   ├── kernel/                               # TIER 1: CORE ARCHITECTURE & INFRASTRUCTURE
-│   │   ├── backend/                        # @ai-crew-suite/plugin-core-backend
-│   │   ├── node/                           # @ai-crew-suite/plugin-core-node
-│   │   └── infra/                          # Foundational LangGraph framework engine pieces
-│   │       ├── llm/
-│   │       │   ├── core/                   # @ai-crew-suite/plugin-infra-llm-backend
-│   │       │   ├── aws/                    # @ai-crew-suite/infra-llm-aws
-│   │       │   ├── openai/                 # @ai-crew-suite/infra-llm-openai
-│   │       │   └── openrouter/             # @ai-crew-suite/infra-llm-openrouter
-│   │       ├── vector/
-│   │       │   ├── core/                   # @ai-crew-suite/infra-vector-core
-│   │       │   ├── pgvector/               # @ai-crew-suite/infra-vector-pgvector
-│   │       │   └── qdrant/                 # @ai-crew-suite/infra-vector-qdrant
-│   │       ├── retrieval-augmenter/        # @ai-crew-suite/infra-retrieval-augmenter
-│   │       └── runtime-store/              # @ai-crew-suite/infra-runtime-store
+│   ├── kernel/
+│   │   ├── backend/                        # @ai-crew-suite/plugin-kernel-backend
+│   │   ├── node/                           # @ai-crew-suite/plugin-kernel-node
+│   │   ├── llm/
+│   │   │   ├── backend/                    # @ai-crew-suite/plugin-llm-backend
+│   │   │   ├── aws/                        # @ai-crew-suite/plugin-llm-backend-module-aws
+│   │   │   ├── openai/                     # @ai-crew-suite/plugin-llm-backend-module-openai
+│   │   │   └── openrouter/                 # @ai-crew-suite/plugin-llm-backend-module-openrouter
+│   │   ├── vector-store/
+│   │   │   ├── backend/                    # @ai-crew-suite/plugin-vector-store-backend
+│   │   │   ├── pgvector/                   # @ai-crew-suite/plugin-vector-store-backend-module-pgvector
+│   │   │   └── qdrant/                     # @ai-crew-suite/plugin-vector-store-backend-module-qdrant
+│   │   ├── react/                          # @ai-crew-suite/plugin-kernel-react
+│   │   ├── retrieval-augmenter/            # @ai-crew-suite/plugin-retrieval-augmenter-backend
+│   │   └── runtime-store/                  # @ai-crew-suite/plugin-runtime-store-backend
 │   │
-│   ├── agents/                             # TIER 2: AGENTIC WORKFLOW PAIRS (18 Agents + Core UI)
-│   │   ├── core-frontend/                  # @ai-crew-suite/agent-core-frontend
+│   ├── agents/
 │   │   ├── alert-tuner/
-│   │   │   ├── backend/                    # @ai-crew-suite/agent-alert-tuner-backend
-│   │   │   └── frontend/                   # @ai-crew-suite/agent-alert-tuner-frontend
+│   │   │   ├── backend/                    # @ai-crew-suite/plugin-agent-alert-tuner-backend
+│   │   │   └── react/                      # @ai-crew-suite/plugin-agent-alert-tuner
 │   │   ├── catalog-insights/
-│   │   │   ├── backend/                    # @ai-crew-suite/agent-catalog-insights-backend
-│   │   │   └── frontend/                   # @ai-crew-suite/agent-catalog-insights-frontend
+│   │   │   ├── backend/                    # @ai-crew-suite/plugin-agent-catalog-insights-backend
+│   │   │   └── react/                      # @ai-crew-suite/plugin-agent-catalog-insights
 │   │   ├── kubernetes-responder/
-│   │   │   ├── backend/                    # @ai-crew-suite/agent-kubernetes-responder-backend
-│   │   │   └── frontend/                   # @ai-crew-suite/agent-kubernetes-responder-frontend
+│   │   │   ├── backend/                    # @ai-crew-suite/plugin-agent-kubernetes-responder-backend
+│   │   │   └── react/                      # @ai-crew-suite/plugin-agent-kubernetes-responder
 │   │   ├── oncall-handover/
-│   │   │   ├── backend/                    # @ai-crew-suite/agent-oncall-handover-backend
-│   │   │   └── frontend/                   # @ai-crew-suite/agent-oncall-handover-frontend
+│   │   │   ├── backend/                    # @ai-crew-suite/plugin-agent-oncall-handover-backend
+│   │   │   └── react/                      # @ai-crew-suite/plugin-agent-oncall-handover
 │   │   ├── release-notes-generator/
-│   │   │   ├── backend/                    # @ai-crew-suite/agent-release-notes-generator-backend
-│   │   │   └── frontend/                   # @ai-crew-suite/agent-release-notes-generator-frontend
+│   │   │   ├── backend/                    # @ai-crew-suite/plugin-agent-release-notes-generator-backend
+│   │   │   └── react/                      # @ai-crew-suite/plugin-agent-release-notes-generator
 │   │   ├── rfc-adr-reviewer/
-│   │   │   ├── backend/                    # @ai-crew-suite/agent-rfc-adr-reviewer-backend
-│   │   │   └── frontend/                   # @ai-crew-suite/agent-rfc-adr-reviewer-frontend
+│   │   │   ├── backend/                    # @ai-crew-suite/plugin-agent-rfc-adr-reviewer-backend
+│   │   │   └── react/                      # @ai-crew-suite/plugin-agent-rfc-adr-reviewer
 │   │   ├── scaffolder-drift-detector/
-│   │   │   ├── backend/                    # @ai-crew-suite/agent-scaffolder-drift-detector-backend
-│   │   │   └── frontend/                   # @ai-crew-suite/agent-scaffolder-drift-detector-frontend
+│   │   │   ├── backend/                    # @ai-crew-suite/plugin-agent-scaffolder-drift-detector-backend
+│   │   │   └── react/                      # @ai-crew-suite/plugin-agent-scaffolder-drift-detector
 │   │   ├── scaffolder-guardrail/
-│   │   │   ├── backend/                    # @ai-crew-suite/agent-scaffolder-guardrail-backend
-│   │   │   └── frontend/                   # @ai-crew-suite/agent-scaffolder-guardrail-frontend
+│   │   │   ├── backend/                    # @ai-crew-suite/plugin-agent-scaffolder-guardrail-backend
+│   │   │   └── react/                      # @ai-crew-suite/plugin-agent-scaffolder-guardrail
 │   │   ├── scaffolder-infra/
-│   │   │   ├── backend/                    # @ai-crew-suite/agent-scaffolder-infra-backend
-│   │   │   └── frontend/                   # @ai-crew-suite/agent-scaffolder-infra-frontend
+│   │   │   ├── backend/                    # @ai-crew-suite/plugin-agent-scaffolder-infra-backend
+│   │   │   └── react/                      # @ai-crew-suite/plugin-agent-scaffolder-infra
 │   │   ├── scaffolder-intent/
-│   │   │   ├── backend/                    # @ai-crew-suite/agent-scaffolder-intent-backend
-│   │   │   └── frontend/                   # @ai-crew-suite/agent-scaffolder-intent-frontend
+│   │   │   ├── backend/                    # @ai-crew-suite/plugin-agent-scaffolder-intent-backend
+│   │   │   └── react/                      # @ai-crew-suite/plugin-agent-scaffolder-intent
 │   │   ├── scaffolder-prd/
-│   │   │   ├── backend/                    # @ai-crew-suite/agent-scaffolder-prd-backend
-│   │   │   └── frontend/                   # @ai-crew-suite/agent-scaffolder-prd-frontend
+│   │   │   ├── backend/                    # @ai-crew-suite/plugin-agent-scaffolder-prd-backend
+│   │   │   └── react/                      # @ai-crew-suite/plugin-agent-scaffolder-prd
 │   │   ├── scaffolder-shadow-detective/
-│   │   │   ├── backend/                    # @ai-crew-suite/agent-scaffolder-shadow-detective-backend
-│   │   │   └── frontend/                   # @ai-crew-suite/agent-scaffolder-shadow-detective-frontend
+│   │   │   ├── backend/                    # @ai-crew-suite/plugin-agent-scaffolder-shadow-detective-backend
+│   │   │   └── react/                      # @ai-crew-suite/plugin-agent-scaffolder-shadow-detective
 │   │   ├── search-archeology/
-│   │   │   ├── backend/                    # @ai-crew-suite/agent-search-archeology-backend
-│   │   │   └── frontend/                   # @ai-crew-suite/agent-search-archeology-frontend
+│   │   │   ├── backend/                    # @ai-crew-suite/plugin-agent-search-archeology-backend
+│   │   │   └── react/                      # @ai-crew-suite/plugin-agent-search-archeology
 │   │   ├── search-context/
-│   │   │   ├── backend/                    # @ai-crew-suite/agent-search-context-backend
-│   │   │   └── frontend/                   # @ai-crew-suite/agent-search-context-frontend
+│   │   │   ├── backend/                    # @ai-crew-suite/plugin-agent-search-context-backend
+│   │   │   └── react/                      # @ai-crew-suite/plugin-agent-search-context
 │   │   ├── tech-debt-scout/
-│   │   │   ├── backend/                    # @ai-crew-suite/agent-tech-debt-scout-backend
-│   │   │   └── frontend/                   # @ai-crew-suite/agent-tech-debt-scout-frontend
+│   │   │   ├── backend/                    # @ai-crew-suite/plugin-agent-tech-debt-scout-backend
+│   │   │   └── react/                      # @ai-crew-suite/plugin-agent-tech-debt-scout
 │   │   ├── techdocs-janitor/
-│   │   │   ├── backend/                    # @ai-crew-suite/agent-techdocs-janitor-backend
-│   │   │   └── frontend/                   # @ai-crew-suite/agent-techdocs-janitor-frontend
+│   │   │   ├── backend/                    # @ai-crew-suite/plugin-agent-techdocs-janitor-backend
+│   │   │   └── react/                      # @ai-crew-suite/plugin-agent-techdocs-janitor
 │   │   ├── techdocs-postmortem/
-│   │   │   ├── backend/                    # @ai-crew-suite/agent-techdocs-postmortem-backend
-│   │   │   └── frontend/                   # @ai-crew-suite/agent-techdocs-postmortem-frontend
+│   │   │   ├── backend/                    # @ai-crew-suite/plugin-agent-techdocs-postmortem-backend
+│   │   │   └── react/                      # @ai-crew-suite/plugin-agent-techdocs-postmortem
 │   │   └── tech-radar-manager/
-│   │       ├── backend/                    # @ai-crew-suite/agent-tech-radar-manager-backend
-│   │       └── frontend/                   # @ai-crew-suite/agent-tech-radar-manager-frontend
+│   │       ├── backend/                    # @ai-crew-suite/plugin-agent-tech-radar-manager-backend
+│   │       └── react/                      # @ai-crew-suite/plugin-agent-tech-radar-manager
 │   │
-│   └── tools/                              # TIER 3: THIRD-PARTY VENDOR INTEGRATION PLUGINS
+│   └── tools/
 │       ├── cloud-providers/
-│       │   ├── core/                       # @ai-crew-suite/tool-cloud-providers-core
-│       │   ├── aws/                        # @ai-crew-suite/tool-cloud-providers-aws
-│       │   ├── azure/                      # @ai-crew-suite/tool-cloud-providers-azure
-│       │   └── gcp/                        # @ai-crew-suite/tool-cloud-providers-gcp
+│       │   ├── engine/                     # @ai-crew-suite/plugin-tool-cloud-providers-backend
+│       │   ├── aws/                        # @ai-crew-suite/plugin-tool-cloud-providers-backend-module-aws
+│       │   ├── azure/                      # @ai-crew-suite/plugin-tool-cloud-providers-backend-module-azure
+│       │   └── gcp/                        # @ai-crew-suite/plugin-tool-cloud-providers-backend-module-gcp
 │       ├── communication/
-│       │   ├── core/                       # @ai-crew-suite/tool-communication-core
-│       │   └── slack/                      # @ai-crew-suite/tool-communication-slack
+│       │   ├── engine/                     # @ai-crew-suite/plugin-tool-communication-backend
+│       │   └── slack/                      # @ai-crew-suite/plugin-tool-communication-backend-module-slack
 │       ├── compliance/
-│       │   ├── core/                       # @ai-crew-suite/tool-compliance-core
-│       │   └── opa/                        # @ai-crew-suite/tool-compliance-opa
+│       │   ├── engine/                     # @ai-crew-suite/plugin-tool-compliance-backend
+│       │   └── opa/                        # @ai-crew-suite/plugin-tool-compliance-backend-module-opa
 │       ├── incident-management/
-│       │   ├── core/                       # @ai-crew-suite/tool-incident-management-core
-│       │   └── pagerduty/                  # @ai-crew-suite/tool-incident-management-pagerduty
-│       ├── kubernetes/                     # @ai-crew-suite/tool-kubernetes (Self-contained driver)
+│       │   ├── engine/                     # @ai-crew-suite/plugin-tool-incident-management-backend
+│       │   └── pagerduty/                  # @ai-crew-suite/plugin-tool-incident-management-backend-module-pagerduty
+│       ├── kubernetes/                     # @ai-crew-suite/plugin-tool-kubernetes-backend
 │       ├── observability/
-│       │   ├── core/                       # @ai-crew-suite/tool-observability-core
-│       │   └── datadog/                    # @ai-crew-suite/tool-observability-datadog
+│       │   ├── engine/                     # @ai-crew-suite/plugin-tool-observability-backend
+│       │   └── datadog/                    # @ai-crew-suite/plugin-tool-observability-backend-module-datadog
 │       ├── project-management/
-│       │   ├── core/                       # @ai-crew-suite/tool-project-management-core
-│       │   └── jira/                       # @ai-crew-suite/tool-project-management-jira
+│       │   ├── engine/                     # @ai-crew-suite/plugin-tool-project-management-backend
+│       │   └── jira/                       # @ai-crew-suite/plugin-tool-project-management-backend-module-jira
 │       ├── quality-scorecards/
-│       │   ├── core/                       # @ai-crew-suite/tool-quality-scorecards-core
-│       │   ├── scorecards/                 # @ai-crew-suite/tool-quality-scorecards-scorecards
-│       │   ├── soundcheck/                 # @ai-crew-suite/tool-quality-scorecards-soundcheck
-│       │   └── techradar/                  # @ai-crew-suite/tool-quality-scorecards-techradar
+│       │   ├── engine/                     # @ai-crew-suite/plugin-tool-quality-scorecards-backend
+│       │   ├── scorecards/                 # @ai-crew-suite/plugin-tool-quality-scorecards-backend-module-scorecards
+│       │   ├── soundcheck/                 # @ai-crew-suite/plugin-tool-quality-scorecards-backend-module-soundcheck
+│       │   └── techradar/                  # @ai-crew-suite/plugin-tool-quality-scorecards-backend-module-techradar
 │       └── vcs/
-│           ├── core/                       # @ai-crew-suite/tool-vcs-core
-│           ├── aws-codecommit/             # @ai-crew-suite/tool-vcs-aws-codecommit
-│           ├── azure/                      # @ai-crew-suite/tool-vcs-azure
-│           ├── bitbucket/                  # @ai-crew-suite/tool-vcs-bitbucket
-│           ├── gerrit/                     # @ai-crew-suite/tool-vcs-gerrit
-│           ├── git/                        # @ai-crew-suite/tool-vcs-git
-│           ├── github/                     # @ai-crew-suite/tool-vcs-github
-│           └── gitlab/                     # @ai-crew-suite/tool-vcs-gitlab
+│           ├── engine/                     # @ai-crew-suite/plugin-tool-vcs-backend
+│           ├── aws-codecommit/             # @ai-crew-suite/plugin-tool-vcs-backend-module-aws-codecommit
+│           ├── azure/                      # @ai-crew-suite/plugin-tool-vcs-backend-module-azure
+│           ├── bitbucket/                  # @ai-crew-suite/plugin-tool-vcs-backend-module-bitbucket
+│           ├── gerrit/                     # @ai-crew-suite/plugin-tool-vcs-backend-module-gerrit
+│           ├── git/                        # @ai-crew-suite/plugin-tool-vcs-backend-module-git
+│           ├── github/                     # @ai-crew-suite/plugin-tool-vcs-backend-module-github
+│           └── gitlab/                     # @ai-crew-suite/plugin-tool-vcs-backend-module-gitlab
 │
 ├── package.json                            # Root monorepo metadata
 └── turbo.json                              # Pipelines orchestration profile

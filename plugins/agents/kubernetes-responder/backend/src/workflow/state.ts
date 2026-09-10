@@ -16,7 +16,7 @@
 import type {
   KubernetesWorkloadRef,
   KubernetesWorkloadSnapshot,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 import type { FailureClass } from './routing';
 
 /**

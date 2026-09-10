@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { BaseGraphRunner } from '@webstackbuilders/plugin-ai-core-node';
+import { BaseGraphRunner } from '@ai-crew-suite/plugin-kernel-node';
 import type {
   AgentEvent,
   AgentRunInput,
   WorkflowContext,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 import type { AlertAiTunerConfig } from '../config';
 import {
   applySuppression,

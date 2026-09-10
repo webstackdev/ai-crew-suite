@@ -18,7 +18,7 @@ import type {
   AgentRunInput,
   WorkflowContext,
   WorkflowRunner,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 import type { ScaffolderIntentConfig } from '../config';
 import { intentProposalArtifact } from '../services/IntentArtifactWriter';
 import { NameAvailabilityChecker } from '../services/NameAvailabilityChecker';

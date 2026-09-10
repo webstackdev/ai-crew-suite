@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { z } from 'zod';
-import type { AiAgentSchemaRegistry } from '@webstackbuilders/plugin-ai-core-node';
+import type { AiAgentSchemaRegistry } from '@ai-crew-suite/plugin-kernel-node';
 
 export const AlertTunerInputSchema = z.object({
   /** Strict structural api contract metadata properties expected by parseAlertTuningQuery */
@@ -35,7 +35,7 @@ export const AlertTunerInputSchema = z.object({
 
 export type AlertTunerInput = z.infer<typeof AlertTunerInputSchema>;
 
-declare module '@webstackbuilders/plugin-ai-core-node' {
+declare module '@ai-crew-suite/plugin-kernel-node' {
   interface AiAgentSchemaRegistry {
     'alert-ai-tuner': {
       inputSchema: typeof AlertTunerInputSchema;

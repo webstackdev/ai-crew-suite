@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { describe, expect, it, vi } from 'vitest';
-import type { VectorStore } from '@webstackbuilders/plugin-ai-core-node';
+import type { VectorStore } from '@ai-crew-suite/plugin-kernel-node';
 import { VectorEmbeddingsRetriever } from '../VectorEmbeddingsRetriever';
 
 const docs = [

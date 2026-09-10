@@ -20,7 +20,7 @@ import type {
   CatalogIntegrationReferences,
   WorkflowContext,
   WorkflowRunner,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 import { InsightRetriever } from '../retrieval/InsightRetriever';
 import { buildInsightPrompt } from '../retrieval/promptContext';
 import { createInsightReportArtifactEvent } from '../services/InsightArtifactWriter';

@@ -18,7 +18,7 @@ import {
   agentExtensionPoint,
   triggerExtensionPoint,
   workflowRunnerExtensionPoint
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 import { createRfcAdrReviewerAgent } from './agent';
 import { readRfcAdrReviewerConfig } from './config';
 import { ReviewGraph } from './workflow/ReviewGraph';

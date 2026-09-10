@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { AlertHistoryEntry } from '@webstackbuilders/plugin-ai-core-node';
+import type { AlertHistoryEntry } from '@ai-crew-suite/plugin-kernel-node';
 import type { EvidenceRef, FiringSample } from './state';
 
 const millisecond = (value: string | undefined): number | undefined => {

@@ -17,7 +17,7 @@ import {
   coreServices,
   createBackendModule,
 } from '@backstage/backend-plugin-api';
-import { runtimeStoreExtensionPoint } from '@webstackbuilders/plugin-ai-core-node';
+import { runtimeStoreExtensionPoint } from '@ai-crew-suite/plugin-kernel-node';
 import { createAgentRuntimeStores } from './service';
 
 /**

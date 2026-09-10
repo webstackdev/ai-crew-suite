@@ -20,7 +20,7 @@ import type {
   KubernetesWorkloadSnapshot,
   WorkflowContext,
   WorkflowRunner
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 import type { DriftDetectorConfig } from '../config';
 import { DriftToolRunner } from '../services/DriftToolRunner';
 import { createDriftReportArtifactEvent } from '../services/DriftArtifactWriter';

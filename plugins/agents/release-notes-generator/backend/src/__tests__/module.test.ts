@@ -15,7 +15,7 @@
  */
 import { createBackendPlugin } from '@backstage/backend-plugin-api';
 import { mockServices, startTestBackend } from '@backstage/backend-test-utils';
-import { agentExtensionPoint, triggerExtensionPoint, workflowRunnerExtensionPoint, type AgentExtensionPoint, type TriggerExtensionPoint, type WorkflowRunnerExtensionPoint } from '@webstackbuilders/plugin-ai-core-node';
+import { agentExtensionPoint, triggerExtensionPoint, workflowRunnerExtensionPoint, type AgentExtensionPoint, type TriggerExtensionPoint, type WorkflowRunnerExtensionPoint } from '@ai-crew-suite/plugin-kernel-node';
 import { describe, expect, it, vi } from 'vitest';
 import { releaseNotesModule } from '../module';
 

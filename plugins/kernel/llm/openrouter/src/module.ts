@@ -17,7 +17,7 @@ import {
   coreServices,
   createBackendModule,
 } from '@backstage/backend-plugin-api';
-import { modelExtensionPoint } from '@webstackbuilders/plugin-ai-core-node';
+import { modelExtensionPoint } from '@ai-crew-suite/plugin-kernel-node';
 import { createOpenRouterModels, OpenRouterConfig } from './OpenRouterModel';
 
 /**

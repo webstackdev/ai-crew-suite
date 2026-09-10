@@ -13,8 +13,6 @@ This package implements the OpenAI embeddings module for AI Crew Suite. It creat
 - **Retrieval tool wiring**: Registers `openai.embeddings.retrieval` with an augmentation indexer and default retrieval pipeline.
 - **Storage composition**: Creates the pgvector store used for embedding writes and semantic retrieval.
 
----
-
 ## Architectural Dependency Tree
 
 This package acts as an embeddings provider module within the broader AI Crew Suite ecosystem:
@@ -24,8 +22,6 @@ This package acts as an embeddings provider module within the broader AI Crew Su
 - **Storage Dependency**: Uses `plugin-ai-core-backend-module-storage-pgvector` for vector persistence.
 - **Retrieval Dependency**: Uses `plugin-ai-core-backend-module-retrieval-augmenter` for indexing and retrieval pipeline behavior.
 - **Provider Dependency**: Uses LangChain OpenAI embeddings implementations.
-
----
 
 ## Local Development Workflow
 
@@ -53,8 +49,6 @@ Test files are located inline next to the modules they validate (`*.test.ts`). E
 yarn workspace @webstackbuilders/plugin-ai-core-backend-module-llm-openai test
 ```
 
----
-
 ## Technical Extension Checklist
 
 When modifying or extending code inside this workspace, ensure you update the corresponding global documentation indexes located at `/docs/core-development/` if you alter any of the following operational layers:
@@ -64,3 +58,8 @@ When modifying or extending code inside this workspace, ensure you update the co
 - [ ] Introducing brand-new model adapter configurations.
 - [ ] Altering backend ingestion worker pipelines.
 - [ ] Updating retrieval tool IDs, augmentation indexer behavior, or pgvector composition.
+
+## Compliance and Licensing
+
+Copyright © 2026 The AI Crew Suite Authors.
+Licensed under the **Apache License, Version 2.0**.

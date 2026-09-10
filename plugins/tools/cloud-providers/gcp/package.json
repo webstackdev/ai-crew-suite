@@ -1,5 +1,5 @@
 {
-  "name": "@ai-crew-suite/tool-cloud-providers-gcp",
+  "name": "@ai-crew-suite/plugin-tool-cloud-providers-backend-module-gcp",
   "description": "GCP driver module that extends the AI Crew Suite cloud providers plugin to provide native GCP infrastructure context tools.",
   "version": "0.0.1",
   "main": "src/index.ts",
@@ -22,10 +22,10 @@
     "role": "backend-plugin-module",
     "pluginId": "tool-cloud-providers",
     "pluginPackages": [
-      "@ai-crew-suite/tool-cloud-providers-core",
-      "@ai-crew-suite/tool-cloud-providers-aws",
-      "@ai-crew-suite/tool-cloud-providers-azure",
-      "@ai-crew-suite/tool-cloud-providers-gcp"
+      "@ai-crew-suite/plugin-tool-cloud-providers-backend",
+      "@ai-crew-suite/plugin-tool-cloud-providers-backend-module-aws",
+      "@ai-crew-suite/plugin-tool-cloud-providers-backend-module-azure",
+      "@ai-crew-suite/plugin-tool-cloud-providers-backend-module-gcp"
     ]
   },
   "bugs": {
@@ -52,7 +52,7 @@
     "typecheck": "crew typecheck"
   },
   "dependencies": {
-    "@ai-crew-suite/plugin-core-node": "workspace:^",
+    "@ai-crew-suite/plugin-kernel-node": "workspace:^",
     "@backstage/backend-plugin-api": "backstage:^",
     "@backstage/config": "backstage:^",
     "@google-cloud/resource-manager": "^7.1.0"

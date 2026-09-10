@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 import { coreServices, createBackendModule } from '@backstage/backend-plugin-api';
-import { incidentManagementDriversExtensionPoint } from '@ai-crew-suite/plugin-core-node';
+import { incidentManagementDriversExtensionPoint } from '@ai-crew-suite/plugin-kernel-node';
 import { PagerDutyDriver } from './providers/PagerDutyDriver';
 import { readPagerDutyConfig } from './config';
 
 /**
  * PagerDuty driver backend module for the AI Core incident management group.
  */
-export const aiCoreBackendModuleIncidentManagementPagerduty = createBackendModule({
-  pluginId: 'ai-core',
-  moduleId: 'incident-management-pagerduty',
+export const toolIncidentManagementModulePagerduty = createBackendModule({
+  pluginId: 'tool-incident-management',
+  moduleId: 'pagerduty',
   register(env) {
     env.registerInit({
       deps: {
@@ -45,4 +45,4 @@ export const aiCoreBackendModuleIncidentManagementPagerduty = createBackendModul
   },
 });
 
-export default aiCoreBackendModuleIncidentManagementPagerduty;
+export default toolIncidentManagementModulePagerduty;

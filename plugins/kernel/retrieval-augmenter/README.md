@@ -13,8 +13,6 @@ This package provides the default retrieval and indexing primitives used by AI C
 - **Post-processing**: Combines grouped retriever output into the final augmentation context supplied to agents.
 - **Pipeline factory**: Exposes `createDefaultRetrievalPipeline` for provider modules that need a standard RAG pipeline.
 
----
-
 ## Architectural Dependency Tree
 
 This package acts as a retrieval implementation module within the broader AI Crew Suite ecosystem:
@@ -23,8 +21,6 @@ This package acts as a retrieval implementation module within the broader AI Cre
 - **Platform Services**: Uses Backstage Catalog, Discovery, Auth, and Search APIs to load and retrieve content.
 - **Storage Dependency**: Operates against any implementation of the shared `VectorStore` contract.
 - **Downstream Consumer**: Directly ingested by embeddings modules such as `plugin-ai-core-backend-module-llm-aws` and `plugin-ai-core-backend-module-llm-openai`.
-
----
 
 ## Local Development Workflow
 
@@ -52,8 +48,6 @@ Test files are located inline next to the modules they validate (`*.test.ts`). E
 yarn workspace @webstackbuilders/plugin-ai-core-backend-module-retrieval-augmenter test
 ```
 
----
-
 ## Technical Extension Checklist
 
 When modifying or extending code inside this workspace, ensure you update the corresponding global documentation indexes located at `/docs/core-development/` if you alter any of the following operational layers:
@@ -63,3 +57,8 @@ When modifying or extending code inside this workspace, ensure you update the co
 - [ ] Introducing brand-new model adapter configurations.
 - [ ] Altering backend ingestion worker pipelines.
 - [ ] Changing chunking, source metadata, deletion, or retrieval merge semantics.
+
+## Compliance and Licensing
+
+Copyright © 2026 The AI Crew Suite Authors.
+Licensed under the **Apache License, Version 2.0**.

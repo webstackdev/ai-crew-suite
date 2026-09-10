@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { AgentEvent } from '@webstackbuilders/plugin-ai-core-node';
+import type { AgentEvent } from '@ai-crew-suite/plugin-kernel-node';
 import type { ExpertiseMatrix } from '../workflow/state';
 
 /** Artifact kind emitted for cited legacy-system expertise research. */

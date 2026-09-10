@@ -19,7 +19,7 @@ import type {
   LoggerService,
   SchedulerService,
 } from '@backstage/backend-plugin-api';
-import type { CatalogEntityResolver } from '@webstackbuilders/plugin-ai-core-node';
+import type { CatalogEntityResolver } from '@ai-crew-suite/plugin-kernel-node';
 import type { CatalogAiInsightsConfig } from '../config';
 import { planScan } from './scanPlanner';
 import { CATALOG_AI_INSIGHTS_AGENT_ID } from '../agent';

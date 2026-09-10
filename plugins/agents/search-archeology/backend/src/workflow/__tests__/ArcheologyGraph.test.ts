@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { AgentEvent, AgentRunInput, WorkflowContext } from '@webstackbuilders/plugin-ai-core-node';
+import type { AgentEvent, AgentRunInput, WorkflowContext } from '@ai-crew-suite/plugin-kernel-node';
 import { describe, expect, it, vi } from 'vitest';
 import { ArcheologyGraph } from '../ArcheologyGraph';
 

@@ -15,15 +15,15 @@
  */
 import { createBackendModule, coreServices } from '@backstage/backend-plugin-api';
 import { ScmIntegrations, DefaultGithubCredentialsProvider } from '@backstage/integration';
-import { vcsDriversExtensionPoint } from '@webstackbuilders/plugin-ai-core-node';
+import { vcsDriversExtensionPoint } from '@ai-crew-suite/plugin-kernel-node';
 import { GitHubDriver } from './providers/github';
 
 /**
  * GitHub VCS driver backend module for the AI Core plugin.
  */
-export const aiCoreBackendModuleVcsGitHub = createBackendModule({
-  pluginId: 'ai-core',
-  moduleId: 'vcs-github',
+export const toolVcsModuleGitHub = createBackendModule({
+  pluginId: 'tool-vcs',
+  moduleId: 'github',
   register(env) {
     env.registerInit({
       deps: {
@@ -55,4 +55,4 @@ export const aiCoreBackendModuleVcsGitHub = createBackendModule({
   },
 });
 
-export default aiCoreBackendModuleVcsGitHub;
+export default toolVcsModuleGitHub;

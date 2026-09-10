@@ -13,8 +13,6 @@ This package is the core AI backend plugin for AI Crew Suite. It owns the runtim
 - **API surface**: Exposes query, embeddings, run, approval, and replay routes through the Backstage backend router.
 - **Persistence integration**: Wires the pgvector runtime store for sessions, checkpoints, runs, approvals, artifacts, and audit logs.
 
----
-
 ## Architectural Dependency Tree
 
 This package acts as the central runtime plugin within the broader AI Crew Suite ecosystem:
@@ -23,8 +21,6 @@ This package acts as the central runtime plugin within the broader AI Crew Suite
 - **Provider Inputs**: Consumes model definitions, tools, sources, agents, and triggers registered by backend modules.
 - **Storage Dependency**: Uses `plugin-ai-core-backend-module-storage-pgvector` or `plugin-ai-core-backend-module-storage-qdrant` to create the default runtime vector embeddings persistence store.
 - **Downstream Consumer**: Directly ingested by a Backstage backend through the exported `ragAiPlugin` backend plugin.
-
----
 
 ## Local Development Workflow
 
@@ -52,8 +48,6 @@ Test files are located inline next to the modules they validate (`*.test.ts`). E
 yarn workspace @webstackbuilders/plugin-ai-core-backend test
 ```
 
----
-
 ## Technical Extension Checklist
 
 When modifying or extending code inside this workspace, ensure you update the corresponding global documentation indexes located at `/docs/core-development/` if you alter any of the following operational layers:
@@ -63,3 +57,8 @@ When modifying or extending code inside this workspace, ensure you update the co
 - [ ] Introducing brand-new model adapter configurations.
 - [ ] Altering backend ingestion worker pipelines.
 - [ ] Adding or changing default agents, built-in tools, API routes, or hardening options.
+
+## Compliance and Licensing
+
+Copyright © 2026 The AI Crew Suite Authors.
+Licensed under the **Apache License, Version 2.0**.

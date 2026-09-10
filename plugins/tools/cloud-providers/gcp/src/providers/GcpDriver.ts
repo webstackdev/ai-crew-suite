@@ -20,7 +20,7 @@ import {
   CloudAccountSummary,
   CloudResourceSummary,
   CloudDependencySummary
-} from '@ai-crew-suite/plugin-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 
 export interface GcpDriverOptions {
   logger: any;

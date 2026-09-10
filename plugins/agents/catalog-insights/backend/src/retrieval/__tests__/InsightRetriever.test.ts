@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { WorkflowContext } from '@webstackbuilders/plugin-ai-core-node';
+import type { WorkflowContext } from '@ai-crew-suite/plugin-kernel-node';
 import { describe, expect, it, vi } from 'vitest';
 import { InsightRetriever } from '../InsightRetriever';
 import type { CatalogInsightRequest } from '../../workflow/state';

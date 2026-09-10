@@ -44,7 +44,7 @@ The graph runs with three paired-step phases: `document.read` validates and reda
 
 ### Backstage Version
 
-- Requires a Backstage backend running the `ai-core` plugin and its extension-point system (`agentExtensionPoint`, `triggerExtensionPoint`, `workflowRunnerExtensionPoint` from `@webstackbuilders/plugin-ai-core-node`)
+- Requires a Backstage backend running the `ai-core` plugin and its extension-point system (`agentExtensionPoint`, `triggerExtensionPoint`, `workflowRunnerExtensionPoint` from `@ai-crew-suite/plugin-kernel-node`)
 
 ### Agentic Requirements
 
@@ -335,7 +335,7 @@ Append `?run=<id>` to the page URL. The run's persisted events replay in order, 
 
 ### Turbo Workspace Resolution
 
-**Symptom**: `yarn typecheck --force` fails with missing exports from `@webstackbuilders/plugin-ai-core-node`.
+**Symptom**: `yarn typecheck --force` fails with missing exports from `@ai-crew-suite/plugin-kernel-node`.
 
 **Fix**: Ensure the dependency is listed in the backend module's `package.json` as `"workspace:*"` and that you've run `yarn install` after adding it.
 

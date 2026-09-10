@@ -22,7 +22,7 @@ import type {
   AgentRunInput,
   ApprovalDecision,
   RunContext,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 import { GraphExecutor } from './GraphExecutor';
 
 type RuntimeContext = Omit<RunContext, 'model' | 'systemPrompt'> & {

@@ -21,7 +21,7 @@ import {
   RepositoryMetadata, 
   RepositorySearchResult, 
   PullRequestSummary 
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 
 export class GerritDriver implements VcsDriver {
   readonly providerId = 'gerrit';

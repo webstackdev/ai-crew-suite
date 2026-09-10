@@ -107,7 +107,7 @@ plugin-ai-core-backend-module-models-chat/
 `src/registry.ts`:
 
 ```ts
-import { ChatModelDefinition } from '@webstackbuilders/plugin-ai-core-node';
+import { ChatModelDefinition } from '@ai-crew-suite/plugin-kernel-node';
 
 export class ChatModelRegistry {
   private readonly models = new Map<string, ChatModelDefinition>();
@@ -287,7 +287,7 @@ plugin-ai-core-backend-module-vector-storage/
 `src/registry.ts`:
 
 ```ts
-import { VectorStoreDefinition, VectorStore } from '@webstackbuilders/plugin-ai-core-node';
+import { VectorStoreDefinition, VectorStore } from '@ai-crew-suite/plugin-kernel-node';
 
 export class VectorStoreRegistry {
   private readonly stores = new Map<string, VectorStoreDefinition>();
@@ -363,7 +363,7 @@ plugin-ai-core-backend-module-vector-storage-pgvector/
 
 ```ts
 import { createBackendModule, coreServices } from '@backstage/backend-plugin-api';
-import { vectorStoreExtensionPoint } from '@webstackbuilders/plugin-ai-core-node';
+import { vectorStoreExtensionPoint } from '@ai-crew-suite/plugin-kernel-node';
 import { createPgVectorStore } from './service';
 
 export const aiCoreBackendModuleVectorStoragePgVector = createBackendModule({
@@ -464,7 +464,7 @@ import {
   transcriptionExtensionPoint,
   rerankingExtensionPoint,
   guardrailExtensionPoint,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 import { createBedrockChat } from './chat';
 import { BedrockTitanEmbeddings } from './embeddings';
 import { createBedrockTranscription } from './transcription';
@@ -654,7 +654,7 @@ import {
   VectorStoreDefinition,
   VectorStore,
   Embeddings,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 
 export function resolveCompose(options: {
   embedders: EmbeddingsDefinition[];

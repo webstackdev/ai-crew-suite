@@ -23,7 +23,7 @@ import {
 	AugmentationOptions,
 	createDefaultRetrievalPipeline,
 } from '../../../retrieval-augmenter/src';
-import { toolExtensionPoint } from '@webstackbuilders/plugin-ai-core-node';
+import { toolExtensionPoint } from '@ai-crew-suite/plugin-kernel-node';
 import { BedrockAugmenter, BedrockConfig } from './BedrockAugmenter';
 
 const getBedrockRegion = () =>

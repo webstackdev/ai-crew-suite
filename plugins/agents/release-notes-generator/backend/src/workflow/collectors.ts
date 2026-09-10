@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { PullRequestSummary } from '@webstackbuilders/plugin-ai-core-node';
+import type { PullRequestSummary } from '@ai-crew-suite/plugin-kernel-node';
 import type { CategoryTaxonomy } from '../config';
 import { categorizeTitle } from './categorize';
 import type { ChangeItem, ReleaseNotesRequest } from './state';

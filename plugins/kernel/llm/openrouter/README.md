@@ -13,8 +13,6 @@ This package implements the OpenRouter model provider module for AI Crew Suite. 
 - **Model registry wiring**: Registers stable `ModelDefinition` IDs through `modelExtensionPoint`.
 - **Provider isolation**: Supplies generation models only; retrieval and embeddings remain owned by separate embeddings modules.
 
----
-
 ## Architectural Dependency Tree
 
 This package acts as a model provider module within the broader AI Crew Suite ecosystem:
@@ -23,8 +21,6 @@ This package acts as a model provider module within the broader AI Crew Suite ec
 - **Core Consumer**: Registered into `plugin-ai-core-backend` through `modelExtensionPoint`.
 - **Provider Dependency**: Uses `@langchain/openrouter` to create `ChatOpenRouter` model instances.
 - **Companion Modules**: Requires an embeddings module such as `plugin-ai-core-backend-module-llm-openai` or `plugin-ai-core-backend-module-llm-aws` when agents need retrieval-augmented context.
-
----
 
 ## Local Development Workflow
 
@@ -52,8 +48,6 @@ Test files are located inline next to the modules they validate (`*.test.ts`). E
 yarn workspace @webstackbuilders/plugin-ai-core-backend-module-llm-openrouter test
 ```
 
----
-
 ## Technical Extension Checklist
 
 When modifying or extending code inside this workspace, ensure you update the corresponding global documentation indexes located at `/docs/core-development/` if you alter any of the following operational layers:
@@ -63,3 +57,8 @@ When modifying or extending code inside this workspace, ensure you update the co
 - [ ] Introducing brand-new model adapter configurations.
 - [ ] Altering backend ingestion worker pipelines.
 - [ ] Updating model registration behavior used by agent `modelRef` values.
+
+## Compliance and Licensing
+
+Copyright © 2026 The AI Crew Suite Authors.
+Licensed under the **Apache License, Version 2.0**.

@@ -6,7 +6,7 @@ It replaces the runtime persistence that previously lived in `plugin-ai-core-bac
 
 ## What it provides
 
-The module assembles the five runtime persistence contracts from `@webstackbuilders/plugin-ai-core-node` and registers them with the AI backend plugin through the `runtimeStoreExtensionPoint`:
+The module assembles the five runtime persistence contracts from `@ai-crew-suite/plugin-kernel-node` and registers them with the AI backend plugin through the `runtimeStoreExtensionPoint`:
 
 | Contract          | Purpose                                                        | Backend options      |
 | ----------------- | -------------------------------------------------------------- | -------------------- |
@@ -62,4 +62,9 @@ Validation fails fast at startup when a store selects the `redis` backend withou
 
 ## How it wires in
 
-`plugin-ai-core-backend` no longer depends on any storage implementation. It registers a `runtimeStoreExtensionPoint` (from `@webstackbuilders/plugin-ai-core-node`) with per-contract setters that reject duplicate registration at boot. This module is the reference implementation; an alternate backend (for example DynamoDB) can be introduced as another module that calls the same extension point. When no module registers a store, the runtime operates without that persistence.
+`plugin-ai-core-backend` no longer depends on any storage implementation. It registers a `runtimeStoreExtensionPoint` (from `@ai-crew-suite/plugin-kernel-node`) with per-contract setters that reject duplicate registration at boot. This module is the reference implementation; an alternate backend (for example DynamoDB) can be introduced as another module that calls the same extension point. When no module registers a store, the runtime operates without that persistence.
+
+## Compliance and Licensing
+
+Copyright © 2026 The AI Crew Suite Authors.
+Licensed under the **Apache License, Version 2.0**.

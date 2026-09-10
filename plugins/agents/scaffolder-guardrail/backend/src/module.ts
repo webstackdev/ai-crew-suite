@@ -18,7 +18,7 @@ import {
   agentExtensionPoint,
   triggerExtensionPoint,
   workflowRunnerExtensionPoint
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 import { createScaffolderGuardrailAgent } from './agent';
 import { readScaffolderGuardrailConfig } from './config';
 import { GuardrailGraph } from './workflow/GuardrailGraph';

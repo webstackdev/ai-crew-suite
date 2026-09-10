@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { CatalogEntitySummary } from '@webstackbuilders/plugin-ai-core-node';
+import type { CatalogEntitySummary } from '@ai-crew-suite/plugin-kernel-node';
 import type { CatalogInsightRequest } from '../workflow/state';
 
 /**

@@ -58,7 +58,7 @@
     "@backstage/config": "backstage:^",
     "@langchain/core": "^1.2.6",
     "@langchain/openrouter": "^0.4.6",
-    "@webstackbuilders/plugin-ai-core-node": "workspace:^",
+    "@ai-crew-suite/plugin-kernel-node": "workspace:^",
     "i18next": "26.3.6",
     "vitest": "^4.1.10"
   },

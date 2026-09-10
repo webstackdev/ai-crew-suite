@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { ToolInvocationResult, WorkflowContext } from '@webstackbuilders/plugin-ai-core-node';
+import type { ToolInvocationResult, WorkflowContext } from '@ai-crew-suite/plugin-kernel-node';
 
 /**
  * Shared bounded read-tool executor for both parallel review channels.

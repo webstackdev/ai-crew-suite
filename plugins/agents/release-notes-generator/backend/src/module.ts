@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { coreServices, createBackendModule } from '@backstage/backend-plugin-api';
-import { agentExtensionPoint, triggerExtensionPoint, workflowRunnerExtensionPoint } from '@webstackbuilders/plugin-ai-core-node';
+import { agentExtensionPoint, triggerExtensionPoint, workflowRunnerExtensionPoint } from '@ai-crew-suite/plugin-kernel-node';
 import { createReleaseNotesAgent } from './agent';
 import { readReleaseNotesConfig } from './config';
 import { ReleaseNotesGraph } from './workflow/ReleaseNotesGraph';

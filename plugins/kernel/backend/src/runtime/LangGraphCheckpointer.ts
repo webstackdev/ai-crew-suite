@@ -18,7 +18,7 @@ import type {
   CheckpointRecord,
   CheckpointStore,
   StateSerializer,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 
 type CheckpointTuple = [id: string, nextNode: string | undefined, state: unknown];
 

@@ -46,7 +46,7 @@ The graph runs five nodes: `adjudicate` (policy + architecture evaluation agains
 
 ### Backstage Version
 
-- Requires a Backstage backend running the `ai-core` plugin and its extension-point system (`agentExtensionPoint`, `triggerExtensionPoint`, `workflowRunnerExtensionPoint` from `@webstackbuilders/plugin-ai-core-node`)
+- Requires a Backstage backend running the `ai-core` plugin and its extension-point system (`agentExtensionPoint`, `triggerExtensionPoint`, `workflowRunnerExtensionPoint` from `@ai-crew-suite/plugin-kernel-node`)
 
 ### Agentic Requirements
 
@@ -384,7 +384,7 @@ Append `?run=<id>` to the page URL. For checkpointed assessments, the page repla
 
 ### Turbo Workspace Resolution
 
-**Symptom**: TypeScript errors on extension point types from `@webstackbuilders/plugin-ai-core-node`.
+**Symptom**: TypeScript errors on extension point types from `@ai-crew-suite/plugin-kernel-node`.
 
 **Fix**: Ensure the dependency is listed as `"workspace:*"` and run `yarn install && yarn typecheck --force`.
 

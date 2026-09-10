@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import type { AgentDefinition } from '@webstackbuilders/plugin-ai-core-node';
+import type { AgentDefinition } from '@ai-crew-suite/plugin-kernel-node';
 import type { BaseChatModel } from '@langchain/core/language_models/chat_models';
-import { NodeError } from '@webstackbuilders/plugin-ai-core-node';
+import { NodeError } from '@ai-crew-suite/plugin-kernel-node';
 import type { Redactor } from './Redactor';
 import type { EventMapper } from './EventMapper';
 

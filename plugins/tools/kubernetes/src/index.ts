@@ -18,4 +18,4 @@ export {
   kubernetesDiagnosticsDriversExtensionPoint,
   type KubernetesDiagnosticsDriver,
   type KubernetesDiagnosticsDriversExtensionPoint,
-} from '@ai-crew-suite/plugin-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';

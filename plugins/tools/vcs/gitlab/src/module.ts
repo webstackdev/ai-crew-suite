@@ -15,15 +15,15 @@
  */
 import { createBackendModule, coreServices } from '@backstage/backend-plugin-api';
 import { ScmIntegrations } from '@backstage/integration';
-import { vcsDriversExtensionPoint } from '@webstackbuilders/plugin-ai-core-node';
+import { vcsDriversExtensionPoint } from '@ai-crew-suite/plugin-kernel-node';
 import { GitLabDriver } from './providers/gitlab';
 
 /**
  * GitLab VCS driver backend module for the AI Core plugin.
  */
-export const aiCoreBackendModuleVcsGitLab = createBackendModule({
-  pluginId: 'ai-core',
-  moduleId: 'vcs-gitlab',
+export const toolVcsModuleGitLab = createBackendModule({
+  pluginId: 'tool-vcs',
+  moduleId: 'gitlab',
   register(env) {
     env.registerInit({
       deps: {
@@ -53,4 +53,4 @@ export const aiCoreBackendModuleVcsGitLab = createBackendModule({
   },
 });
 
-export default aiCoreBackendModuleVcsGitLab;
+export default toolVcsModuleGitLab;

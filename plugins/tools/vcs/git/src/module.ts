@@ -15,15 +15,15 @@
  */
 import { createBackendModule, coreServices } from '@backstage/backend-plugin-api';
 import { ScmIntegrations } from '@backstage/integration';
-import { vcsDriversExtensionPoint } from '@webstackbuilders/plugin-ai-core-node';
+import { vcsDriversExtensionPoint } from '@ai-crew-suite/plugin-kernel-node';
 import { GenericGitDriver } from './providers/git';
 
 /**
  * Generic Fallback Git VCS driver backend module for the AI Core plugin.
  */
-export const aiCoreBackendModuleVcsGit = createBackendModule({
-  pluginId: 'ai-core',
-  moduleId: 'vcs-git',
+export const toolVcsModuleGit = createBackendModule({
+  pluginId: 'tool-vcs',
+  moduleId: 'git',
   register(env) {
     env.registerInit({
       deps: {

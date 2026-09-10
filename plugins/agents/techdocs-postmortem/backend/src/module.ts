@@ -21,7 +21,7 @@ import {
   agentExtensionPoint,
   triggerExtensionPoint,
   workflowRunnerExtensionPoint,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 import { createTechdocsPostmortemAgent } from './agent';
 import { readPostmortemConfig } from './config';
 import { PostmortemGraph } from './workflow/PostmortemGraph';

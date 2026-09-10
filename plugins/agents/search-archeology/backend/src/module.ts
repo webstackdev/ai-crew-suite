@@ -18,7 +18,7 @@ import {
   agentExtensionPoint,
   triggerExtensionPoint,
   workflowRunnerExtensionPoint
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 import { createSearchArcheologyAgent } from './agent';
 import { readSearchArcheologyConfig } from './config';
 import { ArcheologyGraph } from './workflow/ArcheologyGraph';

@@ -24,7 +24,7 @@ import {
   RepositoryMetadata,
   RepositorySearchResult,
   VcsDriver,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 
 export class AzureDriver implements VcsDriver {
   readonly providerId = 'azuredevops';

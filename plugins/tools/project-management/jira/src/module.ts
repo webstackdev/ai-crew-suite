@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 import { coreServices, createBackendModule } from '@backstage/backend-plugin-api';
-import { projectManagementDriversExtensionPoint } from '@webstackbuilders/plugin-ai-core-node';
+import { projectManagementDriversExtensionPoint } from '@ai-crew-suite/plugin-kernel-node';
 import { JiraDriver } from './providers/JiraDriver';
 import { readJiraConfig } from './config';
 
 /**
  * Jira driver backend module for the AI Core project management group.
  */
-export const aiCoreBackendModuleProjectManagementJira = createBackendModule({
-  pluginId: 'ai-core',
-  moduleId: 'project-management-jira',
+export const toolProjectManagementModuleJira = createBackendModule({
+  pluginId: 'tool-project-management',
+  moduleId: 'jira',
   register(env) {
     env.registerInit({
       deps: {
@@ -45,4 +45,4 @@ export const aiCoreBackendModuleProjectManagementJira = createBackendModule({
   },
 });
 
-export default aiCoreBackendModuleProjectManagementJira;
+export default toolProjectManagementModuleJira;

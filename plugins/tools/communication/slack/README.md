@@ -1,10 +1,10 @@
-# @ai-crew-suite/tool-communication-slack
+# @ai-crew-suite/plugin-tool-communication-backend-module-slack
 
 > Slack Extension Module for the AI Crew Suite platform.
 
 ## Overview
 
-This package registers a Slack `CommunicationDriver` implementation with the core `@ai-crew-suite/tool-communication-core` engine through its `communicationDriversExtensionPoint`. This package exclusively owns the Slack Web API connections, credential processing, and payload response mapping, while the core module manages the universal tool execution layer.
+This package registers a Slack `CommunicationDriver` implementation with the core `@ai-crew-suite/plugin-tool-communication-backend` engine through its `communicationDriversExtensionPoint`. This package exclusively owns the Slack Web API connections, credential processing, and payload response mapping, while the core module manages the universal tool execution layer.
 
 ### Core Responsibilities
 
@@ -40,14 +40,19 @@ Your registered Slack App must be provisioned with the following explicit scopes
 Add the extension module directly to your modern Backstage backend system container:
 
 ```ts
-backend.add(import('@ai-crew-suite/tool-communication-slack'));
+backend.add(import('@ai-crew-suite/plugin-tool-communication-backend-module-slack'));
 ```
 
 ## Local Development Workflow
 
 ```bash
 yarn install --refresh
-yarn turbo run build --filter=@ai-crew-suite/tool-communication-slack
-yarn turbo run lint --filter=@ai-crew-suite/tool-communication-slack
-yarn turbo run test --filter=@ai-crew-suite/tool-communication-slack
+yarn turbo run build --filter=@ai-crew-suite/plugin-tool-communication-backend-module-slack
+yarn turbo run lint --filter=@ai-crew-suite/plugin-tool-communication-backend-module-slack
+yarn turbo run test --filter=@ai-crew-suite/plugin-tool-communication-backend-module-slack
 ```
+
+## Compliance and Licensing
+
+Copyright © 2026 The AI Crew Suite Authors.
+Licensed under the **Apache License, Version 2.0**.

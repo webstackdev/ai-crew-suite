@@ -16,7 +16,7 @@
 import type {
   EmbeddingDoc,
   WorkflowContext,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 import type { RawContextItem } from '../workflow/context';
 import type { CatalogInsightRequest } from '../workflow/state';
 

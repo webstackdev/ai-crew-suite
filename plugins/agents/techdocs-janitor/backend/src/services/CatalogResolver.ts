@@ -16,7 +16,7 @@
 import type {
   CatalogEntityResolver,
   CatalogEntitySummary,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 
 /** Minimal catalog resolver for owner truth used by the scoped read-only janitor. */
 export class CatalogResolver implements Pick<

@@ -20,7 +20,7 @@ import type {
   TicketSummary,
   WorkflowContext,
   WorkflowRunner
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 import type { SearchArcheologyConfig } from '../config';
 import { expertiseMatrixArtifact } from '../services/ArcheologyArtifactWriter';
 import { HistoryToolRunner } from '../services/HistoryToolRunner';

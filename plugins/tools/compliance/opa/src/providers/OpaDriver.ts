@@ -20,7 +20,7 @@ import {
   CostEstimateResult,
   PermissionCheckResult,
   PolicyEvaluationResult,
-} from '@ai-crew-suite/plugin-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 
 export type OpaDriverConfig = {
   baseUrl: string;

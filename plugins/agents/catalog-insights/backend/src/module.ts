@@ -19,7 +19,7 @@ import {
   agentExtensionPoint,
   triggerExtensionPoint,
   workflowRunnerExtensionPoint,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 import { createCatalogAiInsightsAgent } from './agent';
 import { readCatalogAiInsightsConfig } from './config';
 import { registerNightlyScanTask } from './scheduler/nightlyScan';

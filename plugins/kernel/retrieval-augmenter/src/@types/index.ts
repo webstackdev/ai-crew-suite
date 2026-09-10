@@ -21,7 +21,7 @@ import type {
   LoggerService,
 } from '@backstage/backend-plugin-api';
 import type { Entity } from '@backstage/catalog-model';
-import type { VectorStore } from '@webstackbuilders/plugin-ai-core-node';
+import type { VectorStore } from '@ai-crew-suite/plugin-kernel-node';
 
 export type AugmentationOptions = {
   chunkSize?: number;

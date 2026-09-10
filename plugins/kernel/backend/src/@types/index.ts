@@ -33,7 +33,7 @@ import type {
   ToolRegistry,
   TriggerBinding,
   WorkflowDefinition,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 import type { AgentRuntime } from '../runtime';
 import type { AiCoreController } from '../service/controller';
 

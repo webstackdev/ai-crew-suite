@@ -21,7 +21,7 @@ import {
   agentExtensionPoint,
   triggerExtensionPoint,
   workflowRunnerExtensionPoint,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 import { createScaffolderPrdAgent } from './agent';
 import { readScaffolderPrdConfig } from './config';
 import { PrdGraph } from './workflow/PrdGraph';

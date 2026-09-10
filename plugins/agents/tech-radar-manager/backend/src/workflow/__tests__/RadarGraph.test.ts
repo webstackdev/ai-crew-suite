@@ -17,7 +17,7 @@ import type {
   AgentEvent,
   AgentRunInput,
   WorkflowContext,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 import { describe, expect, it, vi } from 'vitest';
 import { RadarGraph } from '../RadarGraph';
 

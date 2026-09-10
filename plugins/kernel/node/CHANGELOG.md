@@ -1,4 +1,4 @@
-# @webstackbuilders/plugin-ai-core-node
+# @ai-crew-suite/plugin-kernel-node
 
 ## 0.0.1
 

@@ -15,7 +15,7 @@
  */
 import { ChatOpenRouter } from '@langchain/openrouter';
 import type { LoggerService } from '@backstage/backend-plugin-api';
-import type { ModelDefinition } from '@webstackbuilders/plugin-ai-core-node';
+import type { ModelDefinition } from '@ai-crew-suite/plugin-kernel-node';
 
 /**
  * Configuration for one OpenRouter chat model registration.

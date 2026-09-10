@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 import { coreServices, createBackendModule } from '@backstage/backend-plugin-api';
-import { qualityScorecardsExtensionPoint } from '@webstackbuilders/plugin-ai-core-node';
+import { qualityScorecardsExtensionPoint } from '@ai-crew-suite/plugin-kernel-node';
 import { TechRadarDriver } from './providers/TechRadarDriver';
 
-export const aiCoreModuleQualityScorecardsTechRadar = createBackendModule({
-  pluginId: 'ai-core',
-  moduleId: 'quality-scorecards-techradar',
+export const toolQualityScorecardsModuleTechRadar = createBackendModule({
+  pluginId: 'tool-quality-scorecards',
+  moduleId: 'techradar',
   register(env) {
     env.registerInit({
       deps: {
@@ -43,4 +43,4 @@ export const aiCoreModuleQualityScorecardsTechRadar = createBackendModule({
   },
 });
 
-export default aiCoreModuleQualityScorecardsTechRadar;
+export default toolQualityScorecardsModuleTechRadar;

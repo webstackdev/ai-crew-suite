@@ -24,7 +24,7 @@ import type {
   KubernetesWorkloadTimeline,
   OnCallShift,
   PullRequestSummary,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 import type { InsightToolRunner } from '../services/InsightToolRunner';
 import type { RawContextItem } from './context';
 import type { IntentToolPlan } from './intents';

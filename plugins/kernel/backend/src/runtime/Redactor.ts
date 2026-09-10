@@ -18,7 +18,7 @@ import {
   createRedactor,
   DEFAULT_REDACTION_POLICY,
   RedactionPolicy,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 import type { RootConfigService } from '@backstage/backend-plugin-api';
 
 /**

@@ -16,7 +16,7 @@
 import type {
   RepositoryMetadata,
   RepositorySearchResult
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 import type { TunerToolRunner } from './TunerToolRunner';
 
 /** Read-only VCS tool IDs used to resolve and read the owning IaC file. */

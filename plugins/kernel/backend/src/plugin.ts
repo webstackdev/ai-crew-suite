@@ -38,7 +38,7 @@ import {
   triggerExtensionPoint,
   TriggerBinding,
   WorkflowDefinition,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 import { createAiBackendServices, createRouter, createSourceRegistry } from './service';
 
 /**

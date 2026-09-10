@@ -18,7 +18,7 @@ import type { Redis } from 'ioredis';
 import type {
   SessionMessage,
   SessionStore,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 
 /**
  * Options controlling Redis-backed session persistence.

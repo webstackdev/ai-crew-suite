@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { TicketDetail, TicketSummary } from '@webstackbuilders/plugin-ai-core-node';
+import type { TicketDetail, TicketSummary } from '@ai-crew-suite/plugin-kernel-node';
 import type { ContributionEvidence, EvidenceRef } from './state';
 
 /** Extracts ticket assignee-history and comment actors as cited triage evidence. */

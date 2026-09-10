@@ -21,7 +21,7 @@ import {
   runtimeStoreExtensionPoint,
   sourceExtensionPoint,
   SourceDescriptor,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 import { ragAiPlugin } from '../plugin';
 
 const createAgent = (id: string): AgentDefinition => ({

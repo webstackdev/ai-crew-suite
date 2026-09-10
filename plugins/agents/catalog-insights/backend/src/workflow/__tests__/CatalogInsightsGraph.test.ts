@@ -20,7 +20,7 @@ import type {
   CatalogEntitySummary,
   CatalogIntegrationReferences,
   WorkflowContext,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 import { describe, expect, it, vi } from 'vitest';
 import { CatalogInsightsGraph } from '../CatalogInsightsGraph';
 import type { CatalogInsightReport } from '../state';

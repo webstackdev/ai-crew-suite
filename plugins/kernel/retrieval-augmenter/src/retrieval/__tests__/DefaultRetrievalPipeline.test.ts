@@ -19,7 +19,7 @@ import type {
   AugmentationRetriever,
   EmbeddingDoc,
   RetrievalRouter,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 import { DefaultRetrievalPipeline } from '../DefaultRetrievalPipeline';
 
 const doc = (content: string): EmbeddingDoc => ({

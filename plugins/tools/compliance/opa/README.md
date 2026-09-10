@@ -1,10 +1,10 @@
-# @ai-crew-suite/tool-compliance-opa
+# @ai-crew-suite/plugin-tool-compliance-backend-module-opa
 
 > OPA Extension Module for the AI Crew Suite platform.
 
 ## Overview
 
-This package registers an Open Policy Agent (OPA) `ComplianceDriver` implementation with the core `@ai-crew-suite/tool-compliance-core` engine through its `complianceDriversExtensionPoint`. This package exclusively owns OPA REST API interactions and data normalization, while the core module manages the universal tool execution layer.
+This package registers an Open Policy Agent (OPA) `ComplianceDriver` implementation with the core `@ai-crew-suite/plugin-tool-compliance-backend` engine through its `complianceDriversExtensionPoint`. This package exclusively owns OPA REST API interactions and data normalization, while the core module manages the universal tool execution layer.
 
 ### Core Responsibilities
 
@@ -43,14 +43,19 @@ The driver passes target data as the root `input` entity to OPA. It supports sta
 Add the extension module directly to your modern Backstage backend system container:
 
 ```ts
-backend.add(import('@ai-crew-suite/tool-compliance-opa'));
+backend.add(import('@ai-crew-suite/plugin-tool-compliance-backend-module-opa'));
 ```
 
 ## Local Development Workflow
 
 ```bash
 yarn install --refresh
-yarn turbo run build --filter=@ai-crew-suite/tool-compliance-opa
-yarn turbo run lint --filter=@ai-crew-suite/tool-compliance-opa
-yarn turbo run test --filter=@ai-crew-suite/tool-compliance-opa
+yarn turbo run build --filter=@ai-crew-suite/plugin-tool-compliance-backend-module-opa
+yarn turbo run lint --filter=@ai-crew-suite/plugin-tool-compliance-backend-module-opa
+yarn turbo run test --filter=@ai-crew-suite/plugin-tool-compliance-backend-module-opa
 ```
+
+## Compliance and Licensing
+
+Copyright © 2026 The AI Crew Suite Authors.
+Licensed under the **Apache License, Version 2.0**.

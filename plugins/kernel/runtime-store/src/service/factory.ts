@@ -25,7 +25,7 @@ import type {
   CheckpointStore,
   RunStore,
   SessionStore,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 import { readRuntimeStoresConfig } from '../config';
 import { applyDatabaseMigrations } from '../database/migrations';
 import { RedisCheckpointStore } from './RedisCheckpointStore';

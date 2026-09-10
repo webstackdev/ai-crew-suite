@@ -13,8 +13,6 @@ This package implements a Qdrant-backed vector store for AI Crew Suite. It persi
 - **Retrieval support**: Provides metadata-filtered similarity search for source-specific and cross-source RAG queries.
 - **Config-driven client**: Reads `ai.storage.qdrant` with `QDRANT_URL` and `QDRANT_API_KEY` environment fallbacks.
 
----
-
 ## Architectural Dependency Tree
 
 This package acts as a vector storage module within the broader AI Crew Suite ecosystem:
@@ -23,8 +21,6 @@ This package acts as a vector storage module within the broader AI Crew Suite ec
 - **Provider Dependency**: Uses `@qdrant/js-client-rest` for Qdrant HTTP API access.
 - **Downstream Consumer**: Ingested by embeddings modules such as `plugin-ai-core-backend-module-llm-openai` or `plugin-ai-core-backend-module-llm-aws` when a deployment selects Qdrant as its vector store.
 - **Service Dependency**: Requires a reachable Qdrant server for vector persistence and similarity search.
-
----
 
 ## Local Development Workflow
 
@@ -52,8 +48,6 @@ Test files are located inline next to the modules they validate (`*.test.ts`). E
 yarn workspace @webstackbuilders/plugin-ai-core-backend-module-storage-qdrant test
 ```
 
----
-
 ## Technical Extension Checklist
 
 When modifying or extending code inside this workspace, ensure you update the corresponding global documentation indexes located at `/docs/core-development/` if you alter any of the following operational layers:
@@ -64,3 +58,8 @@ When modifying or extending code inside this workspace, ensure you update the co
 - [ ] Introducing brand-new model adapter configurations.
 - [ ] Altering backend ingestion worker pipelines.
 - [ ] Updating retrieval tool IDs, augmentation indexer behavior, or vector store composition.
+
+## Compliance and Licensing
+
+Copyright © 2026 The AI Crew Suite Authors.
+Licensed under the **Apache License, Version 2.0**.

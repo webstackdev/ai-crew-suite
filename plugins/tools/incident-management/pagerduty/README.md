@@ -1,10 +1,10 @@
-# @ai-crew-suite/tool-incident-management-pagerduty
+# @ai-crew-suite/plugin-tool-incident-management-backend-module-pagerduty
 
 > PagerDuty Extension Module for the AI Crew Suite platform.
 
 ## Overview
 
-This package registers a PagerDuty `IncidentManagementDriver` implementation with the core `@ai-crew-suite/tool-incident-management-core` engine through its `incidentManagementDriversExtensionPoint`. This package exclusively owns PagerDuty REST API v2 interactions, payload mapping, and header injection, while the core module manages the universal tool execution layer.
+This package registers a PagerDuty `IncidentManagementDriver` implementation with the core `@ai-crew-suite/plugin-tool-incident-management-backend` engine through its `incidentManagementDriversExtensionPoint`. This package exclusively owns PagerDuty REST API v2 interactions, payload mapping, and header injection, while the core module manages the universal tool execution layer.
 
 ### Core Responsibilities
 
@@ -38,14 +38,19 @@ ai:
 Add the extension module directly to your modern Backstage backend system container:
 
 ```ts
-backend.add(import('@ai-crew-suite/tool-incident-management-pagerduty'));
+backend.add(import('@ai-crew-suite/plugin-tool-incident-management-backend-module-pagerduty'));
 ```
 
 ## Local Development Workflow
 
 ```bash
 yarn install --refresh
-yarn turbo run build --filter=@ai-crew-suite/tool-incident-management-pagerduty
-yarn turbo run lint --filter=@ai-crew-suite/tool-incident-management-pagerduty
-yarn turbo run test --filter=@ai-crew-suite/tool-incident-management-pagerduty
+yarn turbo run build --filter=@ai-crew-suite/plugin-tool-incident-management-backend-module-pagerduty
+yarn turbo run lint --filter=@ai-crew-suite/plugin-tool-incident-management-backend-module-pagerduty
+yarn turbo run test --filter=@ai-crew-suite/plugin-tool-incident-management-backend-module-pagerduty
 ```
+
+## Compliance and Licensing
+
+Copyright © 2026 The AI Crew Suite Authors.
+Licensed under the **Apache License, Version 2.0**.

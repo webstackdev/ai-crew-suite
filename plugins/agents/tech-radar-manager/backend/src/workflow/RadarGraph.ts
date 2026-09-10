@@ -19,7 +19,7 @@ import type {
   AgentRunInput,
   WorkflowContext,
   WorkflowRunner,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 import type { TechRadarConfig } from '../config';
 import { radarAnalysisArtifact } from '../services/RadarArtifactWriter';
 import {

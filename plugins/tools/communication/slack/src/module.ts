@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 import { coreServices, createBackendModule } from '@backstage/backend-plugin-api';
-import { communicationDriversExtensionPoint } from '@ai-crew-suite/plugin-core-node';
+import { communicationDriversExtensionPoint } from '@ai-crew-suite/plugin-kernel-node';
 import { SlackDriver } from './providers/SlackDriver';
 import { readSlackConfig } from './config';
 
 /**
  * Slack driver backend module for the AI Core communication group.
  */
-export const aiCoreBackendModuleCommunicationSlack = createBackendModule({
-  pluginId: 'ai-core',
-  moduleId: 'communication-slack',
+export const toolCommunicationModuleCommunicationSlack = createBackendModule({
+  pluginId: 'tool-communication',
+  moduleId: 'slack',
   register(env) {
     env.registerInit({
       deps: {
@@ -45,4 +45,4 @@ export const aiCoreBackendModuleCommunicationSlack = createBackendModule({
   },
 });
 
-export default aiCoreBackendModuleCommunicationSlack;
+export default toolCommunicationModuleCommunicationSlack;

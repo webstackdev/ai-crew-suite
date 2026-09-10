@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 import { coreServices, createBackendModule } from '@backstage/backend-plugin-api';
-import { complianceDriversExtensionPoint } from '@ai-crew-suite/plugin-core-node';
+import { complianceDriversExtensionPoint } from '@ai-crew-suite/plugin-kernel-node';
 import { readOpaConfig } from './config';
 import { OpaDriver } from './providers/OpaDriver';
 
 /**
  * OPA driver backend module for the AI Core compliance group.
  */
-export const aiCoreBackendModuleComplianceOpa = createBackendModule({
-  pluginId: 'ai-core',
-  moduleId: 'compliance-opa',
+export const toolComplianceModuleOpa = createBackendModule({
+  pluginId: 'tool-compliance',
+  moduleId: 'opa',
   register(env) {
     env.registerInit({
       deps: {
@@ -45,4 +45,4 @@ export const aiCoreBackendModuleComplianceOpa = createBackendModule({
   },
 });
 
-export default aiCoreBackendModuleComplianceOpa;
+export default toolComplianceModuleOpa;

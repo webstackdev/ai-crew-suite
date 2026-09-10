@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import type { AgentDefinition, AgentEvent, WorkflowDefinition } from '@webstackbuilders/plugin-ai-core-node';
-import { validateWorkflowDefinition, END, NodeError } from '@webstackbuilders/plugin-ai-core-node';
+import type { AgentDefinition, AgentEvent, WorkflowDefinition } from '@ai-crew-suite/plugin-kernel-node';
+import { validateWorkflowDefinition, END, NodeError } from '@ai-crew-suite/plugin-kernel-node';
 import { NodeHarness } from './NodeHarness';
 import { EventMapper } from './EventMapper';
 import { ToolExecutor } from './ToolExecutor';

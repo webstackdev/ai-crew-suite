@@ -20,7 +20,7 @@ import type {
   RepositorySearchResult,
   WorkflowContext,
   WorkflowRunner,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 import type { SearchContextConfig } from '../config';
 import { classifyConsumer } from '../rules/classify';
 import { rollupOwners } from '../rules/rollup';

@@ -100,7 +100,7 @@ Provider modules should not duplicate prompt assembly or orchestration control. 
 
 Create a backend module when adding a new model provider. The module should:
 
-1. Depend on `@webstackbuilders/plugin-ai-core-node`.
+1. Depend on `@ai-crew-suite/plugin-kernel-node`.
 2. Use `createBackendModule({ pluginId: 'ai-core', moduleId: '<provider>-models' })`.
 3. Declare `modelExtensionPoint` in `registerInit` dependencies.
 4. Read provider config from `coreServices.rootConfig`.

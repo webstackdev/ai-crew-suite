@@ -1,5 +1,5 @@
 {
-  "name": "@ai-crew-suite/tool-incident-management-pagerduty",
+  "name": "@ai-crew-suite/plugin-tool-incident-management-backend-module-pagerduty",
   "description": "PagerDuty driver module that extends the AI Crew Suite incident management plugin to provide operational on-call and paging tools.",
   "version": "0.0.1",
   "main": "src/index.ts",
@@ -22,8 +22,8 @@
     "role": "backend-plugin-module",
     "pluginId": "tool-incident-management",
     "pluginPackages": [
-      "@ai-crew-suite/tool-incident-management-core",
-      "@ai-crew-suite/tool-incident-management-pagerduty"
+      "@ai-crew-suite/plugin-tool-incident-management-backend",
+      "@ai-crew-suite/plugin-tool-incident-management-backend-module-pagerduty"
     ]
   },
   "bugs": {
@@ -50,7 +50,7 @@
     "typecheck": "crew typecheck"
   },
   "dependencies": {
-    "@ai-crew-suite/plugin-core-node": "workspace:^",
+    "@ai-crew-suite/plugin-kernel-node": "workspace:^",
     "@backstage/backend-plugin-api": "backstage:^",
     "@backstage/config": "backstage:^"
   },

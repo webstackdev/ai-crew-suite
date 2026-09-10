@@ -1,4 +1,4 @@
-# @ai-crew-suite/tool-kubernetes
+# @ai-crew-suite/plugin-tool-kubernetes-backend
 
 > Kubernetes Diagnostics Module for the AI Crew Suite platform.
 
@@ -37,14 +37,19 @@ The system requires an active driver matching the configured provider identifier
 Add the extension module directly to your modern Backstage backend system container:
 
 ```ts
-backend.add(import('@ai-crew-suite/tool-kubernetes'));
+backend.add(import('@ai-crew-suite/plugin-tool-kubernetes-backend'));
 ```
 
 ## Local Development Workflow
 
 ```bash
 yarn install --refresh
-yarn turbo run build --filter=@ai-crew-suite/tool-kubernetes
-yarn turbo run lint --filter=@ai-crew-suite/tool-kubernetes
-yarn turbo run test --filter=@ai-crew-suite/tool-kubernetes
+yarn turbo run build --filter=@ai-crew-suite/plugin-tool-kubernetes-backend
+yarn turbo run lint --filter=@ai-crew-suite/plugin-tool-kubernetes-backend
+yarn turbo run test --filter=@ai-crew-suite/plugin-tool-kubernetes-backend
 ```
+
+## Compliance and Licensing
+
+Copyright © 2026 The AI Crew Suite Authors.
+Licensed under the **Apache License, Version 2.0**.

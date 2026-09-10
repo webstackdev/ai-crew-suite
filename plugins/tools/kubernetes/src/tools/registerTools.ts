@@ -22,7 +22,7 @@ import {
   KubernetesTimelineQuery,
   KubernetesWorkloadQuery,
   ToolDefinition,
-} from '@ai-crew-suite/plugin-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 
 export interface CreateKubernetesDiagnosticsToolsOptions {
   driver: KubernetesDiagnosticsDriver;

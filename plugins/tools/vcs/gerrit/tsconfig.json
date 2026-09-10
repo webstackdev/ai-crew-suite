@@ -1,17 +1,3 @@
 {
-  "extends": "../../../tsconfig.base.json",
-  "compilerOptions": {
-    "outDir": "../../../dist-types/plugins/backend/plugin-ai-core-backend-module-vcs-gerrit"
-  },
-  "include": [
-    "src/**/*"
-  ],
-  "references": [
-    {
-      "path": "../../../core/node"
-    },
-    {
-      "path": "../core"
-    }
-  ]
+  "extends": "../../../../tsconfig.base.json",
 }

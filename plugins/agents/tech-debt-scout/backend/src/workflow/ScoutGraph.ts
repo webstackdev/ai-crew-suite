@@ -19,7 +19,7 @@ import type {
   RepositorySearchResult,
   WorkflowContext,
   WorkflowRunner,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 import type { TechDebtScoutConfig } from '../config';
 import { techDebtReportArtifact } from '../services/ScoutArtifactWriter';
 import { ScoutToolRunner } from '../services/ScoutToolRunner';

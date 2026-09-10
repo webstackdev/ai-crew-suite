@@ -22,7 +22,7 @@ import type {
   RunStore,
   Tool,
   ToolRegistry,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 
 export const createLogger = () => ({
   info: vi.fn(),

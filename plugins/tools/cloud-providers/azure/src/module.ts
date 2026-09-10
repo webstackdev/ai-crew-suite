@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 import { coreServices, createBackendModule } from '@backstage/backend-plugin-api';
-import { cloudDriversExtensionPoint } from '@ai-crew-suite/plugin-core-node';
+import { cloudDriversExtensionPoint } from '@ai-crew-suite/plugin-kernel-node';
 import { AzureDriver } from './providers/AzureDriver';
 
-export const aiCoreBackendModuleCloudProvidersAzure = createBackendModule({
-  pluginId: 'ai-core',
-  moduleId: 'cloud-providers-azure',
+export const toolCloudProvidersModuleAzure = createBackendModule({
+  pluginId: 'tool-cloud-providers',
+  moduleId: 'azure',
   register(env) {
     env.registerInit({
       deps: {
@@ -49,4 +49,4 @@ export const aiCoreBackendModuleCloudProvidersAzure = createBackendModule({
   },
 });
 
-export default aiCoreBackendModuleCloudProvidersAzure;
+export default toolCloudProvidersModuleAzure;

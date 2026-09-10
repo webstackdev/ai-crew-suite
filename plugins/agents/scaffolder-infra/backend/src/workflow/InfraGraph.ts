@@ -18,7 +18,7 @@ import type {
   AgentRunInput,
   WorkflowContext,
   WorkflowRunner
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 import type { ScaffolderInfraConfig } from '../config';
 import { infraReportArtifact } from '../services/InfraArtifactWriter';
 import { BlueprintResolver } from '../services/BlueprintResolver';

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { AgentEvent, AgentRunInput, PullRequestSummary, WorkflowContext, WorkflowRunner } from '@webstackbuilders/plugin-ai-core-node';
+import type { AgentEvent, AgentRunInput, PullRequestSummary, WorkflowContext, WorkflowRunner } from '@ai-crew-suite/plugin-kernel-node';
 import type { ReleaseNotesConfig } from '../config';
 import { createReleaseNotesDraftArtifactEvent } from '../services/ReleaseNotesArtifactWriter';
 import { ReleaseNotesToolRunner } from '../services/ReleaseNotesToolRunner';

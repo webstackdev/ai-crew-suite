@@ -19,7 +19,7 @@ import type {
   CloudResourceSummary,
   WorkflowContext,
   WorkflowRunner,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 import type { ShadowDetectiveConfig } from '../config';
 import { shadowResourceReportArtifact } from '../services/ShadowArtifactWriter';
 import type { CatalogBindingIndex } from '../services/CatalogBindingIndex';

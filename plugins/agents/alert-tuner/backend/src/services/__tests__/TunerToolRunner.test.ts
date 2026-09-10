@@ -15,7 +15,7 @@
  */
 import { describe, expect, it, vi } from 'vitest';
 import { TunerToolRunner } from '../TunerToolRunner';
-import type { WorkflowContext } from '@webstackbuilders/plugin-ai-core-node';
+import type { WorkflowContext } from '@ai-crew-suite/plugin-kernel-node';
 
 const createMockContext = (invokeToolMock: Function) => {
   const warn = vi.fn();

@@ -15,12 +15,12 @@
  */
 import { coreServices, createBackendModule } from '@backstage/backend-plugin-api';
 import { DefaultAwsCredentialsManager } from '@backstage/integration-aws-node';
-import { cloudDriversExtensionPoint } from '@ai-crew-suite/plugin-core-node';
+import { cloudDriversExtensionPoint } from '@ai-crew-suite/plugin-kernel-node';
 import { AwsDriver } from './providers/AwsDriver';
 
-export const aiCoreBackendModuleCloudProvidersAws = createBackendModule({
-  pluginId: 'ai-core',
-  moduleId: 'cloud-providers-aws',
+export const toolCloudProvidersModuleAws = createBackendModule({
+  pluginId: 'tool-cloud-providers',
+  moduleId: 'aws',
   register(env) {
     env.registerInit({
       deps: {
@@ -51,4 +51,4 @@ export const aiCoreBackendModuleCloudProvidersAws = createBackendModule({
   },
 });
 
-export default aiCoreBackendModuleCloudProvidersAws;
+export default toolCloudProvidersModuleAws;

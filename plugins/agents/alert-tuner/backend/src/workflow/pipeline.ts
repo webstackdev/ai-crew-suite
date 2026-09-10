@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { MetricSeries } from '@webstackbuilders/plugin-ai-core-node';
+import type { MetricSeries } from '@ai-crew-suite/plugin-kernel-node';
 import type { AlertAiTunerConfig } from '../config';
 import { IacSourceResolver } from '../services/IacSourceResolver';
 import type { TunerToolRunner } from '../services/TunerToolRunner';

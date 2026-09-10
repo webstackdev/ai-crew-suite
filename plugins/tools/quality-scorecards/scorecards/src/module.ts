@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 import { coreServices, createBackendModule } from '@backstage/backend-plugin-api';
-import { qualityScorecardsExtensionPoint } from '@webstackbuilders/plugin-ai-core-node';
+import { qualityScorecardsExtensionPoint } from '@ai-crew-suite/plugin-kernel-node';
 import { ScorecardsDriver } from './providers/ScorecardsDriver';
 
-export const aiCoreModuleQualityScorecardsScorecards = createBackendModule({
-  pluginId: 'ai-core',
-  moduleId: 'quality-scorecards-scorecards',
+export const toolQualityScorecardsModuleScorecards = createBackendModule({
+  pluginId: 'tool-quality-scorecards',
+  moduleId: 'scorecards',
   register(env) {
     env.registerInit({
       deps: {
@@ -48,4 +48,4 @@ export const aiCoreModuleQualityScorecardsScorecards = createBackendModule({
   },
 });
 
-export default aiCoreModuleQualityScorecardsScorecards;
+export default toolQualityScorecardsModuleScorecards;

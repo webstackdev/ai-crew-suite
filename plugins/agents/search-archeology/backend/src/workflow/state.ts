@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { ServiceActor } from '@webstackbuilders/plugin-ai-core-node';
+import type { ServiceActor } from '@ai-crew-suite/plugin-kernel-node';
 
 /** Versioned bounded research request for one legacy-system question. */
 export type ArcheologyRequest = {

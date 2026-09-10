@@ -18,7 +18,7 @@ import {
   agentExtensionPoint,
   triggerExtensionPoint,
   workflowRunnerExtensionPoint
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 import { createDriftDetectorAgent } from './agent';
 import { readDriftDetectorConfig } from './config';
 import { DriftGraph } from './workflow/DriftGraph';

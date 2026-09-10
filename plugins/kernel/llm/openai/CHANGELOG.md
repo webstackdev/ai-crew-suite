@@ -12,4 +12,4 @@
 
 - Updated dependencies [8ed88c3]
   - @webstackbuilders/plugin-ai-core-backend-retrieval-augmenter@2.0.0
-  - @webstackbuilders/plugin-ai-core-node@0.4.0
+  - @ai-crew-suite/plugin-kernel-node@0.4.0

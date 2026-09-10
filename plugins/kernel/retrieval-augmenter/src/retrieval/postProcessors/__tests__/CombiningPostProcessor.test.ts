@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { describe, expect, it } from 'vitest';
-import type { EmbeddingDoc } from '@webstackbuilders/plugin-ai-core-node';
+import type { EmbeddingDoc } from '@ai-crew-suite/plugin-kernel-node';
 import { CombiningPostProcessor } from '../CombiningPostProcessor';
 
 const doc = (content: string): EmbeddingDoc => ({

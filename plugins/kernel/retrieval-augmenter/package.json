@@ -58,7 +58,7 @@
     "@backstage/plugin-search-common": "backstage:^",
     "@langchain/core": "^1.2.6",
     "@langchain/textsplitters": "^1.0.1",
-    "@webstackbuilders/plugin-ai-core-node": "workspace:^",
+    "@ai-crew-suite/plugin-kernel-node": "workspace:^",
     "i18next": "26.3.6",
     "p-limit": "^3.1.0"
   }

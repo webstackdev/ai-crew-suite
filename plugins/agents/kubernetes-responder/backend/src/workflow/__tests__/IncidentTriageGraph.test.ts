@@ -19,7 +19,7 @@ import type {
   AgentEvent,
   KubernetesWorkloadSnapshot,
   WorkflowContext,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 import { IncidentTriageGraph } from '../IncidentTriageGraph';
 import type { IncidentTriageReport } from '../state';
 

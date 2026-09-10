@@ -18,7 +18,7 @@ import {
   agentExtensionPoint,
   triggerExtensionPoint,
   workflowRunnerExtensionPoint,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 import { createAlertAiTunerAgent } from './agent';
 import { readAlertAiTunerConfig } from './config';
 import { registerWeeklySweep } from './scheduler/weeklySweep';

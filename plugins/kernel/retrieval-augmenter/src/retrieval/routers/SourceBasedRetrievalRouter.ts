@@ -19,7 +19,7 @@ import {
   AugmentationRetriever,
   EmbeddingsSource,
   RetrievalRouter,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 
 /**
  * Routes retrieval requests to the retrievers configured for a specific source.

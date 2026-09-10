@@ -22,7 +22,7 @@ import {
   agentExtensionPoint,
   triggerExtensionPoint,
   workflowRunnerExtensionPoint,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 import { describe, expect, it, vi } from 'vitest';
 import { catalogAiInsightsModule } from '../module';
 import { CATALOG_AI_INSIGHTS_TOOL_IDS } from '../agent';

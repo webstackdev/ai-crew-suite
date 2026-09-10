@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { AgentDefinition } from '@webstackbuilders/plugin-ai-core-node';
+import type { AgentDefinition } from '@ai-crew-suite/plugin-kernel-node';
 import type { RfcAdrReviewerConfig } from './config';
 
 /** Stable AI Core route identifier for the RFC/ADR reviewer. */

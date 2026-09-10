@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 import { coreServices, createBackendModule } from '@backstage/backend-plugin-api';
-import { cloudDriversExtensionPoint } from '@ai-crew-suite/plugin-core-node';
+import { cloudDriversExtensionPoint } from '@ai-crew-suite/plugin-kernel-node';
 import { GcpDriver } from './providers/GcpDriver';
 
-export const aiCoreBackendModuleCloudProvidersGcp = createBackendModule({
-  pluginId: 'ai-core',
-  moduleId: 'cloud-providers-gcp',
+export const toolCloudProvidersModuleGcp = createBackendModule({
+  pluginId: 'tool-cloud-providers',
+  moduleId: 'gcp',
   register(env) {
     env.registerInit({
       deps: {
@@ -47,4 +47,4 @@ export const aiCoreBackendModuleCloudProvidersGcp = createBackendModule({
   },
 });
 
-export default aiCoreBackendModuleCloudProvidersGcp;
+export default toolCloudProvidersModuleGcp;

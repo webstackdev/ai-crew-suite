@@ -19,7 +19,7 @@ import type {
   CatalogEntityResolver,
   WorkflowContext,
   WorkflowRunner,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 import type { TechdocsJanitorConfig } from '../config';
 import { janitorReportArtifact } from '../services/JanitorArtifactWriter';
 import { detectMarkdown } from './detect';

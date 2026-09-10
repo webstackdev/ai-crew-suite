@@ -19,7 +19,7 @@ import {
   AugmentationPostProcessor,
   EmbeddingDoc,
   EmbeddingsSource,
-} from '@webstackbuilders/plugin-ai-core-node';
+} from '@ai-crew-suite/plugin-kernel-node';
 
 /**
  * Post-processor that concatenates retriever results into one context list.
