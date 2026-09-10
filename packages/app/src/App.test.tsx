@@ -76,7 +76,7 @@ vi.mock(
   () => ({ default: 'scaffolder-ai-shadow-detective' })
 );
 vi.mock(
-  '@ai-crew-suite/plugin-agent-scaffolder-prd-backend/alpha',
+  '@ai-crew-suite/plugin-agent-scaffolder-prd/alpha',
   () => ({ default: 'scaffolder-ai-prd' })
 );
 vi.mock(

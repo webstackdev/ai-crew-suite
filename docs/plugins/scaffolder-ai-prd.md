@@ -36,8 +36,8 @@ The pipeline is **entirely deterministic and runs with zero external dependencie
 
 The plugin follows the standard two-package Backstage agent layout:
 
-- **Backend module** (`@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-prd`, `role: backend-plugin-module`, `pluginId: ai-core`) — registers the `PrdGraph` workflow runner (ID `scaffolder-prd`) with no external service dependencies; the agent definition has 4 read-only tools (all unused) and a single manual trigger
-- **Frontend plugin** (`@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-prd`, `role: frontend-plugin`, `pluginId: scaffoldinger-ai-prd`) — provides a standalone page at `/scaffolder-ai-prd` with a PRD submission form and a `BlueprintPanel` showing the three-channel output
+- **Backend module** (`@ai-crew-suite/plugin-agent-scaffolder-prd-backend`, `role: backend-plugin-module`, `pluginId: ai-core`) — registers the `PrdGraph` workflow runner (ID `scaffolder-prd`) with no external service dependencies; the agent definition has 4 read-only tools (all unused) and a single manual trigger
+- **Frontend plugin** (`@ai-crew-suite/plugin-agent-scaffolder-prd`, `role: frontend-plugin`, `pluginId: scaffoldinger-ai-prd`) — provides a standalone page at `/scaffolder-ai-prd` with a PRD submission form and a `BlueprintPanel` showing the three-channel output
 
 The graph runs with a parallel fan-out pattern: `pm || engineer || writer` → `join.merge`. All three channels are `Promise.resolve()` with deterministic data derived from parsed PRD spans. The artifact kind is `delivery-blueprint`.
 
@@ -75,7 +75,7 @@ In `packages/backend/package.json`:
 
 ```json
 "dependencies": {
-  "@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-prd": "workspace:^"
+  "@ai-crew-suite/plugin-agent-scaffolder-prd-backend": "workspace:^"
 }
 ```
 
@@ -84,7 +84,7 @@ In `packages/backend/package.json`:
 In `packages/backend/src/index.ts`:
 
 ```ts
-import { scaffolderPrdModule } from '@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-prd';
+import { scaffolderPrdModule } from '@ai-crew-suite/plugin-agent-scaffolder-prd-backend';
 
 backend.add(scaffolderPrdModule);
 ```
@@ -122,7 +122,7 @@ In `packages/app/package.json`:
 
 ```json
 "dependencies": {
-  "@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-prd": "workspace:^"
+  "@ai-crew-suite/plugin-agent-scaffolder-prd": "workspace:^"
 }
 ```
 
@@ -131,7 +131,7 @@ In `packages/app/package.json`:
 In `packages/app/src/App.tsx`:
 
 ```ts
-import scaffolderPrdExtensions from '@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-prd/alpha';
+import scaffolderPrdExtensions from '@ai-crew-suite/plugin-agent-scaffolder-prd/alpha';
 
 const app = createApp({
   features: [scaffolderPrdExtensions],

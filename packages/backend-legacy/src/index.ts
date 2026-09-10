@@ -111,7 +111,7 @@ backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-agent-backend
 backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-infra/scaffolderModule')));
 backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-intent')));
 backend.add(loadBackendFeature(import('@ai-crew-suite/plugin-agent-scaffolder-shadow-detective-backend')));
-backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-prd')));
+backend.add(loadBackendFeature(import('@ai-crew-suite/plugin-agent-scaffolder-prd-backend')));
 backend.add(loadBackendFeature(import('@ai-crew-suite/plugin-agent-search-archeology-backend')));
 backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-agent-backend-search-ai-context')));
 backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-agent-backend-tech-debt-ai-scout')));

@@ -26,11 +26,11 @@ import driftDetectorPlugin from '@webstackbuilders/plugin-ai-agent-frontend-scaf
 import scaffolderGuardrailPlugin from '@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-guardrail-agent/alpha';
 import scaffolderInfraPlugin from '@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-infra/alpha';
 import scaffolderIntentPlugin from '@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-intent/alpha';
-import shadowDetectivePlugin from '@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-shadow-detective/alpha';
-import scaffolderPrdPlugin from '@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-prd/alpha';
+import shadowDetectivePlugin from '@ai-crew-suite/plugin-agent-scaffolder-shadow-detective/alpha';
+import scaffolderPrdPlugin from '@ai-crew-suite/plugin-agent-scaffolder-prd/alpha';
 import catalogAiInsightsPlugin from '@webstackbuilders/plugin-ai-agent-frontend-catalog-ai-insights/alpha';
 import rfcAdrReviewerPlugin from '@webstackbuilders/plugin-ai-agent-frontend-rfc-adr-ai-reviewer/alpha';
-import searchArcheologyPlugin from '@webstackbuilders/plugin-ai-agent-frontend-search-ai-archeology/alpha';
+import searchArcheologyPlugin from '@ai-crew-suite/plugin-agent-search-archeology/alpha';
 import searchContextPlugin from '@webstackbuilders/plugin-ai-agent-frontend-search-ai-context/alpha';
 import techDebtScoutPlugin from '@webstackbuilders/plugin-ai-agent-frontend-tech-debt-ai-scout/alpha';
 import techRadarPlugin from '@webstackbuilders/plugin-ai-agent-frontend-tech-radar-ai-manager/alpha';
