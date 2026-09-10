@@ -33,7 +33,7 @@ Every decision in the pipeline is **pure code**: utterance parsing, template sel
 
 The plugin follows the standard two-package Backstage agent layout:
 
-- **Backend module** (`@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-intent`, `role: backend-plugin-module`, `pluginId: ai-core`) — registers the `IntentGraph` workflow runner (ID `scaffolder-intent`) with a `TemplateResolver` backed by the real `scaffolderServiceRef` and a `NameAvailabilityChecker` backed by `CatalogClient`; the agent definition has 4 read-only tools and a single manual trigger
+- **Backend module** (`@ai-crew-suite/plugin-agent-scaffolder-intent-backend`, `role: backend-plugin-module`, `pluginId: ai-core`) — registers the `IntentGraph` workflow runner (ID `scaffolder-intent`) with a `TemplateResolver` backed by the real `scaffolderServiceRef` and a `NameAvailabilityChecker` backed by `CatalogClient`; the agent definition has 4 read-only tools and a single manual trigger
 - **Frontend plugin** (`@ai-crew-suite/plugin-agent-scaffolder-intent`, `role: frontend-plugin`, `pluginId: scaffoldinger-ai-intent`) — provides a standalone page at `/scaffolder-ai-intent` with an `IntentInputForm` for natural-language input and an `IntentProposalPanel` showing template candidates, parameters, and validation issues
 
 The graph runs four deterministic nodes: `select` (template ranking against the allow-list) → `coerce` (schema-flattening and parameter filling) → `validate` (catalog name-availability check) → `proposal` (artifact emission). The artifact kind is `template-intent-proposal`.
@@ -71,7 +71,7 @@ In `packages/backend/package.json`:
 
 ```json
 "dependencies": {
-  "@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-intent": "workspace:^"
+  "@ai-crew-suite/plugin-agent-scaffolder-intent-backend": "workspace:^"
 }
 ```
 
@@ -80,7 +80,7 @@ In `packages/backend/package.json`:
 In `packages/backend/src/index.ts`:
 
 ```ts
-import { scaffolderIntentModule } from '@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-intent';
+import { scaffolderIntentModule } from '@ai-crew-suite/plugin-agent-scaffolder-intent-backend';
 
 backend.add(scaffolderIntentModule);
 ```

@@ -100,16 +100,16 @@ backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-core-backend-
 backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-core-backend-module-runtime-store')));
 
 // agent workflow modules (AI Core agents)
-backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-agent-backend-catalog-ai-insights')));
-backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-agent-backend-oncall-ai-handover-assistant')));
-backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-agent-backend-release-notes-ai-generator')));
-backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-agent-backend-rfc-adr-ai-reviewer')));
+backend.add(loadBackendFeature(import('@ai-crew-suite/plugin-agent-catalog-insights-backend')));
+backend.add(loadBackendFeature(import('@ai-crew-suite/plugin-agent-oncall-handover-backend')));
+backend.add(loadBackendFeature(import('@ai-crew-suite/plugin-agent-release-notes-generator-backend')));
+backend.add(loadBackendFeature(import('@ai-crew-suite/plugin-agent-rfc-adr-reviewer-backend')));
 backend.add(loadBackendFeature(import('@ai-crew-suite/agent-alert-tuner-backend')));
-backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-drift-detector')));
-backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-guardrail-agent')));
-backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-infra')));
-backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-infra/scaffolderModule')));
-backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-intent')));
+backend.add(loadBackendFeature(import('@ai-crew-suite/plugin-agent-scaffolder-drift-detector-backend')));
+backend.add(loadBackendFeature(import('@ai-crew-suite/plugin-agent-scaffolder-guardrail-backend')));
+backend.add(loadBackendFeature(import('@ai-crew-suite/plugin-agent-scaffolder-infra-backend')));
+backend.add(loadBackendFeature(import('@ai-crew-suite/plugin-agent-scaffolder-infra-backend/scaffolderModule')));
+backend.add(loadBackendFeature(import('@ai-crew-suite/plugin-agent-scaffolder-intent-backend')));
 backend.add(loadBackendFeature(import('@ai-crew-suite/plugin-agent-scaffolder-shadow-detective-backend')));
 backend.add(loadBackendFeature(import('@ai-crew-suite/plugin-agent-scaffolder-prd-backend')));
 backend.add(loadBackendFeature(import('@ai-crew-suite/plugin-agent-search-archeology-backend')));

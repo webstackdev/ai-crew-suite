@@ -32,7 +32,7 @@ _Will Users Actually Use It?_
 
 ## Goal
 
-Implement `@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-drift-detector` as an AI Core backend module that continuously reconciles a component's **live infrastructure state** (Kubernetes + cloud topology) against its original **golden-path Scaffolder blueprint**. Instead of static pass/fail checks, it computes the technical **and** financial drift delta, compiles a remediation patch, and routes it through a **human-in-the-loop (HITL) approval gate** so an engineer can auto-sync the repo's infrastructure files back to the golden path with one click. A paired frontend shows the drift dashboard and the one-click remediate flow.
+Implement `@ai-crew-suite/plugin-agent-scaffolder-drift-detector-backend` as an AI Core backend module that continuously reconciles a component's **live infrastructure state** (Kubernetes + cloud topology) against its original **golden-path Scaffolder blueprint**. Instead of static pass/fail checks, it computes the technical **and** financial drift delta, compiles a remediation patch, and routes it through a **human-in-the-loop (HITL) approval gate** so an engineer can auto-sync the repo's infrastructure files back to the golden path with one click. A paired frontend shows the drift dashboard and the one-click remediate flow.
 
 Reuse the architecture proven by `plugin-ai-agent-backend-catalog-ai-insights` (its `_IMPLEMENTATION.md` is the source of truth for repository conventions, workflow-runner mechanics, event contracts, monorepo wiring, and test-layer definitions). This plan documents only what differs: **live-vs-blueprint reconciliation**, drift delta/patch computation, persistent drift-state tracking across scans, and an approval-gated remediation PR write.
 
@@ -118,7 +118,7 @@ plugins/backend/plugin-ai-agent-backend-scaffolder-ai-drift-detector/
 
 Same delegated-but-verified steps as catalog-ai-insights (see that plan's "Monorepo And App Wiring"). Deltas:
 
-- **Backend load**: add `"@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-drift-detector": "workspace:^"` to `packages/backend/package.json` and the matching `backend.add(loadBackendFeature(import(...)))` in `packages/backend/src/index.ts`.
+- **Backend load**: add `"@ai-crew-suite/plugin-agent-scaffolder-drift-detector-backend": "workspace:^"` to `packages/backend/package.json` and the matching `backend.add(loadBackendFeature(import(...)))` in `packages/backend/src/index.ts`.
 - **Cloud + VCS module gates**: reconciliation needs the normalized `cloud.*` tools; remediation needs the new `vcs.pull_request.create` write tool. Both modules must be extended and loaded before those milestones are enabled. Drift-detection-only runs (read path, no PR) work without the VCS write.
 - **App config**: throws at boot without `ai.agents.driftDetector.model`; add the config block (see Configuration). Remediation additionally requires `ai.agents.driftDetector.remediate.enabled: true`.
 - **Frontend registration**: add `"@ai-crew-suite/plugin-agent-scaffolder-drift-detector": "workspace:^"` to `packages/app/package.json`, import its `/alpha` default export in `packages/app/src/App.tsx`, and extend plugin-ID expectations in `packages/app/src/App.test.tsx`.

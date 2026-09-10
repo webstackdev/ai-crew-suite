@@ -34,7 +34,7 @@ Unlike plugins where the model drives decision-making, the insights agent treats
 
 The plugin follows the standard two-package Backstage agent layout:
 
-- **Backend module** (`@webstackbuilders/plugin-ai-agent-backend-catalog-ai-insights`, `role: backend-plugin-module`, `pluginId: ai-core`) — registers the `CatalogInsightsGraph` workflow runner (ID `catalog-insights`), the `catalog-ai-insights` agent definition with a read-only tool allow-list of 11 tools, manual and scheduler triggers, and an optional nightly scan task
+- **Backend module** (`@ai-crew-suite/plugin-agent-catalog-insights-backend`, `role: backend-plugin-module`, `pluginId: ai-core`) — registers the `CatalogInsightsGraph` workflow runner (ID `catalog-insights`), the `catalog-ai-insights` agent definition with a read-only tool allow-list of 11 tools, manual and scheduler triggers, and an optional nightly scan task
 - **Frontend plugin** (`@ai-crew-suite/plugin-agent-catalog-insights`, `role: frontend-plugin`, `pluginId: catalog-ai-insights`) — provides an entity page card (`EntityInsightsCard` / `EntityContextInsightsCard`), a standalone page at `/catalog-ai-insights`, a typed SSE API client, a live run progress view, and cited-answer/context panels
 
 The graph runs through seven deterministic nodes: `request.validate → intent.classify → entity.resolve → context.gather → context.normalize → insight.synthesize → insight.finalize`. The artifact kind is `catalog-insight-report`. The agent's memory mode is `session`, enabling conversational follow-up across multiple questions about the same entity.
@@ -74,16 +74,16 @@ In `packages/backend/package.json`:
 
 ```json
 "dependencies": {
-  "@webstackbuilders/plugin-ai-agent-backend-catalog-ai-insights": "workspace:^"
+  "@ai-crew-suite/plugin-agent-catalog-insights-backend": "workspace:^"
 }
 ```
 
 #### 2. Wire the module into the backend
 
-In `packages/backend/src/index.ts`, add alongside other `@webstackbuilders` module loads:
+In `packages/backend/src/index.ts`, add alongside other `@ai-crew-suite` module loads:
 
 ```ts
-import { catalogAiInsightsModule } from '@webstackbuilders/plugin-ai-agent-backend-catalog-ai-insights';
+import { catalogAiInsightsModule } from '@ai-crew-suite/plugin-agent-catalog-insights-backend';
 
 // Inside your backend builder:
 backend.add(catalogAiInsightsModule);

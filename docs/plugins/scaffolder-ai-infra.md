@@ -74,7 +74,7 @@ In `packages/backend/package.json`:
 
 ```json
 "dependencies": {
-  "@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-infra": "workspace:^"
+  "@ai-crew-suite/plugin-agent-scaffolder-infra-backend": "workspace:^"
 }
 ```
 
@@ -83,7 +83,7 @@ In `packages/backend/package.json`:
 In `packages/backend/src/index.ts`:
 
 ```ts
-import { scaffolderInfraModule } from '@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-infra';
+import { scaffolderInfraModule } from '@ai-crew-suite/plugin-agent-scaffolder-infra-backend';
 backend.add(scaffolderInfraModule);
 ```
 
@@ -94,7 +94,7 @@ backend.add(scaffolderInfraModule);
 In the same `packages/backend/src/index.ts`, add the action module **after** the Scaffolder backend:
 
 ```ts
-import { scaffolderInfraActionModule } from '@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-infra';
+import { scaffolderInfraActionModule } from '@ai-crew-suite/plugin-agent-scaffolder-infra-backend';
 backend.add(scaffolderInfraActionModule);
 ```
 

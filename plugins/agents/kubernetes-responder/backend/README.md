@@ -1,4 +1,4 @@
-# @webstackbuilders/plugin-ai-agent-backend-kubernetes-ai-responder
+# @ai-crew-suite/plugin-agent-kubernetes-responder-backend
 
 Backend module for `@webstackbuilders/plugin-ai-core-backend` that turns an authenticated incident trigger into a bounded, auditable, **read-only**
 Kubernetes investigation. It produces a cited likely-cause report and

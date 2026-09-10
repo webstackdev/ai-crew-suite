@@ -43,7 +43,7 @@ jobs:
         with:
           token: ${{ secrets.WORKFLOW_GITHUB_TOKEN }}
           commit-message: "chore(deps): update backstage and rag plugin dependencies"
-          committer: "webstackbuilders-bot <bot@webstackbuilders.com>"
+          committer: "ai-crew-suite-bot <bot@ai-crew-suite.dev>"
           author: "${{ github.actor }} <${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com>"
           signoff: false
           branch: "automated/update-dependencies" # Swapped out random timestamps for fixed branch updates
@@ -55,7 +55,7 @@ jobs:
             This pull request updates our core framework modules and dependencies to align with the latest Backstage ecosystem release.
 
             - **Engine Hook**: Executed via `yarn backstage-cli versions:bump`
-            - **Target Framework**: Managed under `@webstackbuilders` workspaces
+            - **Target Framework**: Managed under `@ai-crew-suite` workspaces
 
             *Automated thread dispatched by [create-pull-request](https://github.com/peter-evans/create-pull-request).*
           labels: |

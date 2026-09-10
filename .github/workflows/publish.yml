@@ -85,4 +85,4 @@ jobs:
           SLACK_COLOR: "#36a64f"
           SLACK_USERNAME: "Crew Suite Deploy Bot"
           SLACK_TITLE: "🚀 New Release Published Successfully"
-          SLACK_MESSAGE: "A new version has been deployed under the @webstackbuilders scope! View the updated code repository or releases section on GitHub."
+          SLACK_MESSAGE: "A new version has been deployed under the @ai-crew-suite scope! View the updated code repository or releases section on GitHub."

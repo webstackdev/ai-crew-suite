@@ -9,7 +9,7 @@ This plugin leverages large language models to analyze catalog entity relations 
 
 ## Goal
 
-Implement `@webstackbuilders/plugin-ai-agent-backend-catalog-ai-insights` as an AI Core backend module that answers contextual operational questions about any Software Catalog entity (_"Who is the on-call?"_, _"Where are the logs?"_, _"Why did this service fail its last deployment?"_) through a RAG-backed, intent-routed workflow. A paired frontend plugin surfaces answers on the catalog entity page and in a standalone ask view.
+Implement `@ai-crew-suite/plugin-agent-catalog-insights-backend` as an AI Core backend module that answers contextual operational questions about any Software Catalog entity (_"Who is the on-call?"_, _"Where are the logs?"_, _"Why did this service fail its last deployment?"_) through a RAG-backed, intent-routed workflow. A paired frontend plugin surfaces answers on the catalog entity page and in a standalone ask view.
 
 Reuse the architecture proven by `plugin-ai-agent-backend-kubernetes-ai-responder` (its `_IMPLEMENTATION.md` remains the source of truth for repository conventions, workflow-runner mechanics, event contracts, and test-layer definitions). This plan documents only what differs: the RAG/aggregation shape, intent routing, vector-store integration, and background scheduling.
 
@@ -93,7 +93,7 @@ plugins/backend/plugin-ai-agent-backend-catalog-ai-insights/
 
 Steps not covered by `plugin-registration.md` or any checked-in responder example — do not skip:
 
-- **Backend module load**: add `"@webstackbuilders/plugin-ai-agent-backend-catalog-ai-insights": "workspace:^"` to `packages/backend/package.json` and `backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-agent-backend-catalog-ai-insights')))` in `packages/backend/src/index.ts`, grouped with the other `@webstackbuilders` module loads. Note: the responder backend module is intentionally **not** loaded there yet (gated on the Kubernetes diagnostics milestone) — there is no existing agent-module load line to copy. This module can load independently because absent tools degrade to report limitations.
+- **Backend module load**: add `"@ai-crew-suite/plugin-agent-catalog-insights-backend": "workspace:^"` to `packages/backend/package.json` and `backend.add(loadBackendFeature(import('@ai-crew-suite/plugin-agent-catalog-insights-backend')))` in `packages/backend/src/index.ts`, grouped with the other `@webstackbuilders` module loads. Note: the responder backend module is intentionally **not** loaded there yet (gated on the Kubernetes diagnostics milestone) — there is no existing agent-module load line to copy. This module can load independently because absent tools degrade to report limitations.
 - **App config**: the backend module throws at boot without `ai.agents.catalogAiInsights.model`; add the config block (see Configuration) to the active `app-config*.yaml` before enabling the load, with `model` pointing at an installation-registered model ID.
 - **Frontend app registration**: add `"@ai-crew-suite/plugin-agent-catalog-insights": "workspace:^"` to `packages/app/package.json`, import the default export from `.../plugin-ai-agent-frontend-catalog-ai-insights/alpha` in `packages/app/src/App.tsx`, and extend the plugin-ID expectations in `packages/app/src/App.test.tsx` — copy the existing `kubernetes-ai-responder` wiring in all three files.
 - **Yarn PnP refresh**: run `yarn install` after any `package.json` dependency edits, then `yarn typecheck --force` and `yarn lint --force` per `plugin-registration.md`.

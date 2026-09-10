@@ -1,4 +1,4 @@
-# @webstackbuilders/plugin-ai-agent-backend-catalog-ai-insights
+# @ai-crew-suite/plugin-agent-catalog-insights-backend
 
 Backend module for `@webstackbuilders/plugin-ai-core-backend` that answers
 contextual operational questions about any Software Catalog entity ("Who is

@@ -33,7 +33,7 @@ The entire process is **deterministic and model-free**: the graph collects data,
 
 The plugin follows the standard two-package Backstage agent layout:
 
-- **Backend module** (`@webstackbuilders/plugin-ai-agent-backend-oncall-ai-handover-assistant`, `role: backend-plugin-module`, `pluginId: ai-core`) — registers the `HandoverGraph` workflow runner (ID `oncall-handover`), the `oncall-handover-assistant` agent definition with a read-only allow-list of 11 tools, manual and scheduler triggers, and optional shift-boundary scheduling
+- **Backend module** (`@ai-crew-suite/plugin-agent-oncall-handover-backend`, `role: backend-plugin-module`, `pluginId: ai-core`) — registers the `HandoverGraph` workflow runner (ID `oncall-handover`), the `oncall-handover-assistant` agent definition with a read-only allow-list of 11 tools, manual and scheduler triggers, and optional shift-boundary scheduling
 - **Frontend plugin** (`@ai-crew-suite/plugin-agent-oncall-handover`, `role: frontend-plugin`, `pluginId: oncall-handover-assistant`) — provides a standalone page at `/oncall-handover-assistant` with a compile dialog, live SSE run view, clustered-incident/deployment/ticket panels, status banner, and deep-linked replay
 
 The graph runs six deterministic nodes: `window.resolve → collect.parallel → cluster.analyze → context.enrich → brief.summarize → brief.finalize`. The artifact kind is `oncall-handover-brief`. The agent has `memory: 'none'` — each run is a fresh window with no conversational continuity.
@@ -70,16 +70,16 @@ In `packages/backend/package.json`:
 
 ```json
 "dependencies": {
-  "@webstackbuilders/plugin-ai-agent-backend-oncall-ai-handover-assistant": "workspace:^"
+  "@ai-crew-suite/plugin-agent-oncall-handover-backend": "workspace:^"
 }
 ```
 
 #### 2. Wire the module into the backend
 
-In `packages/backend/src/index.ts`, add alongside other `@webstackbuilders` module loads:
+In `packages/backend/src/index.ts`, add alongside other `@ai-crew-suite` module loads:
 
 ```ts
-import { oncallHandoverModule } from '@webstackbuilders/plugin-ai-agent-backend-oncall-ai-handover-assistant';
+import { oncallHandoverModule } from '@ai-crew-suite/plugin-agent-oncall-handover-backend';
 
 // Inside your backend builder:
 backend.add(oncallHandoverModule);

@@ -109,8 +109,8 @@ applyTo:
 - For shared Storybook changes, also run:
 
   ```sh
-  yarn workspace @webstackbuilders/storybook-workspace-infra typecheck
-  yarn workspace @webstackbuilders/storybook-workspace-infra lint
+  yarn workspace @ai-crew-suite/storybook-workspace-infra typecheck
+  yarn workspace @ai-crew-suite/storybook-workspace-infra lint
   yarn storybook:build --force
   ```
 

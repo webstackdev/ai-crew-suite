@@ -52,7 +52,7 @@ vi.mock(
   () => ({ default: 'rfc-adr-ai-reviewer' })
 );
 vi.mock(
-  '@ai-crew-suite/plugin-agent-alert-tuner/alpha',
+  '@ai-crew-suite/plugin-agent-alert-tuner-backend/alpha',
   () => ({ default: 'alert-ai-tuner' })
 );
 vi.mock(

@@ -9,7 +9,7 @@ This plugin interfaces with your active Kubernetes infrastructure to parse error
 
 ## Goal
 
-Implement `@webstackbuilders/plugin-ai-agent-backend-kubernetes-ai-responder` as a backend module that turns an authenticated incident trigger into a bounded, auditable Kubernetes investigation. The workflow produces a cited likely-cause summary and recommended next steps. It does not mutate Kubernetes, repositories, or third-party systems in the first release.
+Implement `@ai-crew-suite/plugin-agent-kubernetes-responder-backend` as a backend module that turns an authenticated incident trigger into a bounded, auditable Kubernetes investigation. The workflow produces a cited likely-cause summary and recommended next steps. It does not mutate Kubernetes, repositories, or third-party systems in the first release.
 
 The plugin must work through AI Crew Suite's stable tool contracts instead of calling Kubernetes, GitHub, Datadog, or Backstage frontend routes directly.
 

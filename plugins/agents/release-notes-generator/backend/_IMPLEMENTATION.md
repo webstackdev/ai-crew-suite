@@ -9,7 +9,7 @@ This plugin analyzes branch diffs, commit histories, and pull request bodies to 
 
 ## Goal
 
-Implement `@webstackbuilders/plugin-ai-agent-backend-release-notes-ai-generator` as an AI Core backend module that turns "all merged PRs since the last release tag" into **customer-facing release notes**. It gathers the PR delta for a repository/window, categorizes changes against a configurable taxonomy, filters out internal chores, resolves cryptic PR titles into readable feature descriptions via linked tickets, summarizes per category with an LLM, and — only after **explicit human approval** — publishes the notes. A paired frontend plugin drives generation, shows the draft, and provides the approve/reject gate.
+Implement `@ai-crew-suite/plugin-agent-release-notes-generator-backend` as an AI Core backend module that turns "all merged PRs since the last release tag" into **customer-facing release notes**. It gathers the PR delta for a repository/window, categorizes changes against a configurable taxonomy, filters out internal chores, resolves cryptic PR titles into readable feature descriptions via linked tickets, summarizes per category with an LLM, and — only after **explicit human approval** — publishes the notes. A paired frontend plugin drives generation, shows the draft, and provides the approve/reject gate.
 
 Reuse the architecture proven by `plugin-ai-agent-backend-catalog-ai-insights` (its `_IMPLEMENTATION.md` is the source of truth for repository conventions, workflow-runner mechanics, event contracts, monorepo wiring, and test-layer definitions). This plan documents only what differs: the **gather → categorize → summarize → publish** flow, taxonomy-driven categorization, and — the first in this plugin series — a **human-in-the-loop approval gate guarding a write action**.
 
@@ -97,7 +97,7 @@ plugins/backend/plugin-ai-agent-backend-release-notes-ai-generator/
 
 Same delegated-but-verified steps as catalog-ai-insights (see that plan's "Monorepo And App Wiring"). Deltas:
 
-- **Backend load**: add `"@webstackbuilders/plugin-ai-agent-backend-release-notes-ai-generator": "workspace:^"` to `packages/backend/package.json` and `backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-agent-backend-release-notes-ai-generator')))` in `packages/backend/src/index.ts`, grouped with the other `@webstackbuilders` module loads.
+- **Backend load**: add `"@ai-crew-suite/plugin-agent-release-notes-generator-backend": "workspace:^"` to `packages/backend/package.json` and `backend.add(loadBackendFeature(import('@ai-crew-suite/plugin-agent-release-notes-generator-backend')))` in `packages/backend/src/index.ts`, grouped with the other `@webstackbuilders` module loads.
 - **VCS module gate**: because publish requires the new `vcs.release.publish` write tool (see Prerequisites), the VCS module (`plugin-ai-core-backend-module-vcs`) must be extended and loaded before the publish milestone is enabled. Draft-only runs work without it.
 - **App config**: the module throws at boot without `ai.agents.releaseNotes.model`; add the config block (see Configuration) before enabling the load. Publishing additionally requires `ai.agents.releaseNotes.publish.enabled: true`.
 - **Frontend registration**: add `"@ai-crew-suite/plugin-agent-release-notes-generator": "workspace:^"` to `packages/app/package.json`, import its `/alpha` default export in `packages/app/src/App.tsx`, and extend plugin-ID expectations in `packages/app/src/App.test.tsx` — copy the `catalog-ai-insights` wiring.

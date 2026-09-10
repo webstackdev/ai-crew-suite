@@ -34,7 +34,7 @@ The investigation is **purely read-only and diagnostic**: the assistant gathers 
 
 The plugin follows the standard two-package Backstage agent layout:
 
-- **Backend module** (`@webstackbuilders/plugin-ai-agent-backend-kubernetes-ai-responder`, `role: backend-plugin-module`, `pluginId: ai-core`) — registers the `IncidentTriageGraph` workflow runner (ID `kubernetes-incident-triage`), the `kubernetes-ai-responder` agent definition with a read-only allow-list of 6 Kubernetes tools, and an Alertmanager webhook trigger
+- **Backend module** (`@ai-crew-suite/plugin-agent-kubernetes-responder-backend`, `role: backend-plugin-module`, `pluginId: ai-core`) — registers the `IncidentTriageGraph` workflow runner (ID `kubernetes-incident-triage`), the `kubernetes-ai-responder` agent definition with a read-only allow-list of 6 Kubernetes tools, and an Alertmanager webhook trigger
 - **Frontend plugin** (`@ai-crew-suite/plugin-agent-kubernetes-responder`, `role: frontend-plugin`, `pluginId: kubernetes-ai-responder`) — provides a standalone incident triage page at `/kubernetes-ai-responder`, a typed SSE API client, a trigger dialog accepting entity-ref or explicit workload coordinates, a live run timeline, evidence and report panels, and a catalog entity action button
 
 The graph runs through seven nodes: `trigger.validate → workload.resolve → failure.classify → evidence.collect → evidence.normalize → synthesize → report.finalize`. The artifact kind is `incident-triage-report`.
@@ -79,7 +79,7 @@ In `packages/backend/package.json`:
 
 ```json
 "dependencies": {
-  "@webstackbuilders/plugin-ai-agent-backend-kubernetes-ai-responder": "workspace:^"
+  "@ai-crew-suite/plugin-agent-kubernetes-responder-backend": "workspace:^"
 }
 ```
 
@@ -88,7 +88,7 @@ In `packages/backend/package.json`:
 In `packages/backend/src/index.ts`, add alongside other `@webstackbuilders` module loads:
 
 ```ts
-import { kubernetesAiResponderModule } from '@webstackbuilders/plugin-ai-agent-backend-kubernetes-ai-responder';
+import { kubernetesAiResponderModule } from '@ai-crew-suite/plugin-agent-kubernetes-responder-backend';
 
 // Inside your backend builder:
 backend.add(kubernetesAiResponderModule);

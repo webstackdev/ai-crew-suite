@@ -9,7 +9,7 @@ This plugin automatically parses Request for Comments (RFCs) and Architecture De
 
 ## Goal
 
-Implement `@webstackbuilders/plugin-ai-agent-backend-rfc-adr-ai-reviewer` as an AI Core backend module that acts as an automated **architecture-governance gate** for RFCs/ADRs. When a design document is detected (repo PR touching `adr/`/`rfc/`, or a Scaffolder template event), it runs a **parallel multi-perspective review**: a **Senior Architect** node cross-references referenced components/APIs against the live catalog and standards via `knowledge.retrieve`, while a **Security Lead** node evaluates the document against enterprise compliance rules. A compilation node merges both critique channels into a single cited **Design Critique** artifact, streamed to the UI as a multi-turn debate over SSE, and — only after **human approval** — posts the critique back to the PR.
+Implement `@ai-crew-suite/plugin-agent-rfc-adr-reviewer-backend` as an AI Core backend module that acts as an automated **architecture-governance gate** for RFCs/ADRs. When a design document is detected (repo PR touching `adr/`/`rfc/`, or a Scaffolder template event), it runs a **parallel multi-perspective review**: a **Senior Architect** node cross-references referenced components/APIs against the live catalog and standards via `knowledge.retrieve`, while a **Security Lead** node evaluates the document against enterprise compliance rules. A compilation node merges both critique channels into a single cited **Design Critique** artifact, streamed to the UI as a multi-turn debate over SSE, and — only after **human approval** — posts the critique back to the PR.
 
 Reuse the architecture proven by `plugin-ai-agent-backend-catalog-ai-insights` (its `_IMPLEMENTATION.md` is the source of truth for repository conventions, workflow-runner mechanics, event contracts, monorepo wiring, and test-layer definitions). This plan documents only what differs: **parallel multi-agent fan-out/merge**, per-node structured SSE, event-trigger ingestion, and an approval-gated PR write.
 
@@ -101,7 +101,7 @@ plugins/backend/plugin-ai-agent-backend-rfc-adr-ai-reviewer/
 
 Same delegated-but-verified steps as catalog-ai-insights (see that plan's "Monorepo And App Wiring"). Deltas:
 
-- **Backend load**: add `"@webstackbuilders/plugin-ai-agent-backend-rfc-adr-ai-reviewer": "workspace:^"` to `packages/backend/package.json` and `backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-agent-backend-rfc-adr-ai-reviewer')))` in `packages/backend/src/index.ts`.
+- **Backend load**: add `"@ai-crew-suite/plugin-agent-rfc-adr-reviewer-backend": "workspace:^"` to `packages/backend/package.json` and `backend.add(loadBackendFeature(import('@ai-crew-suite/plugin-agent-rfc-adr-reviewer-backend')))` in `packages/backend/src/index.ts`.
 - **VCS module gate**: PR-comment posting requires the new `vcs.pull_request.comment` write tool (see Prerequisites); the VCS module must be extended and loaded before the write milestone. Draft-only runs work without it.
 - **Events wiring**: the module subscribes to `coreServices.events`; ensure whatever repo/scaffolder event source is configured publishes onto the Backstage event bus. No new HTTP webhook endpoint is added by this plugin.
 - **App config**: throws at boot without `ai.agents.rfcAdrReviewer.model`; add the config block (see Configuration). Posting additionally requires `ai.agents.rfcAdrReviewer.publish.enabled: true`.

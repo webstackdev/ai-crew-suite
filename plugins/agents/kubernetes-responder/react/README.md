@@ -1,6 +1,6 @@
 # Kubernetes AI Responder (frontend)
 
-Frontend companion to `@webstackbuilders/plugin-ai-agent-backend-kubernetes-ai-responder`.
+Frontend companion to `@ai-crew-suite/plugin-agent-kubernetes-responder-backend`.
 It lets a permitted user start a **read-only** Kubernetes incident investigation,
 follow the run live over the AI Core server-sent events stream, and inspect the
 cited, redacted evidence bundle and the final triage report.

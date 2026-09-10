@@ -21,7 +21,7 @@ import { createMockApi, createMockFn } from '@ai-crew-suite/cli/storybook/mocks'
 import {
   alertTunerApiRef,
   type AlertTunerApi
-} from '@ai-crew-suite/plugin-agent-alert-tuner';
+} from '@ai-crew-suite/plugin-agent-alert-tuner-backend';
 import type { AiRunEvent } from '../../@types';
 
 const meta: Meta<typeof AlertTunerPage> = {

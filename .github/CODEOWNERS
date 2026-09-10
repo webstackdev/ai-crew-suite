@@ -1,19 +1,32 @@
 # Global Monorepo Rules
-# ---------------------
-# Default owners for infrastructure, toolchains, and platform changes
-*                                              @webstackbuilders/platform-leads
 
-# Forked Roadie RAG AI Plugins
-# ----------------------------
-# Specific core team assigned to manage the unmaintained Roadie forks
-/packages/plugin-ai-*                          @webstackbuilders/plugin-maintainers
+## Default owners for infrastructure, toolchains, and platform changes
 
-# Custom AI Tools & Crew Layouts
-# ------------------------------
-# Data science and AI squad assigned to evaluate agent orchestration blocks
-/packages/tool-crew-*                          @webstackbuilders/ai-engineers
+*                                              @ai-crew-suite/platform-leads
 
-# GitHub Automation Rules
-# ------------------------
-/.github/workflows/                            @webstackbuilders/platform-leads
-/turbo.json                                    @webstackbuilders/platform-leads
+---
+
+## Forked Roadie RAG AI Plugins
+
+---
+
+## Specific core team assigned to manage the unmaintained Roadie forks
+
+/packages/plugin-ai-*                          @ai-crew-suite/plugin-maintainers
+
+---
+
+## Custom AI Tools & Crew Layouts
+
+---
+
+## Data science and AI squad assigned to evaluate agent orchestration blocks
+
+/packages/tool-crew-*                          @ai-crew-suite/ai-engineers
+
+## GitHub Automation Rules
+
+/.github/workflows/                            @ai-crew-suite/platform-leads
+/turbo.json                                    @ai-crew-suite/platform-leads
+
+---

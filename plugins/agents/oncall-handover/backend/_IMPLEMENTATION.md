@@ -9,7 +9,7 @@ This plugin automates the collection of shift events, unresolved alerts, and sys
 
 ## Goal
 
-Implement `@webstackbuilders/plugin-ai-agent-backend-oncall-ai-handover-assistant` as an AI Core backend module that compiles a structured **shift handover brief** for an incoming on-call engineer. It aggregates a trailing operational window (default 12h, configurable) across incidents/alerts, deployments, merged PRs, and open high-severity tickets, deduplicates and clusters the noise, and produces a cited, LLM-summarized brief. A paired frontend plugin surfaces the brief on demand and shows scheduled pre-shift briefs.
+Implement `@ai-crew-suite/plugin-agent-oncall-handover-backend` as an AI Core backend module that compiles a structured **shift handover brief** for an incoming on-call engineer. It aggregates a trailing operational window (default 12h, configurable) across incidents/alerts, deployments, merged PRs, and open high-severity tickets, deduplicates and clusters the noise, and produces a cited, LLM-summarized brief. A paired frontend plugin surfaces the brief on demand and shows scheduled pre-shift briefs.
 
 Reuse the architecture proven by `plugin-ai-agent-backend-catalog-ai-insights` (its `_IMPLEMENTATION.md` is the source of truth for repository conventions, workflow-runner mechanics, event contracts, monorepo wiring, and test-layer definitions). This plan documents only what differs: **time-windowed aggregation** (not entity-scoped Q&A), alert clustering, and shift-boundary scheduling.
 
@@ -93,7 +93,7 @@ plugins/backend/plugin-ai-agent-backend-oncall-ai-handover-assistant/
 
 Same delegated-but-verified steps as catalog-ai-insights (see that plan's "Monorepo And App Wiring"). Deltas for this package:
 
-- **Backend load**: add `"@webstackbuilders/plugin-ai-agent-backend-oncall-ai-handover-assistant": "workspace:^"` to `packages/backend/package.json` and `backend.add(loadBackendFeature(import('@webstackbuilders/plugin-ai-agent-backend-oncall-ai-handover-assistant')))` in `packages/backend/src/index.ts`. If catalog-ai-insights has already landed there, copy that line as the template; otherwise follow the `@webstackbuilders` module-load grouping.
+- **Backend load**: add `"@ai-crew-suite/plugin-agent-oncall-handover-backend": "workspace:^"` to `packages/backend/package.json` and `backend.add(loadBackendFeature(import('@ai-crew-suite/plugin-agent-oncall-handover-backend')))` in `packages/backend/src/index.ts`. If catalog-ai-insights has already landed there, copy that line as the template; otherwise follow the `@webstackbuilders` module-load grouping.
 - **App config**: the module throws at boot without `ai.agents.oncallHandover.model`; add the config block (see Configuration) before enabling the load.
 - **Frontend registration**: add `"@ai-crew-suite/plugin-agent-oncall-handover": "workspace:^"` to `packages/app/package.json`, import its `/alpha` default export in `packages/app/src/App.tsx`, and extend plugin-ID expectations in `packages/app/src/App.test.tsx` — copy the `kubernetes-ai-responder` / `catalog-ai-insights` wiring.
 - **Yarn PnP refresh**: `yarn install` after dependency edits, then `yarn typecheck --force` / `yarn lint --force`.

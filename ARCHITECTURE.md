@@ -196,8 +196,8 @@ ai-crew-suite/
 │   │
 │   ├── agents/
 │   │   ├── alert-tuner/
-│   │   │   ├── backend/                    # @ai-crew-suite/plugin-agent-alert-tuner-backend
-│   │   │   └── react/                      # @ai-crew-suite/plugin-agent-alert-tuner
+│   │   │   ├── backend/                    # @ai-crew-suite/plugin-agent-alert-tuner-backend-backend
+│   │   │   └── react/                      # @ai-crew-suite/plugin-agent-alert-tuner-backend
 │   │   ├── catalog-insights/
 │   │   │   ├── backend/                    # @ai-crew-suite/plugin-agent-catalog-insights-backend
 │   │   │   └── react/                      # @ai-crew-suite/plugin-agent-catalog-insights

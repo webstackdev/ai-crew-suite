@@ -47,7 +47,7 @@
     "@material-ui/icons": "^4.11.3",
     "@mui/material": "^7.3.11",
     "@rjsf/utils": "^6.8.0",
-    "@ai-crew-suite/plugin-agent-alert-tuner": "workspace:^",
+    "@ai-crew-suite/plugin-agent-alert-tuner-backend": "workspace:^",
     "@ai-crew-suite/plugin-agent-catalog-insights": "workspace:^",
     "@ai-crew-suite/plugin-agent-kubernetes-responder": "workspace:^",
     "@ai-crew-suite/plugin-agent-oncall-handover": "workspace:^",

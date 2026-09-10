@@ -35,7 +35,7 @@ The entire assessment is **deterministic**: policy evaluation, budget comparison
 
 The plugin follows the standard two-package Backstage agent layout:
 
-- **Backend module** (`@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-guardrail-agent`, `role: backend-plugin-module`, `pluginId: ai-core`) — registers the `GuardrailGraph` workflow runner (ID `scaffolder-guardrail`) with a **real `resume()` method** for the negotiation gate, the `scaffolder-ai-guardrail-agent` agent definition with 4 compliance tools, and a single manual trigger
+- **Backend module** (`@ai-crew-suite/plugin-agent-scaffolder-guardrail-backend`, `role: backend-plugin-module`, `pluginId: ai-core`) — registers the `GuardrailGraph` workflow runner (ID `scaffolder-guardrail`) with a **real `resume()` method** for the negotiation gate, the `scaffolder-ai-guardrail-agent` agent definition with 4 compliance tools, and a single manual trigger
 - **Frontend plugin** (`@ai-crew-suite/plugin-agent-scaffolder-guardrail`, `role: frontend-plugin`, `pluginId: scaffoldinger-ai-guardrail-agent`) — provides a standalone page at `/scaffolder-ai-guardrail-agent` with an evaluation dialog, violation list, cost panel, mutation offer panel, approval bar, and resolution banner
 
 The graph runs five nodes: `adjudicate` (policy + architecture evaluation against all configured policies) → `price` (cost estimation and budget comparison) → `mutate` (ladder-based alternative proposal) → `assessment` (status derivation and artifact emission) → gate. The artifact kinds are `guardrail-assessment` and (on resume) `guardrail-resolution`.
@@ -71,7 +71,7 @@ In `packages/backend/package.json`:
 
 ```json
 "dependencies": {
-  "@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-guardrail-agent": "workspace:^"
+  "@ai-crew-suite/plugin-agent-scaffolder-guardrail-backend": "workspace:^"
 }
 ```
 
@@ -80,7 +80,7 @@ In `packages/backend/package.json`:
 In `packages/backend/src/index.ts`:
 
 ```ts
-import { scaffolderGuardrailModule } from '@webstackbuilders/plugin-ai-agent-backend-scaffolder-ai-guardrail-agent';
+import { scaffolderGuardrailModule } from '@ai-crew-suite/plugin-agent-scaffolder-guardrail-backend';
 
 // Inside your backend builder:
 backend.add(scaffolderGuardrailModule);

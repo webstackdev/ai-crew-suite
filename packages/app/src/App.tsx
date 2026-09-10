@@ -21,7 +21,7 @@ import searchPlugin from '@backstage/plugin-search/alpha';
 import kubernetesAiResponderPlugin from '@ai-crew-suite/plugin-agent-kubernetes-responder/alpha';
 import oncallHandoverPlugin from '@ai-crew-suite/plugin-agent-oncall-handover/alpha';
 import releaseNotesPlugin from '@ai-crew-suite/plugin-agent-release-notes-generator/alpha';
-import alertAiTunerPlugin from '@ai-crew-suite/plugin-agent-alert-tuner/alpha';
+import alertAiTunerPlugin from '@ai-crew-suite/plugin-agent-alert-tuner-backend/alpha';
 import driftDetectorPlugin from '@ai-crew-suite/plugin-agent-scaffolder-drift-detector/alpha';
 import scaffolderGuardrailPlugin from '@ai-crew-suite/plugin-agent-scaffolder-guardrail/alpha';
 import scaffolderInfraPlugin from '@ai-crew-suite/plugin-agent-scaffolder-infra/alpha';

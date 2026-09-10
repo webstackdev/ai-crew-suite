@@ -47,7 +47,7 @@ You are working in AI Crew Suite, a Backstage monorepo (Yarn Berry PnP + turbo) 
 ## Working Norms
 
 - Prefer the smallest correct slice of work. Not every request requires changes across backend and frontend plugins.
-- Packages are published under the `@webstackbuilders` scope.
+- Packages are published under the `@ai-crew-suite` scope.
 - Preserve existing naming and API shapes; Backstage packages follow the `backstage.role` field (`backend-plugin`, `backend-plugin-module`, `frontend-plugin`) and its conventions.
 - Backend modules rely on `no-console: off` and the `__non_webpack_require__` global from the ESLint role overrides — do not remove those overrides.
 - When scaffolding a new plugin, follow `plugin-registration.md` to register it in root `tsconfig.json` and `.eslintrc.cjs`.
