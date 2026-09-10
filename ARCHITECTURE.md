@@ -90,6 +90,8 @@ find . -type f -exec sed -i 's|https://github.com/ai-crew-suite|https://github.c
 ### `package.json`
 
 ```json
+  "configSchema": "config.d.ts",
+
 {
   "name": "@ai-crew-suite/agent-alert-tuner-backend",
   "description": "",
@@ -102,27 +104,18 @@ find . -type f -exec sed -i 's|https://github.com/ai-crew-suite|https://github.c
     "agentic workflow",
     "ai-crew-suite",
     "backend-plugin",
-    "backstage-plugin-module",
-    "backstage",
-    "llm",
-    "version control systems"
+    "backstage"
   ],
   "publishConfig": {
     "access": "public",
     "provenance": true
   },
   "backstage": {
-    "role": "backend-plugin-module",
-    "pluginId": "tool-vcs",
+    "role": "backend-plugin",
+    "pluginId": "",
     "pluginPackages": [
-      "@ai-crew-suite/plugin-tool-vcs-backend",
-      "@ai-crew-suite/plugin-tool-vcs-backend-module-aws-codecommit",
-      "@ai-crew-suite/plugin-tool-vcs-backend-module-azure",
-      "@ai-crew-suite/plugin-tool-vcs-backend-module-bitbucket",
-      "@ai-crew-suite/plugin-tool-vcs-backend-module-gerrit",
-      "@ai-crew-suite/plugin-tool-vcs-backend-module-git",
-      "@ai-crew-suite/plugin-tool-vcs-backend-module-github",
-      "@ai-crew-suite/plugin-tool-vcs-backend-module-gitlab",
+      "",
+      ""
     ]
   },
   "bugs": {
@@ -132,13 +125,12 @@ find . -type f -exec sed -i 's|https://github.com/ai-crew-suite|https://github.c
   "repository": {
     "type": "git",
     "url": "https://github.com/ai-crew-suite/ai-crew-suite",
-    "directory": "plugins/tools/cloud-providers/core"
+    "directory": ""
   },
   "files": [
     "dist/",
     "config.d.ts"
   ],
-  "configSchema": "config.d.ts",
   "scripts": {
     "build": "crew build",
     "clean": "crew clean",
@@ -150,14 +142,32 @@ find . -type f -exec sed -i 's|https://github.com/ai-crew-suite|https://github.c
   },
   "dependencies": {
     "@ai-crew-suite/plugin-kernel-node": "workspace:^",
+    "@ai-crew-suite/plugin-kernel-react": "workspace:^",
+    "@backstage/catalog-model": "backstage:^",
+    "@backstage/core-components": "backstage:^",
+    "@backstage/core-plugin-api": "backstage:^",
+    "@backstage/frontend-plugin-api": "backstage:^",
+    "@backstage/plugin-catalog-react": "backstage:^",
+    "@material-ui/core": "catalog:material-ui-core",
+    "eventsource-parser": "catalog:eventsource-parser",
+    "react": "catalog:react",
+    "react-dom": "catalog:react-dom",
+    "react-router-dom": "catalog:react-router-dom"
+  },
+  "peerDependencies": {
+    "react": "catalog:react",
+    "react-router-dom": "catalog:react-router-dom"
   },
   "devDependencies": {
     "@ai-crew-suite/cli": "workspace:*",
-    "@backstage/backend-test-utils": "backstage:^",
-    "@types/node": "catalog:node-types",
-    "react": "catalog:react",
-    "react-dom": "catalog:react-dom",
-    "typescript": "catalog:typescript",
+    "@backstage/dev-utils": "backstage:^",
+    "@backstage/test-utils": "backstage:^",
+    "@testing-library/jest-dom": "catalog:testing-library-jest-dom",
+    "@testing-library/react": "catalog:testing-library-react",
+    "@testing-library/user-event": "catalog:testing-library-user-event",
+    "@types/react": "*",
+    "@types/react-dom": "*",
+    "storybook": "catalog:storybook",
     "vitest": "catalog:vitest"
   }
 }

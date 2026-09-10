@@ -1,28 +1,28 @@
 {
-  "name": "@webstackbuilders/plugin-ai-agent-frontend-catalog-ai-insights",
+  "name": "@ai-crew-suite/plugin-agent-catalog-insights",
+  "description": "Frontend user interface for catalog AI insights: ask contextual operational questions about a catalog entity, follow the insight run live over SSE, and inspect the cited answer and retained context bundle.",
   "version": "0.0.1",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "license": "Apache-2.0",
-  "description": "Frontend user interface for catalog AI insights: ask contextual operational questions about a catalog entity, follow the insight run live over SSE, and inspect the cited answer and retained context bundle.",
   "keywords": [
-    "backstage",
-    "backstage-plugin",
-    "frontend",
-    "webstack-builders",
+    "agentic workflow",
     "ai-crew-suite",
-    "ai-core",
-    "catalog",
-    "insights"
+    "frontend-plugin",
+    "backstage",
+    "catalog-insights"
   ],
   "publishConfig": {
     "access": "public",
-    "main": "dist/index.esm.js",
-    "types": "dist/index.d.ts"
+    "provenance": true
   },
   "backstage": {
     "role": "frontend-plugin",
-    "pluginId": "catalog-ai-insights"
+    "pluginId": "catalog-insights",
+    "pluginPackages": [
+      "@ai-crew-suite/plugin-agent-catalog-insights-backend",
+      "@ai-crew-suite/plugin-agent-catalog-insights-react"
+    ]
   },
   "bugs": {
     "url": "https://github.com/ai-crew-suite/ai-crew-suite/issues",
@@ -31,71 +31,49 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/ai-crew-suite/ai-crew-suite",
-    "directory": "plugins/frontend/plugin-ai-agent-frontend-catalog-ai-insights"
+    "directory": "plugins/agents/catalog-insights/react"
   },
   "files": [
     "dist"
   ],
-  "exports": {
-    ".": "./src/index.ts",
-    "./alpha": "./src/alpha.ts"
-  },
   "sideEffects": false,
   "scripts": {
-    "start": "backstage-cli package start",
-    "build": "yarn --cwd ../../.. tsc -b plugins/frontend/plugin-ai-agent-frontend-catalog-ai-insights/tsconfig.json --emitDeclarationOnly && backstage-cli package build",
-    "clean": "backstage-cli package clean",
-    "prepack": "backstage-cli package prepack",
-    "postpack": "backstage-cli package postpack",
-    "typecheck": "tsc --noEmit",
-    "lint": "backstage-cli package lint --format stylish",
-    "test": "yarn --cwd ../../.. vitest run plugins/frontend/plugin-ai-agent-frontend-catalog-ai-insights/src --exclude 'dist-types/**' --passWithNoTests --config test/vitest.config.ts"
+    "build": "crew build",
+    "clean": "crew clean",
+    "lint": "crew lint",
+    "test:e2e": "crew test:e2e",
+    "test:unit": "crew test:unit",
+    "test:unit:coverage": "crew test:unit:coverage",
+    "typecheck": "crew typecheck"
   },
   "dependencies": {
+    "@ai-crew-suite/plugin-kernel-node": "workspace:^",
+    "@ai-crew-suite/plugin-kernel-react": "workspace:^",
     "@backstage/catalog-model": "backstage:^",
     "@backstage/core-components": "backstage:^",
     "@backstage/core-plugin-api": "backstage:^",
     "@backstage/frontend-plugin-api": "backstage:^",
     "@backstage/plugin-catalog-react": "backstage:^",
-    "@material-ui/core": "^4.12.4",
-    "@material-ui/icons": "^4.11.3",
-    "eventsource-parser": "^2.0.1",
-    "vitest": "^4.1.10"
+    "@material-ui/core": "catalog:material-ui-core",
+    "eventsource-parser": "catalog:eventsource-parser",
+    "react": "catalog:react",
+    "react-dom": "catalog:react-dom",
+    "react-router-dom": "catalog:react-router-dom"
   },
   "peerDependencies": {
-    "react": "^18.3.1",
-    "react-router-dom": "^6.30.6"
+    "react": "catalog:react",
+    "react-router-dom": "catalog:react-router-dom"
   },
   "devDependencies": {
-    "@ai-crew-suite/cli": "workspace:^",
-    "@backstage/cli": "backstage:^",
+    "@ai-crew-suite/cli": "workspace:*",
     "@backstage/dev-utils": "backstage:^",
     "@backstage/test-utils": "backstage:^",
-    "@testing-library/dom": "^10.4.1",
-    "@testing-library/jest-dom": "^6.10.0",
-    "@testing-library/react": "^16.3.2",
-    "@testing-library/user-event": "^14.6.6",
+    "@testing-library/jest-dom": "catalog:testing-library-jest-dom",
+    "@testing-library/react": "catalog:testing-library-react",
+    "@testing-library/user-event": "catalog:testing-library-user-event",
     "@types/react": "*",
     "@types/react-dom": "*",
-    "@webstackbuilders/plugin-ai-agent-frontend-kubernetes-ai-responder": "workspace:^",
-    "@webstackbuilders/plugin-ai-agent-frontend-oncall-ai-handover-assistant": "workspace:^",
-    "@webstackbuilders/plugin-ai-agent-frontend-release-notes-ai-generator": "workspace:^",
-    "@webstackbuilders/plugin-ai-agent-frontend-rfc-adr-ai-reviewer": "workspace:^",
-    "@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-drift-detector": "workspace:^",
-    "@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-guardrail-agent": "workspace:^",
-    "@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-infra": "workspace:^",
-    "@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-intent": "workspace:^",
-    "@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-prd": "workspace:^",
-    "@webstackbuilders/plugin-ai-agent-frontend-scaffolder-ai-shadow-detective": "workspace:^",
-    "@webstackbuilders/plugin-ai-agent-frontend-search-ai-archeology": "workspace:^",
-    "@webstackbuilders/plugin-ai-agent-frontend-search-ai-context": "workspace:^",
-    "@webstackbuilders/plugin-ai-agent-frontend-tech-debt-ai-scout": "workspace:^",
-    "@webstackbuilders/plugin-ai-agent-frontend-tech-radar-ai-manager": "workspace:^",
-    "@webstackbuilders/plugin-ai-agent-frontend-techdocs-ai-janitor": "workspace:^",
-    "@webstackbuilders/plugin-ai-agent-frontend-techdocs-ai-postmortem": "workspace:^",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-router-dom": "^6.30.6",
-    "storybook": "^10.5.10"
+    "storybook": "catalog:",
+    "vitest": "catalog:vitest"
   }
 }

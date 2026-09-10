@@ -30,8 +30,8 @@ import { AlertTunerGraph } from './workflow/AlertTunerGraph';
  * `ai-core` plugin.
  */
 export const alertAiTunerModule = createBackendModule({
-  pluginId: 'ai-core',
-  moduleId: 'agent-alert-ai-tuner',
+  pluginId: 'alert-tuner',
+  moduleId: 'backend',
   register(env) {
     env.registerInit({
       deps: {
