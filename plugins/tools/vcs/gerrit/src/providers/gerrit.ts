@@ -15,13 +15,22 @@
  */
 import { LoggerService, UrlReaderService } from '@backstage/backend-plugin-api';
 import { ScmIntegrations, GerritIntegration } from '@backstage/integration';
-import { 
-  GerritDriverOptions,
-  VcsDriver, 
-  RepositoryMetadata, 
-  RepositorySearchResult, 
-  PullRequestSummary 
+import {
+  VcsDriver,
+  RepositoryMetadata,
+  RepositorySearchResult,
+  PullRequestSummary,
 } from '@ai-crew-suite/plugin-kernel-node';
+
+/**
+ * Isolated parameters required to instantiate the concrete Gerrit VCS adapter.
+ * Managed entirely within the scope of this provider module package.
+ */
+export type GerritDriverOptions = {
+  urlReader: UrlReaderService;
+  logger: LoggerService;
+  integrations: ScmIntegrations;
+};
 
 export class GerritDriver implements VcsDriver {
   readonly providerId = 'gerrit';
@@ -39,7 +48,7 @@ export class GerritDriver implements VcsDriver {
    * Helper to parse and resolve contextual integration settings based on the target URL
    */
   private resolveIntegrationContext(repoUrl: string) {
-    const integration = this.integrations.gerrit?.byUrl(repoUrl);
+    const integration = this.integrations.gerritByUrl(repoUrl);
     if (!integration) {
       throw new Error(`No Gerrit integration found configured for URL: ${repoUrl}`);
     }
@@ -78,7 +87,7 @@ export class GerritDriver implements VcsDriver {
     const headers: Record<string, string> = { 'Accept': 'application/json' };
     if (ctx.username && ctx.token) {
       const b64 = Buffer.from(`${ctx.username}:${ctx.token}`).toString('base64');
-      headers.Authorization = `Basic ${b64}`;
+      headers['Authorization'] = `Basic ${b64}`;
     }
     return headers;
   }
@@ -90,11 +99,11 @@ export class GerritDriver implements VcsDriver {
     // URL encode project paths as expected by Gerrit namespaces
     const encodedProject = encodeURIComponent(ctx.projectKey);
     const res = await fetch(`${ctx.baseUrl}/a/projects/${encodedProject}`, { headers });
-    
+
     if (!res.ok) {
       throw new Error(`Gerrit project metadata lookup failed: ${res.statusText}`);
     }
-    
+
     const data = await this.parseGerritJson(res);
 
     return {
@@ -140,7 +149,7 @@ export class GerritDriver implements VcsDriver {
     // Map open changes belonging strictly to this project scope configuration
     const query = encodeURIComponent(`project:${ctx.projectKey} status:open`);
     const res = await fetch(`${ctx.baseUrl}/a/changes/?q=${query}&o=CURRENT_REVISION`, { headers });
-    
+
     if (!res.ok) {
       throw new Error(`Gerrit changes list query failed: ${res.statusText}`);
     }

@@ -36,6 +36,12 @@ export type SourceDescriptor = {
 };
 
 /**
+ * ============================================================================
+ *   CORE ENGINE REGISTRIES
+ * ============================================================================
+ */
+
+/**
  * Registry of source descriptors known to the AI backend runtime.
  */
 export interface SourceRegistry {
@@ -46,6 +52,12 @@ export interface SourceRegistry {
   /** Returns whether a source with the supplied ID has been registered. */
   has(id: SourceId): boolean;
 }
+
+/**
+ * ============================================================================
+ *   STORAGE METADATA & QUERY FILTER SHAPES
+ * ============================================================================
+ */
 
 /**
  * Metadata stored alongside an embedded document.

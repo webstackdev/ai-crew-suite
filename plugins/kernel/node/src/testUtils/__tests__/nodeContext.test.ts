@@ -16,7 +16,7 @@
 
 import { describe, expect, it } from 'vitest';
 import { createTestNodeContext } from '../nodeContext';
-import type { ToolRegistry } from '../../@types/tool';
+import type { ToolRegistry } from '../../types/tools/args';
 
 const registry = (tools: Record<string, () => Promise<unknown>>): ToolRegistry => ({
   register: () => {},

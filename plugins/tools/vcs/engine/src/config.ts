@@ -16,17 +16,6 @@
 import { Config } from '@backstage/config';
 import type { VcsProviderId, VcsConfig } from '@ai-crew-suite/plugin-kernel-node';
 
-const SUPPORTED_PROVIDERS: readonly VcsProviderId[] = [
-  'github',
-  'gitlab',
-  'bitbucket',
-  'azuredevops',
-];
-
-const isVcsProviderId = (value: unknown): value is VcsProviderId =>
-  typeof value === 'string' &&
-  (SUPPORTED_PROVIDERS as readonly string[]).includes(value);
-
 /**
  * Extracts the active VCS routing keys from application configs.
  * Relies entirely on root SCM parameters for structural credentials.
@@ -48,11 +37,7 @@ export const readVcsConfig = (config: Config): VcsConfig => {
     );
   }
 
-  if (!isVcsProviderId(provider)) {
-    throw new Error(
-      `Unsupported VCS provider matching key: '${provider}'. Valid configurations: ${SUPPORTED_PROVIDERS.join(', ')}`,
-    );
-  }
-
-  return { provider };
+  // 🌟 FIX: Removed the static array check. Treat provider as an open VcsProviderId.
+  // The backend engine plugin handles validation dynamically via its drivers map.
+  return { provider: provider as VcsProviderId };
 };

@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-export * from './@types';
-export * from './catalog';
-export * from './events';
+export * from './types';
+export * from './services/catalog';
+export * from './services/events';
 export * from './extensions';
 export * from './models';
-export * from './redaction';
+export * from './services/redaction';
 export * from './stores';
 export * from './workflow';
 export * as testUtils from './testUtils';

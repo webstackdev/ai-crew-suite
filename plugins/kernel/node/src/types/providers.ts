@@ -13,6 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import type { BaseChatModel } from '@langchain/core/language_models/chat_models';
+
+/**
+ * Registers a chat model that agents can reference by ID. BaseChatModel only —
+ * legacy BaseLLM string-prompt support is removed across the platform.
+ */
+export type ChatModelDefinition = {
+  /** Unique model identifier used by agent definitions and tiers. */
+  id: string;
+  /** LangChain chat model instance used for generation. */
+  model: BaseChatModel;
+};
+
+/**
+ * Registers a speech-to-text transcription provider (Whisper-style).
+ */
+export type TranscriptionDefinition = {
+  /** Unique provider identifier. */
+  id: string;
+  /** Translates raw binary audio arrays into structured text summaries. */
+  transcribe(input: {
+    audio: Uint8Array;
+    mimeType?: string;
+  }): Promise<{ text: string }>;
+};
 
 /**
  * Registers a safety classifier (Llama Guard, Bedrock Guardrails, Azure Content
@@ -22,6 +47,7 @@
 export type GuardrailDefinition = {
   /** Unique provider identifier. */
   id: string;
+  /** Classifies incoming prompts or outbound egress text to catch violations. */
   classify(input: {
     text: string;
     direction: 'input' | 'output';

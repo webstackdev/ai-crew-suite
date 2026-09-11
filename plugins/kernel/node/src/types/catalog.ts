@@ -15,9 +15,74 @@
  */
 
 /**
- * Compact, serializable view of a catalog entity suitable for AI agent
- * context. Deliberately smaller than a raw catalog entity: agents need
- * identity, ownership, lifecycle, and annotations, not the full document.
+ * Semantic, dependency-injected catalog query surface for AI agent workflows.
+ *
+ * This is the AI-facing catalog contract: bounded, compact, and oriented
+ * around the questions agents actually ask (identity, annotation discovery,
+ * relation neighborhoods, integration handles). Implementations adapt the
+ * real Backstage catalog client; mapping rules live in pure functions so
+ * they can be unit-tested without any catalog server.
+ */
+export interface CatalogEntityResolver {
+  /**
+   * Returns the summary for one entity reference, or `undefined` when the
+   * entity does not exist or is not readable by the initiating identity.
+   */
+  getEntitySummary(
+    entityRef: string,
+  ): Promise<CatalogEntitySummary | undefined>;
+
+  /**
+   * Finds entities carrying a specific annotation value, optionally narrowed
+   * by kind. Results are capped by `limit`.
+   */
+  findByAnnotation(input: {
+    annotation: string;
+    value: string;
+    kinds?: string[];
+    limit?: number;
+  }): Promise<CatalogEntitySummary[]>;
+
+  /**
+   * Walks relation edges from a root entity, bounded by `maxDepth` hops and a
+   * total `limit` of visited entities.
+   */
+  getRelations(input: {
+    entityRef: string;
+    relationTypes: string[];
+    maxDepth: number;
+    limit: number;
+  }): Promise<CatalogRelationGraph>;
+
+  /**
+   * Extracts integration handles (Kubernetes IDs, repositories, on-call,
+   * monitoring, TechDocs) from one entity's annotations.
+   */
+  getIntegrationReferences(
+    entityRef: string,
+  ): Promise<CatalogIntegrationReferences>;
+
+  /**
+   * Finds a user entity by email address, for org-graph identity mapping.
+   * Returns `undefined` when no user matches (treated as an offboarded signal
+   * by consumers, never an exception).
+   */
+  findUserByEmail(email: string): Promise<CatalogEntitySummary | undefined>;
+
+  /**
+   * Finds a single entity by a generic field/value pair. Useful when the
+   * annotation helpers are too narrow (e.g. spec.profile.email).
+   */
+  findByField(input: {
+    field: string;
+    value: string;
+    kinds?: string[];
+  }): Promise<CatalogEntitySummary | undefined>;
+}
+
+/**
+ * Compact, normalized representation of a catalog entity optimized for agentic context windows.
+ * Extracts structural entity properties into a uniform record without carrying heavy payload bulk.
  */
 export type CatalogEntitySummary = {
   /** Stringified entity reference, e.g. `component:default/payment-gateway`. */
@@ -88,69 +153,3 @@ export type CatalogIntegrationReferences = {
   /** Source location from `backstage.io/source-location`, when set. */
   sourceLocation?: string;
 };
-
-/**
- * Semantic, dependency-injected catalog query surface for AI agent workflows.
- *
- * This is the AI-facing catalog contract: bounded, compact, and oriented
- * around the questions agents actually ask (identity, annotation discovery,
- * relation neighborhoods, integration handles). Implementations adapt the
- * real Backstage catalog client; mapping rules live in pure functions so
- * they can be unit-tested without any catalog server.
- */
-export interface CatalogEntityResolver {
-  /**
-   * Returns the summary for one entity reference, or `undefined` when the
-   * entity does not exist or is not readable by the initiating identity.
-   */
-  getEntitySummary(
-    entityRef: string,
-  ): Promise<CatalogEntitySummary | undefined>;
-
-  /**
-   * Finds entities carrying a specific annotation value, optionally narrowed
-   * by kind. Results are capped by `limit`.
-   */
-  findByAnnotation(input: {
-    annotation: string;
-    value: string;
-    kinds?: string[];
-    limit?: number;
-  }): Promise<CatalogEntitySummary[]>;
-
-  /**
-   * Walks relation edges from a root entity, bounded by `maxDepth` hops and a
-   * total `limit` of visited entities.
-   */
-  getRelations(input: {
-    entityRef: string;
-    relationTypes: string[];
-    maxDepth: number;
-    limit: number;
-  }): Promise<CatalogRelationGraph>;
-
-  /**
-   * Extracts integration handles (Kubernetes IDs, repositories, on-call,
-   * monitoring, TechDocs) from one entity's annotations.
-   */
-  getIntegrationReferences(
-    entityRef: string,
-  ): Promise<CatalogIntegrationReferences>;
-
-  /**
-   * Finds a user entity by email address, for org-graph identity mapping.
-   * Returns `undefined` when no user matches (treated as an offboarded signal
-   * by consumers, never an exception).
-   */
-  findUserByEmail(email: string): Promise<CatalogEntitySummary | undefined>;
-
-  /**
-   * Finds a single entity by a generic field/value pair. Useful when the
-   * annotation helpers are too narrow (e.g. spec.profile.email).
-   */
-  findByField(input: {
-    field: string;
-    value: string;
-    kinds?: string[];
-  }): Promise<CatalogEntitySummary | undefined>;
-}

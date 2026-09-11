@@ -17,7 +17,7 @@
 import { describe, expect, it } from 'vitest';
 import { z } from 'zod';
 import { validateWorkflowDefinition } from '../validation';
-import { END, WorkflowDefinition } from '../definition';
+import { END, WorkflowDefinition } from '../../types/workflow/definition';
 
 const baseDef = (): WorkflowDefinition<{ ok: boolean }, { q: string }> => ({
   id: 'wf',

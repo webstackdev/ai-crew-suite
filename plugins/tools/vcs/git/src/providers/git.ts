@@ -16,13 +16,22 @@
 import { LoggerService, UrlReaderService } from '@backstage/backend-plugin-api';
 import { ScmIntegrations } from '@backstage/integration';
 import gitUrlParse from 'git-url-parse';
-import { 
-  GenericGitDriverOptions,
-  VcsDriver, 
-  RepositoryMetadata, 
-  RepositorySearchResult, 
-  PullRequestSummary 
+import {
+  VcsDriver,
+  RepositoryMetadata,
+  RepositorySearchResult,
+  PullRequestSummary
 } from '@ai-crew-suite/plugin-kernel-node';
+
+/**
+ * Isolated parameters required to instantiate the concrete Generic Git VCS adapter.
+ * Managed entirely within the scope of this provider module package.
+ */
+export type GenericGitDriverOptions = {
+  urlReader: UrlReaderService;
+  logger: LoggerService;
+  integrations: ScmIntegrations;
+};
 
 export class GenericGitDriver implements VcsDriver {
   readonly providerId = 'git';
@@ -71,7 +80,6 @@ export class GenericGitDriver implements VcsDriver {
   async readFile(repoUrl: string, path: string, ref?: string): Promise<string> {
     const { host, owner, name } = this.parseGitUrl(repoUrl);
     const cleanPath = path.replace(/^\//, '');
-    
     const targetUrl = `https://${host}/${owner}/${name}/blob/${ref ?? 'HEAD'}/${cleanPath}`;
 
     this.logger.debug(`GenericGitDriver forwarding file read string to UrlReader: ${targetUrl}`);
@@ -90,3 +98,4 @@ export class GenericGitDriver implements VcsDriver {
     return [];
   }
 }
+

@@ -24,7 +24,7 @@ import {
   SourceDescriptor,
   ToolDefinition,
   TriggerBinding,
-} from './@types';
+} from './types';
 import { WorkflowDefinition } from './workflow';
 import { CheckpointStore, StateSerializer, UsageSink, VectorStoreDefinition } from './stores';
 import {

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { TimeRange } from './common';
+import { TimeRange } from '../common';
 
 /**
  * Identifies a workload resolved through the Backstage catalog and Kubernetes

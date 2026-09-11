@@ -13,10 +13,54 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import { EmbeddingDocMetadata } from './source';
-import { EmbeddingDoc } from './rag';
 import type { Embeddings } from '@langchain/core/embeddings';
+import type { EmbeddingDocMetadata } from '../source';
+import type { EmbeddingDoc } from '../pipelines';
+
+/**
+ * ============================================================================
+ *   REGISTRATION BLUEPRINTS (Extension Point Definitions)
+ * ============================================================================
+ */
+
+/**
+ * Registers an embeddings provider module for runtime vectorization.
+ */
+export type EmbeddingsDefinition = {
+  /** Unique provider identifier (e.g. `openai`, `aws-bedrock`). */
+  id: string;
+  /** LangChain text embedding model adapter instance used for spatial analysis. */
+  embeddings: Embeddings;
+};
+
+/**
+ * Registers a retrieval reranking provider module (e.g. Cohere Rerank).
+ */
+export type RerankingDefinition = {
+  /** Unique provider identifier. */
+  id: string;
+  /** Refines similarity search hits based on precise contextual query matching. */
+  rerank(input: {
+    query: string;
+    documents: { id: string; text: string }[];
+  }): Promise<{ id: string; score: number }[]>;
+};
+
+/**
+ * Structural definition mapping an active vector store strategy wrapper.
+ */
+export type VectorStoreDefinition = {
+  /** Stable identifier of the vector storage driver (e.g. `pgvector`, `qdrant`). */
+  id: string;
+  /** Concrete instance of the vector store engine wrapper. */
+  store: VectorStore;
+};
+
+/**
+ * ============================================================================
+ *   RUNTIME DATABASES & DATA STRUCTURES (Runtime Operations)
+ * ============================================================================
+ */
 
 /**
  * Persisted embedding record containing source text and its vector representation.

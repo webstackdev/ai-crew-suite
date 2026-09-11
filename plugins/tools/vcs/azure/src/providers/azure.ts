@@ -19,12 +19,21 @@ import * as azdev from 'azure-devops-node-api';
 import { IGitApi } from 'azure-devops-node-api/GitApi';
 import { VersionControlRecursionType } from 'azure-devops-node-api/interfaces/GitInterfaces';
 import {
-  AzureDriverOptions,
   PullRequestSummary,
   RepositoryMetadata,
   RepositorySearchResult,
   VcsDriver,
 } from '@ai-crew-suite/plugin-kernel-node';
+
+/**
+ * Isolated parameters required to instantiate the concrete Azure DevOps VCS adapter.
+ * Managed entirely within the scope of this provider module package.
+ */
+export type AzureDriverOptions = {
+  urlReader: UrlReaderService;
+  logger: LoggerService;
+  integrations: ScmIntegrations;
+};
 
 export class AzureDriver implements VcsDriver {
   readonly providerId = 'azuredevops';
@@ -60,7 +69,9 @@ export class AzureDriver implements VcsDriver {
       const host = urlObj.host;
       const pathParts = urlObj.pathname.split('/').filter(Boolean);
 
-      if (host === '://azure.com') {
+      // FIXED BUG 1: urlObj.host parses raw domain properties (e.g., 'dev.azure.com'), 
+      // never a protocol scheme literal prefix like '://azure.com'.
+      if (host === 'dev.azure.com' || host === 'azure.com') {
         if (pathParts.length < 4) throw new Error();
         org = pathParts[0];
         project = pathParts[1];
@@ -163,7 +174,7 @@ export class AzureDriver implements VcsDriver {
         title: pr.title ?? '',
         headBranch,
         baseBranch,
-        state: 'open',
+        state: 'open' as const,
         url: `${repoUrl}/pullrequest/${pr.pullRequestId}`,
         author: pr.createdBy?.displayName,
       };

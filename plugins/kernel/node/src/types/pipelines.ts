@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 import { EmbeddingsSource, EntityFilterShape, EmbeddingDocMetadata } from './source';
-import { VectorStore } from './vector';
+import { VectorStore } from './storage/vector';
 
 /**
  * Text document returned from retrieval and passed to language-model prompts.
@@ -26,6 +25,12 @@ export type EmbeddingDoc = {
   /** Retrieved document text that can be included as grounding context. */
   content: string;
 };
+
+/**
+ * ============================================================================
+ *   INGESTION PIPELINES (Data Entry)
+ * ============================================================================
+ */
 
 /**
  * Creates and removes embeddings for a content source.
@@ -47,6 +52,12 @@ export interface AugmentationIndexer {
     filter: EntityFilterShape,
   ): Promise<void>;
 }
+
+/**
+ * ============================================================================
+ *   RETRIEVAL STAGES (Query & Transform Components)
+ * ============================================================================
+ */
 
 /**
  * Selects one or more retrievers that should handle a query for a source.
@@ -84,6 +95,12 @@ export interface AugmentationPostProcessor {
     embeddingDocs: Map<string, EmbeddingDoc[]>,
   ): Promise<EmbeddingDoc[]>;
 }
+
+/**
+ * ============================================================================
+ *   UNIFIED SERVICE INTERFACE (Final Controller Handle)
+ * ============================================================================
+ */
 
 /**
  * End-to-end retrieval pipeline used by tools and controllers to gather context.

@@ -15,9 +15,9 @@
  */
 
 import type { LoggerService } from '@backstage/backend-plugin-api';
-import type { NodeExecutionContext, ToolExecutor, ModelExecutor } from '../workflow/context';
-import type { ToolInvocationResult, ToolInvocationLimits } from '../@types/run';
-import type { ToolRegistry, Tool } from '../@types/tool';
+import type { NodeExecutionContext, ToolExecutor, ModelExecutor } from '../types/workflow/execution';
+import type { ToolInvocationResult, ToolInvocationLimits } from '../types/storage/runtime';
+import type { ToolRegistry, Tool } from '../types/tools/args';
 import { NodeError } from '../workflow/errors';
 
 const noopLogger: LoggerService = {

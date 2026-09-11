@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import type { AgentEvent } from '../events/agentEvent';
-import type { WorkflowDefinition } from '../workflow/definition';
-import { END } from '../workflow/definition';
-import type { NodeExecutionContext } from '../workflow/context';
+import type { AgentEvent } from '../services/events/agentEvent';
+import type { WorkflowDefinition } from '../types/workflow/definition';
+import { END } from '../types/workflow/definition';
+import type { NodeExecutionContext } from '../types/workflow/execution';
 import { NodeError } from '../workflow/errors';
 
 /**

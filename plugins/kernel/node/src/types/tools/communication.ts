@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ServiceActor } from './common';
+import { ServiceActor } from '../common';
 
 /**
  * Normalized chat channel.

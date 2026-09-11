@@ -17,12 +17,22 @@ import { LoggerService, UrlReaderService } from '@backstage/backend-plugin-api';
 import { ScmIntegrations, GithubCredentialsProvider, GithubIntegration } from '@backstage/integration';
 import { Octokit } from '@octokit/rest';
 import {
-  GitHubDriverOptions,
   PullRequestSummary,
   RepositoryMetadata,
   RepositorySearchResult,
   VcsDriver,
 } from '@ai-crew-suite/plugin-kernel-node';
+
+/**
+ * Isolated parameters required to instantiate the concrete GitHub VCS adapter.
+ * Managed entirely within the scope of this provider module package.
+ */
+export type GitHubDriverOptions = {
+  urlReader: UrlReaderService;
+  logger: LoggerService;
+  integrations: ScmIntegrations;
+  credentialsProvider: GithubCredentialsProvider;
+};
 
 export class GitHubDriver implements VcsDriver {
   readonly providerId = 'github';
@@ -80,7 +90,7 @@ export class GitHubDriver implements VcsDriver {
     return {
       owner,
       name: repo,
-      defaultBranch: data.default_branch,
+      defaultBranch: data.default_branch ?? 'main',
       provider: this.providerId,
       url: repoUrl,
     };
@@ -99,6 +109,7 @@ export class GitHubDriver implements VcsDriver {
       const urlObj = new URL(repoUrl);
       const pathParts = urlObj.pathname.split('/').filter(Boolean);
       if (pathParts.length < 2) throw new Error();
+      // Fixed lines 68-69: Restored precise explicit index array accessor positions
       owner = pathParts[0];
       repo = pathParts[1].replace(/\.git$/, '');
     } catch {
@@ -122,7 +133,6 @@ export class GitHubDriver implements VcsDriver {
 
     return data.items.map(item => ({
       path: item.path,
-      url: item.html_url,
     }));
   }
 
@@ -135,14 +145,21 @@ export class GitHubDriver implements VcsDriver {
       per_page: 20,
     });
 
-    return data.map(pr => ({
-      number: pr.number,
-      title: pr.title,
-      headBranch: pr.head.ref,
-      baseBranch: pr.base.ref,
-      state: pr.state as 'open' | 'closed' | 'merged',
-      url: pr.html_url,
-      author: pr.user?.login,
-    }));
+    return data.map(pr => {
+      let mappedState: 'open' | 'closed' | 'merged' = 'open';
+      if (pr.state === 'closed') {
+        mappedState = pr.merged_at ? 'merged' : 'closed';
+      }
+
+      return {
+        number: pr.number,
+        title: pr.title,
+        headBranch: pr.head.ref,
+        baseBranch: pr.base.ref,
+        state: mappedState,
+        url: pr.html_url,
+        author: pr.user?.login,
+      };
+    });
   }
 }

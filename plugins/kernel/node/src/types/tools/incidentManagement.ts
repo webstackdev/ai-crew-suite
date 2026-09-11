@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ServiceActor, TimeRange } from './common';
+import { ServiceActor, TimeRange } from '../common';
 
 /**
  * Provider-neutral lifecycle state for an incident.

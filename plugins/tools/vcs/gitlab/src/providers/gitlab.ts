@@ -17,12 +17,21 @@ import { LoggerService, UrlReaderService } from '@backstage/backend-plugin-api';
 import { ScmIntegrations, GitLabIntegration } from '@backstage/integration';
 import { Gitlab } from '@gitbeaker/rest';
 import {
-  GitLabDriverOptions,
   PullRequestSummary,
   RepositoryMetadata,
   RepositorySearchResult,
   VcsDriver,
 } from '@ai-crew-suite/plugin-kernel-node';
+
+/**
+ * Isolated parameters required to instantiate the concrete GitLab VCS adapter.
+ * Managed entirely within the scope of this provider module package.
+ */
+export type GitLabDriverOptions = {
+  urlReader: UrlReaderService;
+  logger: LoggerService;
+  integrations: ScmIntegrations;
+};
 
 export class GitLabDriver implements VcsDriver {
   readonly providerId = 'gitlab';
@@ -40,7 +49,7 @@ export class GitLabDriver implements VcsDriver {
    * Helper to resolve the correct configured integration and authenticated GitBeaker API client
    */
   private async getClientForRepo(repoUrl: string): Promise<{ api: InstanceType<typeof Gitlab>; integration: GitLabIntegration; projectPath: string }> {
-    const integration = this.integrations.gitlab.byUrl(repoUrl);
+    const integration = this.integrations.gitlabByUrl(repoUrl);
     if (!integration) {
       throw new Error(`No GitLab integration found configured for URL: ${repoUrl}`);
     }
@@ -48,7 +57,6 @@ export class GitLabDriver implements VcsDriver {
     let projectPath = '';
     try {
       const urlObj = new URL(repoUrl);
-      // Extracts everything following the domain name, stripping out any leading or trailing slashes
       projectPath = urlObj.pathname.replace(/^\/|\/$/g, '').replace(/\.git$/, '');
 
       if (!projectPath || projectPath.split('/').length < 2) {
@@ -58,7 +66,6 @@ export class GitLabDriver implements VcsDriver {
       throw new Error(`GitLabDriver could not parse repository URL: ${repoUrl}`);
     }
 
-    // Pull credentials natively managed under the backstage integration configuration block
     const token = integration.config.token ?? '';
 
     const api = new Gitlab({
@@ -71,12 +78,9 @@ export class GitLabDriver implements VcsDriver {
 
   async getRepositoryMetadata(repoUrl: string): Promise<RepositoryMetadata> {
     const { api, projectPath } = await this.getClientForRepo(repoUrl);
-    // Fetch real-time project metadata from GitLab API
     const project = await api.Projects.show(projectPath);
 
     return {
-      // 1. Convert keys to camelCase to match GitBeaker's runtime data mapping
-      // 2. Cast fields using 'as string' to resolve the Camelize<unknown> type boundaries
       owner: project.namespace.fullPath as string,
       name: project.name as string,
       defaultBranch: (project.defaultBranch as string) ?? 'main',
@@ -86,12 +90,9 @@ export class GitLabDriver implements VcsDriver {
   }
 
   async readFile(repoUrl: string, path: string, ref?: string): Promise<string> {
-    // Deduplicate: Reuse your shared, validated parsing helper
     const { integration, projectPath } = await this.getClientForRepo(repoUrl);
 
     const cleanPath = path.replace(/^\//, '');
-
-    // Fall back to gitlab.com if host isn't explicitly configured in app-config.yaml
     const host = integration.config.host ?? 'gitlab.com';
     const targetUrl = `https://${host}/${projectPath}/blob/${ref ?? 'HEAD'}/${cleanPath}`;
 
@@ -106,7 +107,6 @@ export class GitLabDriver implements VcsDriver {
     const { api, projectPath } = await this.getClientForRepo(repoUrl);
     this.logger.debug(`GitLab Search invoked for ${projectPath} with query: ${query}`);
 
-    // Execute a scoped file content blob search within this project scope
     const blobs = await api.Search.all('blobs', query, { projectId: projectPath });
 
     return blobs.map((blob: any) => ({
@@ -118,7 +118,6 @@ export class GitLabDriver implements VcsDriver {
   async listPullRequests(repoUrl: string): Promise<PullRequestSummary[]> {
     const { api, projectPath } = await this.getClientForRepo(repoUrl);
 
-    // In GitLab domain terminology, a "Pull Request" is called a "Merge Request"
     const mergeRequests = await api.MergeRequests.all({
       projectId: projectPath,
       state: 'opened',
@@ -126,11 +125,11 @@ export class GitLabDriver implements VcsDriver {
     });
 
     return mergeRequests.map((mr: any) => ({
-      number: mr.iid, // 'iid' is the project-scoped sequential ID seen in the UI
+      number: mr.iid,
       title: mr.title,
       headBranch: mr.source_branch,
       baseBranch: mr.target_branch,
-      state: 'open', // Parameter limits output to active/opened states
+      state: 'open' as const,
       url: mr.web_url,
       author: mr.author?.username,
     }));

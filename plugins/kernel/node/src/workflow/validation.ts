@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { END, WorkflowDefinition } from './definition';
+import { END, WorkflowDefinition } from '../types/workflow/definition';
 
 /** A single static-validation violation found in a workflow definition. */
 export type WorkflowValidationViolation = { message: string };

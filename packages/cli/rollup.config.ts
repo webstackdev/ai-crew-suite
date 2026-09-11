@@ -30,6 +30,8 @@ const entryPoints = globSync([
 
 const outputDir = path.resolve(currentDir, 'dist/bin');
 
+const executableEntryPattern = /\/src\/bin\/(crew|commands\/[^/]+\/index)\.ts$/;
+
 export default defineConfig({
   input: entryPoints,
   output: {
@@ -39,8 +41,11 @@ export default defineConfig({
     preserveModules: true,
     preserveModulesRoot: path.resolve(currentDir, 'src/bin'),
     entryFileNames: '[name].js',
-    /** Inject a shebang at the top of each subcommand file */
-    banner: '#!/usr/bin/env node\n',
+    /** Inject a shebang only into files intended to be invoked directly. */
+    banner: ({ facadeModuleId }) =>
+      facadeModuleId && executableEntryPattern.test(facadeModuleId)
+        ? '#!/usr/bin/env node\n'
+        : '',
   },
   external: (id) => {
     /** Keep relative imports and internal source files bundled/resolved correctly */

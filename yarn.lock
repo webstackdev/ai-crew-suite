@@ -891,6 +891,77 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@ai-crew-suite/plugin-ai-providers-backend-module-aws@workspace:^, @ai-crew-suite/plugin-ai-providers-backend-module-aws@workspace:plugins/ai-providers/aws":
+  version: 0.0.0-use.local
+  resolution: "@ai-crew-suite/plugin-ai-providers-backend-module-aws@workspace:plugins/ai-providers/aws"
+  dependencies:
+    "@ai-crew-suite/cli": "workspace:*"
+    "@ai-crew-suite/plugin-kernel-backend": "workspace:^"
+    "@ai-crew-suite/plugin-kernel-node": "workspace:^"
+    "@ai-crew-suite/plugin-retrieval-augmenter-backend": "workspace:^"
+    "@ai-crew-suite/plugin-vector-store-pgvector": "workspace:^"
+    "@aws-sdk/client-bedrock-runtime": "npm:^3.1130.0"
+    "@aws-sdk/types": "npm:^3.974.5"
+    "@backstage/backend-common": "catalog:backstage-backend-common"
+    "@backstage/backend-plugin-api": "backstage:^"
+    "@backstage/catalog-client": "backstage:^"
+    "@backstage/config": "backstage:^"
+    "@langchain/aws": "npm:^1.4.5"
+    "@langchain/core": "catalog:langchain-core"
+    i18next: "catalog:i18next"
+    vitest: "catalog:vitest"
+  languageName: unknown
+  linkType: soft
+
+"@ai-crew-suite/plugin-ai-providers-backend-module-openai@workspace:^, @ai-crew-suite/plugin-ai-providers-backend-module-openai@workspace:plugins/ai-providers/openai":
+  version: 0.0.0-use.local
+  resolution: "@ai-crew-suite/plugin-ai-providers-backend-module-openai@workspace:plugins/ai-providers/openai"
+  dependencies:
+    "@ai-crew-suite/cli": "workspace:*"
+    "@ai-crew-suite/plugin-kernel-node": "workspace:^"
+    "@ai-crew-suite/plugin-retrieval-augmenter-backend": "workspace:^"
+    "@ai-crew-suite/plugin-vector-store-pgvector": "workspace:^"
+    "@backstage/backend-common": "catalog:backstage-backend-common"
+    "@backstage/backend-plugin-api": "backstage:^"
+    "@backstage/catalog-client": "backstage:^"
+    "@backstage/config": "backstage:^"
+    "@langchain/core": "catalog:langchain-core"
+    "@langchain/openai": "npm:^1.5.12"
+    i18next: "catalog:i18next"
+    vitest: "catalog:vitest"
+  languageName: unknown
+  linkType: soft
+
+"@ai-crew-suite/plugin-ai-providers-backend-module-openrouter@workspace:^, @ai-crew-suite/plugin-ai-providers-backend-module-openrouter@workspace:plugins/ai-providers/openrouter":
+  version: 0.0.0-use.local
+  resolution: "@ai-crew-suite/plugin-ai-providers-backend-module-openrouter@workspace:plugins/ai-providers/openrouter"
+  dependencies:
+    "@ai-crew-suite/cli": "workspace:*"
+    "@ai-crew-suite/plugin-kernel-node": "workspace:^"
+    "@backstage/backend-plugin-api": "backstage:^"
+    "@backstage/config": "backstage:^"
+    "@langchain/core": "catalog:langchain-core"
+    "@langchain/openrouter": "npm:^0.4.12"
+    i18next: "catalog:i18next"
+    vitest: "catalog:vitest"
+  languageName: unknown
+  linkType: soft
+
+"@ai-crew-suite/plugin-databases-runtime-backend@workspace:^, @ai-crew-suite/plugin-databases-runtime-backend@workspace:plugins/databases/runtime":
+  version: 0.0.0-use.local
+  resolution: "@ai-crew-suite/plugin-databases-runtime-backend@workspace:plugins/databases/runtime"
+  dependencies:
+    "@ai-crew-suite/cli": "workspace:*"
+    "@ai-crew-suite/plugin-kernel-node": "workspace:^"
+    "@backstage/backend-plugin-api": "backstage:^"
+    "@backstage/backend-test-utils": "backstage:^"
+    "@backstage/config": "backstage:^"
+    ioredis: "npm:^5.11.1"
+    knex: "catalog:knex"
+    vitest: "catalog:vitest"
+  languageName: unknown
+  linkType: soft
+
 "@ai-crew-suite/plugin-kernel-backend-module-quality-scorecards@workspace:^, @ai-crew-suite/plugin-kernel-backend-module-quality-scorecards@workspace:plugins/tools/quality-scorecards/engine":
   version: 0.0.0-use.local
   resolution: "@ai-crew-suite/plugin-kernel-backend-module-quality-scorecards@workspace:plugins/tools/quality-scorecards/engine"
@@ -958,62 +1029,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@ai-crew-suite/plugin-ai-providers-backend-module-aws@workspace:^, @ai-crew-suite/plugin-ai-providers-backend-module-aws@workspace:plugins/kernel/llm/aws":
-  version: 0.0.0-use.local
-  resolution: "@ai-crew-suite/plugin-ai-providers-backend-module-aws@workspace:plugins/kernel/llm/aws"
-  dependencies:
-    "@ai-crew-suite/cli": "workspace:*"
-    "@ai-crew-suite/plugin-kernel-backend": "workspace:^"
-    "@ai-crew-suite/plugin-kernel-node": "workspace:^"
-    "@ai-crew-suite/plugin-retrieval-augmenter-backend": "workspace:^"
-    "@ai-crew-suite/plugin-vector-store-pgvector": "workspace:^"
-    "@aws-sdk/client-bedrock-runtime": "npm:^3.1130.0"
-    "@aws-sdk/types": "npm:^3.974.5"
-    "@backstage/backend-common": "catalog:backstage-backend-common"
-    "@backstage/backend-plugin-api": "backstage:^"
-    "@backstage/catalog-client": "backstage:^"
-    "@backstage/config": "backstage:^"
-    "@langchain/aws": "npm:^1.4.5"
-    "@langchain/core": "catalog:langchain-core"
-    i18next: "catalog:i18next"
-    vitest: "catalog:vitest"
-  languageName: unknown
-  linkType: soft
-
-"@ai-crew-suite/plugin-ai-providers-backend-module-openai@workspace:^, @ai-crew-suite/plugin-ai-providers-backend-module-openai@workspace:plugins/kernel/llm/openai":
-  version: 0.0.0-use.local
-  resolution: "@ai-crew-suite/plugin-ai-providers-backend-module-openai@workspace:plugins/kernel/llm/openai"
-  dependencies:
-    "@ai-crew-suite/cli": "workspace:*"
-    "@ai-crew-suite/plugin-kernel-node": "workspace:^"
-    "@ai-crew-suite/plugin-retrieval-augmenter-backend": "workspace:^"
-    "@ai-crew-suite/plugin-vector-store-pgvector": "workspace:^"
-    "@backstage/backend-common": "catalog:backstage-backend-common"
-    "@backstage/backend-plugin-api": "backstage:^"
-    "@backstage/catalog-client": "backstage:^"
-    "@backstage/config": "backstage:^"
-    "@langchain/core": "catalog:langchain-core"
-    "@langchain/openai": "npm:^1.5.12"
-    i18next: "catalog:i18next"
-    vitest: "catalog:vitest"
-  languageName: unknown
-  linkType: soft
-
-"@ai-crew-suite/plugin-ai-providers-backend-module-openrouter@workspace:^, @ai-crew-suite/plugin-ai-providers-backend-module-openrouter@workspace:plugins/kernel/llm/openrouter":
-  version: 0.0.0-use.local
-  resolution: "@ai-crew-suite/plugin-ai-providers-backend-module-openrouter@workspace:plugins/kernel/llm/openrouter"
-  dependencies:
-    "@ai-crew-suite/cli": "workspace:*"
-    "@ai-crew-suite/plugin-kernel-node": "workspace:^"
-    "@backstage/backend-plugin-api": "backstage:^"
-    "@backstage/config": "backstage:^"
-    "@langchain/core": "catalog:langchain-core"
-    "@langchain/openrouter": "npm:^0.4.12"
-    i18next: "catalog:i18next"
-    vitest: "catalog:vitest"
-  languageName: unknown
-  linkType: soft
-
 "@ai-crew-suite/plugin-retrieval-augmenter-backend@workspace:^, @ai-crew-suite/plugin-retrieval-augmenter-backend@workspace:plugins/kernel/retrieval-augmenter":
   version: 0.0.0-use.local
   resolution: "@ai-crew-suite/plugin-retrieval-augmenter-backend@workspace:plugins/kernel/retrieval-augmenter"
@@ -1030,21 +1045,6 @@ __metadata:
     "@langchain/textsplitters": "npm:^1.0.1"
     i18next: "catalog:i18next"
     p-limit: "npm:^3.1.0"
-    vitest: "catalog:vitest"
-  languageName: unknown
-  linkType: soft
-
-"@ai-crew-suite/plugin-databases-runtime-backend@workspace:^, @ai-crew-suite/plugin-databases-runtime-backend@workspace:plugins/kernel/runtime-store":
-  version: 0.0.0-use.local
-  resolution: "@ai-crew-suite/plugin-databases-runtime-backend@workspace:plugins/kernel/runtime-store"
-  dependencies:
-    "@ai-crew-suite/cli": "workspace:*"
-    "@ai-crew-suite/plugin-kernel-node": "workspace:^"
-    "@backstage/backend-plugin-api": "backstage:^"
-    "@backstage/backend-test-utils": "backstage:^"
-    "@backstage/config": "backstage:^"
-    ioredis: "npm:^5.11.1"
-    knex: "catalog:knex"
     vitest: "catalog:vitest"
   languageName: unknown
   linkType: soft
@@ -1410,9 +1410,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@ai-crew-suite/plugin-vector-store-pgvector@workspace:^, @ai-crew-suite/plugin-vector-store-pgvector@workspace:plugins/kernel/vector-store/pgvector":
+"@ai-crew-suite/plugin-vector-store-pgvector@workspace:^, @ai-crew-suite/plugin-vector-store-pgvector@workspace:plugins/databases/vector/pgvector":
   version: 0.0.0-use.local
-  resolution: "@ai-crew-suite/plugin-vector-store-pgvector@workspace:plugins/kernel/vector-store/pgvector"
+  resolution: "@ai-crew-suite/plugin-vector-store-pgvector@workspace:plugins/databases/vector/pgvector"
   dependencies:
     "@ai-crew-suite/cli": "workspace:*"
     "@ai-crew-suite/plugin-kernel-node": "workspace:^"
@@ -1425,9 +1425,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@ai-crew-suite/plugin-vector-store-qdrant@workspace:plugins/kernel/vector-store/qdrant":
+"@ai-crew-suite/plugin-vector-store-qdrant@workspace:plugins/databases/vector/qdrant":
   version: 0.0.0-use.local
-  resolution: "@ai-crew-suite/plugin-vector-store-qdrant@workspace:plugins/kernel/vector-store/qdrant"
+  resolution: "@ai-crew-suite/plugin-vector-store-qdrant@workspace:plugins/databases/vector/qdrant"
   dependencies:
     "@ai-crew-suite/cli": "workspace:*"
     "@ai-crew-suite/plugin-kernel-node": "workspace:^"
@@ -18063,13 +18063,13 @@ __metadata:
     "@ai-crew-suite/plugin-agent-tech-radar-manager-backend": "workspace:^"
     "@ai-crew-suite/plugin-agent-techdocs-janitor-backend": "workspace:^"
     "@ai-crew-suite/plugin-agent-techdocs-postmortem-backend": "workspace:^"
-    "@ai-crew-suite/plugin-kernel-backend": "workspace:^"
-    "@ai-crew-suite/plugin-kernel-backend-module-quality-scorecards": "workspace:^"
-    "@ai-crew-suite/plugin-kernel-node": "workspace:^"
     "@ai-crew-suite/plugin-ai-providers-backend-module-aws": "workspace:^"
     "@ai-crew-suite/plugin-ai-providers-backend-module-openai": "workspace:^"
     "@ai-crew-suite/plugin-ai-providers-backend-module-openrouter": "workspace:^"
     "@ai-crew-suite/plugin-databases-runtime-backend": "workspace:^"
+    "@ai-crew-suite/plugin-kernel-backend": "workspace:^"
+    "@ai-crew-suite/plugin-kernel-backend-module-quality-scorecards": "workspace:^"
+    "@ai-crew-suite/plugin-kernel-node": "workspace:^"
     "@ai-crew-suite/plugin-tool-cloud-providers-backend": "workspace:^"
     "@ai-crew-suite/plugin-tool-communication-backend": "workspace:^"
     "@ai-crew-suite/plugin-tool-communication-backend-module-slack": "workspace:^"
@@ -18141,13 +18141,13 @@ __metadata:
     "@ai-crew-suite/plugin-agent-tech-radar-manager-backend": "workspace:^"
     "@ai-crew-suite/plugin-agent-techdocs-janitor-backend": "workspace:^"
     "@ai-crew-suite/plugin-agent-techdocs-postmortem-backend": "workspace:^"
-    "@ai-crew-suite/plugin-kernel-backend": "workspace:^"
-    "@ai-crew-suite/plugin-kernel-backend-module-quality-scorecards": "workspace:^"
-    "@ai-crew-suite/plugin-kernel-node": "workspace:^"
     "@ai-crew-suite/plugin-ai-providers-backend-module-aws": "workspace:^"
     "@ai-crew-suite/plugin-ai-providers-backend-module-openai": "workspace:^"
     "@ai-crew-suite/plugin-ai-providers-backend-module-openrouter": "workspace:^"
     "@ai-crew-suite/plugin-databases-runtime-backend": "workspace:^"
+    "@ai-crew-suite/plugin-kernel-backend": "workspace:^"
+    "@ai-crew-suite/plugin-kernel-backend-module-quality-scorecards": "workspace:^"
+    "@ai-crew-suite/plugin-kernel-node": "workspace:^"
     "@ai-crew-suite/plugin-tool-cloud-providers-backend": "workspace:^"
     "@ai-crew-suite/plugin-tool-communication-backend": "workspace:^"
     "@ai-crew-suite/plugin-tool-communication-backend-module-slack": "workspace:^"

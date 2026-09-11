@@ -17,7 +17,7 @@ import type {
   CatalogEntityRelation,
   CatalogEntitySummary,
   CatalogIntegrationReferences,
-} from './types';
+} from '../../types/catalog';
 
 /**
  * Minimal structural view of a raw catalog entity that the pure mapping
@@ -36,7 +36,12 @@ export type CatalogEntityLike = {
     annotations?: Record<string, string>;
     tags?: string[];
   };
-  spec?: Record<string, unknown>;
+  spec?: {
+    type?: string;
+    lifecycle?: string;
+    owner?: string;
+    system?: string;
+  } & Record<string, unknown>;
   relations?: { type?: string; targetRef?: string }[];
 };
 

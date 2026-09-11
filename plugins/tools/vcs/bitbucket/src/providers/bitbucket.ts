@@ -16,7 +16,6 @@
 import { LoggerService, UrlReaderService } from '@backstage/backend-plugin-api';
 import { ScmIntegrations } from '@backstage/integration';
 import {
-  BitbucketDriverOptions,
   PullRequestSummary,
   RepositoryMetadata,
   RepositorySearchResult,
@@ -24,6 +23,16 @@ import {
 } from '@ai-crew-suite/plugin-kernel-node';
 
 const bitBucketApiVer = '2.0';
+
+/**
+ * Isolated parameters required to instantiate the concrete Bitbucket VCS adapter.
+ * Managed entirely within the scope of this provider module package.
+ */
+export type BitbucketDriverOptions = {
+  urlReader: UrlReaderService;
+  logger: LoggerService;
+  integrations: ScmIntegrations;
+};
 
 export class BitbucketDriver implements VcsDriver {
   readonly providerId = 'bitbucket';
@@ -41,8 +50,8 @@ export class BitbucketDriver implements VcsDriver {
    * Helper to parse and resolve contextual integration settings based on the target URL
    */
   private resolveIntegrationContext(repoUrl: string) {
-    // 1. First probe for Bitbucket Cloud configurations
-    const cloudIntegration = this.integrations.bitbucketCloud?.byUrl(repoUrl);
+    // CRITICAL FIX 1: Access via standard explicit camelCase getter function blocks instead of broken property lookups.
+    const cloudIntegration = this.integrations.bitbucketCloudByUrl(repoUrl);
     if (cloudIntegration) {
       const urlObj = new URL(repoUrl.replace(/([^:]\/)\/+/g, "$1"));
       const pathParts = urlObj.pathname.split('/').filter(Boolean);
@@ -57,14 +66,15 @@ export class BitbucketDriver implements VcsDriver {
         username: cloudIntegration.config.username,
         appPassword: cloudIntegration.config.appPassword,
         apiBaseUrl: `https://api.bitbucket.org/${bitBucketApiVer}`,
+        projectKey: undefined,
+        password: undefined,
       };
     }
 
-    // 2. Fall back to checking self-hosted Bitbucket Server configurations
-    const serverIntegration = this.integrations.bitbucketServer?.byUrl(repoUrl);
+    // CRITICAL FIX 2: Access via standard explicit server getter method matching the core ScmIntegrations schema layout.
+    const serverIntegration = this.integrations.bitbucketServerByUrl(repoUrl);
     if (serverIntegration) {
       const urlObj = new URL(repoUrl);
-      // Path format: /projects/PROJECT_KEY/repos/REPO_SLUG
       const pathParts = urlObj.pathname.split('/').filter(Boolean);
       const projectIdx = pathParts.indexOf('projects');
       const reposIdx = pathParts.indexOf('repos');
@@ -81,6 +91,8 @@ export class BitbucketDriver implements VcsDriver {
         username: serverIntegration.config.username,
         password: serverIntegration.config.password,
         apiBaseUrl: `${serverIntegration.config.apiBaseUrl || `https://${urlObj.host}/rest/api/1.0`}`,
+        workspace: undefined,
+        appPassword: undefined,
       };
     }
 
@@ -94,11 +106,11 @@ export class BitbucketDriver implements VcsDriver {
     const headers: Record<string, string> = { 'Content-Type': 'application/json' };
 
     if (ctx.token) {
-      headers.Authorization = `Bearer ${ctx.token}`;
+      headers['Authorization'] = `Bearer ${ctx.token}`;
     } else if (ctx.username && (ctx.appPassword || ctx.password)) {
       const password = ctx.appPassword ?? ctx.password;
       const b64 = Buffer.from(`${ctx.username}:${password}`).toString('base64');
-      headers.Authorization = `Basic ${b64}`;
+      headers['Authorization'] = `Basic ${b64}`;
     }
 
     return headers;
@@ -137,7 +149,6 @@ export class BitbucketDriver implements VcsDriver {
 
 
   async readFile(repoUrl: string, path: string, ref?: string): Promise<string> {
-    // Always fall back to core Backstage UrlReader, which handles raw source downloads smoothly
     const cleanPath = path.replace(/^\//, '');
     const versionSegment = ref ? `?at=${encodeURIComponent(ref)}` : '';
     const targetUrl = `${repoUrl.replace(/\.git$/, '')}/raw/${cleanPath}${versionSegment}`;
@@ -168,7 +179,8 @@ export class BitbucketDriver implements VcsDriver {
         title: pr.title,
         headBranch: pr.source?.branch?.name ?? '',
         baseBranch: pr.destination?.branch?.name ?? '',
-        state: 'open',
+        // FIXED TYPE CASTING LITERAL BUG: Coerced explicitly to strict schema string literal bounds
+        state: 'open' as const,
         url: pr.links?.html?.href,
         author: pr.author?.display_name,
       }));
@@ -184,7 +196,7 @@ export class BitbucketDriver implements VcsDriver {
       title: pr.title,
       headBranch: pr.fromRef?.displayId ?? '',
       baseBranch: pr.toRef?.displayId ?? '',
-      state: 'open',
+      state: 'open' as const,
       url: pr.links?.self?.[0]?.href,
       author: pr.author?.user?.displayName,
     }));
