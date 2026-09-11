@@ -22,7 +22,7 @@ import { createPgVectorStore } from '../../../vector/pgvector/src';
 import {
 	AugmentationOptions,
 	createDefaultRetrievalPipeline,
-} from '../../../retrieval-augmenter/src';
+} from '@ai-crew-suite/plugin-retrieval-augmenter-backend';
 import { toolExtensionPoint } from '@ai-crew-suite/plugin-kernel-node';
 import { BedrockAugmenter, BedrockConfig } from './BedrockAugmenter';
 
@@ -40,8 +40,8 @@ const getBedrockRegion = () =>
  * @public
  */
 export const aiCoreBackendModuleLlmAws = createBackendModule({
-	pluginId: 'ai-core',
-	moduleId: 'aws-bedrock-embeddings',
+	pluginId: 'ai-providers',
+	moduleId: 'aws-bedrock',
 	register(env) {
 		env.registerInit({
 			deps: {

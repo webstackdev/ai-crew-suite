@@ -1,6 +1,6 @@
 {
-  "name": "@ai-crew-suite/plugin-llm-backend-module-aws",
-  "description": "The AWS (Bedrock) backend module for the @ai-crew-suite/plugin-kernel plugin.",
+  "name": "@ai-crew-suite/plugin-ai-providers-backend-module-openai",
+  "description": "The OpenAI backend module for the @ai-crew-suite/plugin-kernel plugin.",
   "version": "0.0.1",
   "main": "src/index.ts",
   "types": "src/index.ts",
@@ -10,9 +10,8 @@
     "backstage-plugin-module",
     "backend",
     "ai-crew-suite",
-    "ai-core",
-    "aws",
-    "bedrock",
+    "ai-providers",
+    "openai",
     "embeddings",
     "vector-embeddings",
     "rag"
@@ -21,14 +20,23 @@
     "access": "public",
     "provenance": true
   },
+  "backstage": {
+    "role": "backend-plugin",
+    "pluginId": "ai-providers",
+    "pluginPackages": [
+      "@ai-crew-suite/plugin-ai-providers-backend-module-aws",
+      "@ai-crew-suite/plugin-ai-providers-backend-module-openai",
+      "@ai-crew-suite/plugin-ai-providers-backend-module-openrouter"
+    ]
+  },
   "bugs": {
-    "url": "https://github.com/ai-crew-suite/ai-crew-suite/issues",
+    "url": "https://github.com/ai-crew-suite/ai-crew-suite",
     "email": "support@ai-crew-suite.dev"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/ai-crew-suite/ai-crew-suite",
-    "directory": "plugins/kernel/llm/aws"
+    "directory": "plugins/ai-providers/openai"
   },
   "files": [
     "dist",
@@ -45,18 +53,15 @@
     "typecheck": "crew typecheck"
   },
   "dependencies": {
-    "@ai-crew-suite/plugin-kernel-backend": "workspace:^",
     "@ai-crew-suite/plugin-kernel-node": "workspace:^",
     "@ai-crew-suite/plugin-retrieval-augmenter-backend": "workspace:^",
     "@ai-crew-suite/plugin-vector-store-pgvector": "workspace:^",
-    "@aws-sdk/client-bedrock-runtime": "^3.1130.0",
-    "@aws-sdk/types": "^3.974.5",
     "@backstage/backend-common": "catalog:backstage-backend-common",
     "@backstage/backend-plugin-api": "backstage:^",
     "@backstage/catalog-client": "backstage:^",
     "@backstage/config": "backstage:^",
-    "@langchain/aws": "^1.4.5",
     "@langchain/core": "catalog:langchain-core",
+    "@langchain/openai": "^1.5.12",
     "i18next": "catalog:i18next"
   },
   "devDependencies": {

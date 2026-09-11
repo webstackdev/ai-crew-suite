@@ -30,8 +30,8 @@ import { createOpenRouterModels, OpenRouterConfig } from './OpenRouterModel';
  * @public
  */
 export const aiCoreBackendModuleLlmOpenRouter = createBackendModule({
-  pluginId: 'ai-core',
-  moduleId: 'openrouter-models',
+  pluginId: 'ai-providers',
+  moduleId: 'openrouter',
   register(env) {
     env.registerInit({
       deps: {

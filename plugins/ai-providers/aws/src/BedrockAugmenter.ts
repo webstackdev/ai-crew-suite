@@ -19,7 +19,7 @@ import { AwsCredentialIdentity, Provider } from '@aws-sdk/types';
 import {
   DefaultVectorAugmentationIndexer,
   EmbeddingsConfig,
-} from '../../../retrieval-augmenter/src';
+} from '@ai-crew-suite/plugin-retrieval-augmenter-backend';
 import { BedrockCohereEmbeddings } from './BedrockCohereEmbeddings';
 
 /**

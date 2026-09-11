@@ -19,7 +19,7 @@
   },
   "backstage": {
     "role": "backend-plugin",
-    "pluginId": "vector-store",
+    "pluginId": "databases-vector",
     "moduleId": "pgvector",
     "pluginPackage": [
       "@ai-crew-suite/plugin-vector-store-pgvector",
@@ -33,7 +33,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/ai-crew-suite/ai-crew-suite",
-    "directory": "plugins/kernel/vector-store/pgvector"
+    "directory": "plugins/databases/vector/pgvector"
   },
   "files": [
     "dist",
