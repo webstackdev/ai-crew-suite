@@ -18,7 +18,7 @@ import { cloudDriversExtensionPoint } from '@ai-crew-suite/plugin-kernel-node';
 import { AzureDriver } from './providers/AzureDriver';
 
 export const toolCloudProvidersModuleAzure = createBackendModule({
-  pluginId: 'tool-cloud-providers',
+  pluginId: 'tools-cloud-providers',
   moduleId: 'azure',
   register(env) {
     env.registerInit({

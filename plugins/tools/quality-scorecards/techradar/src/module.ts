@@ -18,7 +18,7 @@ import { qualityScorecardsExtensionPoint } from '@ai-crew-suite/plugin-kernel-no
 import { TechRadarDriver } from './providers/TechRadarDriver';
 
 export const toolQualityScorecardsModuleTechRadar = createBackendModule({
-  pluginId: 'tool-quality-scorecards',
+  pluginId: 'tools-quality-scorecards',
   moduleId: 'techradar',
   register(env) {
     env.registerInit({

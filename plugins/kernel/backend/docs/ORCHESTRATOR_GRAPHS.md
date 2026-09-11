@@ -16,49 +16,49 @@ graph TD
     subgraph ExecutionLoop ["Primary Execution Loop: run()"]
         StartRun([Incoming runInput Request]) --> InitEngine[Reset sequence to 0]
         InitEngine --> YieldEnter["Emit Event: Step ('langgraph', 'enter')"]
-        
+
         %% Phase 1: Conversation Context Memory
         YieldEnter --> LoadHistory["Phase 1: loadHistoryContext()"]
         LoadHistory --> EmitMemEnter["Emit Event: Step ('memory.load', 'enter')"]
         EmitMemEnter --> FetchMessages[Fetch history limits from sessionStore]
         FetchMessages --> EmitMemExit["Emit Event: Step ('memory.load', 'exit')"]
-        
+
         %% Phase 2: RAG Pipeline Engine
         EmitMemExit --> RAGPipeline{"Phase 2: executeRetrievalPipeline()"}
         RAGPipeline -- "Tool Found" --> InvokeRetrieval["Invoke 'knowledge.retrieve' Tool"]
         RAGPipeline -- "Tool Missing / Exception" --> PipeError[Log Error Trace]
         InvokeRetrieval --> CheckOutput{"Is Output Array?"}
-        
+
         CheckOutput -- "Yes" --> CombineQuery[Compose Query String with Context Elements]
         CheckOutput -- "No" --> EmptyEmbeddings[Fall back to empty array Docs] --> CombineQuery
         PipeError --> YieldCoreErr["Emit Event: 'error'"] --> TerminateRun([Terminate Execution Stream])
-        
+
         %% Phase 3: Streaming Iteration Engine
         CombineQuery --> QueryLLM["Phase 3: Invoke llmService.query() Stream"]
         QueryLLM --> StreamLoop{"Iterate Engine Loop Chunks"}
-        
+
         StreamLoop -- "Chunk Available" --> MetricAccum["accumulateMetrics() for input/output/total"]
         MetricAccum --> ExtractText["extractChunkText() string extraction"]
         ExtractText --> TextCheck{"Is Text Valid?"}
         TextCheck -- "Yes" --> AppendResponse[Accumulate Response Buffer]
         AppendResponse --> YieldToken["Emit Event: 'token'"] --> StreamLoop
         TextCheck -- "No" --> StreamLoop
-        
+
         %% Phase 4: Persistence & Gate Checkpoints
         StreamLoop -- "Stream Depleted" --> PersistHistory["Phase 4: persistSessionHistory()"]
         PersistHistory --> EmitPersistEnter["Emit Event: Step ('memory.persist', 'enter')"]
         EmitPersistEnter --> SaveMessages[Append Message Arrays to sessionStore]
         SaveMessages --> EmitPersistExit["Emit Event: Step ('memory.persist', 'exit')"]
-        
+
         EmitPersistExit --> SaveCheckpoint["saveLifecycleCheckpoint() inside checkpointStore"]
         SaveCheckpoint --> GuardCondition{"requiresApprovalGuard() Requirements Met?"}
-        
+
         %% Phase 4b: Interrupt Gateway Block
         GuardCondition -- "Yes (Write Tool Context Matches)" --> HandleInterrupt["handleApprovalInterrupt()"]
         HandleInterrupt --> UpdateStatePending[Save checkpoint status 'awaiting_approval']
         UpdateStatePending --> YieldApproval["Emit Event: 'approval_request' (Interrupt triggered)"]
         YieldApproval --> TerminateRun
-        
+
         %% Phase 5: Normal finalization
         GuardCondition -- "No" --> YieldMetrics["Phase 5: Emit Event: 'usage' (metrics metadata)"]
         YieldMetrics --> YieldExit["Emit Event: Step ('langgraph', 'exit')"]
@@ -70,13 +70,13 @@ graph TD
         %% FIXED LINE: Wrapped quotes around parenthesized string inside node
         StartResume(["Incoming resume() Action Event"]) --> LoadRunCheck[Query runId check from checkpointStore]
         LoadRunCheck --> CheckpointFound{"Does Checkpoint Exist?"}
-        
+
         CheckpointFound -- "No" --> ResumeMissingErr["Log Warning & Emit Event: 'error'"] --> TerminateResume([Close Resume Operation])
         CheckpointFound -- "Yes" --> EvaluateDecision{"Evaluate Decision Status"}
-        
+
         EvaluateDecision -- "rejected" --> ResumeRejectErr["Log warning & Emit Event: 'error'"] --> TerminateResume
         EvaluateDecision -- "approved" --> YieldResumeStep["Emit Event: Step ('approval.resume', 'enter')"]
-        
+
         YieldResumeStep --> MapArtifact[Extract original proposedArtifact meta details]
         MapArtifact --> YieldArtifact["Emit Event: 'artifact' containing action payload info"]
         YieldArtifact --> UpdateCheckpointDone[Save checkpoint status 'done' with resumedAt timestamp]

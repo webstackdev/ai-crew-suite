@@ -1,10 +1,10 @@
-# @ai-crew-suite/plugin-tool-vcs-backend-module-gitlab
+# @ai-crew-suite/plugin-tools-vcs-backend-module-gitlab
 
 > Core Developer Documentation for the AI Crew Suite platform.
 
 ## Overview
 
-This backend module registers a GitLab `VcsDriver` with the host plugin **`@ai-crew-suite/plugin-tool-vcs-backend`** through its exposed `vcsDriversExtensionPoint`.
+This backend module registers a GitLab `VcsDriver` with the host plugin **`@ai-crew-suite/plugin-tools-vcs-backend`** through its exposed `vcsDriversExtensionPoint`.
 
 This package targets both GitLab SaaS and Self-Managed instances, handling connection routing to the platform's native REST and GraphQL API structures. It manages version control tasks such as scanning repository trees, evaluating Merge Requests (MR), appending automated review discussions, checking pipeline statuses, and dispatching code branch mutations. It normalizes GitLab-specific response structures into stable types consumed by upstream platform agents.
 
@@ -31,7 +31,7 @@ The outgoing connection communicates securely with the GitLab API via Personal A
 Register the module directly into your central Backstage system backend initialization framework entrypoint (`packages/backend/src/index.ts`):
 
 ```typescript
-import { toolVcsModuleGitlab } from '@ai-crew-suite/plugin-tool-vcs-backend-module-gitlab';
+import { toolVcsModuleGitlab } from '@ai-crew-suite/plugin-tools-vcs-backend-module-gitlab';
 
 backend.add(toolVcsModuleGitlab);
 ```
@@ -46,13 +46,13 @@ This workspace relies on the monorepo's shared **Yarn Plug'n'Play (PnP)** cachin
 
 ```bash
 yarn install --refresh
-yarn workspace @ai-crew-suite/plugin-tool-vcs-backend-module-gitlab build
+yarn workspace @ai-crew-suite/plugin-tools-vcs-backend-module-gitlab build
 ```
 
 ### 3. Running Unit & Integration Tests
 
 ```bash
-yarn workspace @ai-crew-suite/plugin-tool-vcs-backend-module-gitlab test
+yarn workspace @ai-crew-suite/plugin-tools-vcs-backend-module-gitlab test
 ```
 
 ## Compliance and Licensing

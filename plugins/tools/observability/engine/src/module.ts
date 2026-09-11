@@ -30,7 +30,7 @@ import { createObservabilityTools } from './tools';
  * boot time.
  */
 export const toolObservabilityPlugin = createBackendPlugin({
-  pluginId: 'tool-observability',
+  pluginId: 'tools-observability',
   register(env) {
     // 1. Maintain an internal module-scoped map of registered drivers
     const drivers = new Map<string, ObservabilityDriver>();

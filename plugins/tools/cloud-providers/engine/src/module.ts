@@ -30,7 +30,7 @@ import { createCloudProviderTools } from './registerTools';
  * Dynamically resolves provider driver modules via open extension points.
  */
 export const toolCloudProvidersPlugin = createBackendPlugin({
-  pluginId: 'tool-cloud-providers',
+  pluginId: 'tools-cloud-providers',
   register(env) {
     // 1. Maintain an internal module-scoped map of registered cloud drivers
     const drivers = new Map<string, CloudProviderDriver>();

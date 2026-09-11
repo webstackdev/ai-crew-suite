@@ -20,7 +20,7 @@
   },
   "backstage": {
     "role": "backend-plugin-module",
-    "pluginId": "tool-compliance",
+    "pluginId": "tools-compliance",
     "pluginPackages": [
       "@ai-crew-suite/plugin-tool-compliance-backend",
       "@ai-crew-suite/plugin-tool-compliance-backend-module-opa"

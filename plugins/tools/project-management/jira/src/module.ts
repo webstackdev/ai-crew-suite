@@ -22,7 +22,7 @@ import { readJiraConfig } from './config';
  * Jira driver backend module for the AI Core project management group.
  */
 export const toolProjectManagementModuleJira = createBackendModule({
-  pluginId: 'tool-project-management',
+  pluginId: 'tools-project-management',
   moduleId: 'jira',
   register(env) {
     env.registerInit({

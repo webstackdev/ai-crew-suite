@@ -22,7 +22,7 @@ import { GitHubDriver } from './providers/github';
  * GitHub VCS driver backend module for the AI Core plugin.
  */
 export const toolVcsModuleGitHub = createBackendModule({
-  pluginId: 'tool-vcs',
+  pluginId: 'tools-vcs',
   moduleId: 'github',
   register(env) {
     env.registerInit({

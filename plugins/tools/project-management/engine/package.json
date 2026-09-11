@@ -20,7 +20,7 @@
   },
   "backstage": {
     "role": "backend-plugin-module",
-    "pluginId": "tool-project-management",
+    "pluginId": "tools-project-management",
     "pluginPackages": [
       "@ai-crew-suite/plugin-tool-project-management-backend",
       "@ai-crew-suite/plugin-tool-project-management-backend-module-jira"

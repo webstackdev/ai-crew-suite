@@ -30,7 +30,7 @@ import { createCommunicationTools } from './tools';
  * boot time.
  */
 export const toolCommunicationPlugin = createBackendPlugin({
-  pluginId: 'tool-communication',
+  pluginId: 'tools-communication',
   register(env) {
     // 1. Maintain an internal module-scoped map of registered drivers
     const drivers = new Map<string, CommunicationDriver>();

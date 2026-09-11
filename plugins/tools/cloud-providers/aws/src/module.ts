@@ -19,7 +19,7 @@ import { cloudDriversExtensionPoint } from '@ai-crew-suite/plugin-kernel-node';
 import { AwsDriver } from './providers/AwsDriver';
 
 export const toolCloudProvidersModuleAws = createBackendModule({
-  pluginId: 'tool-cloud-providers',
+  pluginId: 'tools-cloud-providers',
   moduleId: 'aws',
   register(env) {
     env.registerInit({

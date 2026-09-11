@@ -22,7 +22,7 @@ import { readPagerDutyConfig } from './config';
  * PagerDuty driver backend module for the AI Core incident management group.
  */
 export const toolIncidentManagementModulePagerduty = createBackendModule({
-  pluginId: 'tool-incident-management',
+  pluginId: 'tools-incident-management',
   moduleId: 'pagerduty',
   register(env) {
     env.registerInit({

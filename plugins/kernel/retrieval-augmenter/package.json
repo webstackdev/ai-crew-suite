@@ -22,7 +22,7 @@
       "@ai-crew-suite/plugin-kernel-backend",
       "@ai-crew-suite/plugin-kernel-node",
       "@ai-crew-suite/plugin-retrieval-augmenter-backend",
-      "@ai-crew-suite/plugin-runtime-store-backend"
+      "@ai-crew-suite/plugin-databases-runtime-backend"
     ]
   },
   "bugs": {

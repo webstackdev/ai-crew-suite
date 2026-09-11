@@ -26,7 +26,7 @@ import { createKubernetesDiagnosticsTools } from './tools';
  * Kubernetes diagnostics backend module for the AI Core backend plugin.
  */
 export const aiCoreBackendModuleKubernetes = createBackendPlugin({
-  pluginId: 'tool-kubernetes',
+  pluginId: 'tools-kubernetes',
   register(env) {
     const drivers = new Map<string, KubernetesDiagnosticsDriver>();
 

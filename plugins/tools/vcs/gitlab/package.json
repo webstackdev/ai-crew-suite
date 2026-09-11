@@ -1,5 +1,5 @@
 {
-  "name": "@ai-crew-suite/plugin-tool-vcs-backend-module-gitlab",
+  "name": "@ai-crew-suite/plugin-tools-vcs-backend-module-gitlab",
   "description": "GitLab SaaS and Self-Managed integration module for the vcs host backend plugin within the AI Crew Suite platform.",
   "version": "0.0.1",
   "main": "src/index.ts",
@@ -21,16 +21,16 @@
   },
   "backstage": {
     "role": "backend-plugin-module",
-    "pluginId": "tool-vcs",
+    "pluginId": "tools-vcs",
     "pluginPackages": [
-      "@ai-crew-suite/plugin-tool-vcs-backend",
-      "@ai-crew-suite/plugin-tool-vcs-backend-module-aws-codecommit",
-      "@ai-crew-suite/plugin-tool-vcs-backend-module-azure",
-      "@ai-crew-suite/plugin-tool-vcs-backend-module-bitbucket",
-      "@ai-crew-suite/plugin-tool-vcs-backend-module-gerrit",
-      "@ai-crew-suite/plugin-tool-vcs-backend-module-git",
-      "@ai-crew-suite/plugin-tool-vcs-backend-module-github",
-      "@ai-crew-suite/plugin-tool-vcs-backend-module-gitlab"
+      "@ai-crew-suite/plugin-tools-vcs-backend",
+      "@ai-crew-suite/plugin-tools-vcs-backend-module-aws-codecommit",
+      "@ai-crew-suite/plugin-tools-vcs-backend-module-azure",
+      "@ai-crew-suite/plugin-tools-vcs-backend-module-bitbucket",
+      "@ai-crew-suite/plugin-tools-vcs-backend-module-gerrit",
+      "@ai-crew-suite/plugin-tools-vcs-backend-module-git",
+      "@ai-crew-suite/plugin-tools-vcs-backend-module-github",
+      "@ai-crew-suite/plugin-tools-vcs-backend-module-gitlab"
     ]
   },
   "bugs": {

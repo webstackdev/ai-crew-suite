@@ -23,8 +23,8 @@ import { BitbucketDriver } from './providers/bitbucket';
  * Handles both Bitbucket Cloud and Bitbucket Server dynamically.
  */
 export const aiCoreBackendModuleVcsBitbucket = createBackendModule({
-  pluginId: 'ai-core',
-  moduleId: 'vcs-bitbucket',
+  pluginId: 'tools-vcs',
+  moduleId: 'bitbucket',
   register(env) {
     env.registerInit({
       deps: {

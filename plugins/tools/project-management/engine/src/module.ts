@@ -30,7 +30,7 @@ import { createProjectManagementTools } from './tools';
  * modules at boot time.
  */
 export const toolProjectManagementPlugin = createBackendPlugin({
-  pluginId: 'project-management',
+  pluginId: 'tools-project-management',
   register(env) {
     // 1. Maintain an internal module-scoped map of registered drivers
     const drivers = new Map<string, ProjectManagementDriver>();

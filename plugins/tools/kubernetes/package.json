@@ -20,7 +20,7 @@
   },
   "backstage": {
     "role": "backend-plugin",
-    "pluginId": "tool-kubernetes",
+    "pluginId": "tools-kubernetes",
     "pluginPackages": [
       "@ai-crew-suite/plugin-tool-kubernetes-backend"
     ]

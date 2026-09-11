@@ -1,10 +1,10 @@
-# @ai-crew-suite/plugin-tool-vcs-backend-module-git
+# @ai-crew-suite/plugin-tools-vcs-backend-module-git
 
 > Core Developer Documentation for the AI Crew Suite platform.
 
 ## Overview
 
-This backend module registers a vanilla Git `VcsDriver` with the host plugin **`@ai-crew-suite/plugin-tool-vcs-backend`** through its exposed `vcsDriversExtensionPoint`.
+This backend module registers a vanilla Git `VcsDriver` with the host plugin **`@ai-crew-suite/plugin-tools-vcs-backend`** through its exposed `vcsDriversExtensionPoint`.
 
 This package provides native, platform-agnostic version control operations using raw Git execution hooks. It handles bare or local filesystem repository checks, branch tracking, diff computing, and commit logging without relying on SaaS platform vendor wrappers (such as GitHub or GitLab pull request extensions). It is ideal for on-premise setups, disconnected network workspaces, or simple direct branch operations.
 
@@ -31,7 +31,7 @@ The outgoing connection executes shell actions or utilizes native isomorphic Git
 Register the module directly into your central Backstage system backend initialization framework entrypoint (`packages/backend/src/index.ts`):
 
 ```typescript
-import { toolVcsModuleGit } from '@ai-crew-suite/plugin-tool-vcs-backend-module-git';
+import { toolVcsModuleGit } from '@ai-crew-suite/plugin-tools-vcs-backend-module-git';
 
 backend.add(toolVcsModuleGit);
 ```
@@ -46,13 +46,13 @@ This workspace relies on the monorepo's shared **Yarn Plug'n'Play (PnP)** cachin
 
 ```bash
 yarn install --refresh
-yarn workspace @ai-crew-suite/plugin-tool-vcs-backend-module-git build
+yarn workspace @ai-crew-suite/plugin-tools-vcs-backend-module-git build
 ```
 
 ### 3. Running Unit & Integration Tests
 
 ```bash
-yarn workspace @ai-crew-suite/plugin-tool-vcs-backend-module-git test
+yarn workspace @ai-crew-suite/plugin-tools-vcs-backend-module-git test
 ```
 
 ## Compliance and Licensing

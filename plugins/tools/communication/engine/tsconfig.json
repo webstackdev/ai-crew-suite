@@ -4,11 +4,14 @@
     "outDir": "../../../dist-types/plugins/backend/plugin-ai-core-backend-module-communication"
   },
   "include": [
-    "src/**/*"
+    "src*"
   ],
   "references": [
     {
-      "path": "../../../core/node"
+      "path": "../../../../packages/cli"
+    },
+    {
+      "path": "../../../kernel/node"
     }
   ]
 }

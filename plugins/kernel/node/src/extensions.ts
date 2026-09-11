@@ -19,17 +19,11 @@ import {
   AgentDefinition,
   ArtifactSink,
   AuditLogSink,
-  CloudProviderDriver,
-  CommunicationDriver,
-  ComplianceDriver,
-  IncidentManagementDriver,
-  KubernetesDiagnosticsDriver,
   RunStore,
   SessionStore,
   SourceDescriptor,
   ToolDefinition,
   TriggerBinding,
-  VcsDriver,
 } from './@types';
 import { WorkflowDefinition } from './workflow';
 import { CheckpointStore, StateSerializer, UsageSink, VectorStoreDefinition } from './stores';
@@ -42,44 +36,47 @@ import {
 } from './models';
 import { createExtensionPoint } from '@backstage/backend-plugin-api';
 
+export * from './tools';
+
 /**
  * Extension point for registering executable agent profiles.
  */
 export interface AgentExtensionPoint {
   addAgent(agent: AgentDefinition): void;
 }
+
 export const agentExtensionPoint = createExtensionPoint<AgentExtensionPoint>({
-  id: 'plugin-ai.agent',
+  id: 'plugin-agent.agents',
 });
 
 /**
- * Extension point for registering sources.
+ * Extension point that allows backend modules to register indexing and retrieval sources
+ * (e.g., `catalog`, `techdocs`, or custom third-party integrations) with the central AI agent runtime.
+ *
+ * Registered sources provide the content pipelines utilized by agentic workflow plugins
+ * for embeddings generation, knowledge indexing, and context-aware retrieval.
  */
 export interface SourceExtensionPoint {
   addSource(source: SourceDescriptor): void;
 }
+
 export const sourceExtensionPoint = createExtensionPoint<SourceExtensionPoint>({
-  id: 'plugin-ai.source',
+  id: 'plugin-agent.sources',
 });
 
 /**
- * Extension point for registering tools.
- */
-export interface ToolExtensionPoint {
-  addTool(tool: ToolDefinition): void;
-}
-export const toolExtensionPoint = createExtensionPoint<ToolExtensionPoint>({
-  id: 'plugin-ai.tool',
-});
-
-/**
- * Extension point for registering external trigger bindings.
+ * Extension point that allows backend modules to register event-driven hooks and triggers
+ * (e.g., webhook listeners, cron routines, or message queue consumers) into the central AI agent runtime.
+ * 
+ * Registered triggers intercept external platform events and automatically instantiate and route
+ * them to execute a specific, pre-configured `AgentDefinition`.
  */
 export interface TriggerExtensionPoint {
   addTrigger(trigger: TriggerBinding): void;
 }
+
 export const triggerExtensionPoint = createExtensionPoint<TriggerExtensionPoint>({
-  id: 'plugin-ai.trigger',
+  id: 'plugin-agent.triggers',
 });
 
 /**
@@ -93,117 +90,69 @@ export const workflowRunnerExtensionPoint =
     id: 'plugin-ai.workflow-runner',
   });
 
-/** Cloud provider driver registry. */
-export interface CloudDriversExtensionPoint {
-  registerDriver(driver: CloudProviderDriver): void;
+/**
+ * Extension point that allows specialized backend modules (such as `github`, `gitlab`, or `aws-codecommit`)
+ * to register concrete executable tools into the unified Version Control System (VCS) tool group interface.
+ *
+ * Registered tools are exposed to the core agentic runtime, enabling agent workflows to interact
+ * uniformly with repositories, pull requests, and code hosting platforms.
+ */
+export interface ToolExtensionPoint {
+  addTool(tool: ToolDefinition): void;
 }
-export const cloudDriversExtensionPoint = createExtensionPoint<CloudDriversExtensionPoint>({
-  id: 'ai-core.cloud-drivers',
-});
 
-/** Communication driver registry. */
-export interface CommunicationDriversExtensionPoint {
-  registerDriver(driver: CommunicationDriver): void;
-}
-export const communicationDriversExtensionPoint =
-  createExtensionPoint<CommunicationDriversExtensionPoint>({
-    id: 'ai-core.communication-drivers',
-  });
-
-/** Compliance driver registry. */
-export interface ComplianceDriversExtensionPoint {
-  registerDriver(driver: ComplianceDriver): void;
-}
-export const complianceDriversExtensionPoint =
-  createExtensionPoint<ComplianceDriversExtensionPoint>({
-    id: 'ai-core.compliance-drivers',
-  });
-
-/** Incident management driver registry. */
-export interface IncidentManagementDriversExtensionPoint {
-  registerDriver(driver: IncidentManagementDriver): void;
-}
-export const incidentManagementDriversExtensionPoint =
-  createExtensionPoint<IncidentManagementDriversExtensionPoint>({
-    id: 'ai-core.incident-management-drivers',
-  });
-
-/** Kubernetes diagnostics driver registry. */
-export interface KubernetesDiagnosticsDriversExtensionPoint {
-  registerDriver(driver: KubernetesDiagnosticsDriver): void;
-}
-export const kubernetesDiagnosticsDriversExtensionPoint =
-  createExtensionPoint<KubernetesDiagnosticsDriversExtensionPoint>({
-    id: 'ai-core.kubernetes-diagnostics-drivers',
-  });
-
-/** Observability driver registry. */
-export interface ObservabilityDriversExtensionPoint {
-  registerDriver(driver: unknown): void;
-}
-export const observabilityDriversExtensionPoint =
-  createExtensionPoint<ObservabilityDriversExtensionPoint>({
-    id: 'ai-core.observability-drivers',
-  });
-
-/** Project management driver registry. */
-export interface ProjectManagementDriversExtensionPoint {
-  registerDriver(driver: unknown): void;
-}
-export const projectManagementDriversExtensionPoint =
-  createExtensionPoint<ProjectManagementDriversExtensionPoint>({
-    id: 'ai-core.project-management-drivers',
-  });
-
-/** Quality scorecards driver registry. */
-export interface QualityScorecardsExtensionPoint {
-  registerDriver(driver: unknown): void;
-}
-export const qualityScorecardsExtensionPoint =
-  createExtensionPoint<QualityScorecardsExtensionPoint>({
-    id: 'ai-core.quality-scorecards',
-  });
-
-/** VCS driver registry. */
-export interface VcsDriversExtensionPoint {
-  registerDriver(driver: VcsDriver): void;
-}
-export const vcsDriversExtensionPoint = createExtensionPoint<VcsDriversExtensionPoint>({
-  id: 'ai-core.vcs.drivers',
+export const toolExtensionPoint = createExtensionPoint<ToolExtensionPoint>({
+  id: 'tools-vcs.tools',
 });
 
 /** Chat model registrations (replaces the removed `modelExtensionPoint`). */
 export interface ChatModelsExtensionPoint { addChatModel(d: ChatModelDefinition): void }
+
 export const chatModelsExtensionPoint = createExtensionPoint<ChatModelsExtensionPoint>({
   id: 'plugin-ai.models.chat',
 });
 
 /** Embeddings provider registrations. */
-export interface EmbeddingsExtensionPoint { addEmbeddings(d: EmbeddingsDefinition): void }
+export interface EmbeddingsExtensionPoint {
+  addEmbeddings(d: EmbeddingsDefinition): void
+}
+
 export const embeddingsExtensionPoint = createExtensionPoint<EmbeddingsExtensionPoint>({
   id: 'plugin-ai.models.embeddings',
 });
 
 /** Transcription provider registrations. */
-export interface TranscriptionExtensionPoint { addTranscription(d: TranscriptionDefinition): void }
+export interface TranscriptionExtensionPoint {
+  addTranscription(d: TranscriptionDefinition): void
+}
+
 export const transcriptionExtensionPoint = createExtensionPoint<TranscriptionExtensionPoint>({
   id: 'plugin-ai.models.transcription',
 });
 
 /** Reranking provider registrations. */
-export interface RerankingExtensionPoint { addReranking(d: RerankingDefinition): void }
+export interface RerankingExtensionPoint {
+  addReranking(d: RerankingDefinition): void
+}
+
 export const rerankingExtensionPoint = createExtensionPoint<RerankingExtensionPoint>({
   id: 'plugin-ai.models.reranking',
 });
 
 /** Guardrail classifier registrations. */
-export interface GuardrailExtensionPoint { addGuardrail(d: GuardrailDefinition): void }
+export interface GuardrailExtensionPoint {
+  addGuardrail(d: GuardrailDefinition): void
+}
+
 export const guardrailExtensionPoint = createExtensionPoint<GuardrailExtensionPoint>({
   id: 'plugin-ai.models.guardrail',
 });
 
 /** Vector store provider registrations. */
-export interface VectorStoreExtensionPoint { addVectorStore(d: VectorStoreDefinition): void }
+export interface VectorStoreExtensionPoint {
+  addVectorStore(d: VectorStoreDefinition): void
+}
+
 export const vectorStoreExtensionPoint = createExtensionPoint<VectorStoreExtensionPoint>({
   id: 'plugin-ai.storage.vector',
 });
@@ -220,6 +169,7 @@ export interface RuntimeStoreExtensionPoint {
   setUsageSink?(sink: UsageSink): void;
   setStateSerializer?(serializer: StateSerializer): void;
 }
+
 export const runtimeStoreExtensionPoint =
   createExtensionPoint<RuntimeStoreExtensionPoint>({
     id: 'plugin-ai.runtime-store',

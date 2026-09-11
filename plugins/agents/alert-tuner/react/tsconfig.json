@@ -12,7 +12,10 @@
       "path": "../../../../packages/cli"
     },
     {
-      "path": "../../../core/frontend"
+      "path": "../../../kernel/node"
+    },
+    {
+      "path": "../../../kernel/react"
     }
   ],
   "include": [

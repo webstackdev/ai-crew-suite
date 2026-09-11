@@ -32,7 +32,6 @@ import {
   runtimeStoreExtensionPoint,
   SessionStore,
   sourceExtensionPoint,
-  SourceRegistry,
   toolExtensionPoint,
   ToolDefinition,
   triggerExtensionPoint,
@@ -45,7 +44,7 @@ import { createAiBackendServices, createRouter, createSourceRegistry } from './s
  * Registers and boots the AI backend runtime.
  */
 export const ragAiPlugin = createBackendPlugin({
-  pluginId: 'ai-core',
+  pluginId: 'kernel',
   register(env) {
     const sourceRegistry = createSourceRegistry();
     const models = new Map<string, BaseChatModel>();
@@ -77,6 +76,7 @@ export const ragAiPlugin = createBackendPlugin({
         }
         models.set(modelDefinition.id, modelDefinition.model);
       },
+    });
 
     env.registerExtensionPoint(toolExtensionPoint, {
       addTool(tool) {

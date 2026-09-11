@@ -22,7 +22,7 @@ import { GenericGitDriver } from './providers/git';
  * Generic Fallback Git VCS driver backend module for the AI Core plugin.
  */
 export const toolVcsModuleGit = createBackendModule({
-  pluginId: 'tool-vcs',
+  pluginId: 'tools-vcs',
   moduleId: 'git',
   register(env) {
     env.registerInit({

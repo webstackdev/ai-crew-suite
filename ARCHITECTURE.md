@@ -192,7 +192,7 @@ ai-crew-suite/
 │   │   │   └── qdrant/                     # @ai-crew-suite/plugin-vector-store-qdrant
 │   │   ├── react/                          # @ai-crew-suite/plugin-kernel-react
 │   │   ├── retrieval-augmenter/            # @ai-crew-suite/plugin-retrieval-augmenter-backend
-│   │   └── runtime-store/                  # @ai-crew-suite/plugin-runtime-store-backend
+│   │   └── runtime-store/                  # @ai-crew-suite/plugin-databases-runtime-backend
 │   │
 │   ├── agents/
 │   │   ├── alert-tuner/
@@ -278,14 +278,14 @@ ai-crew-suite/
 │       │   ├── soundcheck/                 # @ai-crew-suite/plugin-tool-quality-scorecards-backend-module-soundcheck
 │       │   └── techradar/                  # @ai-crew-suite/plugin-tool-quality-scorecards-backend-module-techradar
 │       └── vcs/
-│           ├── engine/                     # @ai-crew-suite/plugin-tool-vcs-backend
-│           ├── aws-codecommit/             # @ai-crew-suite/plugin-tool-vcs-backend-module-aws-codecommit
-│           ├── azure/                      # @ai-crew-suite/plugin-tool-vcs-backend-module-azure
-│           ├── bitbucket/                  # @ai-crew-suite/plugin-tool-vcs-backend-module-bitbucket
-│           ├── gerrit/                     # @ai-crew-suite/plugin-tool-vcs-backend-module-gerrit
-│           ├── git/                        # @ai-crew-suite/plugin-tool-vcs-backend-module-git
-│           ├── github/                     # @ai-crew-suite/plugin-tool-vcs-backend-module-github
-│           └── gitlab/                     # @ai-crew-suite/plugin-tool-vcs-backend-module-gitlab
+│           ├── engine/                     # @ai-crew-suite/plugin-tools-vcs-backend
+│           ├── aws-codecommit/             # @ai-crew-suite/plugin-tools-vcs-backend-module-aws-codecommit
+│           ├── azure/                      # @ai-crew-suite/plugin-tools-vcs-backend-module-azure
+│           ├── bitbucket/                  # @ai-crew-suite/plugin-tools-vcs-backend-module-bitbucket
+│           ├── gerrit/                     # @ai-crew-suite/plugin-tools-vcs-backend-module-gerrit
+│           ├── git/                        # @ai-crew-suite/plugin-tools-vcs-backend-module-git
+│           ├── github/                     # @ai-crew-suite/plugin-tools-vcs-backend-module-github
+│           └── gitlab/                     # @ai-crew-suite/plugin-tools-vcs-backend-module-gitlab
 │
 ├── package.json                            # Root monorepo metadata
 └── turbo.json                              # Pipelines orchestration profile

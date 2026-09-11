@@ -22,7 +22,7 @@ import { GitLabDriver } from './providers/gitlab';
  * GitLab VCS driver backend module for the AI Core plugin.
  */
 export const toolVcsModuleGitLab = createBackendModule({
-  pluginId: 'tool-vcs',
+  pluginId: 'tools-vcs',
   moduleId: 'gitlab',
   register(env) {
     env.registerInit({

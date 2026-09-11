@@ -23,7 +23,7 @@ import { readQualityScorecardsConfig } from './config';
 import { createQualityScorecardsTools } from './registerTools';
 
 export const toolQualityScorecardsPlugin = createBackendPlugin({
-  pluginId: 'quality-scorecards',
+  pluginId: 'tools-quality-scorecards',
   register(env) {
     // 1. Maintain an internal module-scoped map of registered quality compliance drivers
     const drivers = new Map<string, QualityScorecardsDriver>();

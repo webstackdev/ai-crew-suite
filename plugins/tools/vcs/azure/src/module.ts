@@ -22,8 +22,8 @@ import { AzureDriver } from './providers/azure';
  * Azure DevOps VCS driver backend module for the AI Core plugin.
  */
 export const aiCoreBackendModuleVcsAzure = createBackendModule({
-  pluginId: 'ai-core',
-  moduleId: 'vcs-azure',
+  pluginId: 'tools-vcs',
+  moduleId: 'azure',
   register(env) {
     env.registerInit({
       deps: {

@@ -18,7 +18,7 @@ import { qualityScorecardsExtensionPoint } from '@ai-crew-suite/plugin-kernel-no
 import { ScorecardsDriver } from './providers/ScorecardsDriver';
 
 export const toolQualityScorecardsModuleScorecards = createBackendModule({
-  pluginId: 'tool-quality-scorecards',
+  pluginId: 'tools-quality-scorecards',
   moduleId: 'scorecards',
   register(env) {
     env.registerInit({

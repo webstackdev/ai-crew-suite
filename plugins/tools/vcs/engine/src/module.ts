@@ -30,7 +30,7 @@ import { createVcsTools } from './tools';
  * registrations via Extension Points.
  */
 export const aiCoreBackendModuleVcs = createBackendPlugin({
-  pluginId: 'ai-core',
+  pluginId: 'tools-vcs',
   register(env) {
     // 1. Maintain an internal module-scoped map of registered drivers
     const drivers = new Map<string, VcsDriver>();

@@ -20,7 +20,7 @@
   },
   "backstage": {
     "role": "backend-plugin",
-    "pluginId": "tool-communication",
+    "pluginId": "tools-communication",
     "pluginPackages": [
       "@ai-crew-suite/plugin-tool-communication-backend",
       "@ai-crew-suite/plugin-tool-communication-backend-module-slack"

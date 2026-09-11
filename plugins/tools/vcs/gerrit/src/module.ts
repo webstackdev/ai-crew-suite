@@ -22,8 +22,8 @@ import { GerritDriver } from './providers/gerrit';
  * Gerrit VCS driver backend module for the AI Core plugin.
  */
 export const aiCoreBackendModuleVcsGerrit = createBackendModule({
-  pluginId: 'ai-core',
-  moduleId: 'vcs-gerrit',
+  pluginId: 'tools-vcs',
+  moduleId: 'gerrit',
   register(env) {
     env.registerInit({
       deps: {

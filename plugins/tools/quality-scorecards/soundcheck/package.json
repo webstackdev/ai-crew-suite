@@ -21,7 +21,7 @@
   },
   "backstage": {
     "role": "backend-plugin-module",
-    "pluginId": "tool-quality-scorecards",
+    "pluginId": "tools-quality-scorecards",
     "pluginPackages": [
       "@ai-crew-suite/plugin-tool-quality-scorecards-backend",
       "@ai-crew-suite/plugin-tool-quality-scorecards-backend-module-scorecards"

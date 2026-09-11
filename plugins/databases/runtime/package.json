@@ -1,5 +1,5 @@
 {
-  "name": "@ai-crew-suite/plugin-runtime-store-backend",
+  "name": "@ai-crew-suite/plugin-databases-runtime-backend",
   "description": "Configurable agent runtime persistence for the AI Crew Suite, providing session, checkpoint, run, artifact, and audit stores backed by the site database or Redis.",
   "version": "0.0.1",
   "main": "src/index.ts",
@@ -22,12 +22,9 @@
   },
   "backstage": {
     "role": "backend-plugin",
-    "pluginId": "kernel",
+    "pluginId": "databases-runtime",
     "pluginPackages": [
-      "@ai-crew-suite/plugin-kernel-backend",
-      "@ai-crew-suite/plugin-kernel-node",
-      "@ai-crew-suite/plugin-retrieval-augmenter-backend",
-      "@ai-crew-suite/plugin-runtime-store-backend"
+      "@ai-crew-suite/plugin-databases-runtime-backend"
     ]
   },
   "bugs": {
@@ -37,7 +34,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/ai-crew-suite/ai-crew-suite",
-    "directory": "plugins/kernel/runtime-store"
+    "directory": "plugins/databases/runtime"
   },
   "files": [
     "dist",

@@ -20,7 +20,7 @@
   },
   "backstage": {
     "role": "backend-plugin",
-    "pluginId": "tool-observability",
+    "pluginId": "tools-observability",
     "pluginPackages": [
       "@ai-crew-suite/plugin-tool-observability-backend",
       "@ai-crew-suite/plugin-tool-observability-backend-module-datadog"

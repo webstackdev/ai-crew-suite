@@ -1,5 +1,5 @@
 {
-  "name": "@ai-crew-suite/plugin-agent-alert-tuner-backend",
+  "name": "@ai-crew-suite/plugin-agent-alert-tuner",
   "description": "Standalone Backstage UI for evaluating alert fatigue and reviewing cited, capped IaC tuning proposals.",
   "version": "0.0.1",
   "main": "src/index.ts",
@@ -20,8 +20,8 @@
     "role": "frontend-plugin",
     "pluginId": "alert-tuner",
     "pluginPackages": [
-      "@ai-crew-suite/plugin-agent-alert-tuner-backend-backend",
-      "@ai-crew-suite/plugin-agent-alert-tuner-backend-react"
+      "@ai-crew-suite/plugin-agent-alert-tuner-backend",
+      "@ai-crew-suite/plugin-agent-alert-tuner"
     ]
   },
   "bugs": {
@@ -60,8 +60,8 @@
     "react-router-dom": "catalog:react-router-dom"
   },
   "peerDependencies": {
-    "react": "catalog:react",
-    "react-router-dom": "catalog:react-router-dom"
+    "react": "^18.3.1",
+    "react-router-dom": "^6.30.6"
   },
   "devDependencies": {
     "@ai-crew-suite/cli": "workspace:*",

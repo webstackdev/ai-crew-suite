@@ -44,11 +44,11 @@
     "typecheck": "crew typecheck"
   },
   "dependencies": {
+    "@ai-crew-suite/plugin-kernel-node": "workspace:^",
     "@backstage/backend-plugin-api": "backstage:^",
     "@backstage/config": "backstage:^",
     "@langchain/core": "catalog:langchain-core",
     "@langchain/openrouter": "^0.4.12",
-    "@ai-crew-suite/plugin-kernel-node": "workspace:^",
     "i18next": "catalog:i18next"
   },
   "devDependencies": {

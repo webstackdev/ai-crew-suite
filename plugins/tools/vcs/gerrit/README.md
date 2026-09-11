@@ -1,10 +1,10 @@
-# @ai-crew-suite/plugin-tool-vcs-backend-module-gerrit
+# @ai-crew-suite/plugin-tools-vcs-backend-module-gerrit
 
 > Core Developer Documentation for the AI Crew Suite platform.
 
 ## Overview
 
-This backend module registers a Gerrit Code Review `VcsDriver` with the host plugin **`@ai-crew-suite/plugin-tool-vcs-backend`** through its exposed `vcsDriversExtensionPoint`.
+This backend module registers a Gerrit Code Review `VcsDriver` with the host plugin **`@ai-crew-suite/plugin-tools-vcs-backend`** through its exposed `vcsDriversExtensionPoint`.
 
 This package handles all direct communication channels with Gerrit REST and SSH API endpoints. It manages core review ecosystem tasks such as inspecting change sets, polling open reviews, fetching inline code comment histories, and posting automated scoring approvals or review feedback. It normalizes Gerrit's change-set models into vendor-neutral structures consumed by upstream agents.
 
@@ -32,7 +32,7 @@ The outgoing connection acts as a secure client leveraging authenticated HTTP di
 Register the module directly into your central Backstage system backend initialization framework entrypoint (`packages/backend/src/index.ts`):
 
 ```typescript
-import { toolVcsModuleGerrit } from '@ai-crew-suite/plugin-tool-vcs-backend-module-gerrit';
+import { toolVcsModuleGerrit } from '@ai-crew-suite/plugin-tools-vcs-backend-module-gerrit';
 
 backend.add(toolVcsModuleGerrit);
 ```
@@ -47,13 +47,13 @@ This workspace relies on the monorepo's shared **Yarn Plug'n'Play (PnP)** cachin
 
 ```bash
 yarn install --refresh
-yarn workspace @ai-crew-suite/plugin-tool-vcs-backend-module-gerrit build
+yarn workspace @ai-crew-suite/plugin-tools-vcs-backend-module-gerrit build
 ```
 
 ### 3. Running Unit & Integration Tests
 
 ```bash
-yarn workspace @ai-crew-suite/plugin-tool-vcs-backend-module-gerrit test
+yarn workspace @ai-crew-suite/plugin-tools-vcs-backend-module-gerrit test
 ```
 
 ## Compliance and Licensing

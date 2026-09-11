@@ -22,7 +22,7 @@ import { readDatadogConfig } from './config';
  * Datadog driver backend module for the AI Crew Suite observability group.
  */
 export const toolObservabilityModuleDatadog = createBackendModule({
-  pluginId: 'tool-observability',
+  pluginId: 'tools-observability',
   moduleId: 'datadog',
   register(env) {
     env.registerInit({

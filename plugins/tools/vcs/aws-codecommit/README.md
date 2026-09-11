@@ -1,10 +1,10 @@
-# @ai-crew-suite/plugin-tool-vcs-backend-module-aws-codecommit
+# @ai-crew-suite/plugin-tools-vcs-backend-module-aws-codecommit
 
 > Core Developer Documentation for the AI Crew Suite platform.
 
 ## Overview
 
-This backend module registers an AWS CodeCommit `VcsDriver` with the host plugin **`@ai-crew-suite/plugin-tool-vcs-backend`** through its exposed `vcsDriversExtensionPoint`.
+This backend module registers an AWS CodeCommit `VcsDriver` with the host plugin **`@ai-crew-suite/plugin-tools-vcs-backend`** through its exposed `vcsDriversExtensionPoint`.
 
 This package handles all direct API handshakes with AWS CodeCommit endpoints, managing operations like repository cloning context, pull request creation, commit analysis, and repository metadata mapping. It normalizes AWS-specific response models into standard structures consumed by upstream version control agents.
 
@@ -33,7 +33,7 @@ The outgoing connection acts as a secure client leveraging the official AWS SDK 
 Register the module directly into your central Backstage system backend initialization framework entrypoint (`packages/backend/src/index.ts`):
 
 ```typescript
-import { toolVcsModuleAwsCodecommit } from '@ai-crew-suite/plugin-tool-vcs-backend-module-aws-codecommit';
+import { toolVcsModuleAwsCodecommit } from '@ai-crew-suite/plugin-tools-vcs-backend-module-aws-codecommit';
 
 backend.add(toolVcsModuleAwsCodecommit);
 ```
@@ -48,13 +48,13 @@ This workspace relies on the monorepo's shared **Yarn Plug'n'Play (PnP)** cachin
 
 ```bash
 yarn install --refresh
-yarn workspace @ai-crew-suite/plugin-tool-vcs-backend-module-aws-codecommit build
+yarn workspace @ai-crew-suite/plugin-tools-vcs-backend-module-aws-codecommit build
 ```
 
 ### 3. Running Unit & Integration Tests
 
 ```bash
-yarn workspace @ai-crew-suite/plugin-tool-vcs-backend-module-aws-codecommit test
+yarn workspace @ai-crew-suite/plugin-tools-vcs-backend-module-aws-codecommit test
 ```
 
 ## Compliance and Licensing

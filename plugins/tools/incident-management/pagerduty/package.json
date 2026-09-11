@@ -20,7 +20,7 @@
   },
   "backstage": {
     "role": "backend-plugin-module",
-    "pluginId": "tool-incident-management",
+    "pluginId": "tools-incident-management",
     "pluginPackages": [
       "@ai-crew-suite/plugin-tool-incident-management-backend",
       "@ai-crew-suite/plugin-tool-incident-management-backend-module-pagerduty"

@@ -26,7 +26,7 @@ import { readComplianceConfig } from './config';
 import { createComplianceTools } from './tools';
 
 export const aiCoreBackendModuleCompliance = createBackendPlugin({
-  pluginId: 'tool-compliance',
+  pluginId: 'tools-compliance',
   register(env) {
     const drivers = new Map<string, ComplianceDriver>();
 

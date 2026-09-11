@@ -1,4 +1,4 @@
-# @ai-crew-suite/plugin-tool-vcs-backend
+# @ai-crew-suite/plugin-tools-vcs-backend
 
 > Core Developer Documentation for the AI Crew Suite platform.
 
@@ -10,7 +10,7 @@ By decoupling agent operations from vendor-specific source control platforms, th
 
 ### Core Responsibilities
 
-* **Plugin Architecture Setup**: Establishes the core backend plugin execution framework for the `tool-vcs` namespace.
+* **Plugin Architecture Setup**: Establishes the core backend plugin execution framework for the `tools-vcs` namespace.
 * **Extension Point Routing**: Exposes `vcsDriversExtensionPoint` so sibling provider modules can securely register their specific `VcsDriver` implementations.
 * **Driver Resolution**: Evaluates the active environment driver at boot time by matching the configured string value of `ai.integrations.vcs.provider`.
 * **Stable Tool Registration**: Declares and exposes foundational agentic source control tools (such as file reading, pull request auditing, branch comparison, and commit analysis queries) via the platform's global tool extension registry.
@@ -19,13 +19,13 @@ By decoupling agent operations from vendor-specific source control platforms, th
 
 | Package Name | Driver ID | Core Version Control Target |
 | :--- | :--- | :--- |
-| **`@ai-crew-suite/plugin-tool-vcs-backend-module-github`** | `github` | GitHub Cloud / GitHub Enterprise Server |
-| **`@ai-crew-suite/plugin-tool-vcs-backend-module-gitlab`** | `gitlab` | GitLab SaaS / Self-Managed Instances |
-| **`@ai-crew-suite/plugin-tool-vcs-backend-module-azure`** | `azure` | Azure DevOps Repositories |
-| **`@ai-crew-suite/plugin-tool-vcs-backend-module-bitbucket`** | `bitbucket` | Bitbucket Cloud / Bitbucket Server |
-| **`@ai-crew-suite/plugin-tool-vcs-backend-module-aws-codecommit`** | `aws-codecommit` | AWS CodeCommit Hosted Repositories |
-| **`@ai-crew-suite/plugin-tool-vcs-backend-module-gerrit`** | `gerrit` | Gerrit Code Review Topologies |
-| **`@ai-crew-suite/plugin-tool-vcs-backend-module-git`** | `git` | Local filesystem / Raw unmanaged Git operations |
+| **`@ai-crew-suite/plugin-tools-vcs-backend-module-github`** | `github` | GitHub Cloud / GitHub Enterprise Server |
+| **`@ai-crew-suite/plugin-tools-vcs-backend-module-gitlab`** | `gitlab` | GitLab SaaS / Self-Managed Instances |
+| **`@ai-crew-suite/plugin-tools-vcs-backend-module-azure`** | `azure` | Azure DevOps Repositories |
+| **`@ai-crew-suite/plugin-tools-vcs-backend-module-bitbucket`** | `bitbucket` | Bitbucket Cloud / Bitbucket Server |
+| **`@ai-crew-suite/plugin-tools-vcs-backend-module-aws-codecommit`** | `aws-codecommit` | AWS CodeCommit Hosted Repositories |
+| **`@ai-crew-suite/plugin-tools-vcs-backend-module-gerrit`** | `gerrit` | Gerrit Code Review Topologies |
+| **`@ai-crew-suite/plugin-tools-vcs-backend-module-git`** | `git` | Local filesystem / Raw unmanaged Git operations |
 
 ## Configuration
 
@@ -41,8 +41,8 @@ ai:
 Install the core host backend plugin alongside the specific provider module you have selected for your ecosystem runtime:
 
 ```typescript
-import { toolVcsPlugin } from '@ai-crew-suite/plugin-tool-vcs-backend';
-import { toolVcsModuleGithub } from '@ai-crew-suite/plugin-tool-vcs-backend-module-github';
+import { toolVcsPlugin } from '@ai-crew-suite/plugin-tools-vcs-backend';
+import { toolVcsModuleGithub } from '@ai-crew-suite/plugin-tools-vcs-backend-module-github';
 
 // Wire up features into your Backstage backend loader
 backend.add(toolVcsPlugin);
@@ -61,13 +61,13 @@ This workspace relies on the monorepo's shared **Yarn Plug'n'Play (PnP)** cachin
 
 ```bash
 yarn install --refresh
-yarn workspace @ai-crew-suite/plugin-tool-vcs-backend build
+yarn workspace @ai-crew-suite/plugin-tools-vcs-backend build
 ```
 
 ### 3. Running Unit & Integration Tests
 
 ```bash
-yarn workspace @ai-crew-suite/plugin-tool-vcs-backend test
+yarn workspace @ai-crew-suite/plugin-tools-vcs-backend test
 ```
 
 ## Compliance and Licensing

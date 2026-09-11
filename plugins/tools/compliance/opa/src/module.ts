@@ -22,7 +22,7 @@ import { OpaDriver } from './providers/OpaDriver';
  * OPA driver backend module for the AI Core compliance group.
  */
 export const toolComplianceModuleOpa = createBackendModule({
-  pluginId: 'tool-compliance',
+  pluginId: 'tools-compliance',
   moduleId: 'opa',
   register(env) {
     env.registerInit({

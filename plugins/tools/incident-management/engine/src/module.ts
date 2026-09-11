@@ -30,7 +30,7 @@ import { createIncidentManagementTools } from './tools';
  * `-<provider>` modules at boot time.
  */
 export const toolIncidentManagementPlugin = createBackendPlugin({
-  pluginId: 'tool-incident-management',
+  pluginId: 'tools-incident-management',
   register(env) {
     // 1. Maintain an internal module-scoped map of registered drivers
     const drivers = new Map<string, IncidentManagementDriver>();

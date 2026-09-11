@@ -20,7 +20,7 @@
   },
   "backstage": {
     "role": "backend-plugin",
-    "pluginId": "tool-cloud-providers",
+    "pluginId": "tools-cloud-providers",
     "pluginPackages": [
       "@ai-crew-suite/plugin-tool-cloud-providers-backend",
       "@ai-crew-suite/plugin-tool-cloud-providers-backend-module-aws",

@@ -1,10 +1,10 @@
-# @ai-crew-suite/plugin-tool-vcs-backend-module-bitbucket
+# @ai-crew-suite/plugin-tools-vcs-backend-module-bitbucket
 
 > Core Developer Documentation for the AI Crew Suite platform.
 
 ## Overview
 
-This backend module registers a Bitbucket `VcsDriver` with the host plugin **`@ai-crew-suite/plugin-tool-vcs-backend`** through its exposed `vcsDriversExtensionPoint`.
+This backend module registers a Bitbucket `VcsDriver` with the host plugin **`@ai-crew-suite/plugin-tools-vcs-backend`** through its exposed `vcsDriversExtensionPoint`.
 
 This package handles all direct API communication channels with Bitbucket Cloud or Bitbucket Server endpoints. It handles repository interaction tasks such as checking out source code states, tracking pull request reviewer tasks, resolving commit trees, and mapping metadata. It normalizes Bitbucket-specific response shapes into stable interfaces for version control agents.
 
@@ -33,7 +33,7 @@ The outbound connection relies on secure HTTP Basic Authentication using a Bitbu
 Register the module directly into your central Backstage system backend initialization framework entrypoint (`packages/backend/src/index.ts`):
 
 ```typescript
-import { toolVcsModuleBitbucket } from '@ai-crew-suite/plugin-tool-vcs-backend-module-bitbucket';
+import { toolVcsModuleBitbucket } from '@ai-crew-suite/plugin-tools-vcs-backend-module-bitbucket';
 
 backend.add(toolVcsModuleBitbucket);
 ```
@@ -48,13 +48,13 @@ This workspace relies on the monorepo's shared **Yarn Plug'n'Play (PnP)** cachin
 
 ```bash
 yarn install --refresh
-yarn workspace @ai-crew-suite/plugin-tool-vcs-backend-module-bitbucket build
+yarn workspace @ai-crew-suite/plugin-tools-vcs-backend-module-bitbucket build
 ```
 
 ### 3. Running Unit & Integration Tests
 
 ```bash
-yarn workspace @ai-crew-suite/plugin-tool-vcs-backend-module-bitbucket test
+yarn workspace @ai-crew-suite/plugin-tools-vcs-backend-module-bitbucket test
 ```
 
 ## Compliance and Licensing

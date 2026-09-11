@@ -19,7 +19,7 @@ import { qualityScorecardsExtensionPoint } from '@ai-crew-suite/plugin-kernel-no
 import { SoundcheckDriver } from './providers/SoundcheckDriver';
 
 export const toolQualityScorecardsModuleSoundcheck = createBackendModule({
-  pluginId: 'tool-quality-scorecards',
+  pluginId: 'tools-quality-scorecards',
   moduleId: 'soundcheck',
   register(env) {
     env.registerInit({

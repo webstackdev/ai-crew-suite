@@ -44,9 +44,9 @@
     "typecheck": "crew typecheck"
   },
   "dependencies": {
-    "@ai-crew-suite/plugin-retrieval-augmenter-backend": "workspace:^",
-    "@ai-crew-suite/plugin-storage-pgvector-backend": "workspace:^",
     "@ai-crew-suite/plugin-kernel-node": "workspace:^",
+    "@ai-crew-suite/plugin-retrieval-augmenter-backend": "workspace:^",
+    "@ai-crew-suite/plugin-vector-store-pgvector": "workspace:^",
     "@backstage/backend-common": "catalog:backstage-backend-common",
     "@backstage/backend-plugin-api": "backstage:^",
     "@backstage/catalog-client": "backstage:^",

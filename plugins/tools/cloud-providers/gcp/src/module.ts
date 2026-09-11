@@ -18,7 +18,7 @@ import { cloudDriversExtensionPoint } from '@ai-crew-suite/plugin-kernel-node';
 import { GcpDriver } from './providers/GcpDriver';
 
 export const toolCloudProvidersModuleGcp = createBackendModule({
-  pluginId: 'tool-cloud-providers',
+  pluginId: 'tools-cloud-providers',
   moduleId: 'gcp',
   register(env) {
     env.registerInit({

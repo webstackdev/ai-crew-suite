@@ -59,64 +59,64 @@
       "path": "../../plugins/agents/techdocs-postmortem/backend"
     },
     {
-      "path": "../../plugins/core/backend"
+      "path": "../../plugins/kernel/backend"
     },
     {
-      "path": "../../plugins/core/infra/llm/aws"
+      "path": "../../plugins/kernel/llm/aws"
     },
     {
-      "path": "../../plugins/core/infra/llm/openai"
+      "path": "../../plugins/kernel/llm/openai"
     },
     {
-      "path": "../../plugins/core/infra/llm/openrouter"
+      "path": "../../plugins/kernel/llm/openrouter"
     },
     {
-      "path": "../../plugins/core/infra/runtime-store"
+      "path": "../../plugins/kernel/node"
     },
     {
-      "path": "../../plugins/core/infra/vector/pgvector"
+      "path": "../../plugins/kernel/runtime-store"
     },
     {
-      "path": "../../plugins/core/node"
+      "path": "../../plugins/kernel/vector-store/pgvector"
     },
     {
-      "path": "../../plugins/tools/cloud-providers/core"
+      "path": "../../plugins/tools/cloud-providers/engine"
     },
     {
-      "path": "../../plugins/tools/communication/core"
+      "path": "../../plugins/tools/communication/engine"
     },
     {
       "path": "../../plugins/tools/communication/slack"
     },
     {
-      "path": "../../plugins/tools/compliance/core"
+      "path": "../../plugins/tools/compliance/engine"
     },
     {
       "path": "../../plugins/tools/compliance/opa"
     },
     {
-      "path": "../../plugins/tools/incident-management/core"
+      "path": "../../plugins/tools/incident-management/engine"
     },
     {
       "path": "../../plugins/tools/incident-management/pagerduty"
     },
     {
-      "path": "../../plugins/tools/observability/core"
-    },
-    {
       "path": "../../plugins/tools/observability/datadog"
     },
     {
-      "path": "../../plugins/tools/project-management/core"
+      "path": "../../plugins/tools/observability/engine"
+    },
+    {
+      "path": "../../plugins/tools/project-management/engine"
     },
     {
       "path": "../../plugins/tools/project-management/jira"
     },
     {
-      "path": "../../plugins/tools/quality-scorecards/core"
+      "path": "../../plugins/tools/quality-scorecards/engine"
     },
     {
-      "path": "../../plugins/tools/vcs/core"
+      "path": "../../plugins/tools/vcs/engine"
     },
     {
       "path": "../app"

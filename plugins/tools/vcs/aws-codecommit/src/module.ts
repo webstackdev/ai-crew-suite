@@ -23,8 +23,8 @@ import { AwsCodeCommitDriver } from './providers/aws';
  * by registering the AWS CodeCommit VCS driver with the core VCS registry.
  */
 export const aiCoreBackendModuleVcsAws = createBackendModule({
-  pluginId: 'ai-core',
-  moduleId: 'vcs-aws',
+  pluginId: 'tools-vcs',
+  moduleId: 'aws',
   register(env) {
     env.registerInit({
       deps: {

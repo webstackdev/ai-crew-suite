@@ -15,7 +15,7 @@
  */
 import {
   coreServices,
-  createBackendModule,
+  createBackendPlugin,
 } from '@backstage/backend-plugin-api';
 import { runtimeStoreExtensionPoint } from '@ai-crew-suite/plugin-kernel-node';
 import { createAgentRuntimeStores } from './service';
@@ -32,9 +32,8 @@ import { createAgentRuntimeStores } from './service';
  *
  * @public
  */
-export const aiCoreBackendModuleRuntimeStore = createBackendModule({
-  pluginId: 'ai-core',
-  moduleId: 'runtime-store',
+export const aiCoreBackendModuleRuntimeStore = createBackendPlugin({
+  pluginId: 'databases-runtime',
   register(env) {
     env.registerInit({
       deps: {

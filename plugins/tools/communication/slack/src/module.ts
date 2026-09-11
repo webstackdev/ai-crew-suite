@@ -22,7 +22,7 @@ import { readSlackConfig } from './config';
  * Slack driver backend module for the AI Core communication group.
  */
 export const toolCommunicationModuleCommunicationSlack = createBackendModule({
-  pluginId: 'tool-communication',
+  pluginId: 'tools-communication',
   moduleId: 'slack',
   register(env) {
     env.registerInit({
