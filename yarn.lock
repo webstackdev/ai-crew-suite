@@ -958,9 +958,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@ai-crew-suite/plugin-llm-backend-module-aws@workspace:^, @ai-crew-suite/plugin-llm-backend-module-aws@workspace:plugins/kernel/llm/aws":
+"@ai-crew-suite/plugin-ai-providers-backend-module-aws@workspace:^, @ai-crew-suite/plugin-ai-providers-backend-module-aws@workspace:plugins/kernel/llm/aws":
   version: 0.0.0-use.local
-  resolution: "@ai-crew-suite/plugin-llm-backend-module-aws@workspace:plugins/kernel/llm/aws"
+  resolution: "@ai-crew-suite/plugin-ai-providers-backend-module-aws@workspace:plugins/kernel/llm/aws"
   dependencies:
     "@ai-crew-suite/cli": "workspace:*"
     "@ai-crew-suite/plugin-kernel-backend": "workspace:^"
@@ -980,9 +980,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@ai-crew-suite/plugin-llm-backend-module-openai@workspace:^, @ai-crew-suite/plugin-llm-backend-module-openai@workspace:plugins/kernel/llm/openai":
+"@ai-crew-suite/plugin-ai-providers-backend-module-openai@workspace:^, @ai-crew-suite/plugin-ai-providers-backend-module-openai@workspace:plugins/kernel/llm/openai":
   version: 0.0.0-use.local
-  resolution: "@ai-crew-suite/plugin-llm-backend-module-openai@workspace:plugins/kernel/llm/openai"
+  resolution: "@ai-crew-suite/plugin-ai-providers-backend-module-openai@workspace:plugins/kernel/llm/openai"
   dependencies:
     "@ai-crew-suite/cli": "workspace:*"
     "@ai-crew-suite/plugin-kernel-node": "workspace:^"
@@ -999,9 +999,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@ai-crew-suite/plugin-llm-backend-module-openrouter@workspace:^, @ai-crew-suite/plugin-llm-backend-module-openrouter@workspace:plugins/kernel/llm/openrouter":
+"@ai-crew-suite/plugin-ai-providers-backend-module-openrouter@workspace:^, @ai-crew-suite/plugin-ai-providers-backend-module-openrouter@workspace:plugins/kernel/llm/openrouter":
   version: 0.0.0-use.local
-  resolution: "@ai-crew-suite/plugin-llm-backend-module-openrouter@workspace:plugins/kernel/llm/openrouter"
+  resolution: "@ai-crew-suite/plugin-ai-providers-backend-module-openrouter@workspace:plugins/kernel/llm/openrouter"
   dependencies:
     "@ai-crew-suite/cli": "workspace:*"
     "@ai-crew-suite/plugin-kernel-node": "workspace:^"
@@ -18066,9 +18066,9 @@ __metadata:
     "@ai-crew-suite/plugin-kernel-backend": "workspace:^"
     "@ai-crew-suite/plugin-kernel-backend-module-quality-scorecards": "workspace:^"
     "@ai-crew-suite/plugin-kernel-node": "workspace:^"
-    "@ai-crew-suite/plugin-llm-backend-module-aws": "workspace:^"
-    "@ai-crew-suite/plugin-llm-backend-module-openai": "workspace:^"
-    "@ai-crew-suite/plugin-llm-backend-module-openrouter": "workspace:^"
+    "@ai-crew-suite/plugin-ai-providers-backend-module-aws": "workspace:^"
+    "@ai-crew-suite/plugin-ai-providers-backend-module-openai": "workspace:^"
+    "@ai-crew-suite/plugin-ai-providers-backend-module-openrouter": "workspace:^"
     "@ai-crew-suite/plugin-databases-runtime-backend": "workspace:^"
     "@ai-crew-suite/plugin-tool-cloud-providers-backend": "workspace:^"
     "@ai-crew-suite/plugin-tool-communication-backend": "workspace:^"
@@ -18144,9 +18144,9 @@ __metadata:
     "@ai-crew-suite/plugin-kernel-backend": "workspace:^"
     "@ai-crew-suite/plugin-kernel-backend-module-quality-scorecards": "workspace:^"
     "@ai-crew-suite/plugin-kernel-node": "workspace:^"
-    "@ai-crew-suite/plugin-llm-backend-module-aws": "workspace:^"
-    "@ai-crew-suite/plugin-llm-backend-module-openai": "workspace:^"
-    "@ai-crew-suite/plugin-llm-backend-module-openrouter": "workspace:^"
+    "@ai-crew-suite/plugin-ai-providers-backend-module-aws": "workspace:^"
+    "@ai-crew-suite/plugin-ai-providers-backend-module-openai": "workspace:^"
+    "@ai-crew-suite/plugin-ai-providers-backend-module-openrouter": "workspace:^"
     "@ai-crew-suite/plugin-databases-runtime-backend": "workspace:^"
     "@ai-crew-suite/plugin-tool-cloud-providers-backend": "workspace:^"
     "@ai-crew-suite/plugin-tool-communication-backend": "workspace:^"

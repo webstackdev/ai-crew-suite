@@ -184,9 +184,9 @@ ai-crew-suite/
 │   │   ├── backend/                        # @ai-crew-suite/plugin-kernel-backend
 │   │   ├── node/                           # @ai-crew-suite/plugin-kernel-node
 │   │   ├── llm/
-│   │   │   ├── aws/                        # @ai-crew-suite/plugin-llm-backend-module-aws
-│   │   │   ├── openai/                     # @ai-crew-suite/plugin-llm-backend-module-openai
-│   │   │   └── openrouter/                 # @ai-crew-suite/plugin-llm-backend-module-openrouter
+│   │   │   ├── aws/                        # @ai-crew-suite/plugin-ai-providers-backend-module-aws
+│   │   │   ├── openai/                     # @ai-crew-suite/plugin-ai-providers-backend-module-openai
+│   │   │   └── openrouter/                 # @ai-crew-suite/plugin-ai-providers-backend-module-openrouter
 │   │   ├── vector-store/
 │   │   │   ├── pgvector/                   # @ai-crew-suite/plugin-vector-store-pgvector
 │   │   │   └── qdrant/                     # @ai-crew-suite/plugin-vector-store-qdrant
