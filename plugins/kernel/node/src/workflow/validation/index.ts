@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-// 1. Core Framework Extension Points
-export * from './extensions';
-
-// 2. Structural Types & Blueprints SDK
-export * from './types';
-
-// 3. Stateful Runtime & Execution Services
-export * from './services/catalog';
-export * from './services/redaction';
-export * from './workflow';
-
-// 4. Testing SDK Framework (Exposed under a clean namespace wrapper)
-export * as testUtils from './testUtils';
+export {
+  VALIDATION_PIPELINE,
+  validateWorkflowDefinition,
+} from './definition';
+export {
+  type WorkflowValidationViolation,
+  type ValidationRule,
+  checkMetadata,
+  checkGraphNodes,
+  checkEdges,
+  checkInterrupts,
+} from './rules';
+export { checkTopology } from './topology';

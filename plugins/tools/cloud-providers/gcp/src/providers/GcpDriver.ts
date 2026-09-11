@@ -22,6 +22,10 @@ import {
   CloudDependencySummary
 } from '@ai-crew-suite/plugin-kernel-node';
 
+/**
+ * Isolated parameters required to instantiate the concrete Google Cloud Provider adapter.
+ * Managed entirely within the scope of this provider module package.
+ */
 export interface GcpDriverOptions {
   logger: any;
   rootConfig: Config;
@@ -42,7 +46,7 @@ export class GcpDriver implements CloudProviderDriver {
 
   private getProjectId(): string {
     const gcpIntegration = this.rootConfig.getOptionalConfig('integrations.gcp');
-    return gcpIntegration?.getOptionalString('projectId') || process.env.GOOGLE_CLOUD_PROJECT || 'unknown-project';
+    return gcpIntegration?.getOptionalString('projectId') || process.env['GOOGLE_CLOUD_PROJECT'] || 'unknown-project';
   }
 
   async lookupAccount(): Promise<CloudAccountSummary | undefined> {
@@ -52,7 +56,7 @@ export class GcpDriver implements CloudProviderDriver {
     return {
       id: projectId,
       name: 'GCP Active Project Context',
-      provider: 'gcp',
+      provider: this.providerId,
       region: this.region,
     };
   }
@@ -78,12 +82,13 @@ export class GcpDriver implements CloudProviderDriver {
       // Format the root project asset footprint into standard contracts
       summaries.push({
         id: project.name || `projects/${projectId}`,
-        type: input.service || '://googleapis.com',
-        provider: 'gcp',
+        // FIXED BUG: Ensured literal string fallbacks conform cleanly to the structural contract
+        type: input.service || 'cloud.project',
+        provider: this.providerId,
         region: this.region,
         tags: labels,
-        owner: labels.owner || labels.team,
-        catalogEntityRef: labels.backstage_io_component || labels['backstage-io-component'],
+        owner: labels['owner'] || labels['team'],
+        catalogEntityRef: labels['backstage.io/component'] || labels['backstage-io-component'],
       });
 
       return summaries;

@@ -13,58 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// plugins/backend/plugin-ai-core-node/src/@types/cloud.ts
 import { LoggerService } from '@backstage/backend-plugin-api';
+
+/**
+ * ============================================================================
+ *   CONSTANTS, BRANDS, AND PLATFORM CONFIGURATIONS
+ * ============================================================================
+ */
 
 /** Provider identifier for a cloud driver. Open string. */
 export type CloudProviderId = string & { readonly __brand?: 'CloudProviderId' };
 
-/** Known cloud provider IDs, exported for autocomplete. */
-export const CLOUD_PROVIDERS = {
-  AWS: 'aws',
-  AZURE: 'azure',
-  GCP: 'gcp',
-} as const;
-
+/** Isolated baseline network connectivity settings block. */
 export type ProviderConnectionConfig = {
   region?: string;
 };
 
+/** Unified platform core fallback routing configurations configuration profile. */
 export type CloudProvidersConfig = {
   defaultProvider: CloudProviderId;
   providers: Partial<Record<CloudProviderId, ProviderConnectionConfig>>;
 };
 
-export type DriverOptions = {
-  logger: LoggerService;
-  config?: ProviderConnectionConfig;
-  kubernetesClient?: any;
-};
+/**
+ * ============================================================================
+ *   CORE DYNAMIC CLOUD DRIVER INTERFACE
+ * ============================================================================
+ */
 
-export type CloudAccountSummary = {
-  id: string;
-  name?: string;
-  provider: string;
-  region?: string;
-  metadata?: Record<string, string>;
-};
-
-export type CloudResourceSummary = {
-  id: string;
-  type: string;
-  provider: string;
-  region?: string;
-  tags?: Record<string, string>;
-  owner?: string;
-  catalogEntityRef?: string;
-};
-
-export type CloudDependencySummary = {
-  resourceId: string;
-  dependsOn: string[];
-  dependedBy: string[];
-};
-
+/**
+ * Provider-neutral driver interface for orchestrating multi-cloud provider resources.
+ * This contract isolates concrete SDK calls cleanly inside independent backend module blocks.
+ */
 export interface CloudProviderDriver {
   readonly providerId: string;
 
@@ -85,6 +65,46 @@ export interface CloudProviderDriver {
   }): Promise<CloudDependencySummary>;
 }
 
+/**
+ * ============================================================================
+ *   UNIFIED INFRASTRUCTURE DATA TRANSFER OBJECTS (DTOs)
+ * ============================================================================
+ */
+
+/** Normalized cloud deployment account parameters. */
+export type CloudAccountSummary = {
+  id: string;
+  name?: string;
+  provider: string;
+  region?: string;
+  metadata?: Record<string, string>;
+};
+
+/** Compact, filtered structural cloud asset parameters optimized for prompt contexts. */
+export type CloudResourceSummary = {
+  id: string;
+  type: string;
+  provider: string;
+  region?: string;
+  tags?: Record<string, string>;
+  owner?: string;
+  catalogEntityRef?: string;
+};
+
+/** Traceable graph topological structural mapping link boundaries. */
+export type CloudDependencySummary = {
+  resourceId: string;
+  dependsOn: string[];
+  dependedBy: string[];
+};
+
+/**
+ * ============================================================================
+ *   ENGINE ENGINE FACTORY ATTACHMENT HOOKS
+ * ============================================================================
+ */
+
+/** Options utilized by the core engine plugin to mount these tools inside registries. */
 export interface CreateCloudProviderToolsOptions {
   driver: CloudProviderDriver;
   logger: LoggerService;

@@ -16,17 +16,40 @@
 import { TimeRange } from '../common';
 
 /**
- * A single timestamped sample in a metric series.
+ * ============================================================================
+ *   CORE DYNAMIC OBSERVABILITY DRIVER INTERFACE
+ * ============================================================================
  */
-export type MetricPoint = {
-  /** ISO-8601 sample timestamp. */
-  timestamp: string;
-  /** Sample value. */
-  value: number;
-};
 
 /**
- * Normalized metric series.
+ * Provider-neutral driver for telemetry platforms that serve metrics, logs,
+ * traces, and dashboards, such as Datadog, New Relic, Splunk, Prometheus,
+ * OpenTelemetry collectors, or Jaeger.
+ *
+ * This contract isolates concrete logging and APM API queries cleanly inside
+ * independent backend module blocks, providing system telemetry for all 18 agentic plugins.
+ */
+export interface ObservabilityDriver {
+  /** Unique provider identifier, such as `datadog`, `prometheus`, or `splunk`. */
+  readonly providerId: string;
+  /** Runs a metric series sample query over a bounded time window. */
+  queryMetrics(query: MetricsQuery): Promise<MetricSeries[]>;
+  /** Searches structured system logs over a bounded time window. */
+  searchLogs(query: LogQuery): Promise<LogEntry[]>;
+  /** Searches distributed trace execution spans over a bounded time window. */
+  searchTraces(query: TraceQuery): Promise<TraceSpan[]>;
+  /** Lists provider-hosted operations dashboards relevant to a service or team. */
+  listDashboards(query: DashboardQuery): Promise<DashboardLink[]>;
+}
+
+/**
+ * ============================================================================
+ *   METRICS DATA TRANSFER OBJECTS (DTOs)
+ * ============================================================================
+ */
+
+/**
+ * Normalized metric series container.
  */
 export type MetricSeries = {
   /** Metric name as returned by the provider. */
@@ -35,88 +58,110 @@ export type MetricSeries = {
   labels?: Record<string, string>;
   /** Samples in chronological order, oldest first. */
   points: MetricPoint[];
-  /** Unit label when the provider exposes one. */
+  /** Unit label when the provider exposes one (e.g. `percent`, `bytes`). */
   unit?: string;
 };
 
 /**
- * Normalized log severity.
+ * A single timestamped sample in a metric series.
  */
+export type MetricPoint = {
+  /** ISO-8601 sample timestamp. */
+  timestamp: string;
+  /** Numeric sample value. */
+  value: number;
+};
+
+/**
+ * ============================================================================
+ *   LOGS & DISTRIBUTED TRACING DATA TRANSFER OBJECTS (DTOs)
+ * ============================================================================
+ */
+
+/** Normalized log severity string primitives. */
 export type LogLevel = 'debug' | 'info' | 'warn' | 'error' | 'fatal';
 
 /**
- * Normalized log entry.
+ * Normalized log record entry.
  */
 export type LogEntry = {
   /** ISO-8601 entry timestamp. */
   timestamp: string;
-  /** Normalized severity. */
+  /** Normalized severity rating. */
   level?: LogLevel;
-  /** Emitting service identifier. */
+  /** Emitting service workload identifier. */
   service?: string;
-  /** Log message body. */
+  /** Log message string body content. */
   message: string;
   /** Correlated trace identifier when the provider exposes one. */
   traceId?: string;
-  /** Structured attributes attached to the entry. */
+  /** Structured attributes or key-value payload parameters attached to the entry. */
   attributes?: Record<string, string>;
 };
 
 /**
- * Normalized distributed trace span.
+ * Normalized distributed trace execution span boundary.
  */
 export type TraceSpan = {
-  /** Trace identifier. */
+  /** Trace identifier tracking the entire macro transaction. */
   traceId: string;
-  /** Span identifier. */
+  /** Span identifier tracking this specific operation block. */
   spanId: string;
   /** Parent span identifier for non-root spans. */
   parentSpanId?: string;
-  /** Operation or endpoint name. */
+  /** Operation name or system endpoint descriptor path. */
   operation?: string;
-  /** Emitting service identifier. */
+  /** Emitting service workload identifier. */
   service?: string;
   /** ISO-8601 span start timestamp. */
   startedAt?: string;
   /** Span duration in milliseconds. */
   durationMs?: number;
-  /** Whether the span terminated in an error. */
+  /** Whether the span transaction terminated in an error status code. */
   error?: boolean;
-  /** Provider status message when the span errored. */
+  /** Provider status explanation message when the span errored. */
   statusMessage?: string;
 };
 
 /**
- * Link to a provider-hosted dashboard for a service or team.
+ * ============================================================================
+ *   PLATFORM VISUALIZATION LINK DESCRIPTORS
+ * ============================================================================
+ */
+
+/**
+ * Link to a provider-hosted monitoring dashboard for a service or team.
  */
 export type DashboardLink = {
-  /** Provider dashboard identifier. */
+  /** Provider dashboard identifier string. */
   id: string;
-  /** Dashboard display name. */
+  /** Dashboard display name or title copy block. */
   title: string;
-  /** Canonical dashboard URL. */
+  /** Canonical deep-link URL heading directly back to the SaaS dashboard UI view. */
   url: string;
-  /** Short description when the provider exposes one. */
+  /** Short description summary copy block when the provider exposes one. */
   description?: string;
 };
 
 /**
- * Criteria for a metric query.
+ * ============================================================================
+ *   DRIVER OPERATION QUERY CONSTRAINT PARAMETERS
+ * ============================================================================
  */
+
+/** Criteria for a metric query execution pass. */
 export type MetricsQuery = TimeRange & {
-  /** Provider-native query string. */
+  /** Provider-native query syntax or metric expression string. */
   query: string;
-  /** Sampling interval in seconds. */
+  /** Sampling interval step resolution in seconds. */
   stepSeconds?: number;
 };
 
-/**
- * Criteria for a log search.
- */
+/** Criteria for an automated log search lookback pass. */
 export type LogQuery = TimeRange & {
-  /** Provider-native query string. */
+  /** Provider-native search text or log syntax filter query string. */
   query?: string;
-  /** Restrict results to an emitting service. */
+  /** Restrict results to an emitting service workload source. */
   service?: string;
   /** Restrict results to the given normalized severities. */
   levels?: LogLevel[];
@@ -124,50 +169,28 @@ export type LogQuery = TimeRange & {
   limit?: number;
 };
 
-/**
- * Criteria for a trace search.
- */
+/** Criteria for an automated distributed trace inspection lookup. */
 export type TraceQuery = TimeRange & {
-  /** Restrict results to an emitting service. */
+  /** Restrict results to an emitting service workload source. */
   service?: string;
   /** Restrict results to an operation or endpoint name. */
   operation?: string;
-  /** Restrict results to a single trace. */
+  /** Restrict results to a single explicit trace identifier chain. */
   traceId?: string;
-  /** Return only spans that terminated in an error. */
+  /** Return only spans that terminated in an error status code. */
   errorOnly?: boolean;
-  /** Return only spans slower than this threshold. */
+  /** Return only spans slower than this runtime duration threshold. */
   minDurationMs?: number;
   /** Maximum number of spans. Drivers clamp this to their own page limits. */
   limit?: number;
 };
 
-/**
- * Criteria for listing dashboards.
- */
+/** Criteria for compiling accessible dashboard listings. */
 export type DashboardQuery = {
-  /** Restrict results to a service. */
+  /** Restrict results to a matching service moniker. */
   service?: string;
-  /** Restrict results to a team. */
+  /** Restrict results to a matching team owner reference string. */
   team?: string;
-  /** Free text matched against dashboard titles. */
+  /** Free text regex matched pattern evaluated against dashboard titles. */
   text?: string;
 };
-
-/**
- * Provider-neutral driver for telemetry platforms that serve metrics, logs,
- * traces, and dashboards, such as Datadog, New Relic, Splunk, Prometheus,
- * OpenTelemetry collectors, or Jaeger.
- */
-export interface ObservabilityDriver {
-  /** Unique provider identifier, such as `datadog`. */
-  readonly providerId: string;
-  /** Runs a metric query over a bounded time window. */
-  queryMetrics(query: MetricsQuery): Promise<MetricSeries[]>;
-  /** Searches logs over a bounded time window. */
-  searchLogs(query: LogQuery): Promise<LogEntry[]>;
-  /** Searches distributed trace spans over a bounded time window. */
-  searchTraces(query: TraceQuery): Promise<TraceSpan[]>;
-  /** Lists dashboards relevant to a service or team. */
-  listDashboards(query: DashboardQuery): Promise<DashboardLink[]>;
-}

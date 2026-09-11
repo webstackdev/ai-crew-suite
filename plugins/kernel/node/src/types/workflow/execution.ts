@@ -19,15 +19,13 @@ import type { BaseChatModel } from '@langchain/core/language_models/chat_models'
 import type { AgentDefinition, AgentEvent } from '../agents';
 import type { ToolRegistry } from '../tools/core';
 import type { SourceId, EntityFilterShape } from '../sources';
-import type { 
-  RunStore, 
-  SessionStore, 
-  CheckpointStore, 
-  ArtifactSink, 
+import type {
+  RunStore,
+  SessionStore,
+  CheckpointStore,
+  ArtifactSink,
   AuditLogSink,
   ApprovalDecision,
-  ToolInvocationLimits,
-  ToolInvocationResult
 } from '../storage/runtime';
 
 /**

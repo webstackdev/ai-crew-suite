@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { AgentEvent } from '../agents';
-
-// Re-export the foundational event layer so storage engines can map payloads cleanly
-export type { AgentEvent, ErrorCode } from '../agents';
 
 /**
  * ============================================================================

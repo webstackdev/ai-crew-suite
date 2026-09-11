@@ -1,5 +1,4 @@
 /*
- * Copyright 2024 Larder Software Limited
  * Copyright 2026 The AI Crew Suite Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,20 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export * from './agent';
-export * from './tools/cloud';
+// Core Domain Blueprint Profiles
+export * from './agents';
+export * from './catalog';
 export * from './common';
+export * from './pipelines';
+export * from './providers';
+export * from './sources';
+
+// Runtime Storage and Infrastructure Drivers
+export * from './storage/runtime';
+export * from './storage/vector';
+
+// Unified Structural Tools Contracts
+export * from './tools/cloud';
 export * from './tools/communication';
 export * from './tools/compliance';
+export * from './tools/core';
 export * from './tools/incidentManagement';
 export * from './tools/kubernetes';
 export * from './tools/observability';
 export * from './tools/projectManagement';
 export * from './tools/qualityScorecards';
-export * from './pipelines';
-export * from './storage/runtime';
-export * from './session';
-export * from './source';
-export * from './tools/args';
 export * from './tools/vcs';
-export * from './storage/vector';
+
+// Workflow
+export * from './workflow/definition';
+export * from './workflow/execution';

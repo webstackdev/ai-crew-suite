@@ -16,38 +16,74 @@
 import { ServiceActor } from '../common';
 
 /**
- * Normalized chat channel.
+ * ============================================================================
+ *   CORE DYNAMIC COMMUNICATION DRIVER INTERFACE
+ * ============================================================================
+ */
+
+/**
+ * Provider-neutral driver for real-time human communication services such as
+ * Slack or Microsoft Teams.
+ *
+ * This contract isolates specific webhooks and client connections inside independent
+ * backend module blocks, allowing agents to chat uniformly with teams.
+ */
+export interface CommunicationDriver {
+  /** Unique provider identifier, such as `slack` or `teams`. */
+  readonly providerId: string;
+  /** Resolves a team or service name to a normalized channel mapping context. */
+  lookupChannel(teamOrService: string): Promise<CommunicationChannel | undefined>;
+  /** Posts a message or threaded reply straight to a live channel target. */
+  postMessage(input: PostMessageInput): Promise<{ messageId: string; url?: string }>;
+  /** Reads back an isolated channel transcript slice or specific thread timeline. */
+  getChannelHistory(query: MessageHistoryQuery): Promise<CommunicationMessage[]>;
+}
+
+/**
+ * ============================================================================
+ *   UNIFIED PLATFORM DATA TRANSFER OBJECTS (DTOs)
+ * ============================================================================
+ */
+
+/**
+ * Normalized chat channel metadata profile.
  */
 export type CommunicationChannel = {
-  /** Provider channel identifier. */
+  /** Provider channel identifier (e.g. Slack channel ID). */
   id: string;
-  /** Channel display name. */
+  /** Channel display name string. */
   name: string;
   /** Owning team or service when the provider exposes one. */
   team?: string;
-  /** Deep link to the channel. */
+  /** Deep link directly back to the physical channel asset interface. */
   url?: string;
 };
 
 /**
- * Normalized channel message.
+ * Normalized channel message timeline entry.
  */
 export type CommunicationMessage = {
-  /** Provider message identifier. */
+  /** Provider message identifier string token. */
   id: string;
   /** Channel the message belongs to. */
   channelId: string;
-  /** Message author. */
+  /** Message author normalized identity boundary. */
   author: ServiceActor;
-  /** Plain text message body. */
+  /** Plain text message body content string chunk. */
   text: string;
   /** ISO-8601 creation timestamp. */
   createdAt?: string;
   /** Parent thread identifier when the message is a threaded reply. */
   threadId?: string;
-  /** Deep link to the message. */
+  /** Deep link straight to this specific conversation entry node. */
   url?: string;
 };
+
+/**
+ * ============================================================================
+ *   DRIVER OPERATION EXECUTION INPUT PAYLOADS
+ * ============================================================================
+ */
 
 /**
  * Fields accepted when an agent posts a message.
@@ -55,9 +91,9 @@ export type CommunicationMessage = {
 export type PostMessageInput = {
   /** Target channel identifier. */
   channelId: string;
-  /** Plain text message body. */
+  /** Plain text message body content. */
   text: string;
-  /** Parent thread identifier when replying in a thread. */
+  /** Parent thread identifier when replying in an established thread context. */
   threadId?: string;
 };
 
@@ -67,25 +103,10 @@ export type PostMessageInput = {
 export type MessageHistoryQuery = {
   /** Channel to read from. */
   channelId: string;
-  /** Restrict the read to a single thread. */
+  /** Restrict the read to a single thread conversation path. */
   threadId?: string;
   /** ISO-8601 lower bound on message timestamps. */
   since?: string;
   /** Maximum number of messages. Drivers clamp this to their own page limits. */
   limit?: number;
 };
-
-/**
- * Provider-neutral driver for real-time human communication services such as
- * Slack or Microsoft Teams.
- */
-export interface CommunicationDriver {
-  /** Unique provider identifier, such as `slack`. */
-  readonly providerId: string;
-  /** Resolves a team or service name to a channel. */
-  lookupChannel(teamOrService: string): Promise<CommunicationChannel | undefined>;
-  /** Posts a message to a channel or thread. */
-  postMessage(input: PostMessageInput): Promise<{ messageId: string; url?: string }>;
-  /** Reads back a channel or thread transcript. */
-  getChannelHistory(query: MessageHistoryQuery): Promise<CommunicationMessage[]>;
-}

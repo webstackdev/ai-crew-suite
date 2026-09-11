@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { EmbeddingsSource, EntityFilterShape, EmbeddingDocMetadata } from './source';
+import { EmbeddingsSource, EntityFilterShape, EmbeddingDocMetadata } from './sources';
 import { VectorStore } from './storage/vector';
 
 /**

@@ -23,6 +23,10 @@ import {
   CloudDependencySummary
 } from '@ai-crew-suite/plugin-kernel-node';
 
+/**
+ * Isolated parameters required to instantiate the concrete Azure Cloud Provider adapter.
+ * Managed entirely within the scope of this provider module package.
+ */
 export interface AzureDriverOptions {
   logger: any;
   rootConfig: Config;
@@ -47,17 +51,17 @@ export class AzureDriver implements CloudProviderDriver {
   private getSubscriptionId(): string {
     const azureIntegration = this.rootConfig.getOptionalConfig('integrations.azure');
     // Attempt parsing dedicated configuration variables or fall back to native environment indicators
-    return azureIntegration?.getOptionalString('subscriptionId') || process.env.AZURE_SUBSCRIPTION_ID || 'unknown-subscription';
+    return azureIntegration?.getOptionalString('subscriptionId') || process.env['AZURE_SUBSCRIPTION_ID'] || 'unknown-subscription';
   }
 
   async lookupAccount(): Promise<CloudAccountSummary | undefined> {
     const subscriptionId = this.getSubscriptionId();
     this.logger.debug(`Mapping Azure tenant credentials context for subscription: ${subscriptionId}`);
-    
+
     return {
       id: subscriptionId,
       name: 'Azure Active Subscription Context',
-      provider: 'azure',
+      provider: this.providerId,
       region: this.region,
     };
   }
@@ -92,10 +96,10 @@ export class AzureDriver implements CloudProviderDriver {
         summaries.push({
           id,
           type: resource.type || 'unknown',
-          provider: 'azure',
+          provider: this.providerId,
           region: resource.location || this.region,
           tags: tagsObj,
-          owner: tagsObj.owner || tagsObj.team,
+          owner: tagsObj['owner'] || tagsObj['team'],
           catalogEntityRef: tagsObj['backstage.io/component'],
         });
       }

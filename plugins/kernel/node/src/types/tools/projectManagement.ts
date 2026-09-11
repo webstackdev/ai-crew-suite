@@ -16,19 +16,96 @@
 import { ServiceActor } from '../common';
 
 /**
- * Provider-neutral lifecycle state for a work item.
+ * ============================================================================
+ *   CORE DYNAMIC PROJECT MANAGEMENT DRIVER INTERFACE
+ * ============================================================================
  */
+
+/**
+ * Provider-neutral driver for transactional work tracking services such as
+ * Jira, Linear, Asana, GitHub Projects, or GitLab Issues.
+ *
+ * This contract isolates concrete issue tracking API queries cleanly inside independent
+ * backend module blocks, providing issue management systems for all 18 agentic plugins.
+ */
+export interface ProjectManagementDriver {
+  /** Unique provider identifier, such as `jira` or `linear`. */
+  readonly providerId: string;
+  /** Searches tickets using normalized query constraint criteria. */
+  searchTickets(query: TicketSearchQuery): Promise<TicketSummary[]>;
+  /** Fetches an individual ticket with its complete discussion thread and historical ownership loops. */
+  getTicket(ticketId: string): Promise<TicketDetail>;
+  /** Opens a new task ticket under the target team or project board. */
+  createTicket(input: CreateTicketInput): Promise<TicketSummary>;
+  /** Appends a plain-text discussion comment to an existing ticket. */
+  commentTicket(ticketId: string, comment: string): Promise<TicketComment>;
+}
+
+/**
+ * ============================================================================
+ *   TICKET STATE & CHRONOLOGICAL HISTORY DATA STRUCTURES (DTOs)
+ * ============================================================================
+ */
+
+/** Provider-neutral lifecycle state for a work item tracking asset. */
 export type TicketState = 'open' | 'in_progress' | 'blocked' | 'done' | 'closed';
 
 /**
- * Normalized ticket comment.
+ * Normalized core ticket tracking context record.
+ */
+export type TicketSummary = {
+  /** Provider ticket identifier, such as a Jira key or Linear ID string. */
+  id: string;
+  /** Ticket title or summary headline. */
+  title: string;
+  /** Normalized operational lifecycle state. */
+  state: TicketState;
+  /** Raw provider status name, preserved for prompts that need exact wording. */
+  status?: string;
+  /** Normalized priority label, such as `P1` or `High`. */
+  priority?: string;
+  /** Provider labels, tags, components, or category markers. */
+  labels?: string[];
+  /** Current active ticket assignee. */
+  assignee?: ServiceActor;
+  /** Ticket reporter or creator. */
+  reporter?: ServiceActor;
+  /** Owning team, project, or board identifier. */
+  team?: string;
+  /**
+   * Parent epic or story identifier. Release note agents traverse this to reach
+   * customer-facing descriptions from an implementation ticket.
+   */
+  parentId?: string;
+  /** Canonical deep-link web browser URL heading back to the SaaS provider interface. */
+  url?: string;
+  /** ISO-8601 creation timestamp. */
+  createdAt?: string;
+  /** ISO-8601 last update timestamp. */
+  updatedAt?: string;
+};
+
+/**
+ * Normalized ticket record with discussion and ownership history expanded.
+ */
+export type TicketDetail = TicketSummary & {
+  /** Ticket description body as plain text copy block. */
+  description?: string;
+  /** Discussion thread attached to the ticket. */
+  comments?: TicketComment[];
+  /** Ordered assignee transitions, oldest first. */
+  assigneeHistory?: TicketAssigneeChange[];
+};
+
+/**
+ * Normalized discussion thread comment.
  */
 export type TicketComment = {
   /** Provider comment identifier when available. */
   id?: string;
-  /** Comment author. */
+  /** Comment author identity profile. */
   author: ServiceActor;
-  /** Plain text comment body. */
+  /** Plain text comment body message content. */
   body: string;
   /** ISO-8601 creation timestamp. */
   createdAt?: string;
@@ -48,58 +125,17 @@ export type TicketAssigneeChange = {
 };
 
 /**
- * Normalized ticket record without comment or history expansion.
+ * ============================================================================
+ *   DRIVER OPERATION QUERY CONSTRAINT PARAMS
+ * ============================================================================
  */
-export type TicketSummary = {
-  /** Provider ticket identifier, such as a Jira key or Linear ID. */
-  id: string;
-  /** Ticket title or summary. */
-  title: string;
-  /** Normalized lifecycle state. */
-  state: TicketState;
-  /** Raw provider status name, preserved for prompts that need exact wording. */
-  status?: string;
-  /** Normalized priority label, such as `P1` or `High`. */
-  priority?: string;
-  /** Provider labels, tags, or components. */
-  labels?: string[];
-  /** Current assignee. */
-  assignee?: ServiceActor;
-  /** Ticket reporter or creator. */
-  reporter?: ServiceActor;
-  /** Owning team, project, or board identifier. */
-  team?: string;
-  /**
-   * Parent epic or story identifier. Release note agents traverse this to reach
-   * customer-facing descriptions from an implementation ticket.
-   */
-  parentId?: string;
-  /** Canonical ticket URL. */
-  url?: string;
-  /** ISO-8601 creation timestamp. */
-  createdAt?: string;
-  /** ISO-8601 last update timestamp. */
-  updatedAt?: string;
-};
 
 /**
- * Normalized ticket record with discussion and ownership history expanded.
- */
-export type TicketDetail = TicketSummary & {
-  /** Ticket description body as plain text. */
-  description?: string;
-  /** Discussion thread attached to the ticket. */
-  comments?: TicketComment[];
-  /** Ordered assignee transitions, oldest first. */
-  assigneeHistory?: TicketAssigneeChange[];
-};
-
-/**
- * Structured ticket search criteria. Drivers translate these fields into the
- * provider's own query language.
+ * Structured ticket search criteria parameters. Drivers translate these fields into the
+ * provider's own query language (e.g. JQL or GraphQL parameters).
  */
 export type TicketSearchQuery = {
-  /** Free text matched against title and description. */
+  /** Free text matched against title and description properties. */
   text?: string;
   /** Restrict results to a team, project, or board. */
   team?: string;
@@ -117,33 +153,16 @@ export type TicketSearchQuery = {
  * Fields accepted when an agent opens a ticket.
  */
 export type CreateTicketInput = {
-  /** Ticket title. */
+  /** Ticket title summary headline. */
   title: string;
-  /** Ticket description body as plain text. */
+  /** Ticket description body as plain text copy block. */
   description?: string;
-  /** Target team, project, or board identifier. */
+  /** Target team, project, or board identifier destination coordinate. */
   team?: string;
-  /** Labels, tags, or components to apply. */
+  /** Labels, tags, or components to apply upon creation. */
   labels?: string[];
-  /** Requested priority label. */
+  /** Requested priority tracking label. */
   priority?: string;
   /** Parent epic or story to link the new ticket under. */
   parentId?: string;
 };
-
-/**
- * Provider-neutral driver for transactional work tracking services such as
- * Jira, Linear, Asana, GitHub Projects, or GitLab Issues.
- */
-export interface ProjectManagementDriver {
-  /** Unique provider identifier, such as `jira`. */
-  readonly providerId: string;
-  /** Searches tickets using normalized criteria. */
-  searchTickets(query: TicketSearchQuery): Promise<TicketSummary[]>;
-  /** Fetches a ticket with its discussion and ownership history. */
-  getTicket(ticketId: string): Promise<TicketDetail>;
-  /** Opens a new ticket. */
-  createTicket(input: CreateTicketInput): Promise<TicketSummary>;
-  /** Appends a comment to an existing ticket. */
-  commentTicket(ticketId: string, comment: string): Promise<TicketComment>;
-}

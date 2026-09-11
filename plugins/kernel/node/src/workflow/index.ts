@@ -14,7 +14,5 @@
  * limitations under the License.
  */
 
-export * from '../types/workflow/definition';
-export * from '../types/workflow/execution';
 export * from './errors';
 export * from './validation';

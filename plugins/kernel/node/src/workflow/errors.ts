@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import type { ErrorCode } from '../services/events/agentEvent';
+import type { ErrorCode } from '../types/agents';
 
 /**
  * Thrown by workflow nodes to signal a classified failure. The engine maps this to a

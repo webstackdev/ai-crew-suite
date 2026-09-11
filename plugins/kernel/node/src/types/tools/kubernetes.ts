@@ -16,48 +16,61 @@
 import { TimeRange } from '../common';
 
 /**
+ * ============================================================================
+ *   CORE DYNAMIC KUBERNETES DIAGNOSTICS DRIVER INTERFACE
+ * ============================================================================
+ */
+
+/**
+ * Provider-neutral diagnostics driver for Kubernetes operational state.
+ *
+ * Implementations must enforce Backstage/Kubernetes authorization and bound log
+ * and event output before returning it to an AI tool invocation.
+ */
+export interface KubernetesDiagnosticsDriver {
+  readonly providerId: string;
+  /** Resolves a Backstage catalog entity reference down to its concrete cluster workload targets. */
+  resolveWorkloads(query: KubernetesEntityQuery): Promise<KubernetesWorkloadRef[]>;
+  /** Fetches a comprehensive architectural view of a target Deployment, StatefulSet, or DaemonSet. */
+  getWorkloadSnapshot(query: KubernetesWorkloadQuery): Promise<KubernetesWorkloadSnapshot>;
+  /** Fetches the specific operational phase and footprint summary of an isolated Pod. */
+  getPodSnapshot(query: KubernetesPodQuery): Promise<KubernetesPodSnapshot>;
+  /** Extracts a highly bounded, tail-truncated raw log buffer from a target container. */
+  getPodLogs(query: KubernetesPodLogQuery): Promise<KubernetesPodLogExcerpt>;
+  /** Gathers chronological event statements filtered by cluster workload scopes. */
+  listWorkloadEvents(query: KubernetesEventQuery): Promise<KubernetesEventSummary[]>;
+  /** Compiles an aggregated operational lifecycle history used to analyze recent cluster drift. */
+  getWorkloadTimeline(query: KubernetesTimelineQuery): Promise<KubernetesWorkloadTimeline>;
+}
+
+/**
+ * ============================================================================
+ *   WORKLOAD IDENTIFIERS & REFERENCES
+ * ============================================================================
+ */
+
+/**
  * Identifies a workload resolved through the Backstage catalog and Kubernetes
  * service-location model.
  */
 export type KubernetesWorkloadRef = {
+  /** Target cluster name token. */
   cluster: string;
+  /** Target cluster isolated namespace. */
   namespace: string;
+  /** Target resource descriptor name. */
   name: string;
+  /** Foundational infrastructure orchestration kind. */
   kind: 'Deployment' | 'StatefulSet' | 'DaemonSet' | 'Job' | 'CronJob' | 'Pod';
+  /** Backstage core tracking entity reference hook. */
   entityRef?: string;
 };
 
 /**
- * A normalized container state, including waiting and termination reasons that
- * guide incident workflow branching.
+ * ============================================================================
+ *   RESOURCE STATE SNAPSHOT DATA STRUCTURES (DTOs)
+ * ============================================================================
  */
-export type KubernetesContainerState = {
-  name: string;
-  ready: boolean;
-  restartCount: number;
-  state: 'running' | 'waiting' | 'terminated' | 'unknown';
-  reason?: string;
-  message?: string;
-  exitCode?: number;
-  startedAt?: string;
-  finishedAt?: string;
-};
-
-/**
- * Current diagnostic view of a pod.
- */
-export type KubernetesPodSnapshot = {
-  cluster: string;
-  namespace: string;
-  name: string;
-  phase?: string;
-  reason?: string;
-  message?: string;
-  nodeName?: string;
-  podIp?: string;
-  startedAt?: string;
-  containers: KubernetesContainerState[];
-};
 
 /**
  * Current deployment, StatefulSet, or DaemonSet diagnostic view.
@@ -77,6 +90,44 @@ export type KubernetesWorkloadSnapshot = KubernetesWorkloadRef & {
 };
 
 /**
+ * Current diagnostic view of an individual pod resource vertex.
+ */
+export type KubernetesPodSnapshot = {
+  cluster: string;
+  namespace: string;
+  name: string;
+  phase?: string;
+  reason?: string;
+  message?: string;
+  nodeName?: string;
+  podIp?: string;
+  startedAt?: string;
+  containers: KubernetesContainerState[];
+};
+
+/**
+ * A normalized container state, including waiting and termination reasons that
+ * guide incident workflow branching.
+ */
+export type KubernetesContainerState = {
+  name: string;
+  ready: boolean;
+  restartCount: number;
+  state: 'running' | 'waiting' | 'terminated' | 'unknown';
+  reason?: string;
+  message?: string;
+  exitCode?: number;
+  startedAt?: string;
+  finishedAt?: string;
+};
+
+/**
+ * ============================================================================
+ *   LOGS, EVENTS, AND TELEMETRY TIMELINES (DTOs)
+ * ============================================================================
+ */
+
+/**
  * A bounded raw log excerpt. Drivers must truncate before returning it.
  */
 export type KubernetesPodLogExcerpt = {
@@ -91,7 +142,7 @@ export type KubernetesPodLogExcerpt = {
 };
 
 /**
- * Normalized Kubernetes Event record.
+ * Normalized Kubernetes Event warning or tracking record.
  */
 export type KubernetesEventSummary = {
   cluster: string;
@@ -113,6 +164,12 @@ export type KubernetesWorkloadTimeline = {
   events: KubernetesEventSummary[];
   snapshots: KubernetesWorkloadSnapshot[];
 };
+
+/**
+ * ============================================================================
+ *   DRIVER OPERATION QUERY CONSTRAINT PARAMETERS
+ * ============================================================================
+ */
 
 export type KubernetesEntityQuery = {
   entityRef: string;
@@ -153,19 +210,3 @@ export type KubernetesTimelineQuery = TimeRange & {
   workload?: string;
   limit?: number;
 };
-
-/**
- * Provider-neutral diagnostics driver for Kubernetes operational state.
- *
- * Implementations must enforce Backstage/Kubernetes authorization and bound log
- * and event output before returning it to an AI tool invocation.
- */
-export interface KubernetesDiagnosticsDriver {
-  readonly providerId: string;
-  resolveWorkloads(query: KubernetesEntityQuery): Promise<KubernetesWorkloadRef[]>;
-  getWorkloadSnapshot(query: KubernetesWorkloadQuery): Promise<KubernetesWorkloadSnapshot>;
-  getPodSnapshot(query: KubernetesPodQuery): Promise<KubernetesPodSnapshot>;
-  getPodLogs(query: KubernetesPodLogQuery): Promise<KubernetesPodLogExcerpt>;
-  listWorkloadEvents(query: KubernetesEventQuery): Promise<KubernetesEventSummary[]>;
-  getWorkloadTimeline(query: KubernetesTimelineQuery): Promise<KubernetesWorkloadTimeline>;
-}

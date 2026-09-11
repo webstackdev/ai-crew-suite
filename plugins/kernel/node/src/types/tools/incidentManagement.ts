@@ -16,8 +16,40 @@
 import { ServiceActor, TimeRange } from '../common';
 
 /**
- * Provider-neutral lifecycle state for an incident.
+ * ============================================================================
+ *   CORE DYNAMIC INCIDENT MANAGEMENT DRIVER INTERFACE
+ * ============================================================================
  */
+
+/**
+ * Provider-neutral driver for on-call, paging, and incident lifecycle services
+ * such as PagerDuty, Opsgenie, or incident.io.
+ *
+ * This contract isolates concrete incident tracking calls cleanly inside independent 
+ * backend module blocks, providing alert diagnostics and shifts for all 18 agentic plugins.
+ */
+export interface IncidentManagementDriver {
+  /** Unique provider identifier, such as `pagerduty`, `opsgenie`, or `incidentio`. */
+  readonly providerId: string;
+  /** Lists incidents matching the given criteria over bounded targets. */
+  listIncidents(query: IncidentSearchQuery): Promise<IncidentSummary[]>;
+  /** Fetches a comprehensive incident profile equipped with its complete chronological responder notes. */
+  getIncident(incidentId: string): Promise<IncidentDetail>;
+  /** Resolves the responders currently holding the relevant on-call shifts. */
+  getOnCallShifts(query: OnCallQuery): Promise<OnCallShift[]>;
+  /** Reads back alert firing history over a bounded temporal query window. */
+  getAlertHistory(query: AlertHistoryQuery): Promise<AlertHistoryEntry[]>;
+  /** Appends a diagnostic note or run link straight to an active incident timeline. */
+  annotateIncident(incidentId: string, note: string): Promise<IncidentNote>;
+}
+
+/**
+ * ============================================================================
+ *   INCIDENT DATA RECORDS & TIMELINES (DTOs)
+ * ============================================================================
+ */
+
+/** Provider-neutral lifecycle state for an incident. */
 export type IncidentState = 'triggered' | 'acknowledged' | 'resolved';
 
 /**
@@ -27,26 +59,26 @@ export type IncidentState = 'triggered' | 'acknowledged' | 'resolved';
 export type IncidentResolutionKind = 'auto' | 'manual' | 'unresolved';
 
 /**
- * Normalized incident record.
+ * Normalized core incident context summary record.
  */
 export type IncidentSummary = {
   /** Provider incident identifier. */
   id: string;
-  /** Incident title or summary. */
+  /** Incident title or summary copy block. */
   title: string;
-  /** Normalized lifecycle state. */
+  /** Normalized operational lifecycle state. */
   state: IncidentState;
   /** Raw provider status name, preserved for prompts that need exact wording. */
   status?: string;
   /** Normalized urgency or severity label, such as `SEV1` or `high`. */
   severity?: string;
-  /** Affected service identifier. */
+  /** Affected service identifier resource token. */
   service?: string;
   /** Owning team or escalation policy identifier. */
   team?: string;
   /** Responders currently assigned to the incident. */
   assignees?: ServiceActor[];
-  /** Canonical incident URL. */
+  /** Canonical incident web browser URL link. */
   url?: string;
   /** ISO-8601 timestamp for when the incident was triggered. */
   triggeredAt?: string;
@@ -57,14 +89,14 @@ export type IncidentSummary = {
 };
 
 /**
- * Normalized note attached to an incident timeline.
+ * Normalized diagnostic note attached to an incident timeline.
  */
 export type IncidentNote = {
   /** Provider note identifier when available. */
   id?: string;
-  /** Note author. */
+  /** Note author normalized identity. */
   author: ServiceActor;
-  /** Plain text note body. */
+  /** Plain text note message body content. */
   body: string;
   /** ISO-8601 creation timestamp. */
   createdAt?: string;
@@ -80,6 +112,12 @@ export type IncidentDetail = IncidentSummary & {
   /** Responder notes in chronological order, oldest first. */
   notes?: IncidentNote[];
 };
+
+/**
+ * ============================================================================
+ *   BACKGROUND TELEMETRY & ON-CALL SHIFTS (DTOs)
+ * ============================================================================
+ */
 
 /**
  * Normalized alert occurrence. One entry represents a single firing of an alert
@@ -107,7 +145,7 @@ export type AlertHistoryEntry = {
 };
 
 /**
- * A responder currently or prospectively holding an on-call shift.
+ * A responder currently or prospectively holding an on-call shift rotation window.
  */
 export type OnCallShift = {
   /** The responder holding the shift. */
@@ -125,8 +163,12 @@ export type OnCallShift = {
 };
 
 /**
- * Criteria for listing incidents.
+ * ============================================================================
+ *   DRIVER OPERATION QUERY QUERY PARAMS
+ * ============================================================================
  */
+
+/** Criteria for listing incidents. */
 export type IncidentSearchQuery = TimeRange & {
   /** Restrict results to an affected service. */
   service?: string;
@@ -138,9 +180,7 @@ export type IncidentSearchQuery = TimeRange & {
   limit?: number;
 };
 
-/**
- * Criteria for reading alert history.
- */
+/** Criteria for reading alert history. */
 export type AlertHistoryQuery = TimeRange & {
   /** Restrict results to an affected service. */
   service?: string;
@@ -152,9 +192,7 @@ export type AlertHistoryQuery = TimeRange & {
   limit?: number;
 };
 
-/**
- * Criteria for resolving who is on call.
- */
+/** Criteria for resolving who is on call right now. */
 export type OnCallQuery = {
   /** Restrict results to an affected service. */
   service?: string;
@@ -165,22 +203,3 @@ export type OnCallQuery = {
   /** ISO-8601 instant to resolve against. Defaults to now. */
   at?: string;
 };
-
-/**
- * Provider-neutral driver for on-call, paging, and incident lifecycle services
- * such as PagerDuty, Opsgenie, or incident.io.
- */
-export interface IncidentManagementDriver {
-  /** Unique provider identifier, such as `pagerduty`. */
-  readonly providerId: string;
-  /** Lists incidents matching the given criteria. */
-  listIncidents(query: IncidentSearchQuery): Promise<IncidentSummary[]>;
-  /** Fetches an incident with its responder notes. */
-  getIncident(incidentId: string): Promise<IncidentDetail>;
-  /** Resolves the responders currently holding the relevant on-call shifts. */
-  getOnCallShifts(query: OnCallQuery): Promise<OnCallShift[]>;
-  /** Reads back alert firing history over a bounded window. */
-  getAlertHistory(query: AlertHistoryQuery): Promise<AlertHistoryEntry[]>;
-  /** Appends a diagnostic note or run link to an incident timeline. */
-  annotateIncident(incidentId: string, note: string): Promise<IncidentNote>;
-}

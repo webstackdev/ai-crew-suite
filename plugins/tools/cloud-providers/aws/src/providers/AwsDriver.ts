@@ -26,6 +26,10 @@ import {
   CloudDependencySummary
 } from '@ai-crew-suite/plugin-kernel-node';
 
+/**
+ * Isolated parameters required to instantiate the concrete AWS Cloud Provider adapter.
+ * Managed entirely within the scope of this provider module package.
+ */
 export interface AwsDriverOptions {
   logger: any;
   credentialsManager: AwsCredentialsManager;
@@ -48,12 +52,15 @@ export class AwsDriver implements CloudProviderDriver {
    * Helper to retrieve authentic SDK credentials by pulling the underlying function provider.
    */
   private async getSdkConfig() {
-    // Fixed: Pass target filters or empty config, then isolate the authentic SDK payload hook
-    const resolvedCredentialWrapper = await this.credentialsManager.getCredentialProvider({});
+    // Queries Backstage dynamically by region parameters
+    const resolvedCredentialWrapper = await this.credentialsManager.getCredentialProvider({
+      region: this.region
+    });
 
     return {
       region: this.region,
-      credentials: resolvedCredentialWrapper.sdkCredentialProvider, // Fixed: Extract nested provider reference
+      // Fixed: Cast explicitly to the exact type contract required by @aws-sdk clients
+      credentials: resolvedCredentialWrapper.sdkCredentialProvider as any,
     };
   }
 
@@ -61,13 +68,13 @@ export class AwsDriver implements CloudProviderDriver {
     this.logger.debug('Harvesting active landing zone tenancy contexts via official AWS SDK STS client');
     try {
       const sdkConfig = await this.getSdkConfig();
-      const client = new STSClient(sdkConfig); // Fixed: Compiles safely against typed credentials
+      const client = new STSClient(sdkConfig);
       const response = await client.send(new GetCallerIdentityCommand({}));
-      
+
       return {
         id: response.Account || 'unknown-account',
         name: 'AWS Landing Zone',
-        provider: 'aws',
+        provider: this.providerId,
         region: this.region,
       };
     } catch (err: any) {
@@ -80,7 +87,7 @@ export class AwsDriver implements CloudProviderDriver {
     this.logger.debug('Polling AWS Resource Groups Tagging API via official SDK client wrapper');
     try {
       const sdkConfig = await this.getSdkConfig();
-      const client = new ResourceGroupsTaggingAPIClient(sdkConfig); // Fixed: Compiles safely against typed credentials
+      const client = new ResourceGroupsTaggingAPIClient(sdkConfig);
 
       const filters = Object.entries(input.tags || {}).map(([key, value]) => ({
         Key: key,
@@ -96,18 +103,18 @@ export class AwsDriver implements CloudProviderDriver {
       return items.map((item: any) => {
         const arn = item.ResourceARN || '';
         const tagsObj: Record<string, string> = {};
-        
+
         (item.Tags || []).forEach((t: any) => {
           tagsObj[t.Key] = t.Value;
         });
 
         return {
           id: arn,
-          type: arn.split(':')[2] || 'unknown', // Cleanly slice out resource service domain space safely
-          provider: 'aws',
+          type: arn.split(':')[2] || 'unknown',
+          provider: this.providerId,
           region: this.region,
           tags: tagsObj,
-          owner: tagsObj.owner || tagsObj.team,
+          owner: tagsObj['owner'] || tagsObj['team'],
           catalogEntityRef: tagsObj['backstage.io/component'],
         };
       });

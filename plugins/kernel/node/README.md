@@ -40,10 +40,13 @@ yarn workspace @ai-crew-suite/plugin-kernel-node build
 
 ### 3. Running Unit & Integration Tests
 
-Test files are located inline next to the modules they validate (`*.test.ts`). Execute them via:
+## Local Development Workflow
 
 ```bash
-yarn workspace @ai-crew-suite/plugin-kernel-node test
+yarn install --refresh
+yarn turbo run build --filter=@ai-crew-suite/plugin-kernel-node
+yarn turbo run lint --filter=@ai-crew-suite/plugin-kernel-node
+yarn turbo run test --filter=@ai-crew-suite/plugin-kernel-node
 ```
 
 ## Technical Extension Checklist

@@ -15,6 +15,49 @@
  */
 
 /**
+ * ============================================================================
+ *   CORE DYNAMIC COMPLIANCE DRIVER INTERFACE
+ * ============================================================================
+ */
+
+/**
+ * Provider-neutral driver for governance and policy engines such as Open Policy
+ * Agent, enterprise policy registries, or FinOps policy services.
+ *
+ * This contract isolates concrete compliance engine API queries cleanly inside
+ * independent backend module blocks, providing safety gates for all 18 agentic plugins.
+ */
+export interface ComplianceDriver {
+  /** Unique provider identifier, such as `opa`, `kyverno`, or `internal-registry`. */
+  readonly providerId: string;
+  /** Evaluates IaC, configuration, or a proposed action against a named policy. */
+  evaluatePolicy(input: {
+    policyId?: string;
+    input: unknown;
+  }): Promise<PolicyEvaluationResult>;
+  /** Evaluates whether a user may perform an action on an optional resource. */
+  checkPermission(input: {
+    userRef: string;
+    action: string;
+    resource?: string;
+  }): Promise<PermissionCheckResult>;
+  /** Validates a proposed architecture or infrastructure design. */
+  validateArchitecture(input: {
+    proposal: unknown;
+  }): Promise<ArchitectureValidationResult>;
+  /** Requests a cost estimate or classification for a proposal. */
+  estimateCost(input: {
+    proposal: unknown;
+  }): Promise<CostEstimateResult>;
+}
+
+/**
+ * ============================================================================
+ *   POLICY EVALUATION DATA STRUCTURES
+ * ============================================================================
+ */
+
+/**
  * Result of evaluating a policy against a provider-specific policy engine.
  */
 export type PolicyEvaluationResult = {
@@ -29,6 +72,12 @@ export type PolicyEvaluationResult = {
 };
 
 /**
+ * ============================================================================
+ *   ACCESS SECURITY DATA STRUCTURES
+ * ============================================================================
+ */
+
+/**
  * Result of an authorization policy check.
  */
 export type PermissionCheckResult = {
@@ -37,6 +86,12 @@ export type PermissionCheckResult = {
   /** Provider explanation for a denied request when available. */
   reason?: string;
 };
+
+/**
+ * ============================================================================
+ *   ARCHITECTURE & BUDGET FINANCE GOVERNANCE SHAPES
+ * ============================================================================
+ */
 
 /**
  * Result of validating an architecture or infrastructure proposal.
@@ -63,31 +118,3 @@ export type CostEstimateResult = {
   /** Supplemental provider guidance. */
   notes?: string;
 };
-
-/**
- * Provider-neutral driver for governance and policy engines such as Open Policy
- * Agent, enterprise policy registries, or FinOps policy services.
- */
-export interface ComplianceDriver {
-  /** Unique provider identifier, such as `opa`. */
-  readonly providerId: string;
-  /** Evaluates IaC, configuration, or a proposed action against a named policy. */
-  evaluatePolicy(input: {
-    policyId?: string;
-    input: unknown;
-  }): Promise<PolicyEvaluationResult>;
-  /** Evaluates whether a user may perform an action on an optional resource. */
-  checkPermission(input: {
-    userRef: string;
-    action: string;
-    resource?: string;
-  }): Promise<PermissionCheckResult>;
-  /** Validates a proposed architecture or infrastructure design. */
-  validateArchitecture(input: {
-    proposal: unknown;
-  }): Promise<ArchitectureValidationResult>;
-  /** Requests a cost estimate or classification for a proposal. */
-  estimateCost(input: {
-    proposal: unknown;
-  }): Promise<CostEstimateResult>;
-}

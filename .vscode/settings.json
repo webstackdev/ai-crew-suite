@@ -3,9 +3,11 @@
     "Accum",
     "actioned",
     "agentic",
+    "AKIA",
     "arounds",
     "azdev",
     "azuredevops",
+    "baprs",
     "Contextualizer",
     "creds",
     "demultiplexing",
@@ -15,6 +17,7 @@
     "hdrs",
     "HITL",
     "Ilshidur",
+    "incidentio",
     "jsdom",
     "llms",
     "Milvus",
@@ -61,6 +64,8 @@
     "Vercel",
     "westus",
     "xlarge",
+    "xoxb",
+    "xoxp",
     "zipfs"
   ],
   "search.exclude": {

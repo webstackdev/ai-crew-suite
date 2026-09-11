@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import type { Embeddings } from '@langchain/core/embeddings';
-import type { EmbeddingDocMetadata } from '../source';
+import type { EmbeddingDocMetadata } from '../sources';
 import type { EmbeddingDoc } from '../pipelines';
 
 /**
