@@ -38,7 +38,11 @@ import {
   TriggerBinding,
   WorkflowDefinition,
 } from '@ai-crew-suite/plugin-kernel-node';
-import { createAiBackendServices, createRouter, createSourceRegistry } from './service';
+import {
+  createAiBackendServices,
+  createRouter,
+  createSourceRegistry,
+} from './service';
 
 /**
  * Registers and boots the AI backend runtime.

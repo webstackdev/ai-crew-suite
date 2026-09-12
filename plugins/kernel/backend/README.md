@@ -24,28 +24,20 @@ This package acts as the central runtime plugin within the broader AI Crew Suite
 
 ## Local Development Workflow
 
-### 1. Prerequisites & Context
-
-This workspace relies on the monorepo's shared **Yarn Plug'n'Play (PnP)** caching layout. Ensure your local editor SDK configuration points directly to the active workspace TypeScript bundle.
-
-### 2. Installation & Builds
+### 1. Installation & Builds
 
 Run installation routines and build compilation tracks directly from the monorepo root:
 
 ```bash
-# Clean lockfile sync and refresh PnP maps
 yarn install --refresh
-
-# Compile TypeScript declarations into /dist targets
-yarn workspace @ai-crew-suite/plugin-kernel-backend build
+yarn turbo run build --filter=@ai-crew-suite/plugin-kernel-backend
 ```
 
-### 3. Running Unit & Integration Tests
-
-Test files are located inline next to the modules they validate (`*.test.ts`). Execute them via:
+### 2. Running Unit & Integration Tests
 
 ```bash
-yarn workspace @ai-crew-suite/plugin-kernel-backend test
+yarn turbo run lint --filter=@ai-crew-suite/plugin-kernel-backend
+yarn turbo run test --filter=@ai-crew-suite/plugin-kernel-backend
 ```
 
 ## Technical Extension Checklist

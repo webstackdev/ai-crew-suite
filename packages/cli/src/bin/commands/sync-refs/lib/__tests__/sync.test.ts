@@ -38,6 +38,24 @@ describe('sync-project-references utilities', () => {
       const result = parseCommentedJson(commentedJson);
       expect(result).toEqual({ name: 'test-package', private: true });
     });
+
+    it('should accept trailing commas used by JSONC tsconfig files', () => {
+      const jsonc = `
+        {
+          "compilerOptions": {
+            "strict": true,
+          },
+          "references": [
+            { "path": "../shared" },
+          ],
+        }
+      `;
+
+      expect(parseCommentedJson(jsonc)).toEqual({
+        compilerOptions: { strict: true },
+        references: [{ path: '../shared' }],
+      });
+    });
   });
 
   describe('findPackages', () => {

@@ -17,10 +17,10 @@ import { END, WorkflowDefinition } from '../../types/workflow/definition';
 import { ValidationRule, WorkflowValidationViolation } from './rules';
 
 /**
- * Encapsulates the state and graph traversal logic required to perform 
+ * Encapsulates the state and graph traversal logic required to perform
  * Depth-First Search (DFS) analysis on a workflow topology.
  *
- * This class isolates cyclic tracking and reachability detection away from the 
+ * This class isolates cyclic tracking and reachability detection away from the
  * stateless validation wrapper to maintain a clean and low cyclomatic complexity profile.
  */
 export class TopologyTraversal {
@@ -59,7 +59,7 @@ export class TopologyTraversal {
 
     const targets = this.outgoing.get(current)!;
 
-    // Treat explicit END or code-driven __DYNAMIC__ conditional routers 
+    // Treat explicit END or code-driven __DYNAMIC__ conditional routers
     // as valid trajectories capable of exiting the static tracking routine.
     if (targets.has(END) || targets.has('__DYNAMIC__')) {
       this.hasTerminalPath = true;

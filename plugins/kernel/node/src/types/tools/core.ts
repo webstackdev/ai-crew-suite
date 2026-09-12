@@ -92,3 +92,23 @@ export type ToolContext = {
   /** Abort signal that tools should observe for cancellation and timeout handling. */
   signal: AbortSignal;
 };
+
+/**
+ * Shared limits enforced for a single workflow tool invocation.
+ */
+export type ToolInvocationLimits = {
+  /** Maximum time spent waiting for one tool invocation. */
+  timeoutMs?: number;
+  /** Maximum number of tool calls a workflow may make in one run. */
+  maxInvocations?: number;
+};
+
+/**
+ * Result returned to a workflow after AI Core invokes an allow-listed tool.
+ */
+export type ToolInvocationResult<TResult = unknown> = {
+  toolId: string;
+  output: TResult;
+  /** Redacted compact summary appropriate for events and persisted run steps. */
+  summary: string;
+};

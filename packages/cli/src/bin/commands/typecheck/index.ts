@@ -15,9 +15,12 @@
  */
 import { Command } from 'commander';
 import { spawnSync } from 'node:child_process';
+import { createRequire } from 'node:module';
+import path from 'node:path';
 import chalk from 'chalk';
 
 const program = new Command();
+const require = createRequire(import.meta.url);
 
 program
   .name('typecheck')
@@ -30,13 +33,22 @@ program
     // Capture trailing args passed by the user (like --watch or --pretty)
     const forwardedArgs = process.argv.slice(3);
 
-    // 2. Hardened Execution Pass
-    // Calling 'yarn tsc' bypasses global shell lookups, neutralizing command injection vulnerabilities
-    const result = spawnSync('yarn', ['tsc', '--noEmit', ...forwardedArgs], {
+    const typescriptPackageJson = require.resolve('typescript/package.json');
+    const typescriptCliPath = path.resolve(
+      path.dirname(typescriptPackageJson),
+      'bin/tsc',
+    );
+
+    // Run the repository's TypeScript compiler while preserving the target cwd.
+    const result = spawnSync(
+      process.execPath,
+      [typescriptCliPath, '--noEmit', ...forwardedArgs],
+      {
       stdio: 'inherit',
-      shell: true, // Required for executing package manager link shims across platforms
+      shell: true,
       cwd: process.cwd(),
-    });
+      },
+    );
 
     // 3. Resilient Error Tracking Boundary Control
     if (result.error) {

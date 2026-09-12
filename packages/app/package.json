@@ -3,16 +3,40 @@
   "version": "0.0.0",
   "private": true,
   "bundled": true,
+  "license": "Apache-2.0",
+  "keywords": [
+    "agentic workflow",
+    "ai-crew-suite",
+    "app",
+    "backstage"
+  ],
   "backstage": {
-    "role": "frontend"
+    "name": "app",
+    "private": true,
+    "backstage": {
+      "role": "frontend"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "bugs": {
+    "url": "https://github.com/ai-crew-suite/ai-crew-suite/issues",
+    "email": "support@ai-crew-suite.dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ai-crew-suite/ai-crew-suite",
+    "directory": "packages/app"
   },
   "scripts": {
-    "start": "backstage-cli package start",
-    "build": "backstage-cli package build",
-    "clean": "backstage-cli package clean",
-    "typecheck": "tsc --noEmit",
-    "lint": "backstage-cli package lint --format stylish",
-    "test": "vitest run src --exclude 'dist-types/**' --passWithNoTests --config ../../test/vitest.config.ts"
+    "build": "crew build",
+    "clean": "crew clean",
+    "lint": "crew lint",
+    "test:e2e": "crew test:e2e",
+    "test:unit": "crew test:unit",
+    "test:unit:coverage": "crew test:unit:coverage",
+    "typecheck": "crew typecheck"
   },
   "dependencies": {
     "@ai-crew-suite/plugin-agent-alert-tuner": "workspace:^",
@@ -61,28 +85,28 @@
     "@backstage/ui": "backstage:^",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
-    "@material-ui/core": "^4.12.4",
-    "@material-ui/icons": "^4.11.3",
+    "@material-ui/core": "catalog:material-ui-core",
+    "@material-ui/icons": "catalog:material-ui-icons",
     "@mui/material": "^7.3.11",
-    "@rjsf/utils": "^6.8.0",
-    "i18next": "^22.5.1",
+    "@rjsf/utils": "^6.10.0",
+    "i18next": "catalog:i18next",
     "prop-types": "^15.8.1",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-router": "^6.30.4",
-    "react-router-dom": "^6.30.4",
-    "vitest": "^4.1.11"
+    "react": "catalog:react",
+    "react-dom": "catalog:react-dom",
+    "react-router": "catalog:react-router",
+    "react-router-dom": "catalog:react-router-dom"
   },
   "devDependencies": {
+    "@ai-crew-suite/cli": "workspace:*",
     "@backstage/frontend-test-utils": "backstage:^",
-    "@playwright/test": "^1.62.1",
+    "@playwright/test": "catalog:playwright-test",
     "@testing-library/dom": "^10.4.1",
-    "@testing-library/jest-dom": "^6.10.0",
-    "@testing-library/react": "^16.3.2",
-    "@testing-library/user-event": "^14.6.6",
+    "@testing-library/jest-dom": "catalog:testing-library-jest-dom",
+    "@testing-library/react": "catalog:testing-library-react",
+    "@testing-library/user-event": "catalog:testing-library-user-event",
     "@types/react": "*",
     "@types/react-dom": "*",
-    "cross-env": "^10.1.0"
+    "vitest": "catalog:vitest"
   },
   "browserslist": {
     "production": [
@@ -95,8 +119,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "files": [
-    "dist"
-  ]
+  }
 }

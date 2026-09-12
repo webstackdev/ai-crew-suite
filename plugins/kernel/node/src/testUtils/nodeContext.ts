@@ -16,19 +16,20 @@
 
 import type { LoggerService } from '@backstage/backend-plugin-api';
 import type {
+  ModelExecutor,
   NodeExecutionContext,
   ToolExecutor,
-  ModelExecutor,
 } from '../types/workflow/execution';
-import type { ToolInvocationResult, ToolInvocationLimits } from '../types/storage/runtime';
 import type {
-  ToolRegistry,
   Tool,
+  ToolInvocationLimits,
+  ToolInvocationResult,
+  ToolRegistry,
 } from '../types/tools/core';
 import { NodeError } from '../workflow/errors';
 
 /**
- * A lightweight, stateless no-operation logger implementation to suppress 
+ * A lightweight, stateless no-operation logger implementation to suppress
  * test output flooding unless an explicit logger service is passed in.
  */
 const noopLogger: LoggerService = {
@@ -58,8 +59,8 @@ export interface TestNodeContextOptions {
 }
 
 /**
- * An extended execution context variant that includes an immutable trace snapshot vector 
- * for checking emitted artifacts.
+ * An extended execution context variant that includes an immutable trace
+ * snapshot vector for checking emitted artifacts.
  */
 export type TestNodeExecutionContext = NodeExecutionContext & {
   /** Exposes a read-only audit log of artifacts captured during execution. */
@@ -67,24 +68,30 @@ export type TestNodeExecutionContext = NodeExecutionContext & {
 };
 
 /**
- * Provisions a controllable, fully deterministic `NodeExecutionContext` container for unit tests.
- * 
+ * Provisions a controllable, fully deterministic `NodeExecutionContext`
+ * container for unit tests.
+ *
  * This harness provides robust sandboxing for sensitive runtime dependencies:
- * - **Tool Restrictions**: Restricts code execution to an explicit allowlist and verifies registrations against a registry.
- * - **Time Anchoring**: Anchors temporal queries to a fixed clock point to guarantee reliable assertions across test runner threads.
- * - **Telemetry Extraction**: Captures output payload metrics in an isolated collection log array for easy verification.
- * - **Cancellation Testing**: Connects natively to inbound AbortSignals to mirror production lifecycle cancellation handling.
- * 
+ *
+ * - **Tool Restrictions**: Restricts code execution to an explicit allowlist
+ *   and verifies registrations against a registry.
+ * - **Time Anchoring**: Anchors temporal queries to a fixed clock point to
+ *   guarantee reliable assertions across test runner threads.
+ * - **Telemetry Extraction**: Captures output payload metrics in an isolated
+ *   collection log array for easy verification.
+ * - **Cancellation Testing**: Connects natively to inbound AbortSignals to mirror
+ *   production lifecycle cancellation handling.
+ *
  * @param options - Explicit environment attributes, model scripts, and security controls.
  * @returns A fully operational context container joined with an immutable artifact audit vector.
- * 
+ *
  * @example
  * ```typescript
  * const context = createTestNodeContext({
  *   allowedToolIds: ['calculator'],
  *   now: new Date('2026-09-12T00:00:00.000Z')
  * });
- * 
+ *
  * await context.emitArtifact('summary_metric', { score: 98 });
  * expect(context.capturedArtifacts[0].kind).toBe('summary_metric');
  * ```
@@ -93,7 +100,7 @@ export function createTestNodeContext(options: TestNodeContextOptions = {}): Tes
   const artifacts: Array<{ kind: string; payload: unknown }> = [];
   const allowed = new Set(options.allowedToolIds ?? []);
   const registry = options.toolRegistry;
-  
+
   // Connect cleanly to an inbound control token or provision a dummy controller fallback
   const hostSignal = options.signal ?? new AbortController().signal;
 
@@ -107,10 +114,10 @@ export function createTestNodeContext(options: TestNodeContextOptions = {}): Tes
         throw new NodeError('Operation aborted by the execution host environment', 'tool_failed');
       }
 
-      if (allowed.size > 0 && !allowed.has(input.toolId)) {
+      if (options.allowedToolIds !== undefined && !allowed.has(input.toolId)) {
         throw new NodeError(`Tool '${input.toolId}' is not in the allow-list`, 'tool_denied');
       }
-      
+
       const tool: Tool | undefined = registry?.get(input.toolId);
       if (!tool) {
         throw new NodeError(`Tool '${input.toolId}' not registered`, 'tool_failed');
@@ -123,10 +130,10 @@ export function createTestNodeContext(options: TestNodeContextOptions = {}): Tes
         signal: hostSignal,
       });
 
-      return { 
-        toolId: input.toolId, 
-        output: output as TResult, 
-        summary: '' 
+      return {
+        toolId: input.toolId,
+        output: output as TResult,
+        summary: ''
       };
     },
   };

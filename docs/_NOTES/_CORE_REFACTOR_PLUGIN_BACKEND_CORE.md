@@ -199,7 +199,7 @@ Construction (boot): `compileWorkflow(def)` →
 5. Compile with `LangGraphCheckpointer` (thread_id = runId).
 6. Run `validateWorkflowDefinition(def)` static checks — fail boot on any violation (plus agent-level validation in factory).
 
-Run: 
+Run:
 
 1. Validate input against `def.inputSchema` (absorbs `BaseGraphRunner`'s job).
 2. `graph.stream(validatedInput, { streamMode: ['updates','messages','custom'] })` → `EventMapper` → `AgentEvent` v2.

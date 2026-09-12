@@ -16,9 +16,19 @@
 
 import type { LoggerService } from '@backstage/backend-plugin-api';
 import type { BaseChatModel } from '@langchain/core/language_models/chat_models';
-import type { AgentDefinition, AgentEvent } from '../agents';
-import type { ToolRegistry } from '../tools/core';
-import type { SourceId, EntityFilterShape } from '../sources';
+import type {
+  AgentDefinition,
+  AgentEvent,
+} from '../agents';
+import type {
+  ToolRegistry,
+  ToolInvocationLimits,
+  ToolInvocationResult,
+} from '../tools/core';
+import type {
+  SourceId,
+  EntityFilterShape,
+} from '../sources';
 import type {
   RunStore,
   SessionStore,

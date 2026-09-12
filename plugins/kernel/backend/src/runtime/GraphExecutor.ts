@@ -14,8 +14,17 @@
  * limitations under the License.
  */
 
-import type { AgentDefinition, AgentEvent, WorkflowDefinition } from '@ai-crew-suite/plugin-kernel-node';
-import { validateWorkflowDefinition, END, NodeError } from '@ai-crew-suite/plugin-kernel-node';
+import type {
+  AgentDefinition,
+  AgentEvent,
+  WorkflowDefinition,
+} from '@ai-crew-suite/plugin-kernel-node';
+import {
+  validateWorkflowDefinition,
+  END,
+  type EndSymbol,
+  NodeError,
+} from '@ai-crew-suite/plugin-kernel-node';
 import { NodeHarness } from './NodeHarness';
 import { EventMapper } from './EventMapper';
 import { ToolExecutor } from './ToolExecutor';
@@ -84,7 +93,7 @@ export class GraphExecutor {
     const events: AgentEvent[] = [];
     const mapper = this.eventMapper;
     const redactor = this.redactor;
-    let current: string | typeof END = def.entryNode;
+    let current: string | EndSymbol = def.entryNode;
     const visited = new Set<string>();
 
     while (current !== END) {

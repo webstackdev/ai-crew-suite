@@ -25,7 +25,6 @@ import type {
 } from '@ai-crew-suite/plugin-kernel-node';
 import { NodeError } from '@ai-crew-suite/plugin-kernel-node';
 import { Redactor } from './Redactor';
-import { EventMapper } from './EventMapper';
 
 /**
  * Core-owned single choke point for all tool invocation. Enforces allow-lists,

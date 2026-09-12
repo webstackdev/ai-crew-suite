@@ -22,29 +22,18 @@ This package acts as the interface layer within the broader AI Crew Suite ecosys
 
 ## Local Development Workflow
 
-### 1. Prerequisites & Context
-
-This workspace relies on the monorepo's shared **Yarn Plug'n'Play (PnP)** caching layout. Ensure your local editor SDK configuration points directly to the active workspace TypeScript bundle.
-
-### 2. Installation & Builds
+### 1. Installation & Builds
 
 Run installation routines and build compilation tracks directly from the monorepo root:
 
 ```bash
-# Clean lockfile sync and refresh PnP maps
-yarn install --refresh
-
-# Compile TypeScript declarations into /dist targets
-yarn workspace @ai-crew-suite/plugin-kernel-node build
-```
-
-### 3. Running Unit & Integration Tests
-
-## Local Development Workflow
-
-```bash
 yarn install --refresh
 yarn turbo run build --filter=@ai-crew-suite/plugin-kernel-node
+```
+
+### 2. Running Unit & Integration Tests
+
+```bash
 yarn turbo run lint --filter=@ai-crew-suite/plugin-kernel-node
 yarn turbo run test --filter=@ai-crew-suite/plugin-kernel-node
 ```

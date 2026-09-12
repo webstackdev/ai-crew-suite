@@ -69,7 +69,7 @@ export type WorkflowNode<TState, TInput> = (
 
 /** Terminal sentinel returned by a conditional edge `route` to end the workflow. */
 export const END: unique symbol = Symbol('ai-workflow-end');
-export type END = typeof END;
+export type EndSymbol = typeof END;
 
 /**
  * An edge is either static (`to`) or a deterministic predicate (`route`) returning the
@@ -78,7 +78,7 @@ export type END = typeof END;
 export type WorkflowEdge<TState> =
   | { from: string; to: string }
 
-  | { from: string; route: (state: TState) => string | END };
+  | { from: string; route: (state: TState) => string | EndSymbol };
 
 /**
  * ============================================================================

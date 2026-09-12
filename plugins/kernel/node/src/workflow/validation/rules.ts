@@ -79,8 +79,8 @@ export const checkGraphNodes: ValidationRule = (def, nodeNames, workflowId) => {
 /**
  * Evaluates structural mapping boundaries by verifying workflow edges.
  *
- * Audits every statically declared connection path to guarantee that all trajectories 
- * stem from known coordinates and route exclusively toward valid target nodes or the 
+ * Audits every statically declared connection path to guarantee that all trajectories
+ * stem from known coordinates and route exclusively toward valid target nodes or the
  * runtime engine's terminal symbol sentinel (`END`).
  *
  * @param def - The workflow definition structure.

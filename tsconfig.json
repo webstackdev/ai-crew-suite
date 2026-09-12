@@ -148,16 +148,25 @@
       "path": "./plugins/agents/techdocs-postmortem/react"
     },
     {
+      "path": "./plugins/ai-providers/aws"
+    },
+    {
+      "path": "./plugins/ai-providers/openai"
+    },
+    {
+      "path": "./plugins/ai-providers/openrouter"
+    },
+    {
+      "path": "./plugins/databases/runtime"
+    },
+    {
+      "path": "./plugins/databases/vector/pgvector"
+    },
+    {
+      "path": "./plugins/databases/vector/qdrant"
+    },
+    {
       "path": "./plugins/kernel/backend"
-    },
-    {
-      "path": "./plugins/kernel/llm/aws"
-    },
-    {
-      "path": "./plugins/kernel/llm/openai"
-    },
-    {
-      "path": "./plugins/kernel/llm/openrouter"
     },
     {
       "path": "./plugins/kernel/node"
@@ -167,15 +176,6 @@
     },
     {
       "path": "./plugins/kernel/retrieval-augmenter"
-    },
-    {
-      "path": "./plugins/kernel/runtime-store"
-    },
-    {
-      "path": "./plugins/kernel/vector-store/pgvector"
-    },
-    {
-      "path": "./plugins/kernel/vector-store/qdrant"
     },
     {
       "path": "./plugins/tools/cloud-providers/aws"

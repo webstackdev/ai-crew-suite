@@ -27,6 +27,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@backstage/cli": "backstage:^",
     "@backstage/core-components": "^0.18.13",
     "@backstage/core-plugin-api": "^1.12.9",
     "@backstage/eslint-plugin": "backstage:^",
@@ -60,6 +61,7 @@
     "react-dom": "catalog:react-dom",
     "rimraf": "^6.1.3",
     "storybook": "^10.6.0",
+    "tsc": "^2.0.4",
     "tsx": "^4.23.13",
     "typescript": "catalog:typescript",
     "typescript-eslint": "^8.70.0",

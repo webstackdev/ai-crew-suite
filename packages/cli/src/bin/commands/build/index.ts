@@ -15,11 +15,13 @@
  */
 import { Command } from 'commander';
 import { spawnSync } from 'node:child_process';
+import { createRequire } from 'node:module';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const program = new Command();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const require = createRequire(import.meta.url);
 
 program
   .description('Compile workspace distributions using the Backstage compiler runtime')
@@ -39,15 +41,49 @@ program
       process.exit(cleanResult.status ?? 1);
     }
 
-    console.log('\n\x1b[35m┌────────────────────────────────────────────────────────┐\x1b[0m');
-    console.log(`\x1b[35m│ 🚀 AI CREW SUITE: Orchestrating Backstage Build Target │\x1b[0m`);
-    console.log(`\x1b[35m│ \x1b[90mContext:\x1b[0m ${process.cwd().padEnd(47)} \x1b[35m│\x1b[0m`);
-    console.log('\x1b[35m└────────────────────────────────────────────────────────┘\x1b[0m\n');
+    const syncResult = spawnSync('node', [mainCliPath, 'sync:refs'], {
+      stdio: 'inherit',
+      shell: true,
+      cwd: process.cwd(),
+    });
+
+    if (syncResult.status !== 0) {
+      process.exit(syncResult.status ?? 1);
+    }
+
+    console.log('\x1b[35m┌────────────────────────────────────────────────────────┐\x1b[0m');
+    console.log('\x1b[35m│ 🚀 AI CREW SUITE: Orchestrating Backstage Build Target │\x1b[0m');
+    console.log('\x1b[35m└────────────────────────────────────────────────────────┘\x1b[0m');
+    console.log(`\x1b[35m\x1b[90mContext:\x1b[0m ${process.cwd()}`);
 
     const forwardedArgs = process.argv.slice(3);
+    const typescriptPackageJson = require.resolve('typescript/package.json');
+    const typescriptCliPath = path.resolve(
+      path.dirname(typescriptPackageJson),
+      'bin/tsc',
+    );
+    const declarationResult = spawnSync(
+      process.execPath,
+      [typescriptCliPath, '--emitDeclarationOnly'],
+      {
+        stdio: 'inherit',
+        shell: true,
+        cwd: process.cwd(),
+      },
+    );
+
+    if (declarationResult.status !== 0) {
+      process.exit(declarationResult.status ?? 1);
+    }
+
+    const backstagePackageJson = require.resolve('@backstage/cli/package.json');
+    const backstageCliPath = path.resolve(
+      path.dirname(backstagePackageJson),
+      'bin/backstage-cli',
+    );
     const buildResult = spawnSync(
-      'yarn',
-      ['backstage-cli', 'package', 'build', ...forwardedArgs],
+      process.execPath,
+      [backstageCliPath, 'package', 'build', ...forwardedArgs],
       {
         stdio: 'inherit',
         shell: true,

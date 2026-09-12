@@ -23,6 +23,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@ai-crew-suite/cli@workspace:packages/cli"
   dependencies:
+    "@backstage/cli": "backstage:^"
     "@backstage/core-components": "npm:^0.18.13"
     "@backstage/core-plugin-api": "npm:^1.12.9"
     "@backstage/eslint-plugin": "backstage:^"
@@ -61,6 +62,7 @@ __metadata:
     rimraf: "npm:^6.1.3"
     rollup: "npm:^4.63.1"
     storybook: "npm:^10.6.0"
+    tsc: "npm:^2.0.4"
     tsx: "npm:^4.23.13"
     typescript: "catalog:typescript"
     typescript-eslint: "npm:^8.70.0"
@@ -1017,15 +1019,15 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@ai-crew-suite/plugin-kernel-react@workspace:plugins/kernel/react"
   dependencies:
-    "@backstage/cli": "backstage:^"
+    "@ai-crew-suite/cli": "workspace:*"
     "@backstage/core-components": "backstage:^"
     "@backstage/core-plugin-api": "backstage:^"
     "@backstage/dev-utils": "backstage:^"
     "@backstage/frontend-plugin-api": "backstage:^"
     "@backstage/test-utils": "backstage:^"
-    "@testing-library/user-event": "npm:^14.6.7"
-    eventsource-parser: "npm:^4.1.0"
-    vitest: "npm:^4.1.11"
+    "@testing-library/user-event": "catalog:testing-library-user-event"
+    eventsource-parser: "catalog:eventsource-parser"
+    vitest: "catalog:vitest"
   languageName: unknown
   linkType: soft
 
@@ -6928,13 +6930,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@epic-web/invariant@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "@epic-web/invariant@npm:1.0.0"
-  checksum: 10c0/72dbeb026e4e4eb3bc9c65739b91408ca77ab7d603a2494fa2eff3790ec22892c4caba751cffdf30f5ccf0e7ba79c1e9c96cf0a357404b9432bf1365baac23ca
-  languageName: node
-  linkType: hard
-
 "@esbuild/aix-ppc64@npm:0.25.12":
   version: 0.25.12
   resolution: "@esbuild/aix-ppc64@npm:0.25.12"
@@ -11647,7 +11642,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@playwright/test@npm:^1.62.1, @playwright/test@npm:^1.63.0":
+"@playwright/test@npm:^1.63.0":
   version: 1.63.0
   resolution: "@playwright/test@npm:1.63.0"
   dependencies:
@@ -12458,7 +12453,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rjsf/utils@npm:^6.8.0":
+"@rjsf/utils@npm:^6.10.0":
   version: 6.10.0
   resolution: "@rjsf/utils@npm:6.10.0"
   dependencies:
@@ -15032,7 +15027,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/user-event@npm:^14.6.3, @testing-library/user-event@npm:^14.6.6, @testing-library/user-event@npm:^14.6.7":
+"@testing-library/user-event@npm:^14.6.3, @testing-library/user-event@npm:^14.6.6":
   version: 14.6.7
   resolution: "@testing-library/user-event@npm:14.6.7"
   peerDependencies:
@@ -17374,6 +17369,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "app@workspace:packages/app"
   dependencies:
+    "@ai-crew-suite/cli": "workspace:*"
     "@ai-crew-suite/plugin-agent-alert-tuner": "workspace:^"
     "@ai-crew-suite/plugin-agent-catalog-insights": "workspace:^"
     "@ai-crew-suite/plugin-agent-kubernetes-responder": "workspace:^"
@@ -17421,25 +17417,24 @@ __metadata:
     "@backstage/ui": "backstage:^"
     "@emotion/react": "npm:^11.14.0"
     "@emotion/styled": "npm:^11.14.1"
-    "@material-ui/core": "npm:^4.12.4"
-    "@material-ui/icons": "npm:^4.11.3"
+    "@material-ui/core": "catalog:material-ui-core"
+    "@material-ui/icons": "catalog:material-ui-icons"
     "@mui/material": "npm:^7.3.11"
-    "@playwright/test": "npm:^1.62.1"
-    "@rjsf/utils": "npm:^6.8.0"
+    "@playwright/test": "catalog:playwright-test"
+    "@rjsf/utils": "npm:^6.10.0"
     "@testing-library/dom": "npm:^10.4.1"
-    "@testing-library/jest-dom": "npm:^6.10.0"
-    "@testing-library/react": "npm:^16.3.2"
-    "@testing-library/user-event": "npm:^14.6.6"
+    "@testing-library/jest-dom": "catalog:testing-library-jest-dom"
+    "@testing-library/react": "catalog:testing-library-react"
+    "@testing-library/user-event": "catalog:testing-library-user-event"
     "@types/react": "npm:*"
     "@types/react-dom": "npm:*"
-    cross-env: "npm:^10.1.0"
-    i18next: "npm:^22.5.1"
+    i18next: "catalog:i18next"
     prop-types: "npm:^15.8.1"
-    react: "npm:^18.3.1"
-    react-dom: "npm:^18.3.1"
-    react-router: "npm:^6.30.4"
-    react-router-dom: "npm:^6.30.4"
-    vitest: "npm:^4.1.11"
+    react: "catalog:react"
+    react-dom: "catalog:react-dom"
+    react-router: "catalog:react-router"
+    react-router-dom: "catalog:react-router-dom"
+    vitest: "catalog:vitest"
   languageName: unknown
   linkType: soft
 
@@ -18046,6 +18041,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "backend-legacy@workspace:packages/backend-legacy"
   dependencies:
+    "@ai-crew-suite/cli": "workspace:*"
     "@ai-crew-suite/plugin-agent-alert-tuner-backend": "workspace:^"
     "@ai-crew-suite/plugin-agent-catalog-insights-backend": "workspace:^"
     "@ai-crew-suite/plugin-agent-oncall-handover-backend": "workspace:^"
@@ -18116,7 +18112,7 @@ __metadata:
     app: "link:../app"
     better-sqlite3: "npm:^13.0.3"
     pg: "npm:^8.23.0"
-    vitest: "npm:^4.1.11"
+    vitest: "catalog:vitest"
   languageName: unknown
   linkType: soft
 
@@ -18194,7 +18190,7 @@ __metadata:
     app: "link:../app"
     better-sqlite3: "npm:^13.0.3"
     pg: "npm:^8.23.0"
-    vitest: "npm:^4.1.11"
+    vitest: "catalog:vitest"
   languageName: unknown
   linkType: soft
 
@@ -20215,19 +20211,6 @@ __metadata:
   bin:
     cronstrue: bin/cli.js
   checksum: 10c0/f04c9720eacae8cc58ee700a33ced44947c7d722f9deb8a0d0a9a9b533f493b8c2fabed0e72e6bf9d6d1e5191b7b8325e107496ed93a85a2789e57954084b055
-  languageName: node
-  linkType: hard
-
-"cross-env@npm:^10.1.0":
-  version: 10.1.0
-  resolution: "cross-env@npm:10.1.0"
-  dependencies:
-    "@epic-web/invariant": "npm:^1.0.0"
-    cross-spawn: "npm:^7.0.6"
-  bin:
-    cross-env: dist/bin/cross-env.js
-    cross-env-shell: dist/bin/cross-env-shell.js
-  checksum: 10c0/834a862db456ba1fedf6c6da43436b123ae38f514fa286d6f0937c14fa83f13469f77f70f2812db041ae2d84f82bac627040b8686030aca27fbdf113dfa38b63
   languageName: node
   linkType: hard
 
@@ -25261,7 +25244,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"i18next@npm:^22.4.15, i18next@npm:^22.5.1":
+"i18next@npm:^22.4.15":
   version: 22.5.1
   resolution: "i18next@npm:22.5.1"
   dependencies:
@@ -33037,7 +33020,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-router-dom@npm:^6.30.4, react-router-dom@npm:^6.30.6":
+"react-router-dom@npm:^6.30.6":
   version: 6.30.6
   resolution: "react-router-dom@npm:6.30.6"
   dependencies:
@@ -33050,7 +33033,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-router@npm:6.30.6, react-router@npm:^6.30.4, react-router@npm:^6.30.6":
+"react-router@npm:6.30.6, react-router@npm:^6.30.6":
   version: 6.30.6
   resolution: "react-router@npm:6.30.6"
   dependencies:
@@ -36662,6 +36645,15 @@ __metadata:
   version: 9.6.0
   resolution: "ts-toolbelt@npm:9.6.0"
   checksum: 10c0/838f9a2f0fe881d5065257a23b402c41315b33ff987b73db3e2b39fcb70640c4c7220e1ef118ed5676763543724fdbf4eda7b0e2c17acb667ed1401336af9f8c
+  languageName: node
+  linkType: hard
+
+"tsc@npm:^2.0.4":
+  version: 2.0.4
+  resolution: "tsc@npm:2.0.4"
+  bin:
+    tsc: bin/tsc
+  checksum: 10c0/4651d344891d995e62ab7ca64ce0a8597bbdc2d392886c9956d15caab4dc9bfe86e759d3385b3f97c49fb5294194a161d6812673e3f51e46357c82482f32c3ab
   languageName: node
   linkType: hard
 

@@ -8,9 +8,6 @@
   ],
   "references": [
     {
-      "path": "../../../../packages/cli"
-    },
-    {
       "path": "../../../kernel/node"
     }
   ]

@@ -1,3 +1,17 @@
 {
   "extends": "../../../../tsconfig.base.json",
+  "references": [
+    {
+      "path": "../../databases/vector/pgvector"
+    },
+    {
+      "path": "../../kernel/backend"
+    },
+    {
+      "path": "../../kernel/node"
+    },
+    {
+      "path": "../../kernel/retrieval-augmenter"
+    }
+  ]
 }

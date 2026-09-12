@@ -49,7 +49,8 @@ export function parseCommentedJson<T = Record<string, unknown>>(jsonString: stri
     .replace(/\/\*[\s\S]*?\*\//g, '') // Strip block comments /* ... */ safely
     .replace(/^(?:[^"\n]|"[^"\n]*")*?(\/\/.*)$/gm, (match, group1) => {
       return match.replace(group1, '');
-    });
+    })
+    .replace(/,\s*([}\]])/g, '$1'); // Accept JSONC trailing commas
   return JSON.parse(cleanJson) as T;
 }
 
@@ -111,10 +112,11 @@ export function syncProjectReferences(): void {
     const tsconfigPath = path.join(pkgInfo.dirPath, 'tsconfig.json');
     if (!fs.existsSync(tsconfigPath)) return;
 
+    // TypeScript project references should follow package edges, not tooling
+    // dependencies such as the repository CLI used by package scripts.
     const deps = {
       ...pkgInfo.pkgJson.dependencies,
-      ...pkgInfo.pkgJson.devDependencies,
-      ...pkgInfo.pkgJson.peerDependencies
+      ...pkgInfo.pkgJson.peerDependencies,
     };
 
     const tsconfigReferences: TsConfigReference[] = [];

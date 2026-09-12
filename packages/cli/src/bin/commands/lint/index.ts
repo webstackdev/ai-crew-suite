@@ -16,10 +16,13 @@
 // 📂 packages/cli/src/bin/commands/lint/index.ts
 import { Command } from 'commander';
 import { spawnSync } from 'node:child_process';
+import { createRequire } from 'node:module';
+import path from 'node:path';
 import chalk from 'chalk';
 import { getWorkspaceContext } from '../../utils/workspace.js';
 
 const program = new Command();
+const require = createRequire(import.meta.url);
 
 program
   .name('lint')
@@ -33,11 +36,13 @@ program
     // Capture standard flags (like --fix, --max-warnings 0) passed directly by users or CI
     const forwardedArgs = process.argv.slice(3);
 
-    // Call standard eslint on the current package scope directory context cleanly.
-    // ESLint will walk up to the root folder, read eslint.config.js, and lint process.cwd().
+    const eslintPackageJson = require.resolve('eslint/package.json');
+    const eslintBin = path.resolve(path.dirname(eslintPackageJson), 'bin/eslint.js');
+
+    // Keep the package cwd so the shared flat config can select the package role.
     const lintResult = spawnSync(
-      'yarn',
-      ['eslint', '.', ...forwardedArgs],
+      process.execPath,
+      [eslintBin, '.', ...forwardedArgs],
       {
         stdio: 'inherit',
         shell: true,
