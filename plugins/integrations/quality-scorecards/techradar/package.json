@@ -52,7 +52,7 @@
   },
   "dependencies": {
     "@ai-crew-suite/plugin-kernel-node": "workspace:^",
-    "@backstage-community/plugin-tech-radar-backend": "^1.21.0",
+    "@backstage-community/plugin-tech-radar-backend": "^1.22.0",
     "@backstage/backend-plugin-api": "backstage:^",
     "@backstage/config": "backstage:^"
   },

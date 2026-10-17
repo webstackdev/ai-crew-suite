@@ -52,7 +52,7 @@
     "@backstage/backend-plugin-api": "backstage:^",
     "@backstage/config": "backstage:^",
     "@tree-sitter-grammars/tree-sitter-hcl": "^1.2.0",
-    "web-tree-sitter": "^0.27.0",
+    "web-tree-sitter": "^0.27.1",
     "yaml": "catalog:yaml",
     "zod": "catalog:zod"
   },
