@@ -53,8 +53,8 @@
   "dependencies": {
     "@ai-crew-suite/plugin-kernel-node": "workspace:^",
     "@backstage/backend-plugin-api": "backstage:^",
-    "@spotify/backstage-plugin-soundcheck-backend": "0.31.1",
-    "@spotify/backstage-plugin-soundcheck-node": "^0.16.0"
+    "@spotify/backstage-plugin-soundcheck-backend": "0.33.3",
+    "@spotify/backstage-plugin-soundcheck-node": "^0.17.0"
   },
   "devDependencies": {
     "@ai-crew-suite/cli": "workspace:*",
