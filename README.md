@@ -1,5 +1,8 @@
 # AI Crew Suite
 
+> [!WARNING]
+> This repo has been moved to its [own organization](https://github.com/ai-crew-suite) (AI Crew Suite). It is undergoing a major refactor, from using a Langchain-based workflow to a backend built on Vercel AI SDK, Mem0, and Temporal.
+
 AI Crew Suite is a Backstage plugin workspace for building retrieval-augmented, tool-using AI agents inside a developer portal. It began as a fork of the Roadie RAG AI plugins, but the architecture has been reshaped from a single assistant that answers one retrieval-backed question into a core platform for agents, crews, provider modules, runtime persistence, and structured execution streams.
 
 The original Roadie implementation gave us the useful foundation: catalog and TechDocs ingestion, vector embeddings, a retrieval pipeline, pgvector storage, and a chat-style SSE response path. AI Crew Suite keeps that retrieval quality and makes it one capability inside a broader runtime. Retrieval is now exposed as the `knowledge.retrieve` tool, while agents can also use registered models, tools, sources, triggers, memory, approvals, artifacts, and orchestration strategies.
