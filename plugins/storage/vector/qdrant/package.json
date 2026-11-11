@@ -54,7 +54,7 @@
     "@backstage/backend-plugin-api": "backstage:^",
     "@backstage/config": "backstage:^",
     "@langchain/core": "catalog:langchain-core",
-    "@qdrant/js-client-rest": "^1.19.0",
+    "@qdrant/js-client-rest": "^1.20.0",
     "i18next": "catalog:i18next"
   },
   "devDependencies": {

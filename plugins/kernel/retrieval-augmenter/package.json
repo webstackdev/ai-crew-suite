@@ -55,7 +55,7 @@
     "@backstage/errors": "backstage:^",
     "@backstage/plugin-search-common": "backstage:^",
     "@langchain/core": "catalog:langchain-core",
-    "@langchain/textsplitters": "^1.0.1",
+    "@langchain/textsplitters": "^1.0.2",
     "i18next": "catalog:i18next",
     "p-limit": "^3.1.0"
   },
