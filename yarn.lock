@@ -893,9 +893,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@ai-crew-suite/plugin-ai-providers-backend-module-aws@workspace:^, @ai-crew-suite/plugin-ai-providers-backend-module-aws@workspace:plugins/inference/aws":
+"@ai-crew-suite/plugin-ai-providers-backend-module-aws@workspace:^, @ai-crew-suite/plugin-ai-providers-backend-module-aws@workspace:plugins/intelligence/aws":
   version: 0.0.0-use.local
-  resolution: "@ai-crew-suite/plugin-ai-providers-backend-module-aws@workspace:plugins/inference/aws"
+  resolution: "@ai-crew-suite/plugin-ai-providers-backend-module-aws@workspace:plugins/intelligence/aws"
   dependencies:
     "@ai-crew-suite/cli": "workspace:*"
     "@ai-crew-suite/plugin-kernel-backend": "workspace:^"
@@ -915,9 +915,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@ai-crew-suite/plugin-ai-providers-backend-module-openai@workspace:^, @ai-crew-suite/plugin-ai-providers-backend-module-openai@workspace:plugins/inference/openai":
+"@ai-crew-suite/plugin-ai-providers-backend-module-openai@workspace:^, @ai-crew-suite/plugin-ai-providers-backend-module-openai@workspace:plugins/intelligence/openai":
   version: 0.0.0-use.local
-  resolution: "@ai-crew-suite/plugin-ai-providers-backend-module-openai@workspace:plugins/inference/openai"
+  resolution: "@ai-crew-suite/plugin-ai-providers-backend-module-openai@workspace:plugins/intelligence/openai"
   dependencies:
     "@ai-crew-suite/cli": "workspace:*"
     "@ai-crew-suite/plugin-kernel-node": "workspace:^"
@@ -934,9 +934,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@ai-crew-suite/plugin-ai-providers-backend-module-openrouter@workspace:^, @ai-crew-suite/plugin-ai-providers-backend-module-openrouter@workspace:plugins/inference/openrouter":
+"@ai-crew-suite/plugin-ai-providers-backend-module-openrouter@workspace:^, @ai-crew-suite/plugin-ai-providers-backend-module-openrouter@workspace:plugins/intelligence/openrouter":
   version: 0.0.0-use.local
-  resolution: "@ai-crew-suite/plugin-ai-providers-backend-module-openrouter@workspace:plugins/inference/openrouter"
+  resolution: "@ai-crew-suite/plugin-ai-providers-backend-module-openrouter@workspace:plugins/intelligence/openrouter"
   dependencies:
     "@ai-crew-suite/cli": "workspace:*"
     "@ai-crew-suite/plugin-kernel-node": "workspace:^"
@@ -949,9 +949,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@ai-crew-suite/plugin-databases-runtime-backend@workspace:^, @ai-crew-suite/plugin-databases-runtime-backend@workspace:plugins/databases/runtime":
+"@ai-crew-suite/plugin-databases-runtime-backend@workspace:^, @ai-crew-suite/plugin-databases-runtime-backend@workspace:plugins/storage/runtime":
   version: 0.0.0-use.local
-  resolution: "@ai-crew-suite/plugin-databases-runtime-backend@workspace:plugins/databases/runtime"
+  resolution: "@ai-crew-suite/plugin-databases-runtime-backend@workspace:plugins/storage/runtime"
   dependencies:
     "@ai-crew-suite/cli": "workspace:*"
     "@ai-crew-suite/plugin-kernel-node": "workspace:^"
@@ -964,9 +964,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@ai-crew-suite/plugin-kernel-backend-module-quality-scorecards@workspace:^, @ai-crew-suite/plugin-kernel-backend-module-quality-scorecards@workspace:plugins/tools/quality-scorecards/engine":
+"@ai-crew-suite/plugin-kernel-backend-module-quality-scorecards@workspace:^, @ai-crew-suite/plugin-kernel-backend-module-quality-scorecards@workspace:plugins/integrations/quality-scorecards/engine":
   version: 0.0.0-use.local
-  resolution: "@ai-crew-suite/plugin-kernel-backend-module-quality-scorecards@workspace:plugins/tools/quality-scorecards/engine"
+  resolution: "@ai-crew-suite/plugin-kernel-backend-module-quality-scorecards@workspace:plugins/integrations/quality-scorecards/engine"
   dependencies:
     "@ai-crew-suite/cli": "workspace:*"
     "@ai-crew-suite/plugin-kernel-node": "workspace:^"
@@ -994,11 +994,11 @@ __metadata:
     "@opentelemetry/api": "npm:^1.9.1"
     "@types/compression": "npm:^1.8.1"
     "@types/express": "npm:4.17.25"
-    expect-type: "npm:^1.4.0"
     express: "npm:^4.22.3"
     express-promise-router: "npm:^4.1.1"
     i18next: "catalog:i18next"
     vitest: "catalog:vitest"
+    zod: "catalog:zod"
   languageName: unknown
   linkType: soft
 
@@ -1053,9 +1053,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@ai-crew-suite/plugin-tool-cloud-providers-backend-module-aws@workspace:plugins/tools/cloud-providers/aws":
+"@ai-crew-suite/plugin-tool-cloud-providers-backend-module-aws@workspace:plugins/integrations/cloud-providers/aws":
   version: 0.0.0-use.local
-  resolution: "@ai-crew-suite/plugin-tool-cloud-providers-backend-module-aws@workspace:plugins/tools/cloud-providers/aws"
+  resolution: "@ai-crew-suite/plugin-tool-cloud-providers-backend-module-aws@workspace:plugins/integrations/cloud-providers/aws"
   dependencies:
     "@ai-crew-suite/cli": "workspace:*"
     "@ai-crew-suite/plugin-kernel-node": "workspace:*"
@@ -1068,9 +1068,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@ai-crew-suite/plugin-tool-cloud-providers-backend-module-azure@workspace:plugins/tools/cloud-providers/azure":
+"@ai-crew-suite/plugin-tool-cloud-providers-backend-module-azure@workspace:plugins/integrations/cloud-providers/azure":
   version: 0.0.0-use.local
-  resolution: "@ai-crew-suite/plugin-tool-cloud-providers-backend-module-azure@workspace:plugins/tools/cloud-providers/azure"
+  resolution: "@ai-crew-suite/plugin-tool-cloud-providers-backend-module-azure@workspace:plugins/integrations/cloud-providers/azure"
   dependencies:
     "@ai-crew-suite/cli": "workspace:*"
     "@ai-crew-suite/plugin-kernel-node": "workspace:^"
@@ -1083,9 +1083,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@ai-crew-suite/plugin-tool-cloud-providers-backend-module-gcp@workspace:plugins/tools/cloud-providers/gcp":
+"@ai-crew-suite/plugin-tool-cloud-providers-backend-module-gcp@workspace:plugins/integrations/cloud-providers/gcp":
   version: 0.0.0-use.local
-  resolution: "@ai-crew-suite/plugin-tool-cloud-providers-backend-module-gcp@workspace:plugins/tools/cloud-providers/gcp"
+  resolution: "@ai-crew-suite/plugin-tool-cloud-providers-backend-module-gcp@workspace:plugins/integrations/cloud-providers/gcp"
   dependencies:
     "@ai-crew-suite/cli": "workspace:*"
     "@ai-crew-suite/plugin-kernel-node": "workspace:^"
@@ -1097,9 +1097,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@ai-crew-suite/plugin-tool-cloud-providers-backend@workspace:^, @ai-crew-suite/plugin-tool-cloud-providers-backend@workspace:plugins/tools/cloud-providers/engine":
+"@ai-crew-suite/plugin-tool-cloud-providers-backend@workspace:^, @ai-crew-suite/plugin-tool-cloud-providers-backend@workspace:plugins/integrations/cloud-providers/engine":
   version: 0.0.0-use.local
-  resolution: "@ai-crew-suite/plugin-tool-cloud-providers-backend@workspace:plugins/tools/cloud-providers/engine"
+  resolution: "@ai-crew-suite/plugin-tool-cloud-providers-backend@workspace:plugins/integrations/cloud-providers/engine"
   dependencies:
     "@ai-crew-suite/cli": "workspace:*"
     "@ai-crew-suite/plugin-kernel-node": "workspace:^"
@@ -1111,9 +1111,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@ai-crew-suite/plugin-tool-communication-backend-module-slack@workspace:^, @ai-crew-suite/plugin-tool-communication-backend-module-slack@workspace:plugins/tools/communication/slack":
+"@ai-crew-suite/plugin-tool-communication-backend-module-slack@workspace:^, @ai-crew-suite/plugin-tool-communication-backend-module-slack@workspace:plugins/integrations/communication/slack":
   version: 0.0.0-use.local
-  resolution: "@ai-crew-suite/plugin-tool-communication-backend-module-slack@workspace:plugins/tools/communication/slack"
+  resolution: "@ai-crew-suite/plugin-tool-communication-backend-module-slack@workspace:plugins/integrations/communication/slack"
   dependencies:
     "@ai-crew-suite/cli": "workspace:*"
     "@ai-crew-suite/plugin-kernel-node": "workspace:*"
@@ -1124,9 +1124,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@ai-crew-suite/plugin-tool-communication-backend@workspace:^, @ai-crew-suite/plugin-tool-communication-backend@workspace:plugins/tools/communication/engine":
+"@ai-crew-suite/plugin-tool-communication-backend@workspace:^, @ai-crew-suite/plugin-tool-communication-backend@workspace:plugins/integrations/communication/engine":
   version: 0.0.0-use.local
-  resolution: "@ai-crew-suite/plugin-tool-communication-backend@workspace:plugins/tools/communication/engine"
+  resolution: "@ai-crew-suite/plugin-tool-communication-backend@workspace:plugins/integrations/communication/engine"
   dependencies:
     "@ai-crew-suite/cli": "workspace:*"
     "@ai-crew-suite/plugin-kernel-node": "workspace:^"
@@ -1137,9 +1137,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@ai-crew-suite/plugin-tool-compliance-backend-module-opa@workspace:^, @ai-crew-suite/plugin-tool-compliance-backend-module-opa@workspace:plugins/tools/compliance/opa":
+"@ai-crew-suite/plugin-tool-compliance-backend-module-opa@workspace:^, @ai-crew-suite/plugin-tool-compliance-backend-module-opa@workspace:plugins/integrations/compliance/opa":
   version: 0.0.0-use.local
-  resolution: "@ai-crew-suite/plugin-tool-compliance-backend-module-opa@workspace:plugins/tools/compliance/opa"
+  resolution: "@ai-crew-suite/plugin-tool-compliance-backend-module-opa@workspace:plugins/integrations/compliance/opa"
   dependencies:
     "@ai-crew-suite/cli": "workspace:*"
     "@ai-crew-suite/plugin-kernel-node": "workspace:^"
@@ -1150,9 +1150,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@ai-crew-suite/plugin-tool-compliance-backend@workspace:^, @ai-crew-suite/plugin-tool-compliance-backend@workspace:plugins/tools/compliance/engine":
+"@ai-crew-suite/plugin-tool-compliance-backend@workspace:^, @ai-crew-suite/plugin-tool-compliance-backend@workspace:plugins/integrations/compliance/engine":
   version: 0.0.0-use.local
-  resolution: "@ai-crew-suite/plugin-tool-compliance-backend@workspace:plugins/tools/compliance/engine"
+  resolution: "@ai-crew-suite/plugin-tool-compliance-backend@workspace:plugins/integrations/compliance/engine"
   dependencies:
     "@ai-crew-suite/cli": "workspace:*"
     "@ai-crew-suite/plugin-kernel-node": "workspace:^"
@@ -1163,9 +1163,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@ai-crew-suite/plugin-tool-incident-management-backend-module-pagerduty@workspace:^, @ai-crew-suite/plugin-tool-incident-management-backend-module-pagerduty@workspace:plugins/tools/incident-management/pagerduty":
+"@ai-crew-suite/plugin-tool-incident-management-backend-module-pagerduty@workspace:^, @ai-crew-suite/plugin-tool-incident-management-backend-module-pagerduty@workspace:plugins/integrations/incident-management/pagerduty":
   version: 0.0.0-use.local
-  resolution: "@ai-crew-suite/plugin-tool-incident-management-backend-module-pagerduty@workspace:plugins/tools/incident-management/pagerduty"
+  resolution: "@ai-crew-suite/plugin-tool-incident-management-backend-module-pagerduty@workspace:plugins/integrations/incident-management/pagerduty"
   dependencies:
     "@ai-crew-suite/cli": "workspace:*"
     "@ai-crew-suite/plugin-kernel-node": "workspace:^"
@@ -1176,9 +1176,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@ai-crew-suite/plugin-tool-incident-management-backend@workspace:^, @ai-crew-suite/plugin-tool-incident-management-backend@workspace:plugins/tools/incident-management/engine":
+"@ai-crew-suite/plugin-tool-incident-management-backend@workspace:^, @ai-crew-suite/plugin-tool-incident-management-backend@workspace:plugins/integrations/incident-management/engine":
   version: 0.0.0-use.local
-  resolution: "@ai-crew-suite/plugin-tool-incident-management-backend@workspace:plugins/tools/incident-management/engine"
+  resolution: "@ai-crew-suite/plugin-tool-incident-management-backend@workspace:plugins/integrations/incident-management/engine"
   dependencies:
     "@ai-crew-suite/cli": "workspace:*"
     "@ai-crew-suite/plugin-kernel-node": "workspace:^"
@@ -1189,9 +1189,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@ai-crew-suite/plugin-tool-kubernetes-backend@workspace:plugins/tools/kubernetes":
+"@ai-crew-suite/plugin-tool-kubernetes-backend@workspace:plugins/integrations/kubernetes":
   version: 0.0.0-use.local
-  resolution: "@ai-crew-suite/plugin-tool-kubernetes-backend@workspace:plugins/tools/kubernetes"
+  resolution: "@ai-crew-suite/plugin-tool-kubernetes-backend@workspace:plugins/integrations/kubernetes"
   dependencies:
     "@ai-crew-suite/cli": "workspace:*"
     "@ai-crew-suite/plugin-kernel-node": "workspace:^"
@@ -1202,9 +1202,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@ai-crew-suite/plugin-tool-observability-backend-module-datadog@workspace:^, @ai-crew-suite/plugin-tool-observability-backend-module-datadog@workspace:plugins/tools/observability/datadog":
+"@ai-crew-suite/plugin-tool-observability-backend-module-datadog@workspace:^, @ai-crew-suite/plugin-tool-observability-backend-module-datadog@workspace:plugins/integrations/observability/datadog":
   version: 0.0.0-use.local
-  resolution: "@ai-crew-suite/plugin-tool-observability-backend-module-datadog@workspace:plugins/tools/observability/datadog"
+  resolution: "@ai-crew-suite/plugin-tool-observability-backend-module-datadog@workspace:plugins/integrations/observability/datadog"
   dependencies:
     "@ai-crew-suite/cli": "workspace:*"
     "@ai-crew-suite/plugin-kernel-node": "workspace:^"
@@ -1215,9 +1215,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@ai-crew-suite/plugin-tool-observability-backend@workspace:^, @ai-crew-suite/plugin-tool-observability-backend@workspace:plugins/tools/observability/engine":
+"@ai-crew-suite/plugin-tool-observability-backend@workspace:^, @ai-crew-suite/plugin-tool-observability-backend@workspace:plugins/integrations/observability/engine":
   version: 0.0.0-use.local
-  resolution: "@ai-crew-suite/plugin-tool-observability-backend@workspace:plugins/tools/observability/engine"
+  resolution: "@ai-crew-suite/plugin-tool-observability-backend@workspace:plugins/integrations/observability/engine"
   dependencies:
     "@ai-crew-suite/cli": "workspace:*"
     "@ai-crew-suite/plugin-kernel-node": "workspace:^"
@@ -1228,9 +1228,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@ai-crew-suite/plugin-tool-project-management-backend-module-jira@workspace:^, @ai-crew-suite/plugin-tool-project-management-backend-module-jira@workspace:plugins/tools/project-management/jira":
+"@ai-crew-suite/plugin-tool-project-management-backend-module-jira@workspace:^, @ai-crew-suite/plugin-tool-project-management-backend-module-jira@workspace:plugins/integrations/project-management/jira":
   version: 0.0.0-use.local
-  resolution: "@ai-crew-suite/plugin-tool-project-management-backend-module-jira@workspace:plugins/tools/project-management/jira"
+  resolution: "@ai-crew-suite/plugin-tool-project-management-backend-module-jira@workspace:plugins/integrations/project-management/jira"
   dependencies:
     "@ai-crew-suite/cli": "workspace:*"
     "@ai-crew-suite/plugin-kernel-node": "workspace:^"
@@ -1241,9 +1241,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@ai-crew-suite/plugin-tool-project-management-backend@workspace:^, @ai-crew-suite/plugin-tool-project-management-backend@workspace:plugins/tools/project-management/engine":
+"@ai-crew-suite/plugin-tool-project-management-backend@workspace:^, @ai-crew-suite/plugin-tool-project-management-backend@workspace:plugins/integrations/project-management/engine":
   version: 0.0.0-use.local
-  resolution: "@ai-crew-suite/plugin-tool-project-management-backend@workspace:plugins/tools/project-management/engine"
+  resolution: "@ai-crew-suite/plugin-tool-project-management-backend@workspace:plugins/integrations/project-management/engine"
   dependencies:
     "@ai-crew-suite/cli": "workspace:*"
     "@ai-crew-suite/plugin-kernel-node": "workspace:^"
@@ -1254,9 +1254,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@ai-crew-suite/plugin-tool-quality-scorecards-backend-module-scorecards@workspace:plugins/tools/quality-scorecards/scorecards":
+"@ai-crew-suite/plugin-tool-quality-scorecards-backend-module-scorecards@workspace:plugins/integrations/quality-scorecards/scorecards":
   version: 0.0.0-use.local
-  resolution: "@ai-crew-suite/plugin-tool-quality-scorecards-backend-module-scorecards@workspace:plugins/tools/quality-scorecards/scorecards"
+  resolution: "@ai-crew-suite/plugin-tool-quality-scorecards-backend-module-scorecards@workspace:plugins/integrations/quality-scorecards/scorecards"
   dependencies:
     "@ai-crew-suite/cli": "workspace:*"
     "@ai-crew-suite/plugin-kernel-node": "workspace:^"
@@ -1267,9 +1267,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@ai-crew-suite/plugin-tool-quality-scorecards-backend-module-soundcheck@workspace:plugins/tools/quality-scorecards/soundcheck":
+"@ai-crew-suite/plugin-tool-quality-scorecards-backend-module-soundcheck@workspace:plugins/integrations/quality-scorecards/soundcheck":
   version: 0.0.0-use.local
-  resolution: "@ai-crew-suite/plugin-tool-quality-scorecards-backend-module-soundcheck@workspace:plugins/tools/quality-scorecards/soundcheck"
+  resolution: "@ai-crew-suite/plugin-tool-quality-scorecards-backend-module-soundcheck@workspace:plugins/integrations/quality-scorecards/soundcheck"
   dependencies:
     "@ai-crew-suite/cli": "workspace:*"
     "@ai-crew-suite/plugin-kernel-node": "workspace:^"
@@ -1281,9 +1281,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@ai-crew-suite/plugin-tool-quality-scorecards-backend-module-techradar@workspace:plugins/tools/quality-scorecards/techradar":
+"@ai-crew-suite/plugin-tool-quality-scorecards-backend-module-techradar@workspace:plugins/integrations/quality-scorecards/techradar":
   version: 0.0.0-use.local
-  resolution: "@ai-crew-suite/plugin-tool-quality-scorecards-backend-module-techradar@workspace:plugins/tools/quality-scorecards/techradar"
+  resolution: "@ai-crew-suite/plugin-tool-quality-scorecards-backend-module-techradar@workspace:plugins/integrations/quality-scorecards/techradar"
   dependencies:
     "@ai-crew-suite/cli": "workspace:*"
     "@ai-crew-suite/plugin-kernel-node": "workspace:^"
@@ -1295,9 +1295,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@ai-crew-suite/plugin-tools-vcs-backend-module-aws-codecommit@workspace:plugins/tools/vcs/aws-codecommit":
+"@ai-crew-suite/plugin-tools-vcs-backend-module-aws-codecommit@workspace:plugins/integrations/vcs/aws-codecommit":
   version: 0.0.0-use.local
-  resolution: "@ai-crew-suite/plugin-tools-vcs-backend-module-aws-codecommit@workspace:plugins/tools/vcs/aws-codecommit"
+  resolution: "@ai-crew-suite/plugin-tools-vcs-backend-module-aws-codecommit@workspace:plugins/integrations/vcs/aws-codecommit"
   dependencies:
     "@ai-crew-suite/cli": "workspace:*"
     "@ai-crew-suite/plugin-kernel-node": "workspace:^"
@@ -1309,9 +1309,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@ai-crew-suite/plugin-tools-vcs-backend-module-azure@workspace:plugins/tools/vcs/azure":
+"@ai-crew-suite/plugin-tools-vcs-backend-module-azure@workspace:plugins/integrations/vcs/azure":
   version: 0.0.0-use.local
-  resolution: "@ai-crew-suite/plugin-tools-vcs-backend-module-azure@workspace:plugins/tools/vcs/azure"
+  resolution: "@ai-crew-suite/plugin-tools-vcs-backend-module-azure@workspace:plugins/integrations/vcs/azure"
   dependencies:
     "@ai-crew-suite/cli": "workspace:*"
     "@ai-crew-suite/plugin-kernel-node": "workspace:^"
@@ -1323,9 +1323,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@ai-crew-suite/plugin-tools-vcs-backend-module-bitbucket@workspace:plugins/tools/vcs/bitbucket":
+"@ai-crew-suite/plugin-tools-vcs-backend-module-bitbucket@workspace:plugins/integrations/vcs/bitbucket":
   version: 0.0.0-use.local
-  resolution: "@ai-crew-suite/plugin-tools-vcs-backend-module-bitbucket@workspace:plugins/tools/vcs/bitbucket"
+  resolution: "@ai-crew-suite/plugin-tools-vcs-backend-module-bitbucket@workspace:plugins/integrations/vcs/bitbucket"
   dependencies:
     "@ai-crew-suite/cli": "workspace:*"
     "@ai-crew-suite/plugin-kernel-node": "workspace:^"
@@ -1336,9 +1336,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@ai-crew-suite/plugin-tools-vcs-backend-module-gerrit@workspace:plugins/tools/vcs/gerrit":
+"@ai-crew-suite/plugin-tools-vcs-backend-module-gerrit@workspace:plugins/integrations/vcs/gerrit":
   version: 0.0.0-use.local
-  resolution: "@ai-crew-suite/plugin-tools-vcs-backend-module-gerrit@workspace:plugins/tools/vcs/gerrit"
+  resolution: "@ai-crew-suite/plugin-tools-vcs-backend-module-gerrit@workspace:plugins/integrations/vcs/gerrit"
   dependencies:
     "@ai-crew-suite/cli": "workspace:*"
     "@ai-crew-suite/plugin-kernel-node": "workspace:^"
@@ -1349,9 +1349,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@ai-crew-suite/plugin-tools-vcs-backend-module-git@workspace:plugins/tools/vcs/git":
+"@ai-crew-suite/plugin-tools-vcs-backend-module-git@workspace:plugins/integrations/vcs/git":
   version: 0.0.0-use.local
-  resolution: "@ai-crew-suite/plugin-tools-vcs-backend-module-git@workspace:plugins/tools/vcs/git"
+  resolution: "@ai-crew-suite/plugin-tools-vcs-backend-module-git@workspace:plugins/integrations/vcs/git"
   dependencies:
     "@ai-crew-suite/cli": "workspace:*"
     "@ai-crew-suite/plugin-kernel-node": "workspace:^"
@@ -1364,9 +1364,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@ai-crew-suite/plugin-tools-vcs-backend-module-github@workspace:plugins/tools/vcs/github":
+"@ai-crew-suite/plugin-tools-vcs-backend-module-github@workspace:plugins/integrations/vcs/github":
   version: 0.0.0-use.local
-  resolution: "@ai-crew-suite/plugin-tools-vcs-backend-module-github@workspace:plugins/tools/vcs/github"
+  resolution: "@ai-crew-suite/plugin-tools-vcs-backend-module-github@workspace:plugins/integrations/vcs/github"
   dependencies:
     "@ai-crew-suite/cli": "workspace:*"
     "@ai-crew-suite/plugin-kernel-node": "workspace:^"
@@ -1379,9 +1379,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@ai-crew-suite/plugin-tools-vcs-backend-module-gitlab@workspace:plugins/tools/vcs/gitlab":
+"@ai-crew-suite/plugin-tools-vcs-backend-module-gitlab@workspace:plugins/integrations/vcs/gitlab":
   version: 0.0.0-use.local
-  resolution: "@ai-crew-suite/plugin-tools-vcs-backend-module-gitlab@workspace:plugins/tools/vcs/gitlab"
+  resolution: "@ai-crew-suite/plugin-tools-vcs-backend-module-gitlab@workspace:plugins/integrations/vcs/gitlab"
   dependencies:
     "@ai-crew-suite/cli": "workspace:*"
     "@ai-crew-suite/plugin-kernel-node": "workspace:^"
@@ -1393,9 +1393,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@ai-crew-suite/plugin-tools-vcs-backend@workspace:^, @ai-crew-suite/plugin-tools-vcs-backend@workspace:plugins/tools/vcs/engine":
+"@ai-crew-suite/plugin-tools-vcs-backend@workspace:^, @ai-crew-suite/plugin-tools-vcs-backend@workspace:plugins/integrations/vcs/engine":
   version: 0.0.0-use.local
-  resolution: "@ai-crew-suite/plugin-tools-vcs-backend@workspace:plugins/tools/vcs/engine"
+  resolution: "@ai-crew-suite/plugin-tools-vcs-backend@workspace:plugins/integrations/vcs/engine"
   dependencies:
     "@ai-crew-suite/cli": "workspace:*"
     "@ai-crew-suite/plugin-kernel-node": "workspace:^"
@@ -1414,9 +1414,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@ai-crew-suite/plugin-vector-store-pgvector@workspace:^, @ai-crew-suite/plugin-vector-store-pgvector@workspace:plugins/databases/vector/pgvector":
+"@ai-crew-suite/plugin-vector-store-pgvector@workspace:^, @ai-crew-suite/plugin-vector-store-pgvector@workspace:plugins/storage/vector/pgvector":
   version: 0.0.0-use.local
-  resolution: "@ai-crew-suite/plugin-vector-store-pgvector@workspace:plugins/databases/vector/pgvector"
+  resolution: "@ai-crew-suite/plugin-vector-store-pgvector@workspace:plugins/storage/vector/pgvector"
   dependencies:
     "@ai-crew-suite/cli": "workspace:*"
     "@ai-crew-suite/plugin-kernel-node": "workspace:^"
@@ -1429,9 +1429,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@ai-crew-suite/plugin-vector-store-qdrant@workspace:plugins/databases/vector/qdrant":
+"@ai-crew-suite/plugin-vector-store-qdrant@workspace:plugins/storage/vector/qdrant":
   version: 0.0.0-use.local
-  resolution: "@ai-crew-suite/plugin-vector-store-qdrant@workspace:plugins/databases/vector/qdrant"
+  resolution: "@ai-crew-suite/plugin-vector-store-qdrant@workspace:plugins/storage/vector/qdrant"
   dependencies:
     "@ai-crew-suite/cli": "workspace:*"
     "@ai-crew-suite/plugin-kernel-node": "workspace:^"
@@ -10250,10 +10250,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nodable/entities@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "@nodable/entities@npm:3.0.0"
-  checksum: 10c0/5e57422ce08d9f83a7ad09d8f90953e2e63b3274c3f941bf7ddf64f290473e70d47acbd6c8b9e60169c2a8c5c2424c4131bdd99b937792413f55a4a146f76658
+"@nodable/entities@npm:^3.1.0":
+  version: 3.1.0
+  resolution: "@nodable/entities@npm:3.1.0"
+  checksum: 10c0/a1a2a081949a72da17846dc44962dc95a2bf5268867407fc4f6b686acda4dc5e9fd85f0398999969309b9f7fe0fbe85947a91c1ddac47eba8f9b58224c36f6fb
   languageName: node
   linkType: hard
 
@@ -22711,7 +22711,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expect-type@npm:^1.3.0, expect-type@npm:^1.4.0":
+"expect-type@npm:^1.3.0":
   version: 1.4.0
   resolution: "expect-type@npm:1.4.0"
   checksum: 10c0/d40d76b8570695d36587beb3cc28494da2ca3ec8f04e67f5622ed2d372d850e401a9adef19c6835e1a8173903f157c79540b34c7b3fbd7cd8ce726cc903c57b7
@@ -23093,7 +23093,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-xml-builder@npm:^1.2.0":
+"fast-xml-builder@npm:^1.3.1":
   version: 1.3.1
   resolution: "fast-xml-builder@npm:1.3.1"
   dependencies:
@@ -23104,18 +23104,18 @@ __metadata:
   linkType: hard
 
 "fast-xml-parser@npm:^5.3.4, fast-xml-parser@npm:^5.5.1, fast-xml-parser@npm:^5.5.9":
-  version: 5.11.1
-  resolution: "fast-xml-parser@npm:5.11.1"
+  version: 5.12.0
+  resolution: "fast-xml-parser@npm:5.12.0"
   dependencies:
-    "@nodable/entities": "npm:^3.0.0"
-    fast-xml-builder: "npm:^1.2.0"
-    is-unsafe: "npm:^2.0.0"
+    "@nodable/entities": "npm:^3.1.0"
+    fast-xml-builder: "npm:^1.3.1"
+    is-unsafe: "npm:^2.0.3"
     path-expression-matcher: "npm:^1.6.2"
-    strnum: "npm:^2.4.2"
+    strnum: "npm:^2.5.1"
     xml-naming: "npm:^0.3.0"
   bin:
     fxparser: src/cli/cli.js
-  checksum: 10c0/04a1cf600130c4fc146e9f5bcb0a0e88354c5b9725debfa849f9028afd90b77a3e4c9339a3a7f5d22d749b74ac78567428eb1385679319fabf4d6f03065248d6
+  checksum: 10c0/a63d7bb83aa4a0375762598ddc46535eb02237b046fa235c67e10079a4d706c34467d8336fb492b8020f6dd90070817e08792d1acb93fa4e8b8bd1aee99f705f
   languageName: node
   linkType: hard
 
@@ -26138,10 +26138,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"is-unsafe@npm:^2.0.0":
-  version: 2.0.2
-  resolution: "is-unsafe@npm:2.0.2"
-  checksum: 10c0/3f92f6534e326ae13f4a4733d0d6b9f06f2b7ab80d99c1973eb32b33b00cf9bc7a8505e3260f36209c9109f56a46bb64cc6bd0a27e37fee08cd35892a2b6ae44
+"is-unsafe@npm:^2.0.3":
+  version: 2.0.3
+  resolution: "is-unsafe@npm:2.0.3"
+  checksum: 10c0/509ee09ccaa2613c95e3625c39be029fc8838cce29e1582a560d7f11291516cfad55178efbb1062ac50267064a08ce8c724757d0b90c6b45d6ee5e4b121d45a6
   languageName: node
   linkType: hard
 
@@ -35562,12 +35562,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"strnum@npm:^2.4.2":
-  version: 2.4.2
-  resolution: "strnum@npm:2.4.2"
+"strnum@npm:^2.5.1":
+  version: 2.5.1
+  resolution: "strnum@npm:2.5.1"
   dependencies:
     anynum: "npm:^1.0.1"
-  checksum: 10c0/71a94dcc12cf3187e10089ed2ddcf7c289fed168ce4a33ee393bbd009a9199c237e3ef71597f3c91fac4203dd1e675c090eb4131226fd70af6fa2a31b0175de2
+  checksum: 10c0/8624abed504759ec6f3e1511823c15f39ab3161a9f7c5905fed54d95c4e5a41e02e2e9fb538da3ed6c6f667a978df9c4456aed8146ddfb7b2790001cd2afda7c
   languageName: node
   linkType: hard
 
