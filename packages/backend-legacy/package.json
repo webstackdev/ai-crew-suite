@@ -107,8 +107,8 @@
     "@backstage/plugin-signals-backend": "backstage:^",
     "@backstage/plugin-techdocs-backend": "backstage:^",
     "app": "link:../app",
-    "better-sqlite3": "^13.0.3",
-    "pg": "^8.23.0"
+    "better-sqlite3": "^13.2.0",
+    "pg": "^8.23.1"
   },
   "devDependencies": {
     "@ai-crew-suite/cli": "workspace:*",
